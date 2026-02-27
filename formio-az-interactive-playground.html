@@ -385,6 +385,139 @@
       color: #33466f;
     }
 
+    .selection-guide {
+      margin-top: 10px;
+    }
+
+    .selection-guide-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+      margin-bottom: 8px;
+    }
+
+    .selection-guide-block {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid #dbe4f6;
+      border-radius: 8px;
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .selection-guide-block .label {
+      margin-bottom: 4px;
+    }
+
+    .beginner-mode-wrap {
+      margin-top: 8px;
+    }
+
+    .beginner-step-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+      margin-bottom: 8px;
+    }
+
+    .beginner-pill {
+      padding: 5px 8px;
+      border-radius: 999px;
+      border: 1px solid #d1dcef;
+      background: #f7faff;
+      font-size: 0.75rem;
+      color: #38507e;
+      line-height: 1.2;
+    }
+
+    .beginner-pill-active {
+      background: #245fe6;
+      border-color: #245fe6;
+      color: #ffffff;
+    }
+
+    .beginner-pill-done {
+      background: #eaf7ef;
+      border-color: #b7dfc4;
+      color: #236346;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+      margin-bottom: 8px;
+    }
+
+    .info-tile {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid #dbe4f6;
+      border-radius: 8px;
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .info-tile .label {
+      margin-bottom: 4px;
+    }
+
+    .recipe-steps {
+      margin: 0;
+      padding-left: 18px;
+      color: #33466f;
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .recipe-steps li + li {
+      margin-top: 4px;
+    }
+
+    .glossary-grid,
+    .export-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+      margin-bottom: 8px;
+    }
+
+    .export-wizard {
+      margin-top: 10px;
+    }
+
+    .diff-list {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      max-height: 480px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .diff-item {
+      border: 1px solid #d6e0f2;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.82);
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .diff-item .label {
+      margin-bottom: 4px;
+    }
+
+    .diff-values,
+    .diff-source {
+      font-size: 0.78rem;
+      color: #33466f;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
     .flow-card {
       margin-bottom: 12px;
     }
@@ -622,34 +755,36 @@
 
     @media (min-width: 1600px) {
       .layout {
-        grid-template-columns: minmax(380px, 470px) minmax(0, 1fr);
-      }
-
-      .panel-syntax { grid-area: syntax; }
-      .panel-builder { grid-area: builder; }
-      .panel-preview { grid-area: preview; }
-
-      .right {
-        grid-template-columns: minmax(350px, 0.9fr) minmax(580px, 1.2fr);
-        grid-template-areas:
-          "syntax builder"
-          "preview builder";
-        align-items: start;
-      }
-    }
-
-    @media (min-width: 2200px) {
-      .layout {
-        grid-template-columns: minmax(900px, 1.1fr) minmax(0, 1.9fr);
-        gap: 16px;
+        grid-template-columns: minmax(760px, 0.92fr) minmax(0, 1.08fr);
       }
 
       .left {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .panel-syntax { grid-area: syntax; }
+      .panel-diff { grid-area: diff; }
+      .panel-builder { grid-area: builder; }
+      .panel-preview { grid-area: preview; }
+
       .right {
-        grid-template-columns: minmax(470px, 1fr) minmax(900px, 1.7fr);
+        grid-template-columns: minmax(360px, 0.8fr) minmax(420px, 1fr);
+        grid-template-areas:
+          "syntax preview"
+          "diff preview"
+          "builder builder";
+        align-items: start;
+      }
+    }
+
+    @media (min-width: 2200px) {
+      .layout {
+        grid-template-columns: minmax(980px, 0.95fr) minmax(0, 1.25fr);
+        gap: 16px;
+      }
+
+      .right {
+        grid-template-columns: minmax(460px, 0.92fr) minmax(620px, 1.15fr);
         gap: 14px;
       }
 
@@ -676,6 +811,13 @@
     @media (max-width: 900px) {
       .flow-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .selection-guide-grid,
+      .info-grid,
+      .glossary-grid,
+      .export-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -726,6 +868,40 @@
         </div>
       </div>
       <p id="flow-status" class="tiny"></p>
+    </section>
+
+    <section class="card">
+      <h2>Beginner Mode</h2>
+      <p class="step-hint">Enable this to get one numbered “do this now” instruction at a time, with a direct jump to the relevant control.</p>
+      <div class="inline">
+        <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+          <input id="beginner-mode-enabled" type="checkbox" /> Enable beginner mode
+        </label>
+        <button id="beginner-prev" type="button">Previous Step</button>
+        <button id="beginner-next" type="button">Complete &amp; Next</button>
+        <button id="beginner-jump" type="button">Jump To This Step</button>
+      </div>
+      <div id="beginner-mode-wrap" class="help-box beginner-mode-wrap hidden">
+        <div class="info-grid">
+          <div class="info-tile">
+            <div class="label">Current Step</div>
+            <div id="beginner-step-status">Step 1 of 6</div>
+          </div>
+          <div class="info-tile">
+            <div class="label">Completion Check</div>
+            <div id="beginner-step-done">Not checked yet.</div>
+          </div>
+        </div>
+        <div class="beginner-step-pills" id="beginner-step-list"></div>
+        <div class="row">
+          <label class="label">Do This Now</label>
+          <div id="beginner-prompt" class="selector-preview"></div>
+        </div>
+        <div class="row">
+          <label class="label">Why This Matters</label>
+          <div id="beginner-why" class="tiny"></div>
+        </div>
+      </div>
     </section>
 
     <div class="layout">
@@ -797,6 +973,89 @@
           </div>
 
           <div id="params" class="params"></div>
+          <div id="selection-guide" class="help-box selection-guide">
+            <div><strong>Current Selection Guide</strong></div>
+            <div class="selection-guide-grid">
+              <div class="selection-guide-block">
+                <div class="label">What It Does</div>
+                <div id="selection-guide-what">Choose an item to see a plain-language explanation.</div>
+              </div>
+              <div class="selection-guide-block">
+                <div class="label">How To Use It</div>
+                <div id="selection-guide-how">The guide updates live as you switch between attributes, properties, and functions.</div>
+              </div>
+              <div class="selection-guide-block">
+                <div class="label">Next Step</div>
+                <div id="selection-guide-next">Pick an item, adjust the values, then inspect the preview and syntax output.</div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="label">Concrete Example</label>
+              <pre id="selection-guide-example">No item selected yet.</pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Guided Recipes</h2>
+          <p class="step-hint">Load a ready-made lesson, study the result, then use it as a starting point for your own class.</p>
+          <div class="row">
+            <label class="label" for="recipe-select">Recipe</label>
+            <select id="recipe-select" title="Choose a beginner-friendly styling walkthrough."></select>
+          </div>
+          <div class="inline">
+            <button id="recipe-apply" type="button">Load Recipe</button>
+          </div>
+          <div class="help-box">
+            <div><strong id="recipe-title">Choose a recipe to begin.</strong></div>
+            <p id="recipe-summary" class="tiny">Each recipe loads a full working class into the builder and points you to the core concept behind it.</p>
+            <div class="info-grid">
+              <div class="info-tile">
+                <div class="label">Focus Concept</div>
+                <div id="recipe-focus">The main CSS idea this recipe is teaching.</div>
+              </div>
+              <div class="info-tile">
+                <div class="label">Preview Target</div>
+                <div id="recipe-target">The preview element this recipe will style.</div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="label">Recipe Steps</label>
+              <ol id="recipe-steps" class="recipe-steps"></ol>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Contextual Glossary</h2>
+          <p class="step-hint">Search a concept, read it in plain language, then jump to the matching control in the app.</p>
+          <div class="preset-bar">
+            <input id="glossary-search" placeholder="Search glossary..." title="Filter glossary terms by name or explanation." />
+            <select id="glossary-select" title="Choose a term to see its explanation."></select>
+          </div>
+          <div class="inline">
+            <button id="glossary-jump" type="button">Jump To Control</button>
+          </div>
+          <div class="help-box">
+            <div class="glossary-grid">
+              <div class="info-tile">
+                <div class="label">Definition</div>
+                <div id="glossary-definition">Choose a term to see a plain-language explanation.</div>
+              </div>
+              <div class="info-tile">
+                <div class="label">Where You Use It</div>
+                <div id="glossary-where">The related controls will be identified here.</div>
+              </div>
+              <div class="info-tile">
+                <div class="label">Example</div>
+                <div id="glossary-example">Examples appear here.</div>
+              </div>
+              <div class="info-tile">
+                <div class="label">Practical Tip</div>
+                <div id="glossary-tip">Tips help you avoid common mistakes.</div>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
 
@@ -814,6 +1073,25 @@
           </div>
           <div class="inline">
             <button id="syntax-add-current-rule" type="button">Send Live Rule To Builder</button>
+          </div>
+        </section>
+
+        <section class="card panel-diff">
+          <h2>6) Visual Diff Inspector</h2>
+          <p class="step-hint">Compares the active preview target before vs after styling and points to the declarations most likely causing the change.</p>
+          <div class="info-grid">
+            <div class="info-tile">
+              <div class="label">Active Preview Target</div>
+              <div id="diff-target-label">Card</div>
+            </div>
+            <div class="info-tile">
+              <div class="label">Detected Visual Changes</div>
+              <div id="diff-change-count">No changes detected yet.</div>
+            </div>
+          </div>
+          <div class="row">
+            <label class="label">Changed Rules</label>
+            <div id="diff-list" class="diff-list"></div>
           </div>
         </section>
 
@@ -1002,6 +1280,47 @@
           <div class="row">
             <label class="label">Generated Stylesheet</label>
             <pre id="builder-css"></pre>
+          </div>
+          <div id="export-wizard" class="help-box export-wizard">
+            <div><strong>Export Wizard</strong></div>
+            <p class="tiny">Turn the current class into something you can paste into Form.io immediately.</p>
+            <div class="builder-row">
+              <div class="row">
+                <label class="label" for="export-format">Export Format</label>
+                <select id="export-format" title="Choose how you want to export the current work.">
+                  <option value="class-css">Reusable Class + CSS</option>
+                  <option value="inline-style">Inline style=""</option>
+                  <option value="html-bundle">Self-Contained HTML Snippet</option>
+                </select>
+              </div>
+              <div class="row">
+                <label class="label" for="export-tag">Example Tag</label>
+                <select id="export-tag" title="Tag used in the example snippet.">
+                  <option value="div">div</option>
+                  <option value="button">button</option>
+                  <option value="input">input</option>
+                  <option value="img">img</option>
+                </select>
+              </div>
+            </div>
+            <div class="export-grid">
+              <div class="info-tile">
+                <div class="label">Form.io HTML Attributes Value</div>
+                <pre id="export-attributes"></pre>
+              </div>
+              <div class="info-tile">
+                <div class="label">How To Use This Export</div>
+                <div id="export-notes" class="tiny"></div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="label">Injection / Markup Snippet</label>
+              <pre id="export-snippet"></pre>
+            </div>
+            <div class="inline">
+              <button id="copy-export-attributes" type="button">Copy Attributes</button>
+              <button id="copy-export-snippet" type="button">Copy Export Snippet</button>
+            </div>
           </div>
           <p id="builder-status" class="tiny"></p>
         </section>
@@ -1253,9 +1572,40 @@ translateY()	translateY(<length|percentage>)
       const elItem = document.getElementById("item");
       const elTarget = document.getElementById("target");
       const elFlowStatus = document.getElementById("flow-status");
+      const elBeginnerModeEnabled = document.getElementById("beginner-mode-enabled");
+      const elBeginnerPrev = document.getElementById("beginner-prev");
+      const elBeginnerNext = document.getElementById("beginner-next");
+      const elBeginnerJump = document.getElementById("beginner-jump");
+      const elBeginnerModeWrap = document.getElementById("beginner-mode-wrap");
+      const elBeginnerStepStatus = document.getElementById("beginner-step-status");
+      const elBeginnerStepDone = document.getElementById("beginner-step-done");
+      const elBeginnerStepList = document.getElementById("beginner-step-list");
+      const elBeginnerPrompt = document.getElementById("beginner-prompt");
+      const elBeginnerWhy = document.getElementById("beginner-why");
       const elTemplateSyntax = document.getElementById("template-syntax");
       const elLiveSyntax = document.getElementById("live-syntax");
+      const elDiffTargetLabel = document.getElementById("diff-target-label");
+      const elDiffChangeCount = document.getElementById("diff-change-count");
+      const elDiffList = document.getElementById("diff-list");
       const elParams = document.getElementById("params");
+      const elSelectionGuideWhat = document.getElementById("selection-guide-what");
+      const elSelectionGuideHow = document.getElementById("selection-guide-how");
+      const elSelectionGuideNext = document.getElementById("selection-guide-next");
+      const elSelectionGuideExample = document.getElementById("selection-guide-example");
+      const elRecipeSelect = document.getElementById("recipe-select");
+      const elRecipeApply = document.getElementById("recipe-apply");
+      const elRecipeTitle = document.getElementById("recipe-title");
+      const elRecipeSummary = document.getElementById("recipe-summary");
+      const elRecipeFocus = document.getElementById("recipe-focus");
+      const elRecipeTarget = document.getElementById("recipe-target");
+      const elRecipeSteps = document.getElementById("recipe-steps");
+      const elGlossarySearch = document.getElementById("glossary-search");
+      const elGlossarySelect = document.getElementById("glossary-select");
+      const elGlossaryJump = document.getElementById("glossary-jump");
+      const elGlossaryDefinition = document.getElementById("glossary-definition");
+      const elGlossaryWhere = document.getElementById("glossary-where");
+      const elGlossaryExample = document.getElementById("glossary-example");
+      const elGlossaryTip = document.getElementById("glossary-tip");
       const elFunctionPropertyWrap = document.getElementById("function-property-wrap");
       const elFunctionProperty = document.getElementById("function-property");
       const elFunctionHelpSyntax = document.getElementById("function-help-syntax");
@@ -1302,6 +1652,13 @@ translateY()	translateY(<length|percentage>)
       const elBuilderAutoApply = document.getElementById("builder-auto-apply");
       const elBuilderRules = document.getElementById("builder-rules");
       const elBuilderCSS = document.getElementById("builder-css");
+      const elExportFormat = document.getElementById("export-format");
+      const elExportTag = document.getElementById("export-tag");
+      const elExportAttributes = document.getElementById("export-attributes");
+      const elExportNotes = document.getElementById("export-notes");
+      const elExportSnippet = document.getElementById("export-snippet");
+      const elCopyExportAttributes = document.getElementById("copy-export-attributes");
+      const elCopyExportSnippet = document.getElementById("copy-export-snippet");
       const elCopyBuilderCSS = document.getElementById("copy-builder-css");
       const elClearBuilder = document.getElementById("clear-builder");
       const elBuilderStatus = document.getElementById("builder-status");
@@ -1345,6 +1702,19 @@ translateY()	translateY(<length|percentage>)
       const builderStyleTag = document.createElement("style");
       builderStyleTag.id = "builder-style";
       document.head.appendChild(builderStyleTag);
+      const styleProbeHost = document.createElement("div");
+      styleProbeHost.id = "style-probe-host";
+      styleProbeHost.setAttribute("aria-hidden", "true");
+      styleProbeHost.style.position = "fixed";
+      styleProbeHost.style.left = "-10000px";
+      styleProbeHost.style.top = "-10000px";
+      styleProbeHost.style.visibility = "hidden";
+      styleProbeHost.style.pointerEvents = "none";
+      styleProbeHost.style.width = "420px";
+      styleProbeHost.style.minHeight = "220px";
+      styleProbeHost.style.display = "grid";
+      styleProbeHost.style.gap = "8px";
+      document.body.appendChild(styleProbeHost);
 
       const functionPropertyDefaults = {
         "blur()": "filter",
@@ -1382,6 +1752,626 @@ translateY()	translateY(<length|percentage>)
       };
       const PRESET_STORAGE_KEY = "formio-az-css-playground-presets-v1";
       const LIBRARY_FAVORITES_KEY = "formio-az-css-playground-library-favorites-v1";
+      const GUIDED_RECIPES = [
+        {
+          id: "frosted-card",
+          name: "Make A Frosted Card",
+          summary: "Build a translucent glass card with blur, soft border, and soft elevation.",
+          focus: "backdrop-filter, transparency, and layered depth",
+          target: "card",
+          focusTerm: "backdrop-filter",
+          state: {
+            className: "recipe-frosted-card",
+            baseSelector: ".recipe-frosted-card",
+            variableScope: ".recipe-frosted-card",
+            autoApply: true,
+            target: "card",
+            category: "property",
+            item: "backdrop-filter",
+            rules: [
+              {
+                selector: ".recipe-frosted-card",
+                declarations: [
+                  "background: rgba(255, 255, 255, 0.34);",
+                  "backdrop-filter: blur(14px) saturate(140%);",
+                  "-webkit-backdrop-filter: blur(14px) saturate(140%);",
+                  "border: 1px solid rgba(255, 255, 255, 0.58);",
+                  "box-shadow: 0 18px 36px rgba(33, 58, 100, 0.18);",
+                  "color: #1d3967;"
+                ]
+              }
+            ],
+            variables: []
+          },
+          steps: [
+            "Load the recipe and keep the preview target on Card.",
+            "Inspect the generated class in the CSS Builder.",
+            "Notice that transparency alone is not enough. The blur comes from backdrop-filter.",
+            "Change the blur strength or background alpha to make the glass stronger or weaker."
+          ]
+        },
+        {
+          id: "hover-button",
+          name: "Build A Hover Button",
+          summary: "Create a reusable call-to-action button with hover motion and a transition.",
+          focus: "transition, hover states, and reusable button classes",
+          target: "button",
+          focusTerm: "pseudo-state",
+          state: {
+            className: "recipe-hover-button",
+            baseSelector: ".recipe-hover-button",
+            variableScope: ".recipe-hover-button",
+            autoApply: true,
+            target: "button",
+            category: "property",
+            item: "transition",
+            rules: [
+              {
+                selector: ".recipe-hover-button",
+                declarations: [
+                  "background: linear-gradient(125deg, #245fe6, #29b7ff);",
+                  "color: #ffffff;",
+                  "border: 1px solid rgba(255, 255, 255, 0.45);",
+                  "border-radius: 999px;",
+                  "padding: 10px 18px;",
+                  "font-weight: 700;",
+                  "box-shadow: 0 12px 26px rgba(32, 92, 203, 0.36);",
+                  "transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;"
+                ]
+              },
+              {
+                selector: ".recipe-hover-button:hover",
+                declarations: [
+                  "transform: translateY(-2px);",
+                  "filter: brightness(1.06);",
+                  "box-shadow: 0 16px 30px rgba(32, 92, 203, 0.42);"
+                ]
+              }
+            ],
+            variables: []
+          },
+          steps: [
+            "Load the recipe and switch the preview to After mode if needed.",
+            "Hover the Button preview to see the second rule activate.",
+            "Compare the base selector and the :hover selector in the rule stack.",
+            "Change the transition duration to control how fast the hover animation feels."
+          ]
+        },
+        {
+          id: "fixed-background",
+          name: "Create A Fixed Background",
+          summary: "Turn an image into a full-screen fixed background layer behind your form content.",
+          focus: "positioning, viewport sizing, and negative z-index",
+          target: "image",
+          focusTerm: "z-index",
+          state: {
+            className: "recipe-fixed-background",
+            baseSelector: ".recipe-fixed-background",
+            variableScope: ".recipe-fixed-background",
+            autoApply: true,
+            target: "image",
+            category: "property",
+            item: "position",
+            rules: [
+              {
+                selector: ".recipe-fixed-background",
+                declarations: [
+                  "position: fixed;",
+                  "inset: 0;",
+                  "width: 100vw;",
+                  "height: 100vh;",
+                  "object-fit: cover;",
+                  "object-position: center;",
+                  "filter: brightness(0.72) saturate(1.08);",
+                  "z-index: -1;",
+                  "pointer-events: none;"
+                ]
+              }
+            ],
+            variables: []
+          },
+          steps: [
+            "Load the recipe and watch the Image preview fill the available panel area.",
+            "Study how width and height use viewport units.",
+            "Notice that z-index moves the image behind normal content.",
+            "Use this pattern when a Form.io page needs a branded or atmospheric background."
+          ]
+        },
+        {
+          id: "overlap-stack",
+          name: "Layer Overlapping Elements",
+          summary: "Use parent and child selectors to reorder stacked layers with z-index and transforms.",
+          focus: "child selectors, transforms, and z-index layering",
+          target: "overlap",
+          focusTerm: "selector-relation",
+          state: {
+            className: "recipe-overlap-stack",
+            baseSelector: ".recipe-overlap-stack",
+            variableScope: ".recipe-overlap-stack",
+            autoApply: true,
+            target: "overlap",
+            category: "property",
+            item: "z-index",
+            rules: [
+              {
+                selector: ".recipe-overlap-stack",
+                declarations: [
+                  "background: linear-gradient(140deg, #eef5ff, #dde9ff);",
+                  "border: 1px solid #bfd0f5;"
+                ]
+              },
+              {
+                selector: ".recipe-overlap-stack .back",
+                declarations: [
+                  "z-index: 4;",
+                  "transform: translate(20px, -12px) rotate(-7deg);",
+                  "background: rgba(255, 198, 223, 0.92);"
+                ]
+              },
+              {
+                selector: ".recipe-overlap-stack .mid",
+                declarations: [
+                  "z-index: 2;",
+                  "transform: translate(-10px, 16px) rotate(5deg);",
+                  "background: rgba(176, 227, 255, 0.94);"
+                ]
+              },
+              {
+                selector: ".recipe-overlap-stack .front",
+                declarations: [
+                  "z-index: 6;",
+                  "transform: translate(12px, 8px) rotate(2deg) scale(1.05);",
+                  "background: rgba(255, 235, 157, 0.96);"
+                ]
+              }
+            ],
+            variables: []
+          },
+          steps: [
+            "Load the recipe and use the Overlap preview target.",
+            "Look at the child selectors in the rule stack: .back, .mid, and .front.",
+            "Change the z-index numbers to see which layer moves on top.",
+            "Use this pattern for badges, floating labels, ribbons, and stacked decorative elements."
+          ]
+        },
+        {
+          id: "gradient-panel",
+          name: "Design A Gradient Panel",
+          summary: "Create a bold surface using layered gradients, bright text, and depth.",
+          focus: "linear-gradient, contrast, and surface styling",
+          target: "card",
+          focusTerm: "class-pack",
+          state: {
+            className: "recipe-gradient-panel",
+            baseSelector: ".recipe-gradient-panel",
+            variableScope: ".recipe-gradient-panel",
+            autoApply: true,
+            target: "card",
+            category: "function",
+            item: "linear-gradient()",
+            rules: [
+              {
+                selector: ".recipe-gradient-panel",
+                declarations: [
+                  "background: linear-gradient(130deg, #245fe6, #3db5ff 48%, #40d6a4);",
+                  "color: #f8fcff;",
+                  "border: 1px solid rgba(255, 255, 255, 0.38);",
+                  "box-shadow: 0 16px 38px rgba(28, 76, 164, 0.28);"
+                ]
+              }
+            ],
+            variables: []
+          },
+          steps: [
+            "Load the recipe and focus on how the gradient controls the entire mood of the card.",
+            "Open Step 1 and inspect the `linear-gradient()` item so you can see the function syntax directly.",
+            "Change the angle or the color stops to produce a different visual direction.",
+            "Use this pattern for headers, banners, CTAs, and feature tiles."
+          ]
+        },
+        {
+          id: "focus-input",
+          name: "Build A Friendly Focus Input",
+          summary: "Create an input with a calm base state and a strong accessible focus ring.",
+          focus: "focus state styling and input usability",
+          target: "input",
+          focusTerm: "pseudo-state",
+          state: {
+            className: "recipe-focus-input",
+            baseSelector: ".recipe-focus-input",
+            variableScope: ".recipe-focus-input",
+            autoApply: true,
+            target: "input",
+            category: "property",
+            item: "box-shadow",
+            rules: [
+              {
+                selector: ".recipe-focus-input",
+                declarations: [
+                  "background: #ffffff;",
+                  "border: 1px solid #bfd0f1;",
+                  "border-radius: 10px;",
+                  "color: #21406d;",
+                  "box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);"
+                ]
+              },
+              {
+                selector: ".recipe-focus-input:focus",
+                declarations: [
+                  "outline: none;",
+                  "border-color: #2c73e8;",
+                  "box-shadow: 0 0 0 4px rgba(44, 115, 232, 0.18);"
+                ]
+              }
+            ],
+            variables: []
+          },
+          steps: [
+            "Load the recipe and click into the Input preview to trigger the focus rule.",
+            "Compare the base selector with the `:focus` selector in the rule stack.",
+            "Increase or decrease the box-shadow spread to control how visible the focus halo becomes.",
+            "Use this pattern for fields that need strong usability and accessibility."
+          ]
+        },
+        {
+          id: "token-theme",
+          name: "Create A Token-Based Theme",
+          summary: "Learn how CSS variables let you recolor a component by changing only tokens.",
+          focus: "CSS variables and var() based theming",
+          target: "sandbox",
+          focusTerm: "variable-scope",
+          state: {
+            className: "recipe-token-theme",
+            baseSelector: ".recipe-token-theme",
+            variableScope: ".recipe-token-theme",
+            autoApply: true,
+            target: "sandbox",
+            category: "property",
+            item: "color",
+            rules: [
+              {
+                selector: ".recipe-token-theme",
+                declarations: [
+                  "background: var(--panel-bg);",
+                  "border: 1px solid var(--panel-border);",
+                  "color: var(--panel-text);",
+                  "box-shadow: var(--panel-shadow);"
+                ]
+              },
+              {
+                selector: ".recipe-token-theme .mini-btn",
+                declarations: [
+                  "background: var(--accent);",
+                  "color: #ffffff;",
+                  "border: 1px solid rgba(18, 59, 121, 0.24);"
+                ]
+              }
+            ],
+            variables: [
+              { scope: ".recipe-token-theme", name: "--panel-bg", value: "linear-gradient(120deg, #eef5ff, #dce8ff)" },
+              { scope: ".recipe-token-theme", name: "--panel-border", value: "#c8d9fb" },
+              { scope: ".recipe-token-theme", name: "--panel-text", value: "#1d3b66" },
+              { scope: ".recipe-token-theme", name: "--panel-shadow", value: "0 14px 28px rgba(38, 80, 156, 0.16)" },
+              { scope: ".recipe-token-theme", name: "--accent", value: "#2c73e8" }
+            ]
+          },
+          steps: [
+            "Load the recipe and inspect the Variables list in the builder.",
+            "Notice that the component rules use `var(...)` instead of hard-coded colors.",
+            "Change one variable value and see multiple parts of the preview update together.",
+            "Use this when you want one reusable class to support multiple branded color schemes."
+          ]
+        },
+        {
+          id: "responsive-card",
+          name: "Make A Responsive Compact Card",
+          summary: "Use a media layer so the same class adjusts itself on narrower screens.",
+          focus: "responsive rules and media layers",
+          target: "card",
+          focusTerm: "media-layer",
+          state: {
+            className: "recipe-responsive-card",
+            baseSelector: ".recipe-responsive-card",
+            variableScope: ".recipe-responsive-card",
+            autoApply: true,
+            target: "card",
+            category: "property",
+            item: "padding",
+            mediaLayer: "md-down",
+            rules: [
+              {
+                selector: ".recipe-responsive-card",
+                declarations: [
+                  "background: #ffffff;",
+                  "border: 1px solid #d9e3f8;",
+                  "border-radius: 16px;",
+                  "padding: 22px;",
+                  "box-shadow: 0 16px 34px rgba(34, 58, 106, 0.14);"
+                ]
+              },
+              {
+                selector: ".recipe-responsive-card",
+                media: "(max-width: 900px)",
+                declarations: [
+                  "padding: 12px;",
+                  "border-radius: 10px;"
+                ]
+              }
+            ],
+            variables: []
+          },
+          steps: [
+            "Load the recipe and inspect the Rule Stack carefully.",
+            "The first rule is the base desktop rule. The second rule sits inside an `@media (max-width: 900px)` block.",
+            "Change the mobile padding to understand how the compact version is generated.",
+            "Use media-layer recipes when the same component should adapt across different viewport sizes."
+          ]
+        },
+        {
+          id: "sibling-help-text",
+          name: "Style Siblings In Sequence",
+          summary: "Use sibling selectors to progressively change repeated child blocks.",
+          focus: "adjacent and repeated sibling patterns",
+          target: "sandbox",
+          focusTerm: "related-selector",
+          state: {
+            className: "recipe-sibling-sequence",
+            baseSelector: ".recipe-sibling-sequence",
+            variableScope: ".recipe-sibling-sequence",
+            autoApply: true,
+            target: "sandbox",
+            category: "property",
+            item: "background",
+            rules: [
+              {
+                selector: ".recipe-sibling-sequence .box",
+                declarations: [
+                  "background: #ffffff;",
+                  "border: 1px solid #d6e1f5;",
+                  "border-radius: 8px;"
+                ]
+              },
+              {
+                selector: ".recipe-sibling-sequence .box + .box",
+                declarations: [
+                  "background: #f3f7ff;",
+                  "transform: translateX(8px);"
+                ]
+              },
+              {
+                selector: ".recipe-sibling-sequence .box + .box + .box",
+                declarations: [
+                  "background: #e8f0ff;",
+                  "transform: translateX(16px);"
+                ]
+              }
+            ],
+            variables: []
+          },
+          steps: [
+            "Load the recipe and switch to the Sandbox preview target.",
+            "The first `.box` rule styles all sibling boxes. Each `+ .box` rule styles later siblings in the sequence.",
+            "Change the translate values to exaggerate or reduce the stepping effect.",
+            "Use this pattern for stacked messages, helper rows, timelines, and repeated list decorations."
+          ]
+        }
+      ];
+      const GUIDED_RECIPES_BY_ID = GUIDED_RECIPES.reduce(function (acc, recipe) {
+        acc[recipe.id] = recipe;
+        return acc;
+      }, {});
+      const GLOSSARY_TERMS = [
+        {
+          id: "base-selector",
+          name: "Base Selector",
+          definition: "The main CSS target your class starts from. It is the root element your rules are built around.",
+          where: "Used in the CSS Builder under Base Selector.",
+          example: ".my-form-theme",
+          tip: "Keep this stable. Most child, sibling, and pseudo rules should branch from this root.",
+          targetId: "builder-base-selector"
+        },
+        {
+          id: "selector-relation",
+          name: "Selector Relation",
+          definition: "The relationship between the base selector and another selector, such as descendant, child, or sibling.",
+          where: "Used in the legacy selector controls and represented visually in the Selector Graph Editor.",
+          example: ".card > .title or .field + .help-text",
+          tip: "Use child when the target must be a direct child. Use descendant when it can be nested deeper.",
+          targetId: "builder-combinator"
+        },
+        {
+          id: "related-selector",
+          name: "Related Selector",
+          definition: "The extra selector joined to your base selector through the selected relation.",
+          where: "Used next to Selector Relation in the CSS Builder.",
+          example: ".form-control, .box, button.primary",
+          tip: "This is how you target children, siblings, and nested elements without changing the base selector itself.",
+          targetId: "builder-relative-selector"
+        },
+        {
+          id: "pseudo-state",
+          name: "Pseudo / State",
+          definition: "A pseudo-class or pseudo-element added to the end of a selector to represent a state or virtual element.",
+          where: "Used in the CSS Builder and recipe examples like :hover and :focus.",
+          example: ":hover, :focus, ::before",
+          tip: "Use pseudo-classes for interaction states. Use pseudo-elements when you need generated decorative content.",
+          targetId: "builder-pseudo-selector"
+        },
+        {
+          id: "selector-override",
+          name: "Full Selector Override",
+          definition: "A complete selector that replaces the builder's composed selector entirely.",
+          where: "Used when the normal base + relation + pseudo composition is not enough.",
+          example: ".theme .row + .help-text",
+          tip: "Use this only when the built-in selector tools are too restrictive. Otherwise the graph editor is easier to maintain.",
+          targetId: "builder-selector-override"
+        },
+        {
+          id: "specificity",
+          name: "Specificity",
+          definition: "The priority score browsers use when multiple CSS rules target the same element.",
+          where: "Shown in the Specificity meter below the Selector Graph Editor.",
+          example: "IDs beat classes, and classes beat plain element names.",
+          tip: "Do not solve every conflict by increasing specificity. Prefer cleaner selectors first.",
+          targetId: "specificity-score"
+        },
+        {
+          id: "variable-scope",
+          name: "Variable Scope",
+          definition: "The selector block where your CSS variables are declared.",
+          where: "Used in Variable Scope Selector in the CSS Builder.",
+          example: ".my-theme { --brand: #245fe6; }",
+          tip: "Declare variables close to the component or wrapper that needs them. This makes reuse and overrides easier.",
+          targetId: "builder-variable-scope"
+        },
+        {
+          id: "media-layer",
+          name: "Media Layer",
+          definition: "A rule bucket that wraps declarations in an @media query so they only apply under certain conditions.",
+          where: "Used in Rule Media Layer before adding rules.",
+          example: "@media (max-width: 900px) { ... }",
+          tip: "Use this for responsiveness, motion preferences, and dark-scheme variants.",
+          targetId: "builder-media-layer"
+        },
+        {
+          id: "easing",
+          name: "Easing",
+          definition: "The speed curve used by transitions and animations, such as ease, linear, or ease-in-out.",
+          where: "Most often used in transition and animation related properties.",
+          example: "transition: transform 180ms ease-in-out;",
+          tip: "Use linear for constant speed. Use ease-in-out for softer motion that starts and ends gently.",
+          targetId: "item"
+        },
+        {
+          id: "auto-apply",
+          name: "Auto-Apply Class",
+          definition: "A preview helper that automatically attaches the current class name to the selected preview target.",
+          where: "Used as a checkbox inside the CSS Builder.",
+          example: "If checked, .my-class is added to the active preview target.",
+          tip: "Leave this on while designing. Turn it off only when you want to inspect raw inline style changes without class rules.",
+          targetId: "builder-auto-apply"
+        },
+        {
+          id: "class-pack",
+          name: "Class Pack",
+          definition: "A prebuilt set of CSS rules and variables that loads into the builder as a styled example.",
+          where: "Used in the Built-In Class Library.",
+          example: "Frosted Light, Fixed Fullscreen Cover, Signal Beacon Test",
+          tip: "Use packs to start quickly, then modify their rules instead of rebuilding from zero.",
+          targetId: "library-preset-select"
+        },
+        {
+          id: "backdrop-filter",
+          name: "backdrop-filter",
+          definition: "A CSS property that filters what is visually behind an element, not the element content itself.",
+          where: "Used in glass, frosted, and translucent panel styles.",
+          example: "backdrop-filter: blur(12px) saturate(130%);",
+          tip: "It works best when the element background is semi-transparent.",
+          targetId: "item"
+        },
+        {
+          id: "export-wizard",
+          name: "Export Wizard",
+          definition: "A helper that turns the current builder state into paste-ready attributes or snippets for Form.io.",
+          where: "Located below Generated Stylesheet in the CSS Builder.",
+          example: "class=\"my-theme\" or style=\"padding: 12px; color: #245fe6;\"",
+          tip: "Use Reusable Class + CSS for maintainable styling. Use inline style only for one-off cases.",
+          targetId: "export-format"
+        }
+      ];
+      const GLOSSARY_TERMS_BY_ID = GLOSSARY_TERMS.reduce(function (acc, term) {
+        acc[term.id] = term;
+        return acc;
+      }, {});
+      let glossaryVisibleTerms = GLOSSARY_TERMS.slice();
+      const TOKEN_OPTION_MAP = {
+        easing: ["ease", "ease-in", "ease-out", "ease-in-out", "linear", "step-start", "step-end"],
+        shape: ["circle", "ellipse"]
+      };
+      const VISUAL_DIFF_PROPERTIES = [
+        "display",
+        "position",
+        "inset",
+        "top",
+        "right",
+        "bottom",
+        "left",
+        "z-index",
+        "width",
+        "height",
+        "background-color",
+        "background-image",
+        "color",
+        "border-top-width",
+        "border-top-color",
+        "border-radius",
+        "box-shadow",
+        "filter",
+        "backdrop-filter",
+        "opacity",
+        "transform",
+        "padding-top",
+        "padding-right",
+        "padding-bottom",
+        "padding-left",
+        "margin-top",
+        "margin-right",
+        "margin-bottom",
+        "margin-left",
+        "font-size",
+        "font-weight",
+        "letter-spacing",
+        "text-transform",
+        "transition-property",
+        "transition-duration",
+        "transition-timing-function"
+      ];
+      const BEGINNER_STEPS = [
+        {
+          id: "select-item",
+          title: "Choose What You Want To Style",
+          prompt: "In Step 1, pick a Category, then choose an Item. Start with a CSS Property like background, color, or box-shadow if you want a visible result quickly.",
+          why: "Everything else in the tool depends on this. Until you choose an item, there is no syntax to generate and no parameter model to edit.",
+          targetId: "category"
+        },
+        {
+          id: "tweak-values",
+          title: "Adjust The Values",
+          prompt: "In Step 2, change the parameters and watch the active preview target update. If the input is a dropdown, pick one of the built-in valid values.",
+          why: "This is where you learn what the syntax actually does. The goal is to connect the words in the declaration with the visual outcome.",
+          targetId: "params"
+        },
+        {
+          id: "send-rule",
+          title: "Turn It Into Reusable CSS",
+          prompt: "Use “Send Live Rule To Builder” or “Add Current Rule” so your one-off preview change becomes a reusable declaration in the CSS Builder.",
+          why: "Reusable classes are easier to maintain than inline styles and are the safest long-term strategy for Form.io customization.",
+          targetId: "syntax-add-current-rule"
+        },
+        {
+          id: "refine-class",
+          title: "Name Your Class And Selector",
+          prompt: "Set a class name that describes the look you are building, then confirm the Base Selector matches it.",
+          why: "A clear class name makes the stylesheet easier to copy, reuse, and debug later inside Form.io.",
+          targetId: "builder-class"
+        },
+        {
+          id: "preview-check",
+          title: "Validate The Result",
+          prompt: "Use the Live Preview target selector and the Before/After toggle to confirm the styling is doing what you expect.",
+          why: "This catches visual mistakes before you copy anything into Form.io.",
+          targetId: "target"
+        },
+        {
+          id: "export",
+          title: "Export Something You Can Paste",
+          prompt: "Open the Export Wizard, choose the format you need, then copy the attribute value or the full snippet.",
+          why: "This converts the builder state into something directly usable in Form.io, so you do not have to assemble the final syntax manually.",
+          targetId: "export-format"
+        }
+      ];
+      let beginnerStepIndex = 0;
+      let beginnerExportCopied = false;
 
       function makeLibraryPreset(name, description, className, target, rules, variables, extras) {
         const base = "." + className;
@@ -1953,6 +2943,31 @@ translateY()	translateY(<length|percentage>)
         return "value";
       }
 
+      function optionsForToken(token, item) {
+        const raw = String(token || "").trim();
+        if (!raw) return null;
+        if (raw.indexOf("|") >= 0) {
+          return raw.split("|").map(function (part) { return part.trim(); }).filter(Boolean);
+        }
+        const t = raw.toLowerCase();
+        if (TOKEN_OPTION_MAP[t]) return TOKEN_OPTION_MAP[t].slice();
+        if (t === "property" && item && item.name === "transition-property") {
+          return ["all", "opacity", "transform", "box-shadow", "background-color", "color", "border-color"];
+        }
+        if (t === "count" && item && item.name === "repeat()") {
+          return ["1", "2", "3", "4", "6", "12"];
+        }
+        return null;
+      }
+
+      function paramForToken(token, item) {
+        const options = optionsForToken(token, item);
+        if (options && options.length > 0) {
+          return { key: token, label: token, type: "select", options: options, value: options[0] };
+        }
+        return { key: token, label: token, type: "text", value: defaultValueForToken(token) };
+      }
+
       function supportsCssColor(value) {
         try {
           return Boolean(value) && CSS && CSS.supports && CSS.supports("color", value);
@@ -2496,6 +3511,149 @@ translateY()	translateY(<length|percentage>)
         const before = previewMode === "before";
         elPreviewToggleState.textContent = before ? "Switch To After" : "Switch To Before";
         elPreviewStateText.textContent = before ? "Preview: Before" : "Preview: After";
+      }
+
+      function selectedRecipe() {
+        const id = (elRecipeSelect.value || "").trim();
+        if (!id) return null;
+        return GUIDED_RECIPES_BY_ID[id] || null;
+      }
+
+      function updateRecipeDetail() {
+        const recipe = selectedRecipe();
+        elRecipeSteps.innerHTML = "";
+        if (!recipe) {
+          elRecipeTitle.textContent = "Choose a recipe to begin.";
+          elRecipeSummary.textContent = "Each recipe loads a full working class into the builder and points you to the core concept behind it.";
+          elRecipeFocus.textContent = "The main CSS idea this recipe is teaching.";
+          elRecipeTarget.textContent = "The preview element this recipe will style.";
+          return;
+        }
+
+        elRecipeTitle.textContent = recipe.name;
+        elRecipeSummary.textContent = recipe.summary;
+        elRecipeFocus.textContent = recipe.focus;
+        elRecipeTarget.textContent = previewTargetLabel(recipe.target);
+        recipe.steps.forEach(function (step) {
+          const li = document.createElement("li");
+          li.textContent = step;
+          elRecipeSteps.appendChild(li);
+        });
+      }
+
+      function renderRecipeList() {
+        const prev = (elRecipeSelect.value || "").trim();
+        elRecipeSelect.innerHTML = "";
+        GUIDED_RECIPES.forEach(function (recipe) {
+          const opt = document.createElement("option");
+          opt.value = recipe.id;
+          opt.textContent = recipe.name;
+          elRecipeSelect.appendChild(opt);
+        });
+        if (GUIDED_RECIPES.some(function (recipe) { return recipe.id === prev; })) {
+          elRecipeSelect.value = prev;
+        } else if (GUIDED_RECIPES.length > 0) {
+          elRecipeSelect.selectedIndex = 0;
+        }
+        updateRecipeDetail();
+      }
+
+      function applyGuidedRecipe() {
+        const recipe = selectedRecipe();
+        if (!recipe) {
+          setBuilderStatus("No guided recipe selected.");
+          return;
+        }
+        stopPreviewTargetCycle(true);
+        applyBuilderState(recipe.state);
+        if (recipe.focusTerm && GLOSSARY_TERMS_BY_ID[recipe.focusTerm]) {
+          elGlossarySearch.value = "";
+          renderGlossaryTermList();
+          elGlossarySelect.value = recipe.focusTerm;
+          updateGlossaryDetail();
+        }
+        if (recipe.target) {
+          elTarget.value = recipe.target;
+        }
+        if (elExportFormat.value !== "class-css") {
+          elExportFormat.value = "class-css";
+        }
+        updateRecipeDetail();
+        updateExportWizard();
+        flashActivePreviewPanel();
+        setBuilderStatus("Loaded guided recipe: " + recipe.name + ".");
+      }
+
+      function filteredGlossaryTerms() {
+        const search = (elGlossarySearch.value || "").trim().toLowerCase();
+        return GLOSSARY_TERMS.filter(function (term) {
+          if (!search) return true;
+          const hay = (term.name + " " + term.definition + " " + term.where + " " + term.tip).toLowerCase();
+          return hay.indexOf(search) >= 0;
+        });
+      }
+
+      function selectedGlossaryTerm() {
+        const id = (elGlossarySelect.value || "").trim();
+        if (!id) return null;
+        return GLOSSARY_TERMS_BY_ID[id] || null;
+      }
+
+      function updateGlossaryDetail() {
+        const term = selectedGlossaryTerm();
+        if (!term) {
+          elGlossaryDefinition.textContent = "No glossary term selected.";
+          elGlossaryWhere.textContent = "Adjust the search or choose another term.";
+          elGlossaryExample.textContent = "No example available.";
+          elGlossaryTip.textContent = "No practical tip available.";
+          elGlossaryJump.disabled = true;
+          return;
+        }
+        elGlossaryDefinition.textContent = term.definition;
+        elGlossaryWhere.textContent = term.where;
+        elGlossaryExample.textContent = term.example;
+        elGlossaryTip.textContent = term.tip;
+        elGlossaryJump.disabled = !term.targetId;
+      }
+
+      function renderGlossaryTermList() {
+        const prev = (elGlossarySelect.value || "").trim();
+        const list = filteredGlossaryTerms();
+        glossaryVisibleTerms = list.slice();
+        elGlossarySelect.innerHTML = "";
+        if (list.length === 0) {
+          const opt = document.createElement("option");
+          opt.value = "";
+          opt.textContent = "No matching terms";
+          elGlossarySelect.appendChild(opt);
+          updateGlossaryDetail();
+          return;
+        }
+        list.forEach(function (term) {
+          const opt = document.createElement("option");
+          opt.value = term.id;
+          opt.textContent = term.name;
+          elGlossarySelect.appendChild(opt);
+        });
+        if (list.some(function (term) { return term.id === prev; })) {
+          elGlossarySelect.value = prev;
+        } else {
+          elGlossarySelect.selectedIndex = 0;
+        }
+        updateGlossaryDetail();
+      }
+
+      function jumpToGlossaryControl() {
+        const term = selectedGlossaryTerm();
+        if (!term || !term.targetId) return;
+        const target = document.getElementById(term.targetId);
+        if (!target) return;
+        if (typeof target.scrollIntoView === "function") {
+          target.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        if (typeof target.focus === "function") {
+          target.focus({ preventScroll: true });
+        }
       }
 
       function composeSelector() {
@@ -3090,6 +4248,7 @@ translateY()	translateY(<length|percentage>)
           ". Selector specificity: (" + spec.a + "," + spec.b + "," + spec.c + ")" +
           ". Preview mode: " + previewMode +
           ". Target cycle: " + (previewCycleTimer ? "on" : "off") + ".";
+        updateBeginnerModeUI();
       }
 
       function populateItems() {
@@ -3164,12 +4323,7 @@ translateY()	translateY(<length|percentage>)
           const placeholders = extractPlaceholders(valueSyntax);
           if (placeholders.length > 0) {
             placeholders.forEach(function (token) {
-              if (token.indexOf("|") >= 0) {
-                const options = token.split("|");
-                model.push({ key: token, label: token, type: "select", options: options, value: options[0] });
-              } else {
-                model.push({ key: token, label: token, type: "text", value: defaultValueForToken(token) });
-              }
+              model.push(paramForToken(token, item));
             });
             return model;
           }
@@ -3191,12 +4345,7 @@ translateY()	translateY(<length|percentage>)
           const placeholders = extractPlaceholders(valueSyntax);
           if (placeholders.length > 0) {
             placeholders.forEach(function (token) {
-              if (token.indexOf("|") >= 0) {
-                const options = token.split("|");
-                model.push({ key: token, label: token, type: "select", options: options, value: options[0] });
-              } else {
-                model.push({ key: token, label: token, type: "text", value: defaultValueForToken(token) });
-              }
+              model.push(paramForToken(token, item));
             });
             return model;
           }
@@ -3214,12 +4363,7 @@ translateY()	translateY(<length|percentage>)
         if (cat === "function") {
           const placeholders = extractPlaceholders(item.syntax);
           placeholders.forEach(function (token) {
-            if (token.indexOf("|") >= 0) {
-              const options = token.split("|");
-              model.push({ key: token, label: token, type: "select", options: options, value: options[0] });
-            } else {
-              model.push({ key: token, label: token, type: "text", value: defaultValueForToken(token) });
-            }
+            model.push(paramForToken(token, item));
           });
           if (model.length === 0) {
             model.push({ key: "value", label: "value", type: "text", value: item.syntax });
@@ -3247,11 +4391,8 @@ translateY()	translateY(<length|percentage>)
         if (placeholders.length > 0) {
           const map = {};
           placeholders.forEach(function (token) {
-            if (token.indexOf("|") >= 0) {
-              map[token] = token.split("|")[0];
-            } else {
-              map[token] = defaultValueForToken(token);
-            }
+            const options = optionsForToken(token, item);
+            map[token] = options && options.length > 0 ? options[0] : defaultValueForToken(token);
           });
           return replacePlaceholders(valueSyntax, map);
         }
@@ -3416,51 +4557,7 @@ translateY()	translateY(<length|percentage>)
 
       function resetPreview() {
         [previewCard, previewInput, previewButton, previewImage, previewOverlap, previewSandbox].forEach(function (el) {
-          const attrs = Array.from(el.attributes).map(function (a) { return a.name; });
-          attrs.forEach(function (name) {
-            if (
-              name === "id" ||
-              name === "class" ||
-              name === "type" ||
-              name === "placeholder" ||
-              name === "value" ||
-              name === "src" ||
-              name === "alt" ||
-              name === "data-base-class"
-            ) return;
-            el.removeAttribute(name);
-          });
-
-          const base = el.getAttribute("data-base-class") || "";
-          el.className = base;
-          if (el.id === "preview-button") {
-            el.type = "button";
-            el.textContent = "Preview Button";
-          }
-          if (el.id === "preview-card") {
-            el.textContent = "Preview Card";
-          }
-          if (el.id === "preview-input") {
-            el.placeholder = "Preview Input";
-            el.disabled = false;
-            el.readOnly = false;
-            el.required = false;
-          }
-          if (el.id === "preview-image") {
-            el.src = previewImageDefaultSrc;
-            el.alt = "Preview Image";
-          }
-          if (el.id === "preview-sandbox") {
-            // Preserve sandbox structure and just reset styling hooks.
-            el.querySelectorAll(".mini-btn").forEach(function (b) {
-              b.disabled = false;
-            });
-          }
-          if (el.id === "preview-overlap") {
-            // Layer nodes stay in place; only target-level styling is reset.
-          }
-          el.hidden = false;
-          el.style.cssText = "";
+          resetPreviewElement(el);
         });
       }
 
@@ -3590,6 +4687,410 @@ translateY()	translateY(<length|percentage>)
         elFunctionHelpSyntax.textContent = property + ": " + call + ";";
       }
 
+      function updateSelectionGuide(item) {
+        if (!item) {
+          elSelectionGuideWhat.textContent = "Choose an item to see a plain-language explanation.";
+          elSelectionGuideHow.textContent = "Start in Step 1, then use Step 2 to change values. The guide updates as you work.";
+          elSelectionGuideNext.textContent = "Pick an item, confirm which preview target is highlighted, then compare the Live Output with the visual result.";
+          elSelectionGuideExample.textContent = "No item selected yet.";
+          return;
+        }
+
+        const category = elCategory.value;
+        const liveExample = (elLiveSyntax.textContent || item.syntax || "").trim() || "No live output yet.";
+        const targetName = previewTargetLabel(elTarget.value);
+        const hasBuilderRule = Boolean(latestBuilderCandidate);
+
+        if (category === "attribute") {
+          if (item.name === "style") {
+            elSelectionGuideWhat.textContent = "The style attribute writes inline CSS directly on one HTML element. It affects only that element unless you copy the declarations into a reusable class.";
+            elSelectionGuideHow.textContent = "Use the Style Property Helper to assemble declarations such as color, padding, or box-shadow, then inject them into style=\"\".";
+            elSelectionGuideNext.textContent = "Use this for quick one-off changes. If you want reuse, send the generated declarations to the CSS Builder and attach a class instead.";
+          } else if (item.name === "class") {
+            elSelectionGuideWhat.textContent = "The class attribute assigns one or more class names. By itself it changes nothing visually until matching CSS rules exist.";
+            elSelectionGuideHow.textContent = "Type a class name, then create matching rules in Step 4. This is the preferred path for reusable Form.io styling.";
+            elSelectionGuideNext.textContent = "Attach the class in Form.io, then copy the generated stylesheet into your injection method.";
+          } else if (item.syntax.indexOf("=") < 0) {
+            elSelectionGuideWhat.textContent = "This is a boolean HTML attribute. It is either present or absent, without a text value.";
+            elSelectionGuideHow.textContent = "Toggle it on to add the attribute, or off to omit it. Examples include disabled, required, and hidden.";
+            elSelectionGuideNext.textContent = "Use boolean attributes when you want to change behavior or state, not just appearance.";
+          } else {
+            elSelectionGuideWhat.textContent = "This HTML attribute changes the element markup directly. It can affect behavior, accessibility, metadata, or styling hooks.";
+            elSelectionGuideHow.textContent = "Edit the value in Step 2, then copy the Live Output into a Form.io HTML component or HTML Attributes field.";
+            elSelectionGuideNext.textContent = "Use attributes for markup-level control. Use the CSS Builder when the goal is reusable visual styling.";
+          }
+        } else if (category === "property") {
+          elSelectionGuideWhat.textContent = "A CSS property controls one visual behavior such as color, spacing, layout, border, effect, or animation.";
+          elSelectionGuideHow.textContent = "Adjust the value, confirm the " + targetName + " preview changes, then capture the declaration as a reusable rule.";
+          elSelectionGuideNext.textContent = hasBuilderRule
+            ? "The current declaration can be sent to the CSS Builder now. That is usually better than leaving it as inline style."
+            : "After the preview looks correct, click Add Current Rule or Send Live Rule To Builder.";
+        } else {
+          const property = (elFunctionProperty.value || functionPropertyDefaults[item.name] || "filter").trim();
+          elSelectionGuideWhat.textContent = "A CSS function is only a value fragment on the right side, such as blur(6px), rotate(8deg), or linear-gradient(...).";
+          elSelectionGuideHow.textContent = "This tool places the function into the " + property + " property so the final result becomes a full declaration.";
+          elSelectionGuideNext.textContent = "Common pairings: filter with blur()/brightness(), transform with translate()/rotate()/scale(), and background-image with gradient functions.";
+        }
+
+        elSelectionGuideExample.textContent = liveExample;
+      }
+
+      function applyBuilderClassToElement(target) {
+        if (!target) return;
+        const className = sanitizeClassName(elBuilderClass.value);
+        if (!elBuilderAutoApply.checked) return;
+        if (!className) return;
+        target.classList.add(className);
+      }
+
+      function resetPreviewElement(el) {
+        if (!el) return;
+        const attrs = Array.from(el.attributes).map(function (a) { return a.name; });
+        attrs.forEach(function (name) {
+          if (
+            name === "id" ||
+            name === "class" ||
+            name === "type" ||
+            name === "placeholder" ||
+            name === "value" ||
+            name === "src" ||
+            name === "alt" ||
+            name === "data-base-class"
+          ) return;
+          el.removeAttribute(name);
+        });
+
+        const base = el.getAttribute("data-base-class") || "";
+        el.className = base;
+        if (el.id === "preview-button") {
+          el.type = "button";
+          el.textContent = "Preview Button";
+        }
+        if (el.id === "preview-card") {
+          el.textContent = "Preview Card";
+        }
+        if (el.id === "preview-input") {
+          el.placeholder = "Preview Input";
+          el.disabled = false;
+          el.readOnly = false;
+          el.required = false;
+        }
+        if (el.id === "preview-image") {
+          el.src = previewImageDefaultSrc;
+          el.alt = "Preview Image";
+        }
+        if (el.id === "preview-sandbox") {
+          el.querySelectorAll(".mini-btn").forEach(function (b) {
+            b.disabled = false;
+          });
+        }
+        el.hidden = false;
+        el.style.cssText = "";
+      }
+
+      function applyCurrentVisualStateToTarget(item, map, target, includeBuilderClass) {
+        if (!target) return;
+        if (item) {
+          if (elCategory.value === "attribute") {
+            buildAttributeOutput(item, map, target);
+          } else if (elCategory.value === "property") {
+            buildPropertyOutput(item, map, target);
+          } else {
+            buildFunctionOutput(item, map, target);
+          }
+        }
+        if (includeBuilderClass) {
+          applyBuilderClassToElement(target);
+        }
+      }
+
+      function matchingRuleSourcesForProperty(prop) {
+        const matches = [];
+        const propLow = String(prop || "").toLowerCase();
+
+        function record(label) {
+          if (matches.indexOf(label) < 0) matches.push(label);
+        }
+
+        function declarationMatches(decl) {
+          const text = String(decl || "").trim();
+          const idx = text.indexOf(":");
+          if (idx < 0) return false;
+          const declProp = text.slice(0, idx).trim().toLowerCase();
+          if (declProp === propLow) return true;
+          if (propLow.indexOf("background-") === 0 && declProp === "background") return true;
+          if (propLow.indexOf("border-") === 0 && declProp.indexOf("border") === 0) return true;
+          if (propLow.indexOf("padding-") === 0 && declProp === "padding") return true;
+          if (propLow.indexOf("margin-") === 0 && declProp === "margin") return true;
+          if (propLow.indexOf("transition-") === 0 && declProp === "transition") return true;
+          return false;
+        }
+
+        if (latestBuilderCandidate) {
+          const currentDecls = latestBuilderCandidate.kind === "multi"
+            ? (latestBuilderCandidate.rules || [])
+            : (latestBuilderCandidate.kind === "single" && latestBuilderCandidate.rule ? [latestBuilderCandidate.rule] : []);
+          currentDecls.forEach(function (decl) {
+            if (declarationMatches(decl)) {
+              record("Current live rule: " + ensureSemicolon(decl).trim());
+            }
+          });
+        }
+
+        builderRules.forEach(function (block) {
+          (block.declarations || []).forEach(function (decl) {
+            if (!declarationMatches(decl)) return;
+            let label = block.selector + " { " + ensureSemicolon(decl).trim() + " }";
+            if (block.media) {
+              label = "@media " + block.media + " { " + label + " }";
+            }
+            record(label);
+          });
+        });
+
+        return matches.slice(0, 4);
+      }
+
+      function captureStyleSnapshot(target) {
+        const computed = getComputedStyle(target);
+        const out = {};
+        VISUAL_DIFF_PROPERTIES.forEach(function (prop) {
+          out[prop] = computed.getPropertyValue(prop).trim();
+        });
+        return out;
+      }
+
+      function renderDiffInspector(changes) {
+        elDiffTargetLabel.textContent = previewTargetLabel(elTarget.value);
+        elDiffList.innerHTML = "";
+        if (!changes.length) {
+          elDiffChangeCount.textContent = "No visual differences detected between the baseline and the current preview.";
+          const empty = document.createElement("div");
+          empty.className = "tiny";
+          empty.textContent = "Try changing a property, loading a recipe, or switching Preview to After.";
+          elDiffList.appendChild(empty);
+          return;
+        }
+
+        elDiffChangeCount.textContent = changes.length + " property change" + (changes.length === 1 ? "" : "s") + " detected.";
+        changes.forEach(function (change) {
+          const item = document.createElement("div");
+          item.className = "diff-item";
+
+          const name = document.createElement("div");
+          name.className = "label";
+          name.textContent = change.property;
+          item.appendChild(name);
+
+          const values = document.createElement("div");
+          values.className = "diff-values";
+          values.textContent = "Before: " + change.before + "\nAfter: " + change.after;
+          item.appendChild(values);
+
+          const source = document.createElement("div");
+          source.className = "diff-source";
+          source.textContent = change.sources.length
+            ? "Likely source:\n" + change.sources.join("\n")
+            : "Likely source: browser default or a shorthand declaration not directly mapped.";
+          item.appendChild(source);
+
+          elDiffList.appendChild(item);
+        });
+      }
+
+      function updateDiffInspector(item, map) {
+        const target = targetElement();
+        if (!target) {
+          renderDiffInspector([]);
+          return;
+        }
+
+        const beforeProbe = target.cloneNode(true);
+        const afterProbe = target.cloneNode(true);
+        resetPreviewElement(beforeProbe);
+        resetPreviewElement(afterProbe);
+
+        if (!styleProbeHost) {
+          renderDiffInspector([]);
+          return;
+        }
+
+        styleProbeHost.innerHTML = "";
+        styleProbeHost.appendChild(beforeProbe);
+        styleProbeHost.appendChild(afterProbe);
+
+        const originalDisabled = builderStyleTag.disabled;
+
+        builderStyleTag.disabled = true;
+        const beforeSnapshot = captureStyleSnapshot(beforeProbe);
+
+        applyCurrentVisualStateToTarget(item, map || {}, afterProbe, true);
+        builderStyleTag.disabled = false;
+        const afterSnapshot = captureStyleSnapshot(afterProbe);
+
+        builderStyleTag.disabled = originalDisabled;
+        styleProbeHost.innerHTML = "";
+
+        const changes = [];
+        VISUAL_DIFF_PROPERTIES.forEach(function (prop) {
+          const beforeValue = beforeSnapshot[prop] || "(empty)";
+          const afterValue = afterSnapshot[prop] || "(empty)";
+          if (beforeValue === afterValue) return;
+          changes.push({
+            property: prop,
+            before: beforeValue,
+            after: afterValue,
+            sources: matchingRuleSourcesForProperty(prop)
+          });
+        });
+
+        renderDiffInspector(changes);
+      }
+
+      function isBeginnerStepComplete(stepId) {
+        if (stepId === "select-item") {
+          return Boolean(selectedItem());
+        }
+        if (stepId === "tweak-values") {
+          return activeParams.length > 0 && (elLiveSyntax.textContent || "").trim() && elLiveSyntax.textContent !== "No item selected.";
+        }
+        if (stepId === "send-rule") {
+          return builderRules.some(function (block) { return (block.declarations || []).length > 0; }) || builderVariables.length > 0;
+        }
+        if (stepId === "refine-class") {
+          return (elBuilderClass.value || "").trim() !== "my-custom-class" || (elBuilderBaseSelector.value || "").trim() !== ".my-custom-class";
+        }
+        if (stepId === "preview-check") {
+          return previewMode === "after";
+        }
+        if (stepId === "export") {
+          return beginnerExportCopied;
+        }
+        return false;
+      }
+
+      function updateBeginnerModeUI() {
+        const enabled = Boolean(elBeginnerModeEnabled.checked);
+        elBeginnerModeWrap.classList.toggle("hidden", !enabled);
+        elBeginnerPrev.disabled = !enabled || beginnerStepIndex <= 0;
+        elBeginnerNext.disabled = !enabled || beginnerStepIndex >= BEGINNER_STEPS.length - 1;
+        if (!enabled) {
+          return;
+        }
+
+        if (beginnerStepIndex < 0) beginnerStepIndex = 0;
+        if (beginnerStepIndex >= BEGINNER_STEPS.length) beginnerStepIndex = BEGINNER_STEPS.length - 1;
+
+        const step = BEGINNER_STEPS[beginnerStepIndex];
+        const done = isBeginnerStepComplete(step.id);
+        elBeginnerStepStatus.textContent = "Step " + (beginnerStepIndex + 1) + " of " + BEGINNER_STEPS.length + ": " + step.title;
+        elBeginnerStepDone.textContent = done ? "This step looks complete." : "This step is not complete yet.";
+        elBeginnerPrompt.textContent = step.prompt;
+        elBeginnerWhy.textContent = step.why;
+        elBeginnerJump.disabled = !step.targetId;
+        elBeginnerNext.textContent = beginnerStepIndex >= BEGINNER_STEPS.length - 1 ? "Final Step" : (done ? "Next Step" : "Complete & Next");
+
+        elBeginnerStepList.innerHTML = "";
+        BEGINNER_STEPS.forEach(function (entry, idx) {
+          const pill = document.createElement("div");
+          pill.className = "beginner-pill";
+          if (idx === beginnerStepIndex) pill.classList.add("beginner-pill-active");
+          if (isBeginnerStepComplete(entry.id)) pill.classList.add("beginner-pill-done");
+          pill.textContent = (idx + 1) + ". " + entry.title;
+          elBeginnerStepList.appendChild(pill);
+        });
+      }
+
+      function moveBeginnerStep(direction) {
+        const next = beginnerStepIndex + direction;
+        if (next < 0 || next >= BEGINNER_STEPS.length) return;
+        beginnerStepIndex = next;
+        updateBeginnerModeUI();
+      }
+
+      function jumpToCurrentBeginnerStep() {
+        if (!elBeginnerModeEnabled.checked) return;
+        const step = BEGINNER_STEPS[beginnerStepIndex];
+        if (!step || !step.targetId) return;
+        const target = document.getElementById(step.targetId);
+        if (!target) return;
+        if (typeof target.scrollIntoView === "function") {
+          target.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        if (typeof target.focus === "function") {
+          target.focus({ preventScroll: true });
+        }
+      }
+
+      function currentClassAttributeText() {
+        return 'class="' + sanitizeClassName(elBuilderClass.value) + '"';
+      }
+
+      function bestInlineDeclarationText() {
+        let declarations = [];
+        if (latestBuilderCandidate) {
+          if (latestBuilderCandidate.kind === "multi") {
+            declarations = (latestBuilderCandidate.rules || []).slice();
+          } else if (latestBuilderCandidate.kind === "single" && latestBuilderCandidate.rule) {
+            declarations = [latestBuilderCandidate.rule];
+          }
+        }
+        if (declarations.length === 0) {
+          const base = getBaseSelector();
+          const block = builderRules.find(function (entry) {
+            return !(entry.media || "").trim() && (entry.selector || "").trim() === base;
+          });
+          if (block && Array.isArray(block.declarations)) {
+            declarations = block.declarations.slice();
+          }
+        }
+        return declarations
+          .map(function (rule) { return ensureSemicolon(rule).trim(); })
+          .filter(Boolean)
+          .join(" ");
+      }
+
+      function buildExportMarkup(tag, attrText) {
+        const attrs = attrText ? " " + attrText : "";
+        if (tag === "button") return "<button" + attrs + ">Sample Button</button>";
+        if (tag === "input") return "<input" + attrs + " placeholder=\"Sample Input\" />";
+        if (tag === "img") return "<img" + attrs + " src=\"your-image-url-here\" alt=\"Sample Image\" />";
+        return "<div" + attrs + ">Sample Content</div>";
+      }
+
+      function updateExportWizard() {
+        const format = (elExportFormat.value || "class-css").trim();
+        const tag = (elExportTag.value || "div").trim();
+        const cssText = (elBuilderCSS.textContent || "").trim();
+        const classAttr = currentClassAttributeText();
+        const inlineDecl = bestInlineDeclarationText();
+        const inlineAttr = inlineDecl ? ('style="' + inlineDecl.replace(/"/g, "&quot;") + '"') : "";
+
+        let attrText = "";
+        let snippet = "";
+        let notes = "";
+
+        if (format === "inline-style") {
+          attrText = inlineAttr || 'style="color: #245fe6;"';
+          snippet = buildExportMarkup(tag, attrText);
+          notes = inlineDecl
+            ? "Best for one-off visual tweaks on a single element. Inline style does not support hover-only selectors, sibling selectors, or media queries."
+            : "No inline-ready declaration is available yet. Pick a CSS property/function or use HTML Attribute -> style to generate one.";
+        } else if (format === "html-bundle") {
+          attrText = classAttr;
+          snippet = "<style>\n" + (cssText || (getBaseSelector() + " {\n  \n}")) + "\n</style>\n" + buildExportMarkup(tag, classAttr);
+          notes = "Use this inside a Form.io HTML component when you want a portable self-contained snippet with both markup and CSS in one place.";
+        } else {
+          attrText = classAttr;
+          snippet = buildExportMarkup(tag, classAttr);
+          notes = "Recommended for reusable styling. Paste the class into Form.io HTML Attributes, then inject the Generated Stylesheet using your HTML component or supported attribute workflow.";
+        }
+
+        elExportAttributes.textContent = attrText;
+        elExportSnippet.textContent = snippet;
+        elExportNotes.textContent = notes;
+      }
+
       function renderBuilder() {
         updateSelectorPreview();
 
@@ -3597,6 +5098,7 @@ translateY()	translateY(<length|percentage>)
         elBuilderCSS.textContent = css;
         builderStyleTag.textContent = css;
         builderStyleTag.disabled = previewMode === "before";
+        updateExportWizard();
 
         elBuilderVars.innerHTML = "";
         if (builderVariables.length === 0) {
@@ -3662,11 +5164,7 @@ translateY()	translateY(<length|percentage>)
       }
 
       function applyBuilderClassToTarget() {
-        const className = sanitizeClassName(elBuilderClass.value);
-        if (!elBuilderAutoApply.checked) return;
-        if (!className) return;
-        const target = targetElement();
-        target.classList.add(className);
+        applyBuilderClassToElement(targetElement());
       }
 
       function addRules(rules) {
@@ -3713,6 +5211,7 @@ translateY()	translateY(<length|percentage>)
           elLiveSyntax.textContent = "No item selected.";
           elParams.innerHTML = "";
           elStyleHelperWrap.classList.add("hidden");
+          updateSelectionGuide(null);
           updateLive();
           return;
         }
@@ -3743,9 +5242,12 @@ translateY()	translateY(<length|percentage>)
         updatePreviewFocus();
 
         if (!item) {
+          updateSelectionGuide(null);
           if (!beforeMode) {
             applyBuilderClassToTarget();
           }
+          updateExportWizard();
+          updateDiffInspector(null, {});
           updateFlowStatus();
           return;
         }
@@ -3766,6 +5268,9 @@ translateY()	translateY(<length|percentage>)
           } else {
             applyBuilderClassToTarget();
           }
+          updateSelectionGuide(item);
+          updateExportWizard();
+          updateDiffInspector(item, map);
           updateFlowStatus();
           return;
         }
@@ -3779,6 +5284,9 @@ translateY()	translateY(<length|percentage>)
           } else {
             applyBuilderClassToTarget();
           }
+          updateSelectionGuide(item);
+          updateExportWizard();
+          updateDiffInspector(item, map);
           updateFlowStatus();
           return;
         }
@@ -3792,6 +5300,9 @@ translateY()	translateY(<length|percentage>)
         } else {
           applyBuilderClassToTarget();
         }
+        updateSelectionGuide(item);
+        updateExportWizard();
+        updateDiffInspector(item, map);
         updateFlowStatus();
       }
 
@@ -3814,6 +5325,32 @@ translateY()	translateY(<length|percentage>)
         } catch (err) {
           elCopyBuilderCSS.textContent = "Copy Failed";
           setTimeout(function () { elCopyBuilderCSS.textContent = "Copy Builder CSS"; }, 1200);
+        }
+      }
+
+      async function copyExportAttributes() {
+        try {
+          await navigator.clipboard.writeText(elExportAttributes.textContent);
+          beginnerExportCopied = true;
+          updateBeginnerModeUI();
+          elCopyExportAttributes.textContent = "Copied";
+          setTimeout(function () { elCopyExportAttributes.textContent = "Copy Attributes"; }, 1200);
+        } catch (err) {
+          elCopyExportAttributes.textContent = "Copy Failed";
+          setTimeout(function () { elCopyExportAttributes.textContent = "Copy Attributes"; }, 1200);
+        }
+      }
+
+      async function copyExportSnippet() {
+        try {
+          await navigator.clipboard.writeText(elExportSnippet.textContent);
+          beginnerExportCopied = true;
+          updateBeginnerModeUI();
+          elCopyExportSnippet.textContent = "Copied";
+          setTimeout(function () { elCopyExportSnippet.textContent = "Copy Export Snippet"; }, 1200);
+        } catch (err) {
+          elCopyExportSnippet.textContent = "Copy Failed";
+          setTimeout(function () { elCopyExportSnippet.textContent = "Copy Export Snippet"; }, 1200);
         }
       }
 
@@ -3868,12 +5405,30 @@ translateY()	translateY(<length|percentage>)
           appendStyleDeclaration();
         }
       });
+      elBeginnerModeEnabled.addEventListener("change", function () {
+        if (elBeginnerModeEnabled.checked) {
+          beginnerStepIndex = 0;
+        }
+        updateBeginnerModeUI();
+      });
+      elBeginnerPrev.addEventListener("click", function () { moveBeginnerStep(-1); });
+      elBeginnerNext.addEventListener("click", function () { moveBeginnerStep(1); });
+      elBeginnerJump.addEventListener("click", jumpToCurrentBeginnerStep);
+      elRecipeSelect.addEventListener("change", updateRecipeDetail);
+      elRecipeApply.addEventListener("click", applyGuidedRecipe);
+      elGlossarySearch.addEventListener("input", renderGlossaryTermList);
+      elGlossarySelect.addEventListener("change", updateGlossaryDetail);
+      elGlossaryJump.addEventListener("click", jumpToGlossaryControl);
       elResetValues.addEventListener("click", resetValues);
       elCopySyntax.addEventListener("click", copyLiveSyntax);
       elSyntaxAddCurrentRule.addEventListener("click", addCurrentRuleToBuilder);
       elAddCurrentRule.addEventListener("click", addCurrentRuleToBuilder);
       elAddCustomRule.addEventListener("click", addCustomRuleToBuilder);
       elCopyBuilderCSS.addEventListener("click", copyBuilderCSS);
+      elExportFormat.addEventListener("change", updateExportWizard);
+      elExportTag.addEventListener("change", updateExportWizard);
+      elCopyExportAttributes.addEventListener("click", copyExportAttributes);
+      elCopyExportSnippet.addEventListener("click", copyExportSnippet);
       elClearBuilder.addEventListener("click", clearBuilder);
       elAddVariable.addEventListener("click", addVariable);
       elSelectorGraphEnabled.addEventListener("change", function () {
@@ -3983,12 +5538,16 @@ translateY()	translateY(<length|percentage>)
       updatePreviewModeUI();
       updatePreviewCycleUI();
       updateBuilderMediaControlVisibility();
+      renderRecipeList();
+      renderGlossaryTermList();
       renderLibraryCategoryList();
       renderLibraryPresetList();
       renderPresetList();
       renderBuilder();
       populateItems();
+      updateExportWizard();
       updateFlowStatus();
+      updateBeginnerModeUI();
       } catch (err) {
         const status = document.getElementById("builder-status");
         if (status) {
