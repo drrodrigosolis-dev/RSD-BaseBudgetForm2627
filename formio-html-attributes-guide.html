@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form.io HTML Attributes Quick Reference</title>
+  <style>
+    :root {
+      --bg: #f5f7fc;
+      --ink: #20263a;
+      --muted: #58607a;
+      --card: #ffffff;
+      --line: #d8dff1;
+      --code-bg: #0e1326;
+      --code-ink: #ecf2ff;
+      --accent: #1459c9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Noto Sans", Arial, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at top left, #ebf1ff, #f5f7fc 50%);
+      line-height: 1.45;
+    }
+
+    .page {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(140deg, #fcfdff, #eef4ff);
+      border: 1px solid #cfdbf5;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 1.65rem;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #2d3a5c;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .toc {
+      position: sticky;
+      top: 12px;
+      max-height: calc(100vh - 24px);
+      overflow: auto;
+    }
+
+    .toc h2,
+    h2,
+    h3 {
+      margin-top: 0;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .toc li {
+      margin: 8px 0;
+    }
+
+    .toc a {
+      color: #24345b;
+      text-decoration: none;
+      font-size: 0.93rem;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    p {
+      margin-top: 0;
+    }
+
+    pre {
+      margin: 10px 0;
+      padding: 11px;
+      border-radius: 10px;
+      overflow: auto;
+      background: var(--code-bg);
+      color: var(--code-ink);
+      border: 1px solid #283660;
+      font-size: 0.85rem;
+    }
+
+    code {
+      background: #edf2ff;
+      border-radius: 4px;
+      padding: 1px 4px;
+      color: #1b2d57;
+      font-family: Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.92rem;
+    }
+
+    th,
+    td {
+      border: 1px solid #d6deee;
+      text-align: left;
+      vertical-align: top;
+      padding: 8px;
+    }
+
+    th {
+      background: #f3f7ff;
+      font-weight: 700;
+    }
+
+    .ok,
+    .warn,
+    .limit {
+      border-left: 4px solid;
+      border-radius: 8px;
+      padding: 9px 11px;
+      margin: 10px 0;
+      font-size: 0.92rem;
+    }
+
+    .ok {
+      border-color: #1f8f54;
+      background: #edf9f1;
+      color: #124a2b;
+    }
+
+    .warn {
+      border-color: #cc6c10;
+      background: #fff5e9;
+      color: #6d3406;
+    }
+
+    .limit {
+      border-color: #cb2344;
+      background: #fff1f4;
+      color: #7c1327;
+    }
+
+    .demo {
+      border: 1px solid #d2dcf0;
+      background: linear-gradient(180deg, #fbfdff, #f2f6ff);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e8efff;
+      color: #204485;
+      border: 1px solid #c2d3fa;
+      font-size: 0.78rem;
+      margin-right: 5px;
+    }
+
+    .kbd {
+      display: inline-block;
+      border: 1px solid #cad4eb;
+      background: #f5f8ff;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-family: Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.78rem;
+      color: #27407a;
+    }
+
+    .section-footer {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    .atomic-attr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .atomic-attr-card {
+      border: 1px solid #d2dcef;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px;
+      min-height: 130px;
+    }
+
+    .atomic-attr-card h4 {
+      margin: 0 0 7px;
+      font-size: 0.86rem;
+      color: #253a66;
+    }
+
+    .atomic-attr-preview {
+      border: 1px solid #cad7f0;
+      border-radius: 8px;
+      background: #f8fbff;
+      min-height: 72px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.81rem;
+      color: #294273;
+      overflow: hidden;
+    }
+
+    .attr-glass-backdrop {
+      min-height: 86px;
+      border: 1px solid #c8d6f2;
+      border-radius: 10px;
+      padding: 12px;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(31, 102, 201, 0.22), transparent 38%),
+        radial-gradient(circle at 80% 76%, rgba(21, 179, 142, 0.22), transparent 42%),
+        linear-gradient(120deg, #f4f7ff, #e7efff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .attr-glass-panel {
+      border: 1px solid rgba(255, 255, 255, 0.56);
+      border-radius: 10px;
+      padding: 8px 11px;
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(8px) saturate(130%);
+      -webkit-backdrop-filter: blur(8px) saturate(130%);
+      font-size: 0.79rem;
+      color: #1d3466;
+    }
+
+    .attr-anim-box {
+      border-radius: 8px;
+      border: 1px solid #bbcef3;
+      background: #e6efff;
+      width: 68px;
+      height: 40px;
+      margin: 6px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2a4478;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .attr-fade { animation: attrFade 1.2s ease-in-out infinite alternate; }
+    .attr-slide { animation: attrSlide 1.1s ease-in-out infinite alternate; }
+    .attr-pulse { animation: attrPulse 1.2s ease-in-out infinite; }
+    .attr-glow { animation: attrGlow 1.3s ease-in-out infinite alternate; }
+    .attr-spin { animation: attrSpin 1.8s linear infinite; }
+    .attr-shake { animation: attrShake 1.4s ease-in-out infinite; }
+    .attr-float { animation: attrFloat 1.4s ease-in-out infinite alternate; }
+    .attr-gradient {
+      animation: attrGradientShift 2.4s ease infinite;
+      background: linear-gradient(120deg, #b8d3ff, #d5c0ff, #a9ead6, #b8d3ff);
+      background-size: 240% 240%;
+    }
+
+    @keyframes attrFade {
+      from { opacity: 0.35; }
+      to { opacity: 1; }
+    }
+
+    @keyframes attrSlide {
+      from { transform: translateY(7px); opacity: 0.58; }
+      to { transform: translateY(-2px); opacity: 1; }
+    }
+
+    @keyframes attrPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    @keyframes attrGlow {
+      from { box-shadow: 0 0 0 rgba(29, 92, 191, 0); }
+      to { box-shadow: 0 0 16px rgba(29, 92, 191, 0.54); }
+    }
+
+    @keyframes attrSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes attrShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-2px); }
+      40% { transform: translateX(2px); }
+      60% { transform: translateX(-2px); }
+      80% { transform: translateX(2px); }
+    }
+
+    @keyframes attrFloat {
+      from { transform: translateY(0); }
+      to { transform: translateY(-5px); }
+    }
+
+    @keyframes attrGradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+        max-height: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <h1>Form.io HTML Attributes Quick Reference (Comprehensive)</h1>
+      <p>
+        This guide covers what you can personalize using the <strong>HTML Attributes</strong> tab (and component class hooks)
+        when you do not have full app-level stylesheet access. It focuses on class/style/id/data/aria attributes, practical limits,
+        and concrete recipes for all major component families.
+      </p>
+    </section>
+
+    <div class="layout">
+      <aside class="card toc">
+        <h2>Contents</h2>
+        <ul>
+          <li><a href="#what">1) What This Approach Can Do</a></li>
+          <li><a href="#attribute-types">2) Attribute Types And Their Roles</a></li>
+          <li><a href="#atomic-attributes">3) Atomic Attribute Reference</a></li>
+          <li><a href="#patterns">4) Core Pattern Library</a></li>
+          <li><a href="#component-recipes">5) Component Recipes (All Major Types)</a></li>
+          <li><a href="#advanced">6) Advanced Patterns (IDs, Data Hooks, ARIA)</a></li>
+          <li><a href="#limits">7) Hard Limits + Workarounds</a></li>
+          <li><a href="#qa">8) QA Checklist</a></li>
+        </ul>
+      </aside>
+
+      <main>
+        <section id="what" class="card">
+          <h2>1) What This Approach Can Do</h2>
+          <p>
+            In Form.io, HTML Attributes are usually key/value pairs applied to rendered elements or wrappers. This gives strong control
+            over local presentation and metadata, even when global CSS editing is restricted.
+          </p>
+
+          <div class="ok">
+            Strong use cases: local spacing, borders, backgrounds, width behavior, per-component card styling, custom IDs, test hooks,
+            accessibility attributes, and integration tags for scripts.
+          </div>
+
+          <div class="limit">
+            Limits: inline styles cannot target pseudo-classes (<code>:hover</code>, <code>:focus</code>), sibling relationships,
+            or deeply nested descendants unless you can attach classes and style them elsewhere.
+          </div>
+
+          <div class="warn">
+            Best practice: use HTML Attributes to attach predictable classes/ids/data hooks, then style those hooks using the CSS-injection method
+            whenever possible for maintainability.
+          </div>
+        </section>
+
+        <section id="attribute-types" class="card">
+          <h2>2) Attribute Types And Their Roles</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Attribute</th>
+                <th>Typical Value</th>
+                <th>Why It Matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>class</code></td>
+                <td><code>section-card section-card--primary</code></td>
+                <td>Reusable design hooks; easiest way to connect with CSS-injection styles.</td>
+              </tr>
+              <tr>
+                <td><code>style</code></td>
+                <td><code>padding:12px;border:1px solid #ccd7ef;border-radius:10px;</code></td>
+                <td>Immediate local visual adjustments when no stylesheet control exists.</td>
+              </tr>
+              <tr>
+                <td><code>id</code></td>
+                <td><code>employeeContactBlock</code></td>
+                <td>Anchor links, test selectors, direct script targeting.</td>
+              </tr>
+              <tr>
+                <td><code>data-*</code></td>
+                <td><code>data-test="primary-email"</code></td>
+                <td>Automation/testing/integration metadata without visual impact.</td>
+              </tr>
+              <tr>
+                <td><code>aria-*</code></td>
+                <td><code>aria-describedby="email-help"</code></td>
+                <td>Accessibility context and assistive tech hints.</td>
+              </tr>
+              <tr>
+                <td><code>title</code></td>
+                <td><code>Use business email only</code></td>
+                <td>Tooltip hint in many browsers.</td>
+              </tr>
+              <tr>
+                <td><code>role</code></td>
+                <td><code>region</code></td>
+                <td>Semantic grouping for accessibility/navigation.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="atomic-attributes" class="card">
+          <h2>3) Atomic Attribute Reference (A-Z Dictionary)</h2>
+          <p>
+            This section is strictly disaggregated and alphabetized. Use it like a dictionary: one attribute/property at a time.
+          </p>
+
+          <h3>3.1 How To Write HTML Attributes Correctly</h3>
+          <pre><code>&lt;!-- One attribute --&gt;
+class="fio-card"
+
+&lt;!-- Multiple attributes --&gt;
+class="fio-card"
+id="employmentSection"
+data-test="employment-section"
+aria-label="Employment Section"
+
+&lt;!-- style attribute syntax: property:value; property:value; --&gt;
+style="background:#f8fbff; border:1px solid #cad6ef; border-radius:10px;"
+
+&lt;!-- Important: include semicolons between properties --&gt;
+style="display:flex; gap:8px; align-items:center;"</code></pre>
+
+          <h3>3.2 Non-Style Attribute Dictionary (Strict Alphabetical Order)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Attribute</th>
+                <th>Syntax Template</th>
+                <th>Atomic Example</th>
+                <th>What It Controls</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>aria-atomic</code></td><td><code>aria-atomic="true|false"</code></td><td><code>aria-atomic="true"</code></td><td>Whether live region announces full region</td></tr>
+              <tr><td><code>aria-busy</code></td><td><code>aria-busy="true|false"</code></td><td><code>aria-busy="true"</code></td><td>Loading/processing state hint</td></tr>
+              <tr><td><code>aria-controls</code></td><td><code>aria-controls="&lt;id&gt;"</code></td><td><code>aria-controls="panelA"</code></td><td>Indicates controlled element</td></tr>
+              <tr><td><code>aria-current</code></td><td><code>aria-current="page|step|true|false"</code></td><td><code>aria-current="step"</code></td><td>Current item in set/navigation</td></tr>
+              <tr><td><code>aria-describedby</code></td><td><code>aria-describedby="&lt;id-list&gt;"</code></td><td><code>aria-describedby="emailHelp"</code></td><td>Associates helper text</td></tr>
+              <tr><td><code>aria-disabled</code></td><td><code>aria-disabled="true|false"</code></td><td><code>aria-disabled="true"</code></td><td>Disabled state for assistive tech</td></tr>
+              <tr><td><code>aria-expanded</code></td><td><code>aria-expanded="true|false"</code></td><td><code>aria-expanded="false"</code></td><td>Expandable/collapsible state</td></tr>
+              <tr><td><code>aria-hidden</code></td><td><code>aria-hidden="true|false"</code></td><td><code>aria-hidden="true"</code></td><td>Hide from assistive tech</td></tr>
+              <tr><td><code>aria-label</code></td><td><code>aria-label="&lt;text&gt;"</code></td><td><code>aria-label="Business Email"</code></td><td>Explicit accessible name</td></tr>
+              <tr><td><code>aria-labelledby</code></td><td><code>aria-labelledby="&lt;id-list&gt;"</code></td><td><code>aria-labelledby="sectionTitle"</code></td><td>Uses another element as label</td></tr>
+              <tr><td><code>aria-live</code></td><td><code>aria-live="off|polite|assertive"</code></td><td><code>aria-live="polite"</code></td><td>Live update announcement level</td></tr>
+              <tr><td><code>aria-required</code></td><td><code>aria-required="true|false"</code></td><td><code>aria-required="true"</code></td><td>Required semantics hint</td></tr>
+              <tr><td><code>autocomplete</code></td><td><code>autocomplete="&lt;token&gt;"</code></td><td><code>autocomplete="email"</code></td><td>Browser autofill behavior</td></tr>
+              <tr><td><code>class</code></td><td><code>class="&lt;class-list&gt;"</code></td><td><code>class="fio-card fio-card--critical"</code></td><td>Reusable selector hooks</td></tr>
+              <tr><td><code>data-*</code></td><td><code>data-name="&lt;value&gt;"</code></td><td><code>data-test="employee-email"</code></td><td>Custom metadata/testing hooks</td></tr>
+              <tr><td><code>dir</code></td><td><code>dir="ltr|rtl|auto"</code></td><td><code>dir="ltr"</code></td><td>Text direction</td></tr>
+              <tr><td><code>hidden</code></td><td><code>hidden</code></td><td><code>hidden</code></td><td>Native hidden state</td></tr>
+              <tr><td><code>id</code></td><td><code>id="&lt;unique-id&gt;"</code></td><td><code>id="primaryEmailField"</code></td><td>Unique anchor/script target</td></tr>
+              <tr><td><code>inputmode</code></td><td><code>inputmode="text|numeric|decimal|tel|email|url|search"</code></td><td><code>inputmode="numeric"</code></td><td>Mobile keyboard hint</td></tr>
+              <tr><td><code>lang</code></td><td><code>lang="&lt;language-tag&gt;"</code></td><td><code>lang="en-US"</code></td><td>Language context</td></tr>
+              <tr><td><code>placeholder</code></td><td><code>placeholder="&lt;text&gt;"</code></td><td><code>placeholder="name@company.com"</code></td><td>Input hint text</td></tr>
+              <tr><td><code>role</code></td><td><code>role="&lt;role-name&gt;"</code></td><td><code>role="region"</code></td><td>Semantic role hint</td></tr>
+              <tr><td><code>style</code></td><td><code>style="property:value; ..."</code></td><td><code>style="padding:10px;"</code></td><td>Inline CSS declaration block</td></tr>
+              <tr><td><code>tabindex</code></td><td><code>tabindex="-1|0|1..."</code></td><td><code>tabindex="0"</code></td><td>Keyboard tab order</td></tr>
+              <tr><td><code>title</code></td><td><code>title="&lt;text&gt;"</code></td><td><code>title="Use corporate email"</code></td><td>Native tooltip text</td></tr>
+            </tbody>
+          </table>
+
+          <h3>3.3 Style Attribute Syntax For Surface And Effects</h3>
+          <pre><code>&lt;!-- Gradient --&gt;
+style="background-image:linear-gradient(120deg,#eef4ff,#d9e7ff);"
+style="background-image:radial-gradient(circle at 25% 30%,#dceaff,#fbfdff 60%);"
+
+&lt;!-- Blur/filter --&gt;
+style="filter:blur(1.2px);"
+style="filter:blur(1px) brightness(1.03) contrast(1.05);"
+
+&lt;!-- Box shadow --&gt;
+style="box-shadow:0 10px 22px 0 rgba(25,52,102,.18);"
+
+&lt;!-- Display --&gt;
+style="display:block;"
+style="display:flex; gap:8px; align-items:center;"
+style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"
+
+&lt;!-- Backdrop filter (needs translucent background) --&gt;
+style="background:rgba(255,255,255,.42); backdrop-filter:blur(8px) saturate(130%); -webkit-backdrop-filter:blur(8px) saturate(130%);"
+
+&lt;!-- Animation shorthand --&gt;
+style="animation:attrPulse 1.2s ease-in-out 0s infinite alternate both;"</code></pre>
+
+          <h3>3.4 Style Property Dictionary (Strict Alphabetical Order)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Single-Property Style Value</th>
+                <th>Atomic Example</th>
+                <th>What It Controls</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>accent-color</code></td><td><code>accent-color:&lt;color&gt;;</code></td><td><code>style="accent-color:#1b62c6;"</code></td><td>Native input accent color</td></tr>
+              <tr><td><code>align-content</code></td><td><code>align-content:&lt;value&gt;;</code></td><td><code>style="align-content:start;"</code></td><td>Multi-row flex/grid packing</td></tr>
+              <tr><td><code>align-items</code></td><td><code>align-items:&lt;value&gt;;</code></td><td><code>style="align-items:center;"</code></td><td>Cross-axis alignment</td></tr>
+              <tr><td><code>align-self</code></td><td><code>align-self:&lt;value&gt;;</code></td><td><code>style="align-self:stretch;"</code></td><td>Single-item alignment override</td></tr>
+              <tr><td><code>animation</code></td><td><code>animation:&lt;name&gt; &lt;duration&gt; ...;</code></td><td><code>style="animation:attrPulse 1.2s ease-in-out infinite;"</code></td><td>Animation shorthand</td></tr>
+              <tr><td><code>animation-delay</code></td><td><code>animation-delay:&lt;time&gt;;</code></td><td><code>style="animation-delay:.2s;"</code></td><td>Start delay</td></tr>
+              <tr><td><code>animation-direction</code></td><td><code>animation-direction:&lt;value&gt;;</code></td><td><code>style="animation-direction:alternate;"</code></td><td>Playback direction</td></tr>
+              <tr><td><code>animation-duration</code></td><td><code>animation-duration:&lt;time&gt;;</code></td><td><code>style="animation-duration:1.4s;"</code></td><td>Cycle length</td></tr>
+              <tr><td><code>animation-fill-mode</code></td><td><code>animation-fill-mode:&lt;value&gt;;</code></td><td><code>style="animation-fill-mode:both;"</code></td><td>Before/after keyframe state</td></tr>
+              <tr><td><code>animation-iteration-count</code></td><td><code>animation-iteration-count:&lt;number|infinite&gt;;</code></td><td><code>style="animation-iteration-count:infinite;"</code></td><td>Loop count</td></tr>
+              <tr><td><code>animation-name</code></td><td><code>animation-name:&lt;keyframes-name&gt;;</code></td><td><code>style="animation-name:attrGlow;"</code></td><td>Selected keyframes</td></tr>
+              <tr><td><code>animation-play-state</code></td><td><code>animation-play-state:running|paused;</code></td><td><code>style="animation-play-state:paused;"</code></td><td>Run/pause motion</td></tr>
+              <tr><td><code>animation-timing-function</code></td><td><code>animation-timing-function:&lt;easing&gt;;</code></td><td><code>style="animation-timing-function:ease-in-out;"</code></td><td>Motion pacing</td></tr>
+              <tr><td><code>backdrop-filter</code></td><td><code>backdrop-filter:&lt;filter-list&gt;;</code></td><td><code>style="backdrop-filter:blur(8px) saturate(130%);"</code></td><td>Glass blur on backdrop</td></tr>
+              <tr><td><code>background</code></td><td><code>background:&lt;shorthand&gt;;</code></td><td><code>style="background:#f8fbff;"</code></td><td>Background shorthand</td></tr>
+              <tr><td><code>background-attachment</code></td><td><code>background-attachment:scroll|fixed|local;</code></td><td><code>style="background-attachment:local;"</code></td><td>Background scroll behavior</td></tr>
+              <tr><td><code>background-clip</code></td><td><code>background-clip:border-box|padding-box|content-box;</code></td><td><code>style="background-clip:padding-box;"</code></td><td>Background paint area</td></tr>
+              <tr><td><code>background-color</code></td><td><code>background-color:&lt;color&gt;;</code></td><td><code>style="background-color:#f4f8ff;"</code></td><td>Solid fill color</td></tr>
+              <tr><td><code>background-image</code></td><td><code>background-image:&lt;image&gt;;</code></td><td><code>style="background-image:linear-gradient(120deg,#eef4ff,#d9e7ff);"</code></td><td>Gradient/image layer</td></tr>
+              <tr><td><code>background-origin</code></td><td><code>background-origin:border-box|padding-box|content-box;</code></td><td><code>style="background-origin:border-box;"</code></td><td>Background positioning area</td></tr>
+              <tr><td><code>background-position</code></td><td><code>background-position:&lt;x&gt; &lt;y&gt;;</code></td><td><code>style="background-position:center center;"</code></td><td>Background anchor</td></tr>
+              <tr><td><code>background-repeat</code></td><td><code>background-repeat:repeat|no-repeat|repeat-x|repeat-y;</code></td><td><code>style="background-repeat:no-repeat;"</code></td><td>Tiling behavior</td></tr>
+              <tr><td><code>background-size</code></td><td><code>background-size:auto|cover|contain|&lt;length&gt;;</code></td><td><code>style="background-size:cover;"</code></td><td>Background scaling</td></tr>
+              <tr><td><code>block-size</code></td><td><code>block-size:&lt;length|percentage&gt;;</code></td><td><code>style="block-size:44px;"</code></td><td>Logical height</td></tr>
+              <tr><td><code>border</code></td><td><code>border:&lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>style="border:1px solid #cad6ef;"</code></td><td>Border shorthand</td></tr>
+              <tr><td><code>border-bottom</code></td><td><code>border-bottom:&lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>style="border-bottom:2px solid #bfcdf0;"</code></td><td>Bottom edge border</td></tr>
+              <tr><td><code>border-bottom-left-radius</code></td><td><code>border-bottom-left-radius:&lt;radius&gt;;</code></td><td><code>style="border-bottom-left-radius:10px;"</code></td><td>Bottom-left corner round</td></tr>
+              <tr><td><code>border-bottom-right-radius</code></td><td><code>border-bottom-right-radius:&lt;radius&gt;;</code></td><td><code>style="border-bottom-right-radius:10px;"</code></td><td>Bottom-right corner round</td></tr>
+              <tr><td><code>border-color</code></td><td><code>border-color:&lt;color&gt;;</code></td><td><code>style="border-color:#c5d2ea;"</code></td><td>Border color all sides</td></tr>
+              <tr><td><code>border-left</code></td><td><code>border-left:&lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>style="border-left:3px solid #1f5fbd;"</code></td><td>Left border accent</td></tr>
+              <tr><td><code>border-radius</code></td><td><code>border-radius:&lt;radius&gt;;</code></td><td><code>style="border-radius:10px;"</code></td><td>Corner rounding</td></tr>
+              <tr><td><code>border-right</code></td><td><code>border-right:&lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>style="border-right:1px solid #cad6ef;"</code></td><td>Right edge border</td></tr>
+              <tr><td><code>border-style</code></td><td><code>border-style:solid|dashed|dotted|none;</code></td><td><code>style="border-style:dashed;"</code></td><td>Border line style</td></tr>
+              <tr><td><code>border-top</code></td><td><code>border-top:&lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>style="border-top:1px solid #cad6ef;"</code></td><td>Top edge border</td></tr>
+              <tr><td><code>border-top-left-radius</code></td><td><code>border-top-left-radius:&lt;radius&gt;;</code></td><td><code>style="border-top-left-radius:10px;"</code></td><td>Top-left corner round</td></tr>
+              <tr><td><code>border-top-right-radius</code></td><td><code>border-top-right-radius:&lt;radius&gt;;</code></td><td><code>style="border-top-right-radius:10px;"</code></td><td>Top-right corner round</td></tr>
+              <tr><td><code>border-width</code></td><td><code>border-width:&lt;length&gt;;</code></td><td><code>style="border-width:1px;"</code></td><td>Border thickness</td></tr>
+              <tr><td><code>bottom</code></td><td><code>bottom:&lt;length|percentage|auto&gt;;</code></td><td><code>style="bottom:0;"</code></td><td>Bottom offset (positioned)</td></tr>
+              <tr><td><code>box-shadow</code></td><td><code>box-shadow:&lt;x&gt; &lt;y&gt; &lt;blur&gt; &lt;spread&gt; &lt;color&gt;;</code></td><td><code>style="box-shadow:0 10px 22px 0 rgba(25,52,102,.18);"</code></td><td>Shadow/elevation</td></tr>
+              <tr><td><code>box-sizing</code></td><td><code>box-sizing:content-box|border-box;</code></td><td><code>style="box-sizing:border-box;"</code></td><td>Sizing calculation model</td></tr>
+              <tr><td><code>caret-color</code></td><td><code>caret-color:&lt;color&gt;;</code></td><td><code>style="caret-color:#1f5fbd;"</code></td><td>Caret (text cursor) color</td></tr>
+              <tr><td><code>clear</code></td><td><code>clear:none|left|right|both;</code></td><td><code>style="clear:both;"</code></td><td>Float clearing</td></tr>
+              <tr><td><code>color</code></td><td><code>color:&lt;color&gt;;</code></td><td><code>style="color:#1d2c52;"</code></td><td>Text color</td></tr>
+              <tr><td><code>column-gap</code></td><td><code>column-gap:&lt;length&gt;;</code></td><td><code>style="column-gap:12px;"</code></td><td>Column spacing</td></tr>
+              <tr><td><code>cursor</code></td><td><code>cursor:&lt;value&gt;;</code></td><td><code>style="cursor:pointer;"</code></td><td>Pointer style</td></tr>
+              <tr><td><code>direction</code></td><td><code>direction:ltr|rtl;</code></td><td><code>style="direction:ltr;"</code></td><td>Text direction</td></tr>
+              <tr><td><code>display</code></td><td><code>display:&lt;layout-mode&gt;;</code></td><td><code>style="display:flex;"</code></td><td>Formatting context</td></tr>
+              <tr><td><code>filter</code></td><td><code>filter:&lt;filter-list&gt;;</code></td><td><code>style="filter:blur(1.2px);"</code></td><td>Element-level visual FX</td></tr>
+              <tr><td><code>flex</code></td><td><code>flex:&lt;grow&gt; &lt;shrink&gt; &lt;basis&gt;;</code></td><td><code>style="flex:1 1 auto;"</code></td><td>Flex sizing shorthand</td></tr>
+              <tr><td><code>flex-basis</code></td><td><code>flex-basis:&lt;length|percentage|auto&gt;;</code></td><td><code>style="flex-basis:220px;"</code></td><td>Initial flex basis</td></tr>
+              <tr><td><code>flex-direction</code></td><td><code>flex-direction:row|column|row-reverse|column-reverse;</code></td><td><code>style="flex-direction:column;"</code></td><td>Main axis direction</td></tr>
+              <tr><td><code>flex-grow</code></td><td><code>flex-grow:&lt;number&gt;;</code></td><td><code>style="flex-grow:1;"</code></td><td>Growth factor</td></tr>
+              <tr><td><code>flex-shrink</code></td><td><code>flex-shrink:&lt;number&gt;;</code></td><td><code>style="flex-shrink:0;"</code></td><td>Shrink factor</td></tr>
+              <tr><td><code>flex-wrap</code></td><td><code>flex-wrap:nowrap|wrap|wrap-reverse;</code></td><td><code>style="flex-wrap:wrap;"</code></td><td>Wrap behavior</td></tr>
+              <tr><td><code>font-family</code></td><td><code>font-family:&lt;family-list&gt;;</code></td><td><code>style="font-family:'Segoe UI',Arial,sans-serif;"</code></td><td>Font stack</td></tr>
+              <tr><td><code>font-size</code></td><td><code>font-size:&lt;length|percentage&gt;;</code></td><td><code>style="font-size:.92rem;"</code></td><td>Type size</td></tr>
+              <tr><td><code>font-style</code></td><td><code>font-style:normal|italic|oblique;</code></td><td><code>style="font-style:italic;"</code></td><td>Italic/oblique style</td></tr>
+              <tr><td><code>font-weight</code></td><td><code>font-weight:&lt;value&gt;;</code></td><td><code>style="font-weight:600;"</code></td><td>Text thickness</td></tr>
+              <tr><td><code>gap</code></td><td><code>gap:&lt;row-gap&gt; &lt;column-gap&gt;;</code></td><td><code>style="gap:10px;"</code></td><td>Grid/flex spacing</td></tr>
+              <tr><td><code>grid-auto-flow</code></td><td><code>grid-auto-flow:row|column|dense;</code></td><td><code>style="grid-auto-flow:row;"</code></td><td>Auto-placement direction</td></tr>
+              <tr><td><code>grid-column</code></td><td><code>grid-column:&lt;start&gt; / &lt;end&gt;;</code></td><td><code>style="grid-column:1 / span 2;"</code></td><td>Column track placement</td></tr>
+              <tr><td><code>grid-row</code></td><td><code>grid-row:&lt;start&gt; / &lt;end&gt;;</code></td><td><code>style="grid-row:1 / span 1;"</code></td><td>Row track placement</td></tr>
+              <tr><td><code>grid-template-columns</code></td><td><code>grid-template-columns:&lt;track-list&gt;;</code></td><td><code>style="grid-template-columns:1fr 1fr;"</code></td><td>Grid column tracks</td></tr>
+              <tr><td><code>grid-template-rows</code></td><td><code>grid-template-rows:&lt;track-list&gt;;</code></td><td><code>style="grid-template-rows:auto auto;"</code></td><td>Grid row tracks</td></tr>
+              <tr><td><code>height</code></td><td><code>height:&lt;length|percentage|auto&gt;;</code></td><td><code>style="height:42px;"</code></td><td>Element height</td></tr>
+              <tr><td><code>inset</code></td><td><code>inset:&lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;;</code></td><td><code>style="inset:0;"</code></td><td>Offset shorthand</td></tr>
+              <tr><td><code>justify-content</code></td><td><code>justify-content:&lt;value&gt;;</code></td><td><code>style="justify-content:space-between;"</code></td><td>Main-axis distribution</td></tr>
+              <tr><td><code>left</code></td><td><code>left:&lt;length|percentage|auto&gt;;</code></td><td><code>style="left:0;"</code></td><td>Left offset (positioned)</td></tr>
+              <tr><td><code>letter-spacing</code></td><td><code>letter-spacing:&lt;length&gt;;</code></td><td><code>style="letter-spacing:.01em;"</code></td><td>Character spacing</td></tr>
+              <tr><td><code>line-height</code></td><td><code>line-height:&lt;number|length|percentage&gt;;</code></td><td><code>style="line-height:1.45;"</code></td><td>Line box height</td></tr>
+              <tr><td><code>margin</code></td><td><code>margin:&lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;;</code></td><td><code>style="margin:0 0 12px 0;"</code></td><td>Outer spacing shorthand</td></tr>
+              <tr><td><code>margin-bottom</code></td><td><code>margin-bottom:&lt;length|percentage|auto&gt;;</code></td><td><code>style="margin-bottom:12px;"</code></td><td>Bottom outer spacing</td></tr>
+              <tr><td><code>margin-left</code></td><td><code>margin-left:&lt;length|percentage|auto&gt;;</code></td><td><code>style="margin-left:8px;"</code></td><td>Left outer spacing</td></tr>
+              <tr><td><code>margin-right</code></td><td><code>margin-right:&lt;length|percentage|auto&gt;;</code></td><td><code>style="margin-right:8px;"</code></td><td>Right outer spacing</td></tr>
+              <tr><td><code>margin-top</code></td><td><code>margin-top:&lt;length|percentage|auto&gt;;</code></td><td><code>style="margin-top:8px;"</code></td><td>Top outer spacing</td></tr>
+              <tr><td><code>max-height</code></td><td><code>max-height:&lt;length|percentage|none&gt;;</code></td><td><code>style="max-height:320px;"</code></td><td>Height cap</td></tr>
+              <tr><td><code>max-width</code></td><td><code>max-width:&lt;length|percentage|none&gt;;</code></td><td><code>style="max-width:360px;"</code></td><td>Width cap</td></tr>
+              <tr><td><code>min-height</code></td><td><code>min-height:&lt;length|percentage&gt;;</code></td><td><code>style="min-height:40px;"</code></td><td>Minimum height</td></tr>
+              <tr><td><code>min-width</code></td><td><code>min-width:&lt;length|percentage&gt;;</code></td><td><code>style="min-width:180px;"</code></td><td>Minimum width</td></tr>
+              <tr><td><code>opacity</code></td><td><code>opacity:&lt;number&gt;;</code></td><td><code>style="opacity:.82;"</code></td><td>Transparency</td></tr>
+              <tr><td><code>outline</code></td><td><code>outline:&lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>style="outline:2px solid #1f5fbd;"</code></td><td>Outline/focus stroke</td></tr>
+              <tr><td><code>outline-offset</code></td><td><code>outline-offset:&lt;length&gt;;</code></td><td><code>style="outline-offset:2px;"</code></td><td>Outline spacing from edge</td></tr>
+              <tr><td><code>overflow</code></td><td><code>overflow:visible|hidden|auto|scroll;</code></td><td><code>style="overflow:auto;"</code></td><td>Overall overflow behavior</td></tr>
+              <tr><td><code>overflow-x</code></td><td><code>overflow-x:visible|hidden|auto|scroll;</code></td><td><code>style="overflow-x:auto;"</code></td><td>Horizontal overflow</td></tr>
+              <tr><td><code>overflow-y</code></td><td><code>overflow-y:visible|hidden|auto|scroll;</code></td><td><code>style="overflow-y:auto;"</code></td><td>Vertical overflow</td></tr>
+              <tr><td><code>padding</code></td><td><code>padding:&lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;;</code></td><td><code>style="padding:10px 12px;"</code></td><td>Inner spacing shorthand</td></tr>
+              <tr><td><code>padding-bottom</code></td><td><code>padding-bottom:&lt;length|percentage&gt;;</code></td><td><code>style="padding-bottom:10px;"</code></td><td>Bottom inner spacing</td></tr>
+              <tr><td><code>padding-left</code></td><td><code>padding-left:&lt;length|percentage&gt;;</code></td><td><code>style="padding-left:12px;"</code></td><td>Left inner spacing</td></tr>
+              <tr><td><code>padding-right</code></td><td><code>padding-right:&lt;length|percentage&gt;;</code></td><td><code>style="padding-right:12px;"</code></td><td>Right inner spacing</td></tr>
+              <tr><td><code>padding-top</code></td><td><code>padding-top:&lt;length|percentage&gt;;</code></td><td><code>style="padding-top:10px;"</code></td><td>Top inner spacing</td></tr>
+              <tr><td><code>perspective</code></td><td><code>perspective:&lt;length|none&gt;;</code></td><td><code>style="perspective:900px;"</code></td><td>3D perspective depth</td></tr>
+              <tr><td><code>pointer-events</code></td><td><code>pointer-events:auto|none;</code></td><td><code>style="pointer-events:none;"</code></td><td>Pointer interaction control</td></tr>
+              <tr><td><code>position</code></td><td><code>position:static|relative|absolute|fixed|sticky;</code></td><td><code>style="position:relative;"</code></td><td>Positioning mode</td></tr>
+              <tr><td><code>right</code></td><td><code>right:&lt;length|percentage|auto&gt;;</code></td><td><code>style="right:0;"</code></td><td>Right offset (positioned)</td></tr>
+              <tr><td><code>row-gap</code></td><td><code>row-gap:&lt;length&gt;;</code></td><td><code>style="row-gap:10px;"</code></td><td>Vertical grid/flex gap</td></tr>
+              <tr><td><code>text-align</code></td><td><code>text-align:left|center|right|justify;</code></td><td><code>style="text-align:left;"</code></td><td>Inline alignment</td></tr>
+              <tr><td><code>text-overflow</code></td><td><code>text-overflow:clip|ellipsis;</code></td><td><code>style="text-overflow:ellipsis;"</code></td><td>Overflowed text marker</td></tr>
+              <tr><td><code>text-transform</code></td><td><code>text-transform:none|uppercase|lowercase|capitalize;</code></td><td><code>style="text-transform:none;"</code></td><td>Case transformation</td></tr>
+              <tr><td><code>top</code></td><td><code>top:&lt;length|percentage|auto&gt;;</code></td><td><code>style="top:0;"</code></td><td>Top offset (positioned)</td></tr>
+              <tr><td><code>transform</code></td><td><code>transform:&lt;transform-list&gt;;</code></td><td><code>style="transform:translateY(-2px);"</code></td><td>2D/3D transform</td></tr>
+              <tr><td><code>transform-origin</code></td><td><code>transform-origin:&lt;x&gt; &lt;y&gt; [&lt;z&gt;];</code></td><td><code>style="transform-origin:center center;"</code></td><td>Transform pivot point</td></tr>
+              <tr><td><code>transition</code></td><td><code>transition:&lt;property&gt; &lt;duration&gt; &lt;easing&gt; &lt;delay&gt;;</code></td><td><code>style="transition:all 180ms ease;"</code></td><td>Transition shorthand</td></tr>
+              <tr><td><code>transition-delay</code></td><td><code>transition-delay:&lt;time&gt;;</code></td><td><code>style="transition-delay:50ms;"</code></td><td>Transition delay</td></tr>
+              <tr><td><code>transition-duration</code></td><td><code>transition-duration:&lt;time&gt;;</code></td><td><code>style="transition-duration:180ms;"</code></td><td>Transition duration</td></tr>
+              <tr><td><code>transition-property</code></td><td><code>transition-property:&lt;property-list&gt;;</code></td><td><code>style="transition-property:box-shadow,transform;"</code></td><td>Which properties transition</td></tr>
+              <tr><td><code>transition-timing-function</code></td><td><code>transition-timing-function:&lt;easing&gt;;</code></td><td><code>style="transition-timing-function:ease-in-out;"</code></td><td>Transition pacing</td></tr>
+              <tr><td><code>visibility</code></td><td><code>visibility:visible|hidden|collapse;</code></td><td><code>style="visibility:hidden;"</code></td><td>Visibility without layout collapse</td></tr>
+              <tr><td><code>white-space</code></td><td><code>white-space:normal|nowrap|pre|pre-wrap;</code></td><td><code>style="white-space:nowrap;"</code></td><td>Line-wrap behavior</td></tr>
+              <tr><td><code>width</code></td><td><code>width:&lt;length|percentage|auto&gt;;</code></td><td><code>style="width:100%;"</code></td><td>Element width</td></tr>
+              <tr><td><code>word-break</code></td><td><code>word-break:normal|break-all|keep-all|break-word;</code></td><td><code>style="word-break:break-word;"</code></td><td>Long word breaking</td></tr>
+              <tr><td><code>z-index</code></td><td><code>z-index:&lt;integer|auto&gt;;</code></td><td><code>style="z-index:4;"</code></td><td>Stacking order</td></tr>
+            </tbody>
+          </table>
+
+          <h3>3.5 Independent Visual Samples</h3>
+          <div class="atomic-attr-grid">
+            <div class="atomic-attr-card">
+              <h4><code>background-image: linear-gradient()</code></h4>
+              <div class="atomic-attr-preview" style="background-image:linear-gradient(120deg,#ecf4ff,#d3e2ff);">syntax: <code>style="background-image:linear-gradient(...);"</code></div>
+            </div>
+            <div class="atomic-attr-card">
+              <h4><code>background-image: radial-gradient()</code></h4>
+              <div class="atomic-attr-preview" style="background-image:radial-gradient(circle at 25% 30%,#dceaff,#fbfdff 60%);">syntax: <code>style="background-image:radial-gradient(...);"</code></div>
+            </div>
+            <div class="atomic-attr-card">
+              <h4><code>box-shadow</code></h4>
+              <div class="atomic-attr-preview" style="box-shadow:0 10px 20px rgba(23,49,98,.16);">syntax: <code>style="box-shadow:x y blur spread color;"</code></div>
+            </div>
+            <div class="atomic-attr-card">
+              <h4><code>filter: blur()</code></h4>
+              <div class="atomic-attr-preview" style="background:linear-gradient(120deg,#edf4ff,#dbe8ff);filter:blur(1.2px);">syntax: <code>style="filter:blur(1.2px);"</code></div>
+            </div>
+            <div class="atomic-attr-card">
+              <h4><code>backdrop-filter</code></h4>
+              <div class="attr-glass-backdrop"><div class="attr-glass-panel">syntax: <code>style="backdrop-filter:blur(8px);"</code></div></div>
+            </div>
+            <div class="atomic-attr-card">
+              <h4><code>display</code></h4>
+              <div class="atomic-attr-preview" style="display:flex;gap:6px;align-items:center;justify-content:center;">
+                <span style="width:22px;height:22px;border:1px solid #b8caef;background:#d8e6ff;border-radius:6px;"></span>
+                <span style="width:22px;height:22px;border:1px solid #b8caef;background:#d8e6ff;border-radius:6px;"></span>
+                <span style="width:22px;height:22px;border:1px solid #b8caef;background:#d8e6ff;border-radius:6px;"></span>
+              </div>
+            </div>
+          </div>
+
+          <h3>3.6 Animations In HTML Attributes</h3>
+          <p>
+            Inline <code>style</code> can apply animation properties, but keyframes must exist in a style block or stylesheet.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Animation Type</th>
+                <th>HTML Attribute Syntax</th>
+                <th>Required CSS Keyframes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Fade In</td><td><code>class="attr-fade"</code> or <code>style="animation:attrFade 1.2s ease-in-out infinite alternate;"</code></td><td><code>@keyframes attrFade { ... }</code></td></tr>
+              <tr><td>Slide Up</td><td><code>class="attr-slide"</code> or <code>style="animation:attrSlide 1.1s ease-in-out infinite alternate;"</code></td><td><code>@keyframes attrSlide { ... }</code></td></tr>
+              <tr><td>Pulse</td><td><code>class="attr-pulse"</code> or <code>style="animation:attrPulse 1.2s ease-in-out infinite;"</code></td><td><code>@keyframes attrPulse { ... }</code></td></tr>
+              <tr><td>Glow</td><td><code>class="attr-glow"</code> or <code>style="animation:attrGlow 1.3s ease-in-out infinite alternate;"</code></td><td><code>@keyframes attrGlow { ... }</code></td></tr>
+              <tr><td>Spin</td><td><code>class="attr-spin"</code> or <code>style="animation:attrSpin 1.8s linear infinite;"</code></td><td><code>@keyframes attrSpin { ... }</code></td></tr>
+              <tr><td>Shake</td><td><code>class="attr-shake"</code> or <code>style="animation:attrShake 1.4s ease-in-out infinite;"</code></td><td><code>@keyframes attrShake { ... }</code></td></tr>
+              <tr><td>Float</td><td><code>class="attr-float"</code> or <code>style="animation:attrFloat 1.4s ease-in-out infinite alternate;"</code></td><td><code>@keyframes attrFloat { ... }</code></td></tr>
+              <tr><td>Gradient Shift</td><td><code>class="attr-gradient"</code> or <code>style="animation:attrGradientShift 2.4s ease infinite;"</code></td><td><code>@keyframes attrGradientShift { ... }</code></td></tr>
+            </tbody>
+          </table>
+
+          <div class="atomic-attr-grid">
+            <div class="atomic-attr-card"><h4>Fade</h4><div class="attr-anim-box attr-fade">Fade</div></div>
+            <div class="atomic-attr-card"><h4>Slide</h4><div class="attr-anim-box attr-slide">Slide</div></div>
+            <div class="atomic-attr-card"><h4>Pulse</h4><div class="attr-anim-box attr-pulse">Pulse</div></div>
+            <div class="atomic-attr-card"><h4>Glow</h4><div class="attr-anim-box attr-glow">Glow</div></div>
+            <div class="atomic-attr-card"><h4>Spin</h4><div class="attr-anim-box attr-spin">Spin</div></div>
+            <div class="atomic-attr-card"><h4>Shake</h4><div class="attr-anim-box attr-shake">Shake</div></div>
+            <div class="atomic-attr-card"><h4>Float</h4><div class="attr-anim-box attr-float">Float</div></div>
+            <div class="atomic-attr-card"><h4>Gradient</h4><div class="attr-anim-box attr-gradient">Flow</div></div>
+          </div>
+
+          <pre><code>&lt;!-- HTML Attributes atomic examples --&gt;
+style="box-shadow:0 10px 22px 0 rgba(25,52,102,.18);"
+style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"
+style="background:rgba(255,255,255,.42); backdrop-filter:blur(8px) saturate(130%);"
+
+/* Motion safety in style block */
+@media (prefers-reduced-motion: reduce) {
+  .attr-pulse, .attr-fade, .attr-slide, .attr-glow, .attr-spin, .attr-shake, .attr-float, .attr-gradient {
+    animation: none !important;
+    transition: none !important;
+  }
+}</code></pre>
+        </section>
+
+        <section id="patterns" class="card">
+          <h2>4) Core Pattern Library</h2>
+
+          <h3>4.1 Pattern A: Card Wrapper Around Important Component</h3>
+          <pre><code>class = "fio-card fio-card--accent"
+style = "padding:12px;border:1px solid #c8d6f3;border-radius:12px;background:#f8fbff;"</code></pre>
+          <div class="demo" style="padding:12px;border:1px solid #c8d6f3;border-radius:12px;background:#f8fbff;">
+            <div style="font-weight:700;margin-bottom:6px;color:#214485;">Preferred Contact Method</div>
+            <label style="display:block;margin:4px 0;"><input type="radio" name="prefA" /> Email</label>
+            <label style="display:block;margin:4px 0;"><input type="radio" name="prefA" /> Phone</label>
+          </div>
+
+          <h3>4.2 Pattern B: Compact Inline Field</h3>
+          <pre><code>style = "max-width:280px;margin-bottom:6px;"
+input style (if available) = "padding:6px 8px;font-size:13px;"</code></pre>
+          <div class="demo">
+            <label style="display:block;font-weight:600;font-size:13px;margin-bottom:4px;max-width:280px;">Employee ID</label>
+            <input style="max-width:280px;padding:6px 8px;font-size:13px;border:1px solid #cdd8ef;border-radius:8px;width:100%;" placeholder="EMP-00124" />
+          </div>
+
+          <h3>4.3 Pattern C: Warning/Policy Block</h3>
+          <pre><code>class = "policy-note"
+style = "background:#fff4ea;border-left:4px solid #d46f12;padding:10px;border-radius:8px;"</code></pre>
+          <div class="demo" style="background:#fff4ea;border-left:4px solid #d46f12;padding:10px;border-radius:8px;color:#723707;">
+            Documents uploaded here are retained for 7 years according to policy FIN-23.
+          </div>
+
+          <h3>4.4 Pattern D: Dense Horizontal Group</h3>
+          <pre><code>style = "display:flex;gap:8px;align-items:center;flex-wrap:wrap;"</code></pre>
+          <div class="demo" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <label style="font-weight:600;">Search</label>
+            <input style="padding:7px 10px;border:1px solid #c8d2ea;border-radius:8px;" placeholder="Name or ID" />
+            <button style="padding:7px 10px;border:1px solid #b8c8e9;border-radius:8px;background:#edf3ff;color:#1e437f;">Run</button>
+          </div>
+
+          <h3>4.5 Pattern E: Two-Column Local Layout</h3>
+          <pre><code>style = "display:grid;grid-template-columns:1fr 1fr;gap:10px;"
+(Use media query in injected CSS if you need responsive collapse.)</code></pre>
+          <div class="demo" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="padding:8px;border:1px solid #d4ddf1;border-radius:8px;background:#fff;">Column A</div>
+            <div style="padding:8px;border:1px solid #d4ddf1;border-radius:8px;background:#fff;">Column B</div>
+          </div>
+        </section>
+
+        <section id="component-recipes" class="card">
+          <h2>5) Component Recipes (All Major Types)</h2>
+          <p>Each recipe shows typical attribute payloads you can assign in the Form.io component editor.</p>
+
+          <div class="demo-grid">
+            <div class="demo">
+              <div class="badge">TextField / Email / Number / Phone</div>
+              <pre><code>class="fio-field fio-field--critical"
+style="margin-bottom:12px;"
+data-test="primary-email"
+aria-describedby="email-help"</code></pre>
+              <label style="display:block;font-weight:600;margin-bottom:4px;">Business Email</label>
+              <input style="width:100%;padding:8px 10px;border:1px solid #cdd8ef;border-radius:8px;" placeholder="name@company.com" />
+              <div id="email-help" style="font-size:12px;color:#5d6782;margin-top:4px;">Use your corporate domain.</div>
+            </div>
+
+            <div class="demo">
+              <div class="badge">TextArea</div>
+              <pre><code>style="border:1px solid #cfd9ef;padding:8px;border-radius:10px;background:#f8fbff;"
+id="descriptionBlock"</code></pre>
+              <label style="display:block;font-weight:600;margin-bottom:4px;">Description</label>
+              <textarea style="width:100%;min-height:90px;padding:8px;border:1px solid #cfd8ee;border-radius:8px;"></textarea>
+            </div>
+
+            <div class="demo">
+              <div class="badge">Select / SelectBoxes</div>
+              <pre><code>class="fio-select-group"
+style="padding:10px;border-radius:10px;background:#f3f8ff;"</code></pre>
+              <label style="display:block;font-weight:600;margin-bottom:4px;">Region</label>
+              <select style="width:100%;padding:8px;border:1px solid #cad5ec;border-radius:8px;">
+                <option>Choose...</option>
+                <option>North</option>
+                <option>South</option>
+              </select>
+            </div>
+
+            <div class="demo">
+              <div class="badge">Checkbox / Radio</div>
+              <pre><code>style="padding:8px;border:1px solid #d0daf0;border-radius:8px;background:#fff;"
+class="option-card"</code></pre>
+              <label style="display:block;margin:4px 0;"><input type="checkbox" /> Email Alerts</label>
+              <label style="display:block;margin:4px 0;"><input type="checkbox" /> SMS Alerts</label>
+            </div>
+
+            <div class="demo">
+              <div class="badge">Date / Time</div>
+              <pre><code>style="max-width:240px;"
+class="date-field"</code></pre>
+              <label style="display:block;font-weight:600;margin-bottom:4px;">Start Date</label>
+              <input type="date" style="max-width:240px;width:100%;padding:8px;border:1px solid #ced7ec;border-radius:8px;" />
+            </div>
+
+            <div class="demo">
+              <div class="badge">File Upload</div>
+              <pre><code>style="border:2px dashed #bfd0ee;padding:12px;border-radius:10px;background:#f9fcff;text-align:center;"
+class="upload-drop"</code></pre>
+              <div style="border:2px dashed #bfd0ee;padding:12px;border-radius:10px;background:#f9fcff;text-align:center;color:#395587;">Drop files here</div>
+            </div>
+
+            <div class="demo">
+              <div class="badge">Signature</div>
+              <pre><code>style="border:1px solid #c9d6ef;border-radius:10px;padding:8px;background:#fff;"
+id="signPadArea"</code></pre>
+              <div style="border:1px solid #c9d6ef;border-radius:10px;padding:8px;background:#fff;">
+                <div style="height:70px;border:1px solid #d4ddf0;border-radius:8px;background:repeating-linear-gradient(45deg,#fbfcff,#fbfcff 6px,#f1f5ff 6px,#f1f5ff 12px);"></div>
+              </div>
+            </div>
+
+            <div class="demo">
+              <div class="badge">Panel / Container / Fieldset</div>
+              <pre><code>class="section-frame"
+style="border:1px solid #ccd8ef;border-radius:12px;padding:12px;background:#f8fbff;"
+role="region"
+aria-label="Employment Section"</code></pre>
+              <div style="border:1px solid #ccd8ef;border-radius:12px;padding:12px;background:#f8fbff;">
+                <div style="font-weight:700;color:#223f74;margin-bottom:6px;">Employment Section</div>
+                <div style="color:#566180;font-size:13px;">Container styling for grouped fields.</div>
+              </div>
+            </div>
+
+            <div class="demo">
+              <div class="badge">DataGrid / EditGrid Wrapper</div>
+              <pre><code>class="rows-block"
+style="padding:8px;border:1px solid #d0daf0;border-radius:10px;background:#fff;overflow:auto;"</code></pre>
+              <div style="padding:8px;border:1px solid #d0daf0;border-radius:10px;background:#fff;overflow:auto;">
+                <table style="border-collapse:collapse;width:100%;font-size:13px;">
+                  <tr>
+                    <th style="border:1px solid #d6deee;background:#f3f7ff;padding:6px;">Item</th>
+                    <th style="border:1px solid #d6deee;background:#f3f7ff;padding:6px;">Qty</th>
+                  </tr>
+                  <tr>
+                    <td style="border:1px solid #d6deee;padding:6px;">Laptop</td>
+                    <td style="border:1px solid #d6deee;padding:6px;">1</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <div class="demo">
+              <div class="badge">Button</div>
+              <pre><code>class="btn btn-primary btn-submit-main"
+style="border-radius:999px;padding:9px 14px;"
+data-test="submit-form"</code></pre>
+              <button style="border:1px solid #1458bc;background:#1458bc;color:#fff;border-radius:999px;padding:9px 14px;">Submit</button>
+            </div>
+
+            <div class="demo">
+              <div class="badge">Content / HTML Component</div>
+              <pre><code>style="background:#f1f7ff;border-left:4px solid #2e6ecb;padding:10px;border-radius:8px;"
+class="info-callout"</code></pre>
+              <div style="background:#f1f7ff;border-left:4px solid #2e6ecb;padding:10px;border-radius:8px;color:#164083;">
+                Please complete all required fields before submission.
+              </div>
+            </div>
+          </div>
+
+          <p class="section-footer">
+            If a component does not expose direct input attributes in your edition, put attributes on its wrapper and use wrapper-level layout/styling.
+          </p>
+        </section>
+
+        <section id="advanced" class="card">
+          <h2>6) Advanced Patterns (IDs, Data Hooks, ARIA)</h2>
+
+          <h3>6.1 Stable IDs For Anchors And Integrations</h3>
+          <pre><code>id="employmentHistorySection"
+class="fio-anchor-section"</code></pre>
+          <p>Use this for deep links and scripted scroll/focus behavior.</p>
+
+          <h3>6.2 Data Attributes For QA Automation</h3>
+          <pre><code>data-test="employee-name"
+data-section="identity"
+data-required="true"</code></pre>
+          <p>
+            These are ideal for Playwright/Cypress selectors because they are stable compared with generated class names.
+          </p>
+
+          <h3>6.3 ARIA And Semantic Enhancements</h3>
+          <pre><code>role="region"
+aria-label="Personal Information"
+aria-live="polite"</code></pre>
+          <p>
+            Use for screen-reader context and dynamic status updates. Keep ARIA usage intentional; avoid conflicting semantics.
+          </p>
+
+          <h3>6.4 Testing/Telemetry Hook Example</h3>
+          <pre><code>class="flow-step"
+data-step="2"
+data-owner="hr"
+data-journey="onboarding"</code></pre>
+        </section>
+
+        <section id="limits" class="card">
+          <h2>7) Hard Limits + Workarounds</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Need</th>
+                <th>Why HTML Attributes Alone Are Limited</th>
+                <th>Workaround</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Hover/focus visual effects</td>
+                <td>Inline <code>style</code> cannot define pseudo-classes.</td>
+                <td>Add class hook and define <code>:hover</code>/<code>:focus</code> in injected CSS.</td>
+              </tr>
+              <tr>
+                <td>Consistent theme across whole form</td>
+                <td>Repeating inline style is hard to maintain.</td>
+                <td>Use one wrapper class + centralized CSS tokens.</td>
+              </tr>
+              <tr>
+                <td>Styling child internals of complex widgets</td>
+                <td>Attributes may only apply at outer wrapper.</td>
+                <td>Use wrapper class and descendant selectors in CSS approach.</td>
+              </tr>
+              <tr>
+                <td>Responsive behavior</td>
+                <td>Inline styles do not support media queries.</td>
+                <td>Assign classes now; implement breakpoints in CSS-injection file.</td>
+              </tr>
+              <tr>
+                <td>Validation state theming</td>
+                <td>State classes are runtime-driven and need selectors.</td>
+                <td>Style <code>.has-error</code>/<code>.is-invalid</code> in scoped CSS.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="warn">
+            Practical rule: use HTML Attributes for structure, identity, and local style; use CSS injection for reusable theme logic.
+          </div>
+        </section>
+
+        <section id="qa" class="card">
+          <h2>8) QA Checklist</h2>
+          <ol>
+            <li>Every key section has a stable <code>id</code> or <code>data-test</code> hook.</li>
+            <li>Wrapper classes follow a naming convention (example: <code>fio-*</code>).</li>
+            <li>Inline styles are short and purposeful, not repeated excessively.</li>
+            <li>No invalid HTML/CSS values in style attributes.</li>
+            <li>ARIA attributes are meaningful and not contradictory.</li>
+            <li>Mobile width behavior checked for local grid/flex styles.</li>
+            <li>If combined with CSS injection, selectors target the assigned classes/ids exactly.</li>
+          </ol>
+
+          <p class="section-footer">
+            Keyboard tip: when validating focus behavior in the final app, use
+            <span class="kbd">Tab</span> and <span class="kbd">Shift</span> + <span class="kbd">Tab</span>
+            to ensure your attribute-based structure remains usable.
+          </p>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

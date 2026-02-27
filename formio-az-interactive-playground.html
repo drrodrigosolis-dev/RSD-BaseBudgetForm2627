@@ -1,0 +1,4004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form.io A-Z Interactive Playground</title>
+  <style>
+    :root {
+      --bg: #f3f6fc;
+      --card: #ffffff;
+      --line: #d4ddef;
+      --ink: #1f273e;
+      --muted: #566182;
+      --accent: #165fc7;
+      --code-bg: #0f1631;
+      --code-ink: #eef3ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Noto Sans", Arial, sans-serif;
+      background: radial-gradient(circle at top right, #e8efff, var(--bg) 52%);
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    .page {
+      max-width: 3400px;
+      margin: 0 auto;
+      padding: 16px 22px 24px;
+    }
+
+    .hero,
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .hero {
+      margin-bottom: 12px;
+    }
+
+    .card {
+      margin-bottom: 0;
+    }
+
+    .hero {
+      background: linear-gradient(130deg, #fbfdff, #edf3ff);
+      border-color: #cddaf4;
+    }
+
+    .hero h1 {
+      margin: 0 0 7px;
+      font-size: 1.45rem;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #2e3c61;
+      font-size: 0.95rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .left,
+    .right {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .right {
+      grid-template-columns: 1fr;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+    }
+
+    .row {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .label {
+      font-size: 0.82rem;
+      color: #334266;
+      font-weight: 600;
+    }
+
+    select,
+    input,
+    textarea,
+    button {
+      width: 100%;
+      min-height: 34px;
+      border: 1px solid #c6d3ee;
+      border-radius: 8px;
+      padding: 7px 9px;
+      font: inherit;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    input[type="checkbox"] {
+      width: auto;
+      min-height: 0;
+      margin-right: 6px;
+    }
+
+    textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+
+    button {
+      cursor: pointer;
+      background: #edf3ff;
+      color: #214382;
+      font-weight: 600;
+    }
+
+    button:hover {
+      background: #e4edff;
+    }
+
+    .tiny {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .inline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .inline > * {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    pre {
+      margin: 0;
+      background: var(--code-bg);
+      color: var(--code-ink);
+      border: 1px solid #263862;
+      border-radius: 10px;
+      padding: 10px;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.38;
+    }
+
+    code {
+      font-family: Menlo, Consolas, "Liberation Mono", monospace;
+      background: #eaf0ff;
+      color: #1b2e57;
+      border-radius: 4px;
+      padding: 1px 4px;
+    }
+
+    .params {
+      display: grid;
+      gap: 8px;
+    }
+
+    .param-item {
+      border: 1px solid #d4dcef;
+      border-radius: 8px;
+      padding: 8px;
+      background: #fafcff;
+    }
+
+    .param-title {
+      font-size: 0.8rem;
+      color: #33456e;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .param-help {
+      margin-top: 5px;
+      font-size: 0.75rem;
+      color: #516287;
+    }
+
+    .param-error {
+      margin-top: 5px;
+      font-size: 0.75rem;
+      color: #9a1a33;
+      display: none;
+    }
+
+    .param-item.invalid .param-error {
+      display: block;
+    }
+
+    .param-color-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .param-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .param-inline input[type="number"] {
+      width: 100%;
+      min-width: 90px;
+    }
+
+    .preview-wrap {
+      border: 1px solid #d3dcee;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #fbfdff, #f2f6ff);
+      padding: 12px;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .preview-panel {
+      border-radius: 12px;
+      padding: 6px;
+      transition: opacity 160ms ease, background 160ms ease, box-shadow 160ms ease;
+    }
+
+    .preview-panel-inactive {
+      opacity: 0.58;
+    }
+
+    .preview-panel-active {
+      background: rgba(82, 129, 219, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(82, 129, 219, 0.2);
+    }
+
+    .preview-panel-active .preview-title {
+      color: #244b91;
+    }
+
+    .preview-panel-flash {
+      animation: preview-panel-flash 720ms ease;
+    }
+
+    @keyframes preview-panel-flash {
+      0% {
+        transform: scale(1);
+        box-shadow: inset 0 0 0 1px rgba(82, 129, 219, 0.2);
+      }
+      35% {
+        transform: scale(1.02);
+        box-shadow: inset 0 0 0 2px rgba(82, 129, 219, 0.35), 0 0 0 3px rgba(82, 129, 219, 0.14);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: inset 0 0 0 1px rgba(82, 129, 219, 0.2);
+      }
+    }
+
+    .preview-target {
+      border: 1px solid #c8d4ef;
+      border-radius: 9px;
+      background: #fff;
+      padding: 10px;
+      min-height: 66px;
+      color: #2b3d67;
+      transition: all 160ms ease;
+    }
+
+    .preview-title {
+      font-size: 0.78rem;
+      color: #49577c;
+      margin-bottom: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    #preview-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.88rem;
+    }
+
+    #preview-input {
+      width: 100%;
+      min-height: 36px;
+      padding: 8px 10px;
+      border: 1px solid #c9d5ef;
+      border-radius: 8px;
+      background: #fff;
+      color: #21345e;
+    }
+
+    #preview-button {
+      border: 1px solid #c4d2f1;
+      border-radius: 8px;
+      padding: 8px 11px;
+      background: #edf3ff;
+      color: #224383;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .preview-image {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      padding: 0;
+    }
+
+    .preview-overlap {
+      position: relative;
+      min-height: 150px;
+      overflow: visible;
+      background: linear-gradient(140deg, #f8fbff, #e9f0ff);
+    }
+
+    .preview-overlap .layer {
+      position: absolute;
+      width: 110px;
+      height: 74px;
+      border-radius: 10px;
+      border: 1px solid rgba(33, 58, 100, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #17325a;
+      box-shadow: 0 8px 18px rgba(44, 73, 125, 0.18);
+    }
+
+    .preview-overlap .back {
+      left: 12px;
+      top: 42px;
+      background: rgba(154, 194, 255, 0.9);
+      z-index: 1;
+    }
+
+    .preview-overlap .mid {
+      left: 48px;
+      top: 24px;
+      background: rgba(178, 228, 252, 0.92);
+      z-index: 2;
+    }
+
+    .preview-overlap .front {
+      left: 84px;
+      top: 6px;
+      background: rgba(255, 215, 241, 0.94);
+      z-index: 3;
+    }
+
+    .help-box {
+      border: 1px solid #d5def0;
+      border-radius: 8px;
+      background: #f8fbff;
+      padding: 8px;
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: #33466f;
+    }
+
+    .flow-card {
+      margin-bottom: 12px;
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .flow-step {
+      border: 1px solid #d4deef;
+      border-radius: 9px;
+      background: #f8fbff;
+      padding: 8px;
+    }
+
+    .flow-step strong {
+      display: block;
+      font-size: 0.82rem;
+      color: #1f3561;
+      margin-bottom: 4px;
+    }
+
+    .flow-step p {
+      margin: 0;
+      font-size: 0.76rem;
+      color: #485b83;
+      line-height: 1.35;
+    }
+
+    .step-hint {
+      margin: 0 0 8px;
+      font-size: 0.8rem;
+      color: #4a5e87;
+    }
+
+    .style-helper-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .builder-list {
+      border: 1px solid #d4deef;
+      border-radius: 8px;
+      background: #fbfdff;
+      min-height: 84px;
+      max-height: 230px;
+      overflow: auto;
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .builder-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #d6deee;
+      border-radius: 8px;
+      background: #fff;
+      padding: 6px 7px;
+    }
+
+    .builder-item code {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+      font-size: 0.77rem;
+    }
+
+    .builder-remove {
+      width: auto;
+      min-height: 0;
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      border-radius: 6px;
+      background: #fdecef;
+      border: 1px solid #f2c4cf;
+      color: #7f1a2e;
+      cursor: pointer;
+    }
+
+    .builder-remove:hover {
+      background: #f9dfe5;
+    }
+
+    .selector-preview {
+      font-size: 0.82rem;
+      background: #f4f8ff;
+      border: 1px solid #d0dbf2;
+      border-radius: 8px;
+      padding: 7px 8px;
+      color: #213864;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .selector-graph-list {
+      border: 1px solid #d4deef;
+      border-radius: 8px;
+      background: #fbfdff;
+      padding: 8px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .selector-graph-item {
+      display: grid;
+      grid-template-columns: minmax(130px, 0.8fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: end;
+      border: 1px solid #d6deee;
+      border-radius: 8px;
+      background: #fff;
+      padding: 8px;
+    }
+
+    .specificity-wrap {
+      border: 1px solid #d4deef;
+      border-radius: 8px;
+      background: #fbfdff;
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .specificity-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .specificity-meter {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: #e5ecfa;
+      overflow: hidden;
+    }
+
+    .specificity-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #2ca66f, #8bbf43);
+      transition: width 180ms ease;
+    }
+
+    .preview-state-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid #c6d6f1;
+      color: #234273;
+      background: #f0f5ff;
+      width: fit-content;
+    }
+
+    .builder-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .builder-vars {
+      border: 1px solid #d4deef;
+      border-radius: 8px;
+      background: #fbfdff;
+      min-height: 56px;
+      max-height: 170px;
+      overflow: auto;
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .builder-var-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #d6deee;
+      border-radius: 8px;
+      padding: 6px 7px;
+      background: #fff;
+    }
+
+    .builder-var-item code {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+      font-size: 0.77rem;
+    }
+
+    .preset-bar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .preview-sandbox {
+      display: grid;
+      gap: 6px;
+      align-content: start;
+    }
+
+    .preview-sandbox .box {
+      border: 1px solid #cdd8ef;
+      border-radius: 6px;
+      padding: 5px 7px;
+      font-size: 0.77rem;
+      background: #f8fbff;
+    }
+
+    .preview-sandbox .mini-btn {
+      width: auto;
+      min-height: 0;
+      border: 1px solid #c8d6ef;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 0.77rem;
+      background: #ecf2ff;
+      color: #26457f;
+      justify-self: start;
+      cursor: pointer;
+    }
+
+    @media (min-width: 1600px) {
+      .layout {
+        grid-template-columns: minmax(380px, 470px) minmax(0, 1fr);
+      }
+
+      .panel-syntax { grid-area: syntax; }
+      .panel-builder { grid-area: builder; }
+      .panel-preview { grid-area: preview; }
+
+      .right {
+        grid-template-columns: minmax(350px, 0.9fr) minmax(580px, 1.2fr);
+        grid-template-areas:
+          "syntax builder"
+          "preview builder";
+        align-items: start;
+      }
+    }
+
+    @media (min-width: 2200px) {
+      .layout {
+        grid-template-columns: minmax(900px, 1.1fr) minmax(0, 1.9fr);
+        gap: 16px;
+      }
+
+      .left {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .right {
+        grid-template-columns: minmax(470px, 1fr) minmax(900px, 1.7fr);
+        gap: 14px;
+      }
+
+      .preview-grid {
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      }
+    }
+
+    @media (max-width: 1080px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .left,
+      .right {
+        grid-template-columns: 1fr;
+      }
+
+      .right {
+        grid-template-areas: none;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .flow-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .page {
+        padding: 12px;
+      }
+
+      .selector-graph-item,
+      .flow-grid,
+      .style-helper-grid,
+      .builder-row,
+      .preset-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <h1>Form.io A-Z Interactive Playground</h1>
+      <p>Choose an HTML attribute, CSS property, or CSS function from the full A-Z lists. Tweak values and copy live syntax.</p>
+    </section>
+
+    <section class="card flow-card">
+      <h2>Workflow Guide</h2>
+      <div class="flow-grid">
+        <div class="flow-step">
+          <strong>Step 1: Select Item</strong>
+          <p>Pick `Category`, then choose an `Item`. Use search to narrow long A-Z lists quickly.</p>
+        </div>
+        <div class="flow-step">
+          <strong>Step 2: Tweak Parameters</strong>
+          <p>Edit values for the selected item. For `HTML Attribute -> style`, use the Style Property Helper.</p>
+        </div>
+        <div class="flow-step">
+          <strong>Step 3: Validate Syntax</strong>
+          <p>Review Template vs Live Output. When it looks right, send it to the builder as reusable CSS.</p>
+        </div>
+        <div class="flow-step">
+          <strong>Step 4: Build Stylesheet</strong>
+          <p>Set class/selector/media layer, stack rules, manage variables, then export the final stylesheet.</p>
+        </div>
+      </div>
+      <p id="flow-status" class="tiny"></p>
+    </section>
+
+    <div class="layout">
+      <div class="left">
+        <section class="card">
+          <h2>1) Select Item</h2>
+          <p class="step-hint">This chooses the source syntax block you are editing.</p>
+          <div class="row">
+            <label class="label" for="category">Category</label>
+            <select id="category">
+              <option value="attribute">HTML Attribute</option>
+              <option value="property">CSS Property</option>
+              <option value="function">CSS Function</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <label class="label" for="search">Search</label>
+            <input id="search" placeholder="Type to filter..." title="Filter items by name or syntax. Example: color, transform, aria-label." />
+          </div>
+
+          <div class="row">
+            <label class="label" for="item">Item</label>
+            <select id="item" title="Choose one attribute/property/function to edit."></select>
+          </div>
+
+          <div class="inline">
+            <button id="reset-values" type="button">Reset Values</button>
+            <button id="copy-syntax" type="button">Copy Live Syntax</button>
+          </div>
+          <p class="tiny">Syntax source: same A-Z entries as your fourth file.</p>
+        </section>
+
+        <section class="card">
+          <h2>2) Tweak Parameters</h2>
+          <p class="step-hint">Edit placeholders/values. Changes apply instantly to Live Output and Preview.</p>
+          <div id="function-property-wrap" class="row hidden">
+            <label class="label" for="function-property">Function Apply Property</label>
+            <input id="function-property" placeholder="filter" title="The CSS property that receives the function value. Example: transform for rotate(), filter for blur()." />
+            <p class="tiny">This is the CSS property that will receive the function value.</p>
+            <div class="help-box">
+              <div>Function output is only a value like <code>blur(6px)</code>, not a full declaration.</div>
+              <div>So this field decides the left side: <code>property: value;</code>.</div>
+              <pre id="function-help-syntax">filter: blur(6px);</pre>
+            </div>
+          </div>
+
+          <div id="attribute-name-wrap" class="row hidden">
+            <label class="label" for="custom-attr-name">Custom Attribute Name (for <code>data-*</code>)</label>
+            <input id="custom-attr-name" placeholder="data-test" value="data-test" title="Name for wildcard data attribute. Example: data-test, data-section." />
+          </div>
+
+          <div id="style-helper-wrap" class="row hidden">
+            <label class="label">Style Property Helper</label>
+            <div class="style-helper-grid">
+              <div class="row">
+                <label class="label" for="style-property">CSS Property</label>
+                <select id="style-property" title="Choose a CSS property to add into the HTML style attribute."></select>
+              </div>
+              <div class="row">
+                <label class="label" for="style-property-value">Value</label>
+                <input id="style-property-value" placeholder="12px" title="Value for selected CSS property. Example: 12px, #1f5fbd, blur(6px)." />
+              </div>
+            </div>
+            <div class="inline">
+              <button id="add-style-declaration" type="button">Add Declaration To style=""</button>
+            </div>
+            <p class="tiny">Pick a property and value, then inject it into the <code>style</code> attribute textarea.</p>
+          </div>
+
+          <div id="params" class="params"></div>
+        </section>
+      </div>
+
+      <div class="right">
+        <section class="card panel-syntax">
+          <h2>3) Syntax</h2>
+          <p class="step-hint">Template is the source pattern. Live Output is the resolved syntax from your current values.</p>
+          <div class="row">
+            <label class="label">Template</label>
+            <pre id="template-syntax"></pre>
+          </div>
+          <div class="row">
+            <label class="label">Live Output</label>
+            <pre id="live-syntax"></pre>
+          </div>
+          <div class="inline">
+            <button id="syntax-add-current-rule" type="button">Send Live Rule To Builder</button>
+          </div>
+        </section>
+
+        <section class="card panel-builder">
+          <h2>4) CSS Builder</h2>
+          <p class="step-hint">Use this as your stylesheet workspace: selector targeting, media layers, variables, rule stack, and presets.</p>
+          <div class="row">
+            <label class="label" for="builder-class">Class Name</label>
+            <input id="builder-class" value="my-custom-class" title="Class token used for convenience and auto-apply. Example: onboarding-theme" />
+          </div>
+          <div class="row">
+            <label class="label" for="builder-base-selector">Base Selector</label>
+            <input id="builder-base-selector" value=".my-custom-class" title="Main selector root for your stylesheet. Example: .onboarding-theme or #formA." />
+          </div>
+          <div id="builder-legacy-row-1" class="builder-row">
+            <div class="row">
+              <label class="label" for="builder-combinator">Selector Relation</label>
+              <select id="builder-combinator" title="How related selector is linked to base selector: descendant, child, adjacent sibling, or general sibling.">
+                <option value="self">Self (base selector)</option>
+                <option value="descendant">Descendant (space)</option>
+                <option value="child">Child (&gt;)</option>
+                <option value="adjacent">Adjacent sibling (+)</option>
+                <option value="sibling">General sibling (~)</option>
+              </select>
+            </div>
+            <div class="row">
+              <label class="label" for="builder-relative-selector">Related Selector</label>
+              <input id="builder-relative-selector" placeholder=".form-control" value=".form-control" title="Selector combined with base by chosen relation. Example: .form-control, .btn-primary, input[type=email]." />
+            </div>
+          </div>
+          <div id="builder-legacy-row-2" class="builder-row">
+            <div class="row">
+              <label class="label" for="builder-pseudo-selector">Pseudo / State</label>
+              <input id="builder-pseudo-selector" placeholder=":hover or ::before" title="Optional pseudo-class/element appended to selector. Example: :focus, :hover, ::before." />
+            </div>
+            <div class="row">
+              <label class="label" for="builder-selector-override">Full Selector Override (optional)</label>
+              <input id="builder-selector-override" placeholder=".my-custom-class .row + .help-text" title="If set, this full selector replaces base + relation + pseudo composition." />
+            </div>
+          </div>
+          <div class="row">
+            <label class="label">Current Target Selector</label>
+            <div id="builder-selector-preview" class="selector-preview"></div>
+          </div>
+          <div class="row">
+            <label class="label">Selector Graph Editor</label>
+            <div class="inline">
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+                <input id="selector-graph-enabled" type="checkbox" checked /> Enable graph editor
+              </label>
+              <button id="selector-graph-add" type="button">Add Node</button>
+              <button id="selector-graph-clear" type="button">Reset Graph</button>
+            </div>
+            <div id="selector-graph-list" class="selector-graph-list"></div>
+            <label class="label">Graph Selector Output</label>
+            <div id="selector-graph-output" class="selector-preview"></div>
+            <div class="specificity-wrap">
+              <div class="specificity-head">
+                <span class="label">Specificity</span>
+                <code id="specificity-score">(0,0,0)</code>
+              </div>
+              <div class="specificity-meter">
+                <div id="specificity-fill" class="specificity-fill"></div>
+              </div>
+              <p id="specificity-note" class="tiny"></p>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="label" for="builder-variable-scope">Variable Scope Selector</label>
+            <input id="builder-variable-scope" placeholder=".my-custom-class (blank = base selector)" title="Selector block where CSS variables are declared. Leave blank to use base selector." />
+          </div>
+          <div class="builder-row">
+            <div class="row">
+              <label class="label" for="builder-var-name">CSS Variable Name</label>
+              <input id="builder-var-name" placeholder="--fio-primary" title="Must start with --, for example --fio-primary." />
+            </div>
+            <div class="row">
+              <label class="label" for="builder-var-value">CSS Variable Value</label>
+              <input id="builder-var-value" placeholder="#1f5fbd" title="Any CSS value. Example: #1f5fbd, 12px, 1.2rem, rgba(0,0,0,.15), var(--other)." />
+            </div>
+          </div>
+          <div class="builder-row">
+            <div class="row">
+              <label class="label" for="builder-var-format">Variable Color Format (optional helper)</label>
+              <select id="builder-var-format" title="Use helper to generate color values in HEX, RGB, or HSL.">
+                <option value="hex">HEX</option>
+                <option value="rgb">RGB</option>
+                <option value="hsl">HSL</option>
+              </select>
+            </div>
+            <div class="row">
+              <label class="label" for="builder-var-color">Variable Color Picker</label>
+              <input id="builder-var-color" type="color" value="#1f5fbd" title="Pick a color and apply it to variable value using selected format." />
+            </div>
+          </div>
+          <div class="row">
+            <label class="label" for="builder-var-alpha">Variable Alpha (optional)</label>
+            <input id="builder-var-alpha" type="number" min="0" max="1" step="0.01" value="1" title="Alpha channel for RGB/HSL helpers. 1 = fully opaque." />
+          </div>
+          <div class="inline">
+            <button id="add-variable" type="button">Add Variable</button>
+          </div>
+          <div class="row">
+            <label class="label">Variables</label>
+            <div id="builder-vars" class="builder-vars"></div>
+          </div>
+
+          <div class="row">
+            <label class="label" for="custom-rule">Custom Declaration</label>
+            <input id="custom-rule" placeholder="border-radius: 12px;" title="Write one or more declarations separated by semicolons." />
+          </div>
+          <div class="builder-row">
+            <div class="row">
+              <label class="label" for="builder-media-layer">Rule Media Layer</label>
+              <select id="builder-media-layer" title="Rules you add now will be placed in this layer. Use All Screens for base rules.">
+                <option value="all">All Screens (No @media)</option>
+                <option value="sm-down">Small Down (max-width: 640px)</option>
+                <option value="md-down">Medium Down (max-width: 900px)</option>
+                <option value="lg-up">Large Up (min-width: 1024px)</option>
+                <option value="xl-up">XL Up (min-width: 1280px)</option>
+                <option value="motion-reduce">Reduced Motion</option>
+                <option value="dark-scheme">Dark Color Scheme</option>
+                <option value="custom">Custom Query...</option>
+              </select>
+            </div>
+            <div id="builder-media-custom-wrap" class="row hidden">
+              <label class="label" for="builder-media-custom">Custom Media Query</label>
+              <input id="builder-media-custom" placeholder="(max-width: 1100px) and (orientation: landscape)" title="Only the query condition; do not include @media keyword." />
+            </div>
+          </div>
+          <p class="tiny">Current rule additions use the selected layer. Example output: <code>@media (max-width: 900px) { ... }</code>.</p>
+          <div class="inline">
+            <button id="add-current-rule" type="button">Add Current Rule</button>
+            <button id="add-custom-rule" type="button">Add Custom Rule</button>
+          </div>
+          <div class="inline">
+            <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+              <input id="builder-auto-apply" type="checkbox" checked /> Auto-apply class to selected preview target
+            </label>
+          </div>
+          <div class="row">
+            <label class="label">Rule Stack</label>
+            <div id="builder-rules" class="builder-list"></div>
+          </div>
+          <div class="inline">
+            <button id="copy-builder-css" type="button">Copy Builder CSS</button>
+            <button id="clear-builder" type="button">Clear Builder</button>
+          </div>
+          <div class="row">
+            <label class="label" for="library-preset-select">Built-In Class Library</label>
+            <div class="preset-bar">
+              <select id="library-preset-select" title="Pick a prebuilt class style package to populate the builder."></select>
+              <button id="library-apply-preset" type="button">Apply Class Pack</button>
+            </div>
+            <div class="preset-bar">
+              <input id="library-search" placeholder="Search class packs..." title="Filter class packs by name, description, class id, or category." />
+              <select id="library-category" title="Filter class packs by category.">
+                <option value="">All Categories</option>
+              </select>
+            </div>
+            <div class="inline">
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+                <input id="library-favorites-only" type="checkbox" /> Favorites Only
+              </label>
+              <button id="library-preview-pack" type="button">Preview Pack Now</button>
+              <button id="library-cycle-targets" type="button">Cycle All Targets</button>
+              <button id="library-toggle-favorite" type="button">Favorite Pack</button>
+              <button id="library-random" type="button">Randomize Pack</button>
+            </div>
+            <p id="library-cycle-status" class="tiny">Cycle off.</p>
+            <p id="library-preset-help" class="tiny"></p>
+          </div>
+          <div class="row">
+            <label class="label">Preset Manager</label>
+            <div class="preset-bar">
+              <input id="preset-name" placeholder="Preset name" title="Name used when saving preset." />
+              <select id="preset-select" title="Choose an existing preset to load or delete."></select>
+            </div>
+            <div class="inline">
+              <button id="save-preset" type="button">Save / Update Preset</button>
+              <button id="load-preset" type="button">Load Preset</button>
+              <button id="delete-preset" type="button">Delete Preset</button>
+            </div>
+          </div>
+          <div class="row">
+            <label class="label">Generated Stylesheet</label>
+            <pre id="builder-css"></pre>
+          </div>
+          <p id="builder-status" class="tiny"></p>
+        </section>
+
+        <section class="card panel-preview">
+          <h2>5) Live Preview</h2>
+          <p class="step-hint">Preview target receives current live styles and auto-applied class for fast visual validation.</p>
+          <div class="row">
+            <label class="label" for="target">Preview Target</label>
+            <select id="target" title="Choose which preview element receives current test styles.">
+              <option value="card">Card</option>
+              <option value="input">Input</option>
+              <option value="button">Button</option>
+              <option value="image">Image</option>
+              <option value="overlap">Overlap / z-index</option>
+              <option value="sandbox">Sandbox (children/siblings)</option>
+            </select>
+          </div>
+          <div class="inline">
+            <button id="preview-toggle-state" type="button">Switch To Before</button>
+            <span id="preview-state-text" class="preview-state-pill">Preview: After</span>
+          </div>
+          <p id="preview-active-help" class="tiny">Active preview target: Card. The highlighted panel receives the current styles.</p>
+
+          <div class="preview-wrap">
+            <div class="preview-grid">
+              <div class="preview-panel" data-preview-key="card">
+                <div class="preview-title">Card</div>
+                <div id="preview-card" class="preview-target" data-base-class="preview-target">Preview Card</div>
+              </div>
+              <div class="preview-panel" data-preview-key="input">
+                <div class="preview-title">Input</div>
+                <input id="preview-input" class="preview-target" data-base-class="preview-target" placeholder="Preview Input" />
+              </div>
+              <div class="preview-panel" data-preview-key="button">
+                <div class="preview-title">Button</div>
+                <button id="preview-button" class="preview-target" data-base-class="preview-target" type="button">Preview Button</button>
+              </div>
+              <div class="preview-panel" data-preview-key="image">
+                <div class="preview-title">Image</div>
+                <img
+                  id="preview-image"
+                  class="preview-target preview-image"
+                  data-base-class="preview-target preview-image"
+                  alt="Preview Image"
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23dce9ff'/%3E%3Cstop offset='1' stop-color='%23b5cffb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='320' height='180' fill='url(%23g)'/%3E%3Ccircle cx='78' cy='64' r='28' fill='%23ffffff66'/%3E%3Crect x='30' y='118' width='260' height='28' rx='8' fill='%23ffffff88'/%3E%3C/svg%3E"
+                />
+              </div>
+              <div class="preview-panel" data-preview-key="overlap">
+                <div class="preview-title">Overlap / z-index</div>
+                <div id="preview-overlap" class="preview-target preview-overlap" data-base-class="preview-target preview-overlap">
+                  <div class="layer back">Back z1</div>
+                  <div class="layer mid">Mid z2</div>
+                  <div class="layer front">Front z3</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="sandbox">
+                <div class="preview-title">Sandbox (Selectors)</div>
+                <div id="preview-sandbox" class="preview-target preview-sandbox" data-base-class="preview-target preview-sandbox">
+                  <div class="box alpha">.box.alpha</div>
+                  <div class="box beta">.box.beta</div>
+                  <div class="box gamma">.box.gamma</div>
+                  <button type="button" class="mini-btn">.mini-btn</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <textarea id="attr-data" class="hidden">
+aria-atomic	aria-atomic="true|false"
+aria-busy	aria-busy="true|false"
+aria-controls	aria-controls="<id>"
+aria-current	aria-current="page|step|true|false"
+aria-describedby	aria-describedby="<id-list>"
+aria-disabled	aria-disabled="true|false"
+aria-expanded	aria-expanded="true|false"
+aria-hidden	aria-hidden="true|false"
+aria-label	aria-label="<text>"
+aria-labelledby	aria-labelledby="<id-list>"
+aria-live	aria-live="off|polite|assertive"
+aria-required	aria-required="true|false"
+autocomplete	autocomplete="<token>"
+class	class="<class-list>"
+data-*	data-name="<value>"
+dir	dir="ltr|rtl|auto"
+disabled	disabled
+hidden	hidden
+id	id="<unique-id>"
+inputmode	inputmode="text|numeric|decimal|tel|email|url|search"
+lang	lang="<language-tag>"
+name	name="<field-name>"
+placeholder	placeholder="<text>"
+readonly	readonly
+required	required
+role	role="<role-name>"
+style	style="property:value; property:value;"
+tabindex	tabindex="-1|0|1..."
+title	title="<text>"
+    </textarea>
+
+    <textarea id="prop-data" class="hidden">
+-webkit-backdrop-filter	-webkit-backdrop-filter: <filter-list>;
+accent-color	accent-color: <color>;
+align-content	align-content: <value>;
+align-items	align-items: <value>;
+align-self	align-self: <value>;
+animation	animation: <name> <duration> <timing-function> <delay> <iteration-count> <direction> <fill-mode>;
+animation-delay	animation-delay: <time>;
+animation-direction	animation-direction: <value>;
+animation-duration	animation-duration: <time>;
+animation-fill-mode	animation-fill-mode: <value>;
+animation-iteration-count	animation-iteration-count: <number|infinite>;
+animation-name	animation-name: <keyframes-name>;
+animation-play-state	animation-play-state: running|paused;
+animation-timing-function	animation-timing-function: <easing>;
+backdrop-filter	backdrop-filter: <filter-list>;
+background	background: <shorthand>;
+background-attachment	background-attachment: scroll|fixed|local;
+background-clip	background-clip: border-box|padding-box|content-box;
+background-color	background-color: <color>;
+background-image	background-image: <image>;
+background-origin	background-origin: border-box|padding-box|content-box;
+background-position	background-position: <x> <y>;
+background-repeat	background-repeat: repeat|no-repeat|repeat-x|repeat-y;
+background-size	background-size: auto|cover|contain|<length>;
+block-size	block-size: <length|percentage>;
+border	border: <width> <style> <color>;
+border-bottom	border-bottom: <width> <style> <color>;
+border-bottom-left-radius	border-bottom-left-radius: <radius>;
+border-bottom-right-radius	border-bottom-right-radius: <radius>;
+border-color	border-color: <color>;
+border-left	border-left: <width> <style> <color>;
+border-radius	border-radius: <radius>;
+border-right	border-right: <width> <style> <color>;
+border-style	border-style: solid|dashed|dotted|none;
+border-top	border-top: <width> <style> <color>;
+border-top-left-radius	border-top-left-radius: <radius>;
+border-top-right-radius	border-top-right-radius: <radius>;
+border-width	border-width: <length>;
+bottom	bottom: <length|percentage|auto>;
+box-shadow	box-shadow: <x> <y> <blur> <spread> <color>;
+box-sizing	box-sizing: content-box|border-box;
+caret-color	caret-color: <color>;
+clear	clear: none|left|right|both;
+color	color: <color>;
+column-gap	column-gap: <length>;
+cursor	cursor: <value>;
+direction	direction: ltr|rtl;
+display	display: block|inline|inline-block|flex|grid|none;
+filter	filter: <filter-list>;
+flex	flex: <grow> <shrink> <basis>;
+flex-basis	flex-basis: <length|percentage|auto>;
+flex-direction	flex-direction: row|column|row-reverse|column-reverse;
+flex-grow	flex-grow: <number>;
+flex-shrink	flex-shrink: <number>;
+flex-wrap	flex-wrap: nowrap|wrap|wrap-reverse;
+font-family	font-family: <family-list>;
+font-size	font-size: <length|percentage>;
+font-style	font-style: normal|italic|oblique;
+font-weight	font-weight: <value>;
+gap	gap: <row-gap> <column-gap>;
+grid-auto-flow	grid-auto-flow: row|column|dense;
+grid-column	grid-column: <start> / <end>;
+grid-row	grid-row: <start> / <end>;
+grid-template-columns	grid-template-columns: <track-list>;
+grid-template-rows	grid-template-rows: <track-list>;
+height	height: <length|percentage|auto>;
+inset	inset: <top> <right> <bottom> <left>;
+justify-content	justify-content: <value>;
+left	left: <length|percentage|auto>;
+letter-spacing	letter-spacing: <length>;
+line-height	line-height: <number|length|percentage>;
+margin	margin: <top> <right> <bottom> <left>;
+margin-bottom	margin-bottom: <length|percentage|auto>;
+margin-left	margin-left: <length|percentage|auto>;
+margin-right	margin-right: <length|percentage|auto>;
+margin-top	margin-top: <length|percentage|auto>;
+max-height	max-height: <length|percentage|none>;
+max-width	max-width: <length|percentage|none>;
+min-height	min-height: <length|percentage>;
+min-width	min-width: <length|percentage>;
+opacity	opacity: <number>;
+outline	outline: <width> <style> <color>;
+outline-offset	outline-offset: <length>;
+overflow	overflow: visible|hidden|auto|scroll;
+overflow-x	overflow-x: visible|hidden|auto|scroll;
+overflow-y	overflow-y: visible|hidden|auto|scroll;
+padding	padding: <top> <right> <bottom> <left>;
+padding-bottom	padding-bottom: <length|percentage>;
+padding-left	padding-left: <length|percentage>;
+padding-right	padding-right: <length|percentage>;
+padding-top	padding-top: <length|percentage>;
+perspective	perspective: <length|none>;
+pointer-events	pointer-events: auto|none;
+position	position: static|relative|absolute|fixed|sticky;
+right	right: <length|percentage|auto>;
+row-gap	row-gap: <length>;
+text-align	text-align: left|center|right|justify;
+text-overflow	text-overflow: clip|ellipsis;
+text-transform	text-transform: none|uppercase|lowercase|capitalize;
+top	top: <length|percentage|auto>;
+transform	transform: <transform-list>;
+transform-origin	transform-origin: <x> <y> [<z>];
+transition	transition: <property> <duration> <easing> <delay>;
+transition-delay	transition-delay: <time>;
+transition-duration	transition-duration: <time>;
+transition-property	transition-property: <property-list>;
+transition-timing-function	transition-timing-function: <easing>;
+visibility	visibility: visible|hidden|collapse;
+white-space	white-space: normal|nowrap|pre|pre-wrap;
+width	width: <length|percentage|auto>;
+word-break	word-break: normal|break-all|keep-all|break-word;
+z-index	z-index: <integer|auto>;
+    </textarea>
+
+    <textarea id="fn-data" class="hidden">
+blur()	blur(<radius>)
+brightness()	brightness(<factor>)
+clamp()	clamp(<min>, <preferred>, <max>)
+contrast()	contrast(<factor>)
+cubic-bezier()	cubic-bezier(<x1>, <y1>, <x2>, <y2>)
+hsl()	hsl(<h> <s> <l> / <a>)
+hsla()	hsla(<h>, <s>, <l>, <a>)
+inset()	inset(<top> <right> <bottom> <left>)
+linear-gradient()	linear-gradient(<angle>, <color-stop-1>, <color-stop-2>, ...)
+matrix()	matrix(<a>, <b>, <c>, <d>, <tx>, <ty>)
+minmax()	minmax(<min>, <max>)
+radial-gradient()	radial-gradient(<shape> at <x y>, <color-stop-1>, <color-stop-2>, ...)
+repeat()	repeat(<count>, <track-list>)
+rgb()	rgb(<r> <g> <b> / <a>)
+rgba()	rgba(<r>, <g>, <b>, <a>)
+rotate()	rotate(<angle>)
+saturate()	saturate(<factor|percent>)
+scale()	scale(<x>[, <y>])
+translate()	translate(<tx>[, <ty>])
+translateX()	translateX(<length|percentage>)
+translateY()	translateY(<length|percentage>)
+    </textarea>
+  </div>
+
+  <script>
+    (function () {
+      try {
+      const elCategory = document.getElementById("category");
+      const elSearch = document.getElementById("search");
+      const elItem = document.getElementById("item");
+      const elTarget = document.getElementById("target");
+      const elFlowStatus = document.getElementById("flow-status");
+      const elTemplateSyntax = document.getElementById("template-syntax");
+      const elLiveSyntax = document.getElementById("live-syntax");
+      const elParams = document.getElementById("params");
+      const elFunctionPropertyWrap = document.getElementById("function-property-wrap");
+      const elFunctionProperty = document.getElementById("function-property");
+      const elFunctionHelpSyntax = document.getElementById("function-help-syntax");
+      const elAttributeNameWrap = document.getElementById("attribute-name-wrap");
+      const elCustomAttrName = document.getElementById("custom-attr-name");
+      const elStyleHelperWrap = document.getElementById("style-helper-wrap");
+      const elStyleProperty = document.getElementById("style-property");
+      const elStylePropertyValue = document.getElementById("style-property-value");
+      const elAddStyleDeclaration = document.getElementById("add-style-declaration");
+      const elResetValues = document.getElementById("reset-values");
+      const elCopySyntax = document.getElementById("copy-syntax");
+      const elBuilderClass = document.getElementById("builder-class");
+      const elBuilderBaseSelector = document.getElementById("builder-base-selector");
+      const elBuilderCombinator = document.getElementById("builder-combinator");
+      const elBuilderRelativeSelector = document.getElementById("builder-relative-selector");
+      const elBuilderPseudoSelector = document.getElementById("builder-pseudo-selector");
+      const elBuilderSelectorOverride = document.getElementById("builder-selector-override");
+      const elBuilderLegacyRow1 = document.getElementById("builder-legacy-row-1");
+      const elBuilderLegacyRow2 = document.getElementById("builder-legacy-row-2");
+      const elBuilderSelectorPreview = document.getElementById("builder-selector-preview");
+      const elSelectorGraphEnabled = document.getElementById("selector-graph-enabled");
+      const elSelectorGraphAdd = document.getElementById("selector-graph-add");
+      const elSelectorGraphClear = document.getElementById("selector-graph-clear");
+      const elSelectorGraphList = document.getElementById("selector-graph-list");
+      const elSelectorGraphOutput = document.getElementById("selector-graph-output");
+      const elSpecificityScore = document.getElementById("specificity-score");
+      const elSpecificityFill = document.getElementById("specificity-fill");
+      const elSpecificityNote = document.getElementById("specificity-note");
+      const elBuilderVariableScope = document.getElementById("builder-variable-scope");
+      const elBuilderVarName = document.getElementById("builder-var-name");
+      const elBuilderVarValue = document.getElementById("builder-var-value");
+      const elBuilderVarFormat = document.getElementById("builder-var-format");
+      const elBuilderVarColor = document.getElementById("builder-var-color");
+      const elBuilderVarAlpha = document.getElementById("builder-var-alpha");
+      const elAddVariable = document.getElementById("add-variable");
+      const elBuilderVars = document.getElementById("builder-vars");
+      const elSyntaxAddCurrentRule = document.getElementById("syntax-add-current-rule");
+      const elCustomRule = document.getElementById("custom-rule");
+      const elBuilderMediaLayer = document.getElementById("builder-media-layer");
+      const elBuilderMediaCustomWrap = document.getElementById("builder-media-custom-wrap");
+      const elBuilderMediaCustom = document.getElementById("builder-media-custom");
+      const elAddCurrentRule = document.getElementById("add-current-rule");
+      const elAddCustomRule = document.getElementById("add-custom-rule");
+      const elBuilderAutoApply = document.getElementById("builder-auto-apply");
+      const elBuilderRules = document.getElementById("builder-rules");
+      const elBuilderCSS = document.getElementById("builder-css");
+      const elCopyBuilderCSS = document.getElementById("copy-builder-css");
+      const elClearBuilder = document.getElementById("clear-builder");
+      const elBuilderStatus = document.getElementById("builder-status");
+      const elLibraryPresetSelect = document.getElementById("library-preset-select");
+      const elLibraryApplyPreset = document.getElementById("library-apply-preset");
+      const elLibrarySearch = document.getElementById("library-search");
+      const elLibraryCategory = document.getElementById("library-category");
+      const elLibraryFavoritesOnly = document.getElementById("library-favorites-only");
+      const elLibraryPreviewPack = document.getElementById("library-preview-pack");
+      const elLibraryCycleTargets = document.getElementById("library-cycle-targets");
+      const elLibraryCycleStatus = document.getElementById("library-cycle-status");
+      const elLibraryToggleFavorite = document.getElementById("library-toggle-favorite");
+      const elLibraryRandom = document.getElementById("library-random");
+      const elLibraryPresetHelp = document.getElementById("library-preset-help");
+      const elPresetName = document.getElementById("preset-name");
+      const elPresetSelect = document.getElementById("preset-select");
+      const elSavePreset = document.getElementById("save-preset");
+      const elLoadPreset = document.getElementById("load-preset");
+      const elDeletePreset = document.getElementById("delete-preset");
+      const elPreviewToggleState = document.getElementById("preview-toggle-state");
+      const elPreviewStateText = document.getElementById("preview-state-text");
+      const elPreviewActiveHelp = document.getElementById("preview-active-help");
+
+      const previewCard = document.getElementById("preview-card");
+      const previewInput = document.getElementById("preview-input");
+      const previewButton = document.getElementById("preview-button");
+      const previewImage = document.getElementById("preview-image");
+      const previewOverlap = document.getElementById("preview-overlap");
+      const previewSandbox = document.getElementById("preview-sandbox");
+      const previewPanels = Array.from(document.querySelectorAll(".preview-panel"));
+      const previewTargets = {
+        card: previewCard,
+        input: previewInput,
+        button: previewButton,
+        image: previewImage,
+        overlap: previewOverlap,
+        sandbox: previewSandbox
+      };
+
+      const previewImageDefaultSrc = previewImage.src;
+      const builderStyleTag = document.createElement("style");
+      builderStyleTag.id = "builder-style";
+      document.head.appendChild(builderStyleTag);
+
+      const functionPropertyDefaults = {
+        "blur()": "filter",
+        "brightness()": "filter",
+        "clamp()": "width",
+        "contrast()": "filter",
+        "cubic-bezier()": "transition-timing-function",
+        "hsl()": "color",
+        "hsla()": "color",
+        "inset()": "clip-path",
+        "linear-gradient()": "background-image",
+        "matrix()": "transform",
+        "minmax()": "grid-template-columns",
+        "radial-gradient()": "background-image",
+        "repeat()": "grid-template-columns",
+        "rgb()": "color",
+        "rgba()": "color",
+        "rotate()": "transform",
+        "saturate()": "filter",
+        "scale()": "transform",
+        "translate()": "transform",
+        "translateX()": "transform",
+        "translateY()": "transform"
+      };
+
+      const datasets = {
+        attribute: parseData("attr-data"),
+        property: parseData("prop-data"),
+        function: parseData("fn-data")
+      };
+      const datasetSourceByCategory = {
+        attribute: "attr-data",
+        property: "prop-data",
+        function: "fn-data"
+      };
+      const PRESET_STORAGE_KEY = "formio-az-css-playground-presets-v1";
+      const LIBRARY_FAVORITES_KEY = "formio-az-css-playground-library-favorites-v1";
+
+      function makeLibraryPreset(name, description, className, target, rules, variables, extras) {
+        const base = "." + className;
+        return {
+          id: className,
+          name: name,
+          description: description,
+          state: {
+            className: className,
+            baseSelector: (extras && extras.baseSelector) || base,
+            combinator: (extras && extras.combinator) || "self",
+            relativeSelector: (extras && extras.relativeSelector) || ".form-control",
+            pseudoSelector: (extras && extras.pseudoSelector) || "",
+            selectorOverride: (extras && extras.selectorOverride) || "",
+            variableScope: (extras && extras.variableScope) || base,
+            autoApply: extras && Object.prototype.hasOwnProperty.call(extras, "autoApply") ? extras.autoApply : true,
+            target: target || "card",
+            rules: (rules || []).map(function (r) {
+              return {
+                selector: r.selector,
+                declarations: (r.declarations || []).map(ensureSemicolon)
+              };
+            }),
+            variables: (variables || []).map(function (v) {
+              return {
+                scope: v.scope || ((extras && extras.variableScope) || base),
+                name: v.name,
+                value: v.value
+              };
+            })
+          }
+        };
+      }
+
+      const BUILTIN_PRESETS = [
+        makeLibraryPreset(
+          "[Debug] Signal Beacon Test",
+          "Diagnostic pack with loud stripes, thick borders, glow, and tilt. Use this first to confirm the preview is responding.",
+          "debug-signal-beacon",
+          "card",
+          [
+            {
+              selector: ".debug-signal-beacon",
+              declarations: [
+                "background: repeating-linear-gradient(135deg, #ff006e 0px, #ff006e 14px, #ffd400 14px, #ffd400 28px, #00d4ff 28px, #00d4ff 42px, #151515 42px, #151515 56px)",
+                "color: #ffffff",
+                "border: 6px solid #111111",
+                "border-radius: 18px",
+                "outline: 4px solid #ffffff",
+                "outline-offset: -10px",
+                "box-shadow: 0 0 0 4px #00d4ff, 0 0 0 10px rgba(255, 0, 110, 0.55), 0 22px 52px rgba(255, 0, 110, 0.4)",
+                "font-weight: 900",
+                "font-size: 1.02rem",
+                "letter-spacing: 0.08em",
+                "text-transform: uppercase",
+                "text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45)",
+                "transform: rotate(-2deg) scale(1.04)"
+              ]
+            }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Background] Fixed Fullscreen Cover",
+          "Use on an image to pin it to viewport as a full-screen background layer.",
+          "fixed-bg-cover",
+          "image",
+          [
+            { selector: ".fixed-bg-cover", declarations: ["position: fixed", "inset: 0", "width: 100vw", "height: 100vh", "object-fit: cover", "object-position: center", "z-index: -1", "pointer-events: none"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Background] Cinematic Dark Overlay",
+          "Dramatic hero image with contrast boost and dark vignette feel.",
+          "cinematic-bg",
+          "image",
+          [
+            { selector: ".cinematic-bg", declarations: ["width: 100%", "height: 100%", "object-fit: cover", "filter: saturate(1.2) contrast(1.05) brightness(0.7)", "transform: scale(1.03)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Background] Dream Blur Wallpaper",
+          "Soft colorful wallpaper look with blur and lowered contrast.",
+          "dream-blur-bg",
+          "image",
+          [
+            { selector: ".dream-blur-bg", declarations: ["width: 100%", "height: 100%", "object-fit: cover", "filter: blur(1.5px) saturate(1.35) brightness(1.03)", "transform: scale(1.05)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Background] Retro Scanlines",
+          "Adds CRT-like horizontal scanline texture over image.",
+          "retro-scan-bg",
+          "image",
+          [
+            { selector: ".retro-scan-bg", declarations: ["width: 100%", "height: 100%", "object-fit: cover", "background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 2px, transparent 4px)", "mix-blend-mode: multiply", "opacity: 0.92"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Background] Monochrome Matte",
+          "Flat premium black-and-white backdrop style.",
+          "mono-matte-bg",
+          "image",
+          [
+            { selector: ".mono-matte-bg", declarations: ["width: 100%", "height: 100%", "object-fit: cover", "filter: grayscale(100%) contrast(0.95) brightness(0.95)", "opacity: 0.88"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Background] Aurora Gradient Panel",
+          "Colorful aurora gradient card/panel style.",
+          "aurora-panel",
+          "card",
+          [
+            { selector: ".aurora-panel", declarations: ["background: linear-gradient(130deg, #32c5ff, #7b5cff 46%, #ff58b3)", "color: #f8fbff", "border: 1px solid rgba(255,255,255,0.32)", "box-shadow: 0 18px 44px rgba(39,56,138,0.35)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Background] Sunset Gradient Panel",
+          "Warm gradient panel useful for hero cards and CTA blocks.",
+          "sunset-panel",
+          "card",
+          [
+            { selector: ".sunset-panel", declarations: ["background: linear-gradient(120deg, #ff8a3d, #ff467e 52%, #8d46ff)", "color: #fff6f9", "border: 1px solid rgba(255,255,255,0.34)", "box-shadow: 0 18px 42px rgba(154,42,89,0.35)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Background] Ocean Gradient Panel",
+          "Blue-green calm gradient with clean readability.",
+          "ocean-panel",
+          "card",
+          [
+            { selector: ".ocean-panel", declarations: ["background: linear-gradient(125deg, #0b6cf0, #10b3c8 56%, #57e39f)", "color: #f3fffb", "border: 1px solid rgba(255,255,255,0.28)", "box-shadow: 0 16px 40px rgba(8,83,132,0.34)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Background] Candy Mesh",
+          "Playful mesh-gradient vibe for promotional blocks.",
+          "candy-mesh-panel",
+          "card",
+          [
+            { selector: ".candy-mesh-panel", declarations: ["background: radial-gradient(circle at 18% 22%, #ffd3f4 0%, transparent 42%), radial-gradient(circle at 82% 16%, #cbe1ff 0%, transparent 46%), radial-gradient(circle at 68% 82%, #ffd9a6 0%, transparent 40%), #fff1f8", "color: #4f3451", "border: 1px solid #f4cadf", "box-shadow: 0 14px 32px rgba(182,88,133,0.2)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Background] Spotlight Card",
+          "Subtle spotlight for depth without heavy gradients.",
+          "spotlight-card",
+          "card",
+          [
+            { selector: ".spotlight-card", declarations: ["background: radial-gradient(circle at 20% 16%, rgba(255,255,255,0.85) 0%, rgba(246,251,255,0.6) 28%, #eaf1ff 100%)", "border: 1px solid #ccdaf8", "box-shadow: 0 14px 30px rgba(69,99,157,0.2)", "color: #1f345b"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Glass] Frosted Light",
+          "Classic frosted-glass style: blur, transparency, and soft border.",
+          "frost-light",
+          "card",
+          [
+            { selector: ".frost-light", declarations: ["background: rgba(255,255,255,0.34)", "backdrop-filter: blur(12px) saturate(130%)", "-webkit-backdrop-filter: blur(12px) saturate(130%)", "border: 1px solid rgba(255,255,255,0.5)", "box-shadow: 0 18px 36px rgba(40,60,108,0.16)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Glass] Frosted Dark",
+          "Dark frosted panel for overlays and modal-like surfaces.",
+          "frost-dark",
+          "card",
+          [
+            { selector: ".frost-dark", declarations: ["background: rgba(8,14,28,0.48)", "color: #ecf2ff", "backdrop-filter: blur(14px) saturate(145%)", "-webkit-backdrop-filter: blur(14px) saturate(145%)", "border: 1px solid rgba(255,255,255,0.2)", "box-shadow: 0 20px 44px rgba(3,8,26,0.5)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Glass] Polar Ice",
+          "Cold translucent blue glass with airy depth.",
+          "polar-ice",
+          "card",
+          [
+            { selector: ".polar-ice", declarations: ["background: rgba(221,242,255,0.32)", "color: #183356", "backdrop-filter: blur(10px) saturate(150%)", "-webkit-backdrop-filter: blur(10px) saturate(150%)", "border: 1px solid rgba(255,255,255,0.65)", "box-shadow: 0 14px 32px rgba(49,105,163,0.24)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Glass] Neon Prism",
+          "Vibrant translucent look with colorful edge glow.",
+          "neon-prism-glass",
+          "card",
+          [
+            { selector: ".neon-prism-glass", declarations: ["background: linear-gradient(145deg, rgba(96,87,255,0.28), rgba(255,88,179,0.24))", "backdrop-filter: blur(16px) saturate(170%)", "-webkit-backdrop-filter: blur(16px) saturate(170%)", "border: 1px solid rgba(255,255,255,0.45)", "box-shadow: 0 0 0 1px rgba(173,186,255,0.35), 0 18px 40px rgba(90,41,130,0.38)", "color: #f6f3ff"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Glass] Misty Input",
+          "Semi-transparent frosted input style for form fields.",
+          "frost-input",
+          "input",
+          [
+            { selector: ".frost-input", declarations: ["background: rgba(255,255,255,0.42)", "backdrop-filter: blur(8px) saturate(125%)", "-webkit-backdrop-filter: blur(8px) saturate(125%)", "border: 1px solid rgba(206,221,247,0.95)", "box-shadow: inset 0 1px 0 rgba(255,255,255,0.7)", "color: #1a355e"] },
+            { selector: ".frost-input:focus", declarations: ["outline: none", "border-color: #5f8ee4", "box-shadow: 0 0 0 3px rgba(95,142,228,0.2)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Depth] Floating Card",
+          "Modern elevated card with soft drop shadow.",
+          "floating-card",
+          "card",
+          [
+            { selector: ".floating-card", declarations: ["background: #ffffff", "border: 1px solid #dce4f5", "border-radius: 16px", "box-shadow: 0 18px 38px rgba(28,55,112,0.16)", "transform: translateY(-2px)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Depth] Deep Elevation",
+          "Heavy depth for standout panels and alerts.",
+          "deep-elevation",
+          "card",
+          [
+            { selector: ".deep-elevation", declarations: ["background: #fefefe", "border: 1px solid #d9e2f8", "border-radius: 14px", "box-shadow: 0 28px 60px rgba(19,36,85,0.28)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Depth] Inset Emboss",
+          "Embossed surface with inset highlights and low contrast.",
+          "inset-emboss",
+          "card",
+          [
+            { selector: ".inset-emboss", declarations: ["background: #edf3ff", "border: 1px solid #d6e0f5", "box-shadow: inset 0 2px 6px rgba(142,164,206,0.35), inset 0 -2px 6px rgba(255,255,255,0.7)", "color: #26416f"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Depth] Brutalist Hard Shadow",
+          "Sharp old-school hard-shadow treatment.",
+          "brutalist-hard-shadow",
+          "card",
+          [
+            { selector: ".brutalist-hard-shadow", declarations: ["background: #ffe656", "border: 2px solid #121212", "box-shadow: 8px 8px 0 #121212", "color: #121212", "font-weight: 700"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Depth] Ambient Glow",
+          "Subtle luminous glow around a clean surface.",
+          "ambient-glow",
+          "card",
+          [
+            { selector: ".ambient-glow", declarations: ["background: #ffffff", "border: 1px solid #dbe6ff", "box-shadow: 0 0 0 1px rgba(160,187,248,0.34), 0 14px 34px rgba(69,99,163,0.18), 0 0 36px rgba(110,152,255,0.25)", "color: #1f355f"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Button] Pill CTA",
+          "Rounded call-to-action button with rich gradient.",
+          "btn-pill-cta",
+          "button",
+          [
+            { selector: ".btn-pill-cta", declarations: ["background: linear-gradient(120deg, #2567e9, #29b0ff)", "color: #ffffff", "border: 1px solid rgba(255,255,255,0.55)", "border-radius: 999px", "padding: 10px 18px", "font-weight: 700", "box-shadow: 0 10px 24px rgba(34,104,230,0.38)"] },
+            { selector: ".btn-pill-cta:hover", declarations: ["filter: brightness(1.06)", "transform: translateY(-1px)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Button] Neon Arcade",
+          "Cyber neon action button with glow edge.",
+          "btn-neon-arcade",
+          "button",
+          [
+            { selector: ".btn-neon-arcade", declarations: ["background: #091129", "color: #53f3ff", "border: 1px solid #53f3ff", "border-radius: 10px", "text-transform: uppercase", "letter-spacing: 0.06em", "box-shadow: 0 0 0 1px rgba(83,243,255,0.4), 0 0 18px rgba(83,243,255,0.45)"] },
+            { selector: ".btn-neon-arcade:hover", declarations: ["background: #0f1f43", "color: #a5fcff"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Button] Ghost Outline",
+          "Transparent button with high-contrast outline.",
+          "btn-ghost-outline",
+          "button",
+          [
+            { selector: ".btn-ghost-outline", declarations: ["background: transparent", "color: #24406f", "border: 2px solid #4f79be", "border-radius: 10px", "font-weight: 700"] },
+            { selector: ".btn-ghost-outline:hover", declarations: ["background: rgba(79,121,190,0.11)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Button] Warm Gradient CTA",
+          "Warm energetic button gradient for conversion actions.",
+          "btn-warm-gradient",
+          "button",
+          [
+            { selector: ".btn-warm-gradient", declarations: ["background: linear-gradient(130deg, #ff8a3d, #ff5a5f 48%, #ff2fa0)", "color: #fff", "border: 1px solid rgba(255,255,255,0.4)", "border-radius: 12px", "font-weight: 700", "box-shadow: 0 12px 28px rgba(201,78,110,0.35)"] },
+            { selector: ".btn-warm-gradient:hover", declarations: ["filter: saturate(1.08) brightness(1.04)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Button] Dark Tech",
+          "Minimal dark control with subtle cyan edge lighting.",
+          "btn-dark-tech",
+          "button",
+          [
+            { selector: ".btn-dark-tech", declarations: ["background: #111a2f", "color: #dce8ff", "border: 1px solid #2f4c7f", "border-radius: 8px", "box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 22px rgba(7,15,36,0.45)"] },
+            { selector: ".btn-dark-tech:hover", declarations: ["border-color: #52b4ff", "box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 2px rgba(82,180,255,0.16), 0 10px 22px rgba(7,15,36,0.45)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Pattern] Candy Stripes",
+          "Diagonal candy stripes for playful sections.",
+          "pattern-candy-stripes",
+          "card",
+          [
+            { selector: ".pattern-candy-stripes", declarations: ["background: repeating-linear-gradient(135deg, #ffd5ea 0px, #ffd5ea 12px, #ffe7f3 12px, #ffe7f3 24px)", "border: 1px solid #f5bfd8", "color: #6c3055"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Pattern] Graph Paper",
+          "Subtle graph paper layout useful for structured forms.",
+          "pattern-graph-paper",
+          "card",
+          [
+            { selector: ".pattern-graph-paper", declarations: ["background-image: linear-gradient(#dce8ff 1px, transparent 1px), linear-gradient(90deg, #dce8ff 1px, transparent 1px)", "background-size: 20px 20px", "background-color: #f7faff", "border: 1px solid #d3def5", "color: #24416f"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Pattern] Dots Pop",
+          "Dotted playful backdrop with gentle color.",
+          "pattern-dots-pop",
+          "card",
+          [
+            { selector: ".pattern-dots-pop", declarations: ["background-image: radial-gradient(circle, rgba(112,151,233,0.28) 2px, transparent 2px)", "background-size: 18px 18px", "background-color: #f4f8ff", "border: 1px solid #d6e2f8"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Pattern] Checkerboard",
+          "Checkerboard pattern for visual testing and contrast checks.",
+          "pattern-checkerboard",
+          "card",
+          [
+            { selector: ".pattern-checkerboard", declarations: ["background-image: linear-gradient(45deg, #dce6fa 25%, transparent 25%), linear-gradient(-45deg, #dce6fa 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #dce6fa 75%), linear-gradient(-45deg, transparent 75%, #dce6fa 75%)", "background-size: 20px 20px", "background-position: 0 0, 0 10px, 10px -10px, -10px 0", "background-color: #f9fbff", "border: 1px solid #d7e1f5"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Pattern] Carbon Fiber",
+          "Dark carbon-like texture with layered gradients.",
+          "pattern-carbon-fiber",
+          "card",
+          [
+            { selector: ".pattern-carbon-fiber", declarations: ["background: linear-gradient(27deg, #111a2c 5px, transparent 5px) 0 5px, linear-gradient(207deg, #111a2c 5px, transparent 5px) 10px 0, linear-gradient(27deg, #16223b 5px, transparent 5px) 0 10px, linear-gradient(207deg, #16223b 5px, transparent 5px) 10px 5px, linear-gradient(90deg, #0f1728 10px, transparent 10px), #121b2f", "background-size: 20px 20px", "color: #e8f0ff", "border: 1px solid #2a3651"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Input] Focus Halo",
+          "Clean input with clear focus halo for accessibility.",
+          "input-focus-halo",
+          "input",
+          [
+            { selector: ".input-focus-halo", declarations: ["background: #ffffff", "border: 1px solid #b8cbed", "border-radius: 10px", "color: #1b345f"] },
+            { selector: ".input-focus-halo:focus", declarations: ["outline: none", "border-color: #2d79f0", "box-shadow: 0 0 0 3px rgba(45,121,240,0.25)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Input] Underline Modern",
+          "Minimal underlined field style with modern focus.",
+          "input-underline",
+          "input",
+          [
+            { selector: ".input-underline", declarations: ["background: transparent", "border: none", "border-bottom: 2px solid #90a8d4", "border-radius: 0", "padding-left: 2px", "padding-right: 2px"] },
+            { selector: ".input-underline:focus", declarations: ["outline: none", "border-bottom-color: #1d6fe4", "box-shadow: 0 2px 0 rgba(29,111,228,0.15)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Input] Soft Filled",
+          "Filled input style with subtle elevation and comfort look.",
+          "input-soft-fill",
+          "input",
+          [
+            { selector: ".input-soft-fill", declarations: ["background: #f3f7ff", "border: 1px solid #d1def5", "border-radius: 11px", "color: #22406f", "box-shadow: inset 0 1px 0 rgba(255,255,255,0.7)"] },
+            { selector: ".input-soft-fill:focus", declarations: ["outline: none", "border-color: #6b93de", "box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 0 0 3px rgba(107,147,222,0.2)"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Sandbox] Stepped Boxes",
+          "Showcases child and sibling styling in the sandbox preview.",
+          "sandbox-steps",
+          "sandbox",
+          [
+            { selector: ".sandbox-steps .box", declarations: ["background: #f6f9ff", "border: 1px solid #ced9f1", "border-radius: 8px", "padding: 8px 10px"] },
+            { selector: ".sandbox-steps .box + .box", declarations: ["margin-top: 6px", "transform: translateX(8px)", "background: #eef4ff"] },
+            { selector: ".sandbox-steps .mini-btn", declarations: ["background: #2a70e6", "color: #ffffff", "border: 1px solid #1f5ec3", "border-radius: 8px", "padding: 6px 10px"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Sandbox] Sibling Ladder",
+          "Visually separates siblings with alternating treatment.",
+          "sandbox-ladder",
+          "sandbox",
+          [
+            { selector: ".sandbox-ladder .box", declarations: ["border: 1px solid #cfdaf2", "background: #ffffff", "border-radius: 7px"] },
+            { selector: ".sandbox-ladder .box + .box", declarations: ["background: #f3f7ff", "border-color: #b9caee"] },
+            { selector: ".sandbox-ladder .box + .box + .box", declarations: ["background: #e9f0ff", "border-color: #9db5e7"] },
+            { selector: ".sandbox-ladder .mini-btn", declarations: ["background: #ffffff", "border: 1px dashed #7e99cb", "color: #2b477b"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Sandbox] Button Cluster",
+          "Compact utility look for nested mini controls.",
+          "sandbox-button-cluster",
+          "sandbox",
+          [
+            { selector: ".sandbox-button-cluster", declarations: ["background: #f4f8ff", "border: 1px solid #d0dcf4", "border-radius: 10px", "padding: 10px"] },
+            { selector: ".sandbox-button-cluster .mini-btn", declarations: ["background: linear-gradient(120deg, #3f76e7, #5497ff)", "border: 1px solid #2b62d1", "color: #fff", "border-radius: 999px", "padding: 4px 10px", "box-shadow: 0 6px 14px rgba(39,90,195,0.33)"] },
+            { selector: ".sandbox-button-cluster .box", declarations: ["background: #fff", "border: 1px solid #d5dff3"] }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Theme] Oceanic Tokens",
+          "Tokenized blue-green theme using CSS variables and var() mappings.",
+          "theme-oceanic",
+          "card",
+          [
+            { selector: ".theme-oceanic", declarations: ["background: var(--bg-main)", "color: var(--text-main)", "border: 1px solid var(--border-main)", "box-shadow: var(--shadow-main)"] },
+            { selector: ".theme-oceanic .mini-btn", declarations: ["background: var(--accent-main)", "color: #fff", "border: 1px solid rgba(8,52,95,0.28)"] }
+          ],
+          [
+            { name: "--bg-main", value: "linear-gradient(120deg, #dff5ff, #cae7ff)" },
+            { name: "--text-main", value: "#163d63" },
+            { name: "--border-main", value: "#b8d6f6" },
+            { name: "--accent-main", value: "#1f7adf" },
+            { name: "--shadow-main", value: "0 14px 34px rgba(26,90,159,0.22)" }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Theme] Sunset Tokens",
+          "Warm tokenized style with coral and pink accents.",
+          "theme-sunset",
+          "card",
+          [
+            { selector: ".theme-sunset", declarations: ["background: var(--bg-main)", "color: var(--text-main)", "border: 1px solid var(--border-main)", "box-shadow: var(--shadow-main)"] },
+            { selector: ".theme-sunset .mini-btn", declarations: ["background: var(--accent-main)", "color: #fff", "border: 1px solid rgba(113,41,53,0.35)"] }
+          ],
+          [
+            { name: "--bg-main", value: "linear-gradient(120deg, #ffe3cc, #ffd2e3)" },
+            { name: "--text-main", value: "#5a2e39" },
+            { name: "--border-main", value: "#f3b8cb" },
+            { name: "--accent-main", value: "#ff5d7b" },
+            { name: "--shadow-main", value: "0 14px 34px rgba(177,71,101,0.28)" }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Theme] Forest Tokens",
+          "Nature-leaning token theme with moss and leaf tones.",
+          "theme-forest",
+          "card",
+          [
+            { selector: ".theme-forest", declarations: ["background: var(--bg-main)", "color: var(--text-main)", "border: 1px solid var(--border-main)", "box-shadow: var(--shadow-main)"] },
+            { selector: ".theme-forest .mini-btn", declarations: ["background: var(--accent-main)", "color: #f6fff6", "border: 1px solid rgba(21,79,51,0.38)"] }
+          ],
+          [
+            { name: "--bg-main", value: "linear-gradient(120deg, #e7f7e9, #d8efde)" },
+            { name: "--text-main", value: "#1f4b33" },
+            { name: "--border-main", value: "#b7dbbe" },
+            { name: "--accent-main", value: "#2f9a61" },
+            { name: "--shadow-main", value: "0 14px 34px rgba(40,110,70,0.24)" }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Theme] Mono Tokens",
+          "Minimal grayscale token theme for sober interfaces.",
+          "theme-mono",
+          "card",
+          [
+            { selector: ".theme-mono", declarations: ["background: var(--bg-main)", "color: var(--text-main)", "border: 1px solid var(--border-main)", "box-shadow: var(--shadow-main)"] },
+            { selector: ".theme-mono .mini-btn", declarations: ["background: var(--accent-main)", "color: #f7f7f7", "border: 1px solid #0f0f0f"] }
+          ],
+          [
+            { name: "--bg-main", value: "linear-gradient(120deg, #f1f1f1, #dbdbdb)" },
+            { name: "--text-main", value: "#1d1d1d" },
+            { name: "--border-main", value: "#bcbcbc" },
+            { name: "--accent-main", value: "#2f2f2f" },
+            { name: "--shadow-main", value: "0 14px 34px rgba(20,20,20,0.2)" }
+          ]
+        ),
+        makeLibraryPreset(
+          "[Theme] Candy Tokens",
+          "Bright playful token theme for onboarding and promo flows.",
+          "theme-candy",
+          "card",
+          [
+            { selector: ".theme-candy", declarations: ["background: var(--bg-main)", "color: var(--text-main)", "border: 1px solid var(--border-main)", "box-shadow: var(--shadow-main)"] },
+            { selector: ".theme-candy .mini-btn", declarations: ["background: var(--accent-main)", "color: #ffffff", "border: 1px solid rgba(116,44,115,0.35)"] }
+          ],
+          [
+            { name: "--bg-main", value: "linear-gradient(120deg, #ffe8f7, #e8f4ff)" },
+            { name: "--text-main", value: "#5a3563" },
+            { name: "--border-main", value: "#f0bfeb" },
+            { name: "--accent-main", value: "#d44bc4" },
+            { name: "--shadow-main", value: "0 14px 34px rgba(160,71,157,0.24)" }
+          ]
+        )
+      ];
+      const BUILTIN_PRESETS_BY_ID = BUILTIN_PRESETS.reduce(function (acc, preset) {
+        acc[preset.id] = preset;
+        return acc;
+      }, {});
+      let libraryVisiblePresets = BUILTIN_PRESETS.slice();
+
+      let activeParams = [];
+      let latestBuilderCandidate = null;
+      let builderRules = [];
+      let builderVariables = [];
+      let lastAutoBaseClass = sanitizeClassName(elBuilderClass.value);
+      let selectorGraphSegments = [];
+      let previewMode = "after";
+      const previewCycleTargets = ["card", "input", "button", "image", "overlap"];
+      let previewCycleIndex = 0;
+      let previewCycleTimer = null;
+      const builderMediaLayerMap = {
+        all: "",
+        "sm-down": "(max-width: 640px)",
+        "md-down": "(max-width: 900px)",
+        "lg-up": "(min-width: 1024px)",
+        "xl-up": "(min-width: 1280px)",
+        "motion-reduce": "(prefers-reduced-motion: reduce)",
+        "dark-scheme": "(prefers-color-scheme: dark)"
+      };
+
+      function parseData(id) {
+        const source = document.getElementById(id);
+        const raw = source ? source.value.trim() : "";
+        if (!raw) return [];
+        return raw.split(/\n+/).map(function (line) {
+          const tab = line.indexOf("\t");
+          if (tab < 0) return null;
+          return {
+            name: line.slice(0, tab).trim(),
+            syntax: line.slice(tab + 1).trim()
+          };
+        }).filter(Boolean);
+      }
+
+      function extractPlaceholders(text) {
+        const regex = /<([^>]+)>/g;
+        const out = [];
+        let match;
+        while ((match = regex.exec(text))) {
+          const token = match[1].trim();
+          if (out.indexOf(token) === -1) out.push(token);
+        }
+        return out;
+      }
+
+      function defaultValueForToken(token) {
+        const t = token.toLowerCase();
+        if (t.indexOf("color") >= 0) return "#1f5fbd";
+        if (t.indexOf("time") >= 0 || t.indexOf("duration") >= 0 || t.indexOf("delay") >= 0) return "200ms";
+        if (t.indexOf("angle") >= 0) return "120deg";
+        if (t.indexOf("radius") >= 0) return "8px";
+        if (t.indexOf("length") >= 0 || t.indexOf("size") >= 0 || t.indexOf("width") >= 0 || t.indexOf("height") >= 0) return "12px";
+        if (t.indexOf("percentage") >= 0) return "50%";
+        if (t === "x" || t === "y") return "1";
+        if (t === "x1" || t === "y1" || t === "x2" || t === "y2") return "0.25";
+        if (t.indexOf("number") >= 0 || t === "a" || t === "b" || t === "c" || t === "d") return "1";
+        if (t.indexOf("tx") >= 0 || t.indexOf("ty") >= 0) return "10px";
+        if (t.indexOf("id-list") >= 0) return "helperText";
+        if (t === "id") return "demoId";
+        if (t.indexOf("text") >= 0) return "Sample";
+        if (t.indexOf("token") >= 0) return "email";
+        if (t.indexOf("class-list") >= 0) return "demo-class";
+        if (t.indexOf("track-list") >= 0) return "1fr 1fr";
+        if (t.indexOf("property-list") >= 0) return "box-shadow, transform";
+        if (t.indexOf("property") === 0) return "all";
+        if (t.indexOf("name") >= 0) return "demo";
+        if (t.indexOf("value") >= 0) return "value";
+        if (t.indexOf("easing") >= 0) return "ease-in-out";
+        if (t.indexOf("filter-list") >= 0) return "blur(8px) saturate(120%)";
+        if (t.indexOf("image") >= 0) return "linear-gradient(120deg,#eef4ff,#d9e7ff)";
+        if (t.indexOf("shape") >= 0) return "circle";
+        if (t.indexOf("x y") >= 0) return "50% 50%";
+        if (t.indexOf("count") >= 0) return "2";
+        if (t.indexOf("min") >= 0) return "12px";
+        if (t.indexOf("max") >= 0) return "1fr";
+        return "value";
+      }
+
+      function supportsCssColor(value) {
+        try {
+          return Boolean(value) && CSS && CSS.supports && CSS.supports("color", value);
+        } catch (err) {
+          return false;
+        }
+      }
+
+      function parseDimensionValue(value, fallbackUnit) {
+        const raw = String(value || "").trim();
+        const m = raw.match(/^(-?\d*\.?\d+)([a-z%]*)$/i);
+        if (!m) {
+          return {
+            number: "",
+            unit: fallbackUnit || "px"
+          };
+        }
+        return {
+          number: m[1],
+          unit: m[2] || (fallbackUnit || "px")
+        };
+      }
+
+      function clampNumber(n, min, max) {
+        return Math.max(min, Math.min(max, n));
+      }
+
+      function hexToRgb(hex) {
+        const normalized = String(hex || "").trim().replace(/^#/, "");
+        if (!/^[0-9a-f]{6}$/i.test(normalized)) return { r: 31, g: 95, b: 189 };
+        return {
+          r: parseInt(normalized.slice(0, 2), 16),
+          g: parseInt(normalized.slice(2, 4), 16),
+          b: parseInt(normalized.slice(4, 6), 16)
+        };
+      }
+
+      function rgbToHex(r, g, b) {
+        const x = clampNumber(Math.round(Number(r) || 0), 0, 255).toString(16).padStart(2, "0");
+        const y = clampNumber(Math.round(Number(g) || 0), 0, 255).toString(16).padStart(2, "0");
+        const z = clampNumber(Math.round(Number(b) || 0), 0, 255).toString(16).padStart(2, "0");
+        return "#" + x + y + z;
+      }
+
+      function rgbToHsl(r, g, b) {
+        let rr = (Number(r) || 0) / 255;
+        let gg = (Number(g) || 0) / 255;
+        let bb = (Number(b) || 0) / 255;
+        const max = Math.max(rr, gg, bb);
+        const min = Math.min(rr, gg, bb);
+        let h = 0;
+        let s = 0;
+        const l = (max + min) / 2;
+
+        if (max !== min) {
+          const d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case rr:
+              h = (gg - bb) / d + (gg < bb ? 6 : 0);
+              break;
+            case gg:
+              h = (bb - rr) / d + 2;
+              break;
+            default:
+              h = (rr - gg) / d + 4;
+              break;
+          }
+          h /= 6;
+        }
+
+        return {
+          h: Math.round(h * 360),
+          s: Math.round(s * 100),
+          l: Math.round(l * 100)
+        };
+      }
+
+      function hslToRgb(h, s, l) {
+        let hh = (Number(h) || 0) / 360;
+        let ss = (Number(s) || 0) / 100;
+        let ll = (Number(l) || 0) / 100;
+        let r, g, b;
+
+        if (ss === 0) {
+          r = g = b = ll;
+        } else {
+          const hue2rgb = function (p, q, t) {
+            let tt = t;
+            if (tt < 0) tt += 1;
+            if (tt > 1) tt -= 1;
+            if (tt < 1 / 6) return p + (q - p) * 6 * tt;
+            if (tt < 1 / 2) return q;
+            if (tt < 2 / 3) return p + (q - p) * (2 / 3 - tt) * 6;
+            return p;
+          };
+          const q = ll < 0.5 ? ll * (1 + ss) : ll + ss - ll * ss;
+          const p = 2 * ll - q;
+          r = hue2rgb(p, q, hh + 1 / 3);
+          g = hue2rgb(p, q, hh);
+          b = hue2rgb(p, q, hh - 1 / 3);
+        }
+
+        return {
+          r: Math.round(r * 255),
+          g: Math.round(g * 255),
+          b: Math.round(b * 255)
+        };
+      }
+
+      function parseCssColorToRgb(value) {
+        if (!supportsCssColor(value)) return { r: 31, g: 95, b: 189, a: 1 };
+        const swatch = document.createElement("span");
+        swatch.style.color = value;
+        document.body.appendChild(swatch);
+        const computed = getComputedStyle(swatch).color;
+        document.body.removeChild(swatch);
+        const m = computed.match(/rgba?\(([^)]+)\)/i);
+        if (!m) return { r: 31, g: 95, b: 189, a: 1 };
+        const parts = m[1].split(",").map(function (p) { return p.trim(); });
+        return {
+          r: Number(parts[0]) || 31,
+          g: Number(parts[1]) || 95,
+          b: Number(parts[2]) || 189,
+          a: parts[3] != null ? Number(parts[3]) : 1
+        };
+      }
+
+      function inferParamKind(param, item) {
+        const label = String(param.label || "").toLowerCase();
+        const value = String(param.value || "").toLowerCase();
+        const itemName = String((item && item.name) || "").toLowerCase();
+
+        if (label.indexOf("color") >= 0 || itemName.indexOf("color") >= 0 || supportsCssColor(param.value)) return "color";
+        if (label.indexOf("time") >= 0 || label.indexOf("duration") >= 0 || label.indexOf("delay") >= 0) return "time";
+        if (label.indexOf("angle") >= 0) return "angle";
+        if (
+          label.indexOf("length") >= 0 ||
+          label.indexOf("radius") >= 0 ||
+          label.indexOf("width") >= 0 ||
+          label.indexOf("height") >= 0 ||
+          label === "tx" ||
+          label === "ty" ||
+          label.indexOf("percentage") >= 0 ||
+          /-?\d*\.?\d+(px|rem|em|%|vw|vh)$/i.test(value)
+        ) return "dimension";
+        if (label.indexOf("integer") >= 0) return "integer";
+        if (label.indexOf("number") >= 0 || label.indexOf("factor") >= 0 || label === "x" || label === "y" || label === "x1" || label === "x2" || label === "y1" || label === "y2" || label === "a" || label === "b" || label === "c" || label === "d") return "number";
+        return "text";
+      }
+
+      function defaultUnitsForKind(kind, label) {
+        if (kind === "time") return ["ms", "s"];
+        if (kind === "angle") return ["deg", "rad", "turn"];
+        const l = String(label || "").toLowerCase();
+        if (l.indexOf("percentage") >= 0) return ["%", "px", "rem", "em"];
+        return ["px", "rem", "em", "%", "vw", "vh"];
+      }
+
+      function ensureSemicolon(text) {
+        const v = (text || "").trim();
+        if (!v) return "";
+        return v.endsWith(";") ? v : (v + ";");
+      }
+
+      function sanitizeClassName(input) {
+        const raw = (input || "").trim().toLowerCase();
+        const normalized = raw.replace(/[^a-z0-9_-]+/g, "-").replace(/^-+|-+$/g, "");
+        return normalized || "my-custom-class";
+      }
+
+      function parseDeclarations(text) {
+        return (text || "")
+          .split(";")
+          .map(function (d) { return d.trim(); })
+          .filter(Boolean)
+          .map(function (d) { return ensureSemicolon(d); });
+      }
+
+      function currentBuilderMediaQuery() {
+        const layer = (elBuilderMediaLayer.value || "all").trim();
+        if (layer === "custom") return (elBuilderMediaCustom.value || "").trim();
+        return builderMediaLayerMap[layer] || "";
+      }
+
+      function updateBuilderMediaControlVisibility() {
+        const custom = (elBuilderMediaLayer.value || "") === "custom";
+        elBuilderMediaCustomWrap.classList.toggle("hidden", !custom);
+      }
+
+      function ruleMediaLabel(media) {
+        return media ? ("@media " + media) : "base layer";
+      }
+
+      function buildColorStringFromControls(hex, format, alpha) {
+        const rgb = hexToRgb(hex || "#1f5fbd");
+        const a = clampNumber(Number(alpha), 0, 1);
+        if (format === "rgb") {
+          if (a < 1) return "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + a + ")";
+          return "rgb(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ")";
+        }
+        if (format === "hsl") {
+          const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+          if (a < 1) return "hsla(" + hsl.h + ", " + hsl.s + "%, " + hsl.l + "%, " + a + ")";
+          return "hsl(" + hsl.h + ", " + hsl.s + "%, " + hsl.l + "%)";
+        }
+        if (a < 1) return "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + a + ")";
+        return rgbToHex(rgb.r, rgb.g, rgb.b);
+      }
+
+      function syncVariableValueFromColorHelper() {
+        const value = buildColorStringFromControls(
+          elBuilderVarColor.value,
+          elBuilderVarFormat.value,
+          elBuilderVarAlpha.value
+        );
+        elBuilderVarValue.value = value;
+      }
+
+      function looksLikeLengthValue(value) {
+        return /^-?\d*\.?\d+(px|rem|em|%|vw|vh|vmin|vmax|ch|ex)$/.test(String(value || "").trim());
+      }
+
+      function looksLikeTimeValue(value) {
+        return /^-?\d*\.?\d+(ms|s)$/.test(String(value || "").trim());
+      }
+
+      function looksLikeNumber(value) {
+        return /^-?\d*\.?\d+$/.test(String(value || "").trim());
+      }
+
+      function isLikelyGenericCssValue(value) {
+        const v = String(value || "").trim();
+        if (!v) return false;
+        if (supportsCssColor(v)) return true;
+        if (looksLikeLengthValue(v) || looksLikeTimeValue(v) || looksLikeNumber(v)) return true;
+        if (/^(var|calc|min|max|clamp)\(/.test(v)) return true;
+        if (/^[a-z-]+$/i.test(v)) return true;
+        return false;
+      }
+
+      function setBuilderStatus(msg) {
+        elBuilderStatus.textContent = msg || "";
+      }
+
+      function getBaseSelector() {
+        const fromInput = (elBuilderBaseSelector.value || "").trim();
+        if (fromInput) return fromInput;
+        return "." + sanitizeClassName(elBuilderClass.value);
+      }
+
+      function getSelectorScopeForVariables() {
+        const fromInput = (elBuilderVariableScope.value || "").trim();
+        return fromInput || getBaseSelector();
+      }
+
+      function normalizeGraphSegment(seg) {
+        const relation = String((seg && seg.relation) || "descendant").trim();
+        const selector = String((seg && seg.selector) || "").trim();
+        const pseudo = String((seg && seg.pseudo) || "").trim();
+        const validRelation = ["self", "descendant", "child", "adjacent", "sibling"].indexOf(relation) >= 0 ? relation : "descendant";
+        return { relation: validRelation, selector: selector, pseudo: pseudo };
+      }
+
+      function seedSelectorGraphFromLegacy() {
+        const relation = (elBuilderCombinator.value || "self").trim();
+        const relative = (elBuilderRelativeSelector.value || "").trim();
+        const pseudo = (elBuilderPseudoSelector.value || "").trim();
+        selectorGraphSegments = [normalizeGraphSegment({
+          relation: relation || "self",
+          selector: relation === "self" ? (relative || "") : (relative || "*"),
+          pseudo: pseudo
+        })];
+      }
+
+      function composeSelectorFromGraph(base) {
+        if (!selectorGraphSegments.length) {
+          seedSelectorGraphFromLegacy();
+        }
+        let selector = base;
+        selectorGraphSegments.forEach(function (seg) {
+          const relation = seg.relation || "descendant";
+          const part = (seg.selector || "").trim();
+          const pseudo = (seg.pseudo || "").trim();
+          if (relation === "self") {
+            if (part && part !== "*") {
+              if (/^[.#:[].*/.test(part)) {
+                selector += part;
+              } else {
+                selector += " " + part;
+              }
+            }
+          } else {
+            const operator = relation === "child" ? " > " : relation === "adjacent" ? " + " : relation === "sibling" ? " ~ " : " ";
+            selector += operator + (part || "*");
+          }
+          if (pseudo) selector += pseudo;
+        });
+        return selector.trim();
+      }
+
+      function computeSpecificityForSingle(selector) {
+        const src = String(selector || "");
+        const idCount = (src.match(/#[a-zA-Z0-9_-]+/g) || []).length;
+        const classCount = (src.match(/\.[a-zA-Z0-9_-]+/g) || []).length;
+        const attrCount = (src.match(/\[[^\]]+\]/g) || []).length;
+        const pseudoClassCount = (src.match(/:(?!:)[a-zA-Z0-9_-]+(?:\([^)]*\))?/g) || []).length;
+        const pseudoElementCount = (src.match(/::[a-zA-Z0-9_-]+/g) || []).length;
+
+        const stripped = src
+          .replace(/::[a-zA-Z0-9_-]+/g, " ")
+          .replace(/#[a-zA-Z0-9_-]+/g, " ")
+          .replace(/\.[a-zA-Z0-9_-]+/g, " ")
+          .replace(/\[[^\]]+\]/g, " ")
+          .replace(/:(?!:)[a-zA-Z0-9_-]+(?:\([^)]*\))?/g, " ")
+          .replace(/[>+~*,]/g, " ");
+        const typeCount = (stripped.match(/\b[a-zA-Z][a-zA-Z0-9-]*\b/g) || []).length;
+
+        return {
+          a: idCount,
+          b: classCount + attrCount + pseudoClassCount,
+          c: pseudoElementCount + typeCount
+        };
+      }
+
+      function compareSpecificity(x, y) {
+        if (x.a !== y.a) return x.a - y.a;
+        if (x.b !== y.b) return x.b - y.b;
+        return x.c - y.c;
+      }
+
+      function computeSpecificity(selector) {
+        const groups = String(selector || "")
+          .split(",")
+          .map(function (s) { return s.trim(); })
+          .filter(Boolean);
+        if (!groups.length) return { a: 0, b: 0, c: 0 };
+
+        let max = computeSpecificityForSingle(groups[0]);
+        for (let i = 1; i < groups.length; i++) {
+          const current = computeSpecificityForSingle(groups[i]);
+          if (compareSpecificity(current, max) > 0) max = current;
+        }
+        return max;
+      }
+
+      function updateSpecificityMeter(selector) {
+        const spec = computeSpecificity(selector);
+        const score = spec.a * 100 + spec.b * 10 + spec.c;
+        elSpecificityScore.textContent = "(" + spec.a + "," + spec.b + "," + spec.c + ")";
+        const width = Math.min(100, spec.a * 45 + spec.b * 6 + spec.c * 1.5);
+        elSpecificityFill.style.width = width + "%";
+
+        let note = "Low specificity; easier to override.";
+        let fill = "linear-gradient(90deg, #2ca66f, #8bbf43)";
+        if (spec.a > 0 || spec.b >= 6) {
+          note = "High specificity; overrides may get harder.";
+          fill = "linear-gradient(90deg, #d65f47, #be2d2d)";
+        } else if (spec.b >= 3 || spec.c >= 4) {
+          note = "Medium specificity; manageable with consistent layering.";
+          fill = "linear-gradient(90deg, #de9a2f, #d06f2f)";
+        }
+        elSpecificityFill.style.background = fill;
+        elSpecificityNote.textContent = note + " Numeric score: " + score + ".";
+      }
+
+      function renderSelectorGraph() {
+        if (!selectorGraphSegments.length) seedSelectorGraphFromLegacy();
+        elSelectorGraphList.innerHTML = "";
+
+        selectorGraphSegments.forEach(function (seg, idx) {
+          const row = document.createElement("div");
+          row.className = "selector-graph-item";
+
+          const relationWrap = document.createElement("div");
+          relationWrap.className = "row";
+          const relationLabel = document.createElement("label");
+          relationLabel.className = "label";
+          relationLabel.textContent = "Relation";
+          const relation = document.createElement("select");
+          relation.innerHTML =
+            '<option value="self">Self</option>' +
+            '<option value="descendant">Descendant</option>' +
+            '<option value="child">Child (&gt;)</option>' +
+            '<option value="adjacent">Adjacent (+)</option>' +
+            '<option value="sibling">Sibling (~)</option>';
+          relation.value = seg.relation;
+          relation.addEventListener("change", function () {
+            selectorGraphSegments[idx].relation = relation.value;
+            updateSelectorPreview();
+            updateFlowStatus();
+          });
+          relationWrap.appendChild(relationLabel);
+          relationWrap.appendChild(relation);
+
+          const selectorWrap = document.createElement("div");
+          selectorWrap.className = "row";
+          const selectorLabel = document.createElement("label");
+          selectorLabel.className = "label";
+          selectorLabel.textContent = "Selector";
+          const selectorInput = document.createElement("input");
+          selectorInput.placeholder = ".form-control";
+          selectorInput.value = seg.selector;
+          selectorInput.addEventListener("input", function () {
+            selectorGraphSegments[idx].selector = selectorInput.value;
+            updateSelectorPreview();
+            updateFlowStatus();
+          });
+          selectorWrap.appendChild(selectorLabel);
+          selectorWrap.appendChild(selectorInput);
+
+          const pseudoWrap = document.createElement("div");
+          pseudoWrap.className = "row";
+          const pseudoLabel = document.createElement("label");
+          pseudoLabel.className = "label";
+          pseudoLabel.textContent = "Pseudo";
+          const pseudoInput = document.createElement("input");
+          pseudoInput.placeholder = ":hover or ::before";
+          pseudoInput.value = seg.pseudo;
+          pseudoInput.addEventListener("input", function () {
+            selectorGraphSegments[idx].pseudo = pseudoInput.value;
+            updateSelectorPreview();
+            updateFlowStatus();
+          });
+          pseudoWrap.appendChild(pseudoLabel);
+          pseudoWrap.appendChild(pseudoInput);
+
+          const removeBtn = document.createElement("button");
+          removeBtn.type = "button";
+          removeBtn.textContent = "Remove";
+          removeBtn.className = "builder-remove";
+          removeBtn.addEventListener("click", function () {
+            if (selectorGraphSegments.length <= 1) {
+              selectorGraphSegments[0] = { relation: "self", selector: "", pseudo: "" };
+            } else {
+              selectorGraphSegments.splice(idx, 1);
+            }
+            renderSelectorGraph();
+            updateFlowStatus();
+          });
+
+          row.appendChild(relationWrap);
+          row.appendChild(selectorWrap);
+          row.appendChild(pseudoWrap);
+          row.appendChild(removeBtn);
+          elSelectorGraphList.appendChild(row);
+        });
+
+        const graphEnabled = Boolean(elSelectorGraphEnabled.checked);
+        elSelectorGraphList.classList.toggle("hidden", !graphEnabled);
+        elSelectorGraphAdd.disabled = !graphEnabled;
+        elSelectorGraphClear.disabled = !graphEnabled;
+        elBuilderLegacyRow1.classList.toggle("hidden", graphEnabled);
+        elBuilderLegacyRow2.classList.toggle("hidden", graphEnabled);
+        updateSelectorPreview();
+      }
+
+      function addSelectorGraphSegment() {
+        if (!selectorGraphSegments.length) seedSelectorGraphFromLegacy();
+        selectorGraphSegments.push({ relation: "descendant", selector: ".child", pseudo: "" });
+        renderSelectorGraph();
+        updateFlowStatus();
+      }
+
+      function clearSelectorGraphSegments() {
+        selectorGraphSegments = [{ relation: "self", selector: "", pseudo: "" }];
+        renderSelectorGraph();
+        updateFlowStatus();
+      }
+
+      function previewTargetLabel(key) {
+        if (key === "card") return "Card";
+        if (key === "input") return "Input";
+        if (key === "button") return "Button";
+        if (key === "image") return "Image";
+        if (key === "overlap") return "Overlap";
+        if (key === "sandbox") return "Sandbox";
+        return key || "Unknown";
+      }
+
+      function updatePreviewCycleUI() {
+        const running = previewCycleTimer !== null;
+        elLibraryCycleTargets.textContent = running ? "Stop Target Cycle" : "Cycle All Targets";
+        elLibraryCycleStatus.textContent = running
+          ? "Cycling: " + previewCycleTargets.map(previewTargetLabel).join(" -> ") + " (current: " + previewTargetLabel(elTarget.value) + ")."
+          : "Cycle off.";
+      }
+
+      function stopPreviewTargetCycle(silent) {
+        if (previewCycleTimer !== null) {
+          clearInterval(previewCycleTimer);
+          previewCycleTimer = null;
+        }
+        updatePreviewCycleUI();
+        if (!silent) setBuilderStatus("Stopped target cycle.");
+      }
+
+      function cycleTargetStep() {
+        if (!previewCycleTargets.length) return;
+        previewCycleIndex = (previewCycleIndex + 1) % previewCycleTargets.length;
+        const target = previewCycleTargets[previewCycleIndex];
+        elTarget.value = target;
+        previewMode = "after";
+        updatePreviewModeUI();
+        updateLive();
+        updatePreviewCycleUI();
+      }
+
+      function startPreviewTargetCycle() {
+        const preset = selectedLibraryPreset();
+        if (!preset) {
+          setBuilderStatus("No class pack selected.");
+          return;
+        }
+        stopPreviewTargetCycle(true);
+        previewCurrentLibraryPack();
+        const current = elTarget.value;
+        const idx = previewCycleTargets.indexOf(current);
+        previewCycleIndex = idx >= 0 ? idx : 0;
+        updatePreviewCycleUI();
+        previewCycleTimer = setInterval(cycleTargetStep, 1800);
+        setBuilderStatus("Cycling preview targets for current class pack.");
+      }
+
+      function togglePreviewTargetCycle() {
+        if (previewCycleTimer !== null) {
+          stopPreviewTargetCycle();
+          return;
+        }
+        startPreviewTargetCycle();
+      }
+
+      function togglePreviewMode() {
+        previewMode = previewMode === "before" ? "after" : "before";
+        updatePreviewModeUI();
+        renderBuilder();
+        updateLive();
+      }
+
+      function updatePreviewModeUI() {
+        const before = previewMode === "before";
+        elPreviewToggleState.textContent = before ? "Switch To After" : "Switch To Before";
+        elPreviewStateText.textContent = before ? "Preview: Before" : "Preview: After";
+      }
+
+      function composeSelector() {
+        const override = (elBuilderSelectorOverride.value || "").trim();
+        if (override) return override;
+
+        if (elSelectorGraphEnabled.checked) {
+          return composeSelectorFromGraph(getBaseSelector());
+        }
+
+        const base = getBaseSelector();
+        const combinator = elBuilderCombinator.value;
+        const relative = (elBuilderRelativeSelector.value || "").trim();
+        const pseudo = (elBuilderPseudoSelector.value || "").trim();
+
+        let selector = base;
+        if (combinator === "descendant") selector = base + " " + (relative || "*");
+        if (combinator === "child") selector = base + " > " + (relative || "*");
+        if (combinator === "adjacent") selector = base + " + " + (relative || "*");
+        if (combinator === "sibling") selector = base + " ~ " + (relative || "*");
+
+        if (pseudo) selector += pseudo;
+        return selector.trim();
+      }
+
+      function updateSelectorPreview() {
+        const selector = composeSelector();
+        elBuilderSelectorPreview.textContent = selector;
+        elSelectorGraphOutput.textContent = selector;
+        updateSpecificityMeter(selector);
+      }
+
+      function ensureRuleBlock(selector, media) {
+        const s = (selector || "").trim();
+        const m = (media || "").trim();
+        if (!s) return null;
+        let block = builderRules.find(function (b) {
+          return b.selector === s && (b.media || "") === m;
+        });
+        if (!block) {
+          block = { selector: s, media: m, declarations: [] };
+          builderRules.push(block);
+        }
+        return block;
+      }
+
+      function addDeclarationsToSelector(selector, declarations, media) {
+        const block = ensureRuleBlock(selector, media);
+        if (!block) return 0;
+        const normalized = (declarations || [])
+          .map(ensureSemicolon)
+          .filter(Boolean);
+        if (normalized.length === 0) return 0;
+        block.declarations = block.declarations.concat(normalized);
+        return normalized.length;
+      }
+
+      function cleanRuleBlocks() {
+        builderRules = builderRules.filter(function (b) {
+          b.declarations = (b.declarations || []).filter(Boolean);
+          return b.selector && b.declarations.length > 0;
+        });
+      }
+
+      function addVariable() {
+        const name = (elBuilderVarName.value || "").trim();
+        const value = (elBuilderVarValue.value || "").trim();
+        if (!name || !value) {
+          setBuilderStatus("Variable name and value are required.");
+          return;
+        }
+        if (!/^--[a-zA-Z0-9_-]+$/.test(name)) {
+          setBuilderStatus("Variable name must match --name format (letters, numbers, _ or -).");
+          return;
+        }
+        const low = name.toLowerCase();
+        const allowAdvanced = /^(var|calc|min|max|clamp)\(/.test(value);
+        const isColorVar = /color|bg|background|ink|text|accent/.test(low);
+        const isTimeVar = /time|duration|delay/.test(low);
+        const isLengthVar = /size|width|height|space|spacing|gap|radius|padding|margin/.test(low);
+        const isNumberVar = /opacity|scale|ratio|weight|line-height|z-index/.test(low);
+
+        if (isColorVar && !(supportsCssColor(value) || allowAdvanced)) {
+          setBuilderStatus("This variable looks like color. Use HEX/RGB/HSL or a valid CSS color value.");
+          return;
+        }
+        if (isTimeVar && !(looksLikeTimeValue(value) || allowAdvanced)) {
+          setBuilderStatus("This variable looks like time. Use values like 200ms or 0.3s.");
+          return;
+        }
+        if (isLengthVar && !(looksLikeLengthValue(value) || allowAdvanced)) {
+          setBuilderStatus("This variable looks like length. Use values like 12px, 1rem, 50%.");
+          return;
+        }
+        if (isNumberVar && !(looksLikeNumber(value) || allowAdvanced || /^[a-z-]+$/i.test(value))) {
+          setBuilderStatus("This variable looks numeric. Use a number like 1, 0.6, 700.");
+          return;
+        }
+        if (!isLikelyGenericCssValue(value) && !allowAdvanced) {
+          setBuilderStatus("Variable value format is not recognized as CSS. Check syntax.");
+          return;
+        }
+        const scope = getSelectorScopeForVariables();
+        builderVariables.push({ scope: scope, name: name, value: value });
+        elBuilderVarName.value = "";
+        elBuilderVarValue.value = "";
+        renderBuilder();
+        updateLive();
+        setBuilderStatus("Variable added.");
+      }
+
+      function removeVariable(index) {
+        if (index < 0 || index >= builderVariables.length) return;
+        builderVariables.splice(index, 1);
+        renderBuilder();
+        updateLive();
+        setBuilderStatus("Variable removed.");
+      }
+
+      function groupedVariables() {
+        const groups = {};
+        builderVariables.forEach(function (v) {
+          if (!groups[v.scope]) groups[v.scope] = [];
+          groups[v.scope].push(v);
+        });
+        return groups;
+      }
+
+      function buildStylesheetText() {
+        cleanRuleBlocks();
+        const sections = [];
+        const varsByScope = groupedVariables();
+        Object.keys(varsByScope).forEach(function (scope) {
+          const lines = varsByScope[scope].map(function (v) { return v.name + ": " + v.value + ";"; });
+          if (lines.length > 0) {
+            sections.push(scope + " {\n  " + lines.join("\n  ") + "\n}");
+          }
+        });
+
+        const baseBlocks = builderRules.filter(function (block) {
+          return !(block.media || "").trim();
+        });
+        baseBlocks.forEach(function (block) {
+          if (!block.declarations.length) return;
+          sections.push(block.selector + " {\n  " + block.declarations.join("\n  ") + "\n}");
+        });
+
+        const mediaBuckets = {};
+        builderRules.forEach(function (block) {
+          const media = (block.media || "").trim();
+          if (!media || !block.declarations.length) return;
+          if (!mediaBuckets[media]) mediaBuckets[media] = [];
+          mediaBuckets[media].push(block);
+        });
+        Object.keys(mediaBuckets).forEach(function (media) {
+          const inner = mediaBuckets[media].map(function (block) {
+            return block.selector + " {\n    " + block.declarations.join("\n    ") + "\n  }";
+          }).join("\n\n  ");
+          sections.push("@media " + media + " {\n  " + inner + "\n}");
+        });
+
+        if (sections.length === 0) {
+          sections.push(getBaseSelector() + " {\n  \n}");
+        }
+        return sections.join("\n\n");
+      }
+
+      function snapshotBuilderState() {
+        return {
+          className: elBuilderClass.value,
+          baseSelector: elBuilderBaseSelector.value,
+          combinator: elBuilderCombinator.value,
+          relativeSelector: elBuilderRelativeSelector.value,
+          pseudoSelector: elBuilderPseudoSelector.value,
+          selectorOverride: elBuilderSelectorOverride.value,
+          selectorGraphEnabled: elSelectorGraphEnabled.checked,
+          selectorGraphSegments: selectorGraphSegments.map(function (seg) {
+            return normalizeGraphSegment(seg);
+          }),
+          variableScope: elBuilderVariableScope.value,
+          mediaLayer: elBuilderMediaLayer.value,
+          mediaCustom: elBuilderMediaCustom.value,
+          previewMode: previewMode,
+          autoApply: elBuilderAutoApply.checked,
+          rules: builderRules.map(function (b) {
+            return { selector: b.selector, media: b.media || "", declarations: b.declarations.slice() };
+          }),
+          variables: builderVariables.map(function (v) {
+            return { scope: v.scope, name: v.name, value: v.value };
+          })
+        };
+      }
+
+      function applyBuilderState(state) {
+        if (!state) return;
+        elBuilderClass.value = state.className || "my-custom-class";
+        elBuilderBaseSelector.value = state.baseSelector || ("." + sanitizeClassName(elBuilderClass.value));
+        elBuilderCombinator.value = state.combinator || "self";
+        elBuilderRelativeSelector.value = state.relativeSelector || ".form-control";
+        elBuilderPseudoSelector.value = state.pseudoSelector || "";
+        elBuilderSelectorOverride.value = state.selectorOverride || "";
+        elSelectorGraphEnabled.checked = state.selectorGraphEnabled !== false;
+        selectorGraphSegments = Array.isArray(state.selectorGraphSegments) && state.selectorGraphSegments.length
+          ? state.selectorGraphSegments.map(normalizeGraphSegment)
+          : [];
+        if (!selectorGraphSegments.length) seedSelectorGraphFromLegacy();
+        elBuilderVariableScope.value = state.variableScope || "";
+        elBuilderMediaLayer.value = state.mediaLayer || "all";
+        elBuilderMediaCustom.value = state.mediaCustom || "";
+        updateBuilderMediaControlVisibility();
+        previewMode = state.previewMode === "before" ? "before" : "after";
+        updatePreviewModeUI();
+        renderSelectorGraph();
+        elBuilderAutoApply.checked = state.autoApply !== false;
+        builderRules = Array.isArray(state.rules) ? state.rules.map(function (b) {
+          if (typeof b === "string") {
+            return {
+              selector: elBuilderBaseSelector.value || ("." + sanitizeClassName(elBuilderClass.value)),
+              media: "",
+              declarations: [ensureSemicolon(b)]
+            };
+          }
+          return { selector: b.selector, media: b.media || "", declarations: (b.declarations || []).slice() };
+        }) : [];
+        builderVariables = Array.isArray(state.variables) ? state.variables.map(function (v) {
+          return { scope: v.scope, name: v.name, value: v.value };
+        }) : [];
+        if (state.target && Object.prototype.hasOwnProperty.call(previewTargets, state.target)) {
+          elTarget.value = state.target;
+        }
+        if (state.category && datasets[state.category]) {
+          elCategory.value = state.category;
+          if (typeof state.search === "string") {
+            elSearch.value = state.search;
+          }
+          populateItems();
+          if (state.item) {
+            const hasItem = Array.from(elItem.options).some(function (o) { return o.value === state.item; });
+            if (hasItem) elItem.value = state.item;
+          }
+        }
+        lastAutoBaseClass = sanitizeClassName(elBuilderClass.value);
+        renderBuilder();
+        renderEverything();
+      }
+
+      function readPresets() {
+        try {
+          const raw = localStorage.getItem(PRESET_STORAGE_KEY);
+          if (!raw) return {};
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === "object") return parsed;
+          return {};
+        } catch (err) {
+          return {};
+        }
+      }
+
+      function writePresets(obj) {
+        try {
+          localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(obj));
+        } catch (err) {
+          setBuilderStatus("Could not save presets in this browser.");
+        }
+      }
+
+      function renderPresetList() {
+        const presets = readPresets();
+        const names = Object.keys(presets).sort();
+        elPresetSelect.innerHTML = "";
+        if (names.length === 0) {
+          const opt = document.createElement("option");
+          opt.value = "";
+          opt.textContent = "No presets saved";
+          elPresetSelect.appendChild(opt);
+          return;
+        }
+        names.forEach(function (name) {
+          const opt = document.createElement("option");
+          opt.value = name;
+          opt.textContent = name;
+          elPresetSelect.appendChild(opt);
+        });
+      }
+
+      function readLibraryFavorites() {
+        try {
+          const raw = localStorage.getItem(LIBRARY_FAVORITES_KEY);
+          if (!raw) return {};
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            return parsed.reduce(function (acc, id) {
+              acc[id] = true;
+              return acc;
+            }, {});
+          }
+          if (parsed && typeof parsed === "object") return parsed;
+          return {};
+        } catch (err) {
+          return {};
+        }
+      }
+
+      function writeLibraryFavorites(obj) {
+        try {
+          localStorage.setItem(LIBRARY_FAVORITES_KEY, JSON.stringify(obj || {}));
+        } catch (err) {
+          setBuilderStatus("Could not save library favorites in this browser.");
+        }
+      }
+
+      function libraryPresetCategory(preset) {
+        const name = String((preset && preset.name) || "");
+        const m = name.match(/^\s*\[([^\]]+)\]/);
+        if (m && m[1]) return m[1].trim();
+        return "Other";
+      }
+
+      function isLibraryFavorite(id) {
+        const favorites = readLibraryFavorites();
+        return Boolean(favorites[id]);
+      }
+
+      function updateLibraryFavoriteButton() {
+        const preset = selectedLibraryPreset();
+        if (!preset) {
+          elLibraryToggleFavorite.textContent = "Favorite Pack";
+          return;
+        }
+        elLibraryToggleFavorite.textContent = isLibraryFavorite(preset.id) ? "Unfavorite Pack" : "Favorite Pack";
+      }
+
+      function renderLibraryCategoryList() {
+        const prev = (elLibraryCategory.value || "").trim();
+        const categories = Array.from(new Set(BUILTIN_PRESETS.map(libraryPresetCategory))).sort();
+        elLibraryCategory.innerHTML = "";
+
+        const allOpt = document.createElement("option");
+        allOpt.value = "";
+        allOpt.textContent = "All Categories";
+        elLibraryCategory.appendChild(allOpt);
+
+        categories.forEach(function (cat) {
+          const opt = document.createElement("option");
+          opt.value = cat;
+          opt.textContent = cat;
+          elLibraryCategory.appendChild(opt);
+        });
+
+        if (categories.indexOf(prev) >= 0) {
+          elLibraryCategory.value = prev;
+        } else {
+          elLibraryCategory.value = "";
+        }
+      }
+
+      function filteredLibraryPresets() {
+        const search = (elLibrarySearch.value || "").trim().toLowerCase();
+        const category = (elLibraryCategory.value || "").trim();
+        const favoritesOnly = Boolean(elLibraryFavoritesOnly.checked);
+        const favorites = readLibraryFavorites();
+
+        return BUILTIN_PRESETS.filter(function (preset) {
+          const cat = libraryPresetCategory(preset);
+          if (category && cat !== category) return false;
+          if (favoritesOnly && !favorites[preset.id]) return false;
+          if (!search) return true;
+          const hay = (preset.name + " " + preset.description + " " + preset.id + " " + cat).toLowerCase();
+          return hay.indexOf(search) >= 0;
+        });
+      }
+
+      function renderLibraryPresetList() {
+        const prev = (elLibraryPresetSelect.value || "").trim();
+        const list = filteredLibraryPresets();
+        libraryVisiblePresets = list.slice();
+        elLibraryPresetSelect.innerHTML = "";
+        if (list.length === 0) {
+          const opt = document.createElement("option");
+          opt.value = "";
+          opt.textContent = "No class packs match filters";
+          elLibraryPresetSelect.appendChild(opt);
+          elLibraryPresetHelp.textContent = "No results. Adjust search/category/favorite filters.";
+          updateLibraryFavoriteButton();
+          return;
+        }
+        list.forEach(function (preset) {
+          const opt = document.createElement("option");
+          opt.value = preset.id;
+          opt.textContent = (isLibraryFavorite(preset.id) ? "* " : "") + preset.name;
+          elLibraryPresetSelect.appendChild(opt);
+        });
+
+        if (list.some(function (preset) { return preset.id === prev; })) {
+          elLibraryPresetSelect.value = prev;
+        } else {
+          elLibraryPresetSelect.selectedIndex = 0;
+        }
+
+        updateLibraryPresetHelp();
+        updateLibraryFavoriteButton();
+      }
+
+      function selectedLibraryPreset() {
+        const id = (elLibraryPresetSelect.value || "").trim();
+        if (!id) return null;
+        return BUILTIN_PRESETS_BY_ID[id] || null;
+      }
+
+      function updateLibraryPresetHelp() {
+        const preset = selectedLibraryPreset();
+        if (!preset) {
+          elLibraryPresetHelp.textContent = "";
+          return;
+        }
+        const cat = libraryPresetCategory(preset);
+        const favorite = isLibraryFavorite(preset.id) ? "yes" : "no";
+        const target = preset.state && preset.state.target ? preset.state.target : "card";
+        const className = preset.state && preset.state.className ? "." + preset.state.className : "";
+        elLibraryPresetHelp.textContent =
+          "[" + cat + "] " + preset.description +
+          " Target: " + target +
+          ". Class: " + className +
+          ". Favorite: " + favorite +
+          ". Showing " + libraryVisiblePresets.length + "/" + BUILTIN_PRESETS.length +
+          ". Tip: packs are previewed in AFTER mode on their target.";
+      }
+
+      function toggleLibraryFavorite() {
+        const preset = selectedLibraryPreset();
+        if (!preset) {
+          setBuilderStatus("No class pack selected to favorite.");
+          return;
+        }
+        const favorites = readLibraryFavorites();
+        const wasFavorite = Boolean(favorites[preset.id]);
+        if (wasFavorite) {
+          delete favorites[preset.id];
+        } else {
+          favorites[preset.id] = true;
+        }
+        writeLibraryFavorites(favorites);
+        renderLibraryPresetList();
+        if (libraryVisiblePresets.some(function (x) { return x.id === preset.id; })) {
+          elLibraryPresetSelect.value = preset.id;
+          updateLibraryPresetHelp();
+          updateLibraryFavoriteButton();
+        }
+        setBuilderStatus((wasFavorite ? "Unfavorited" : "Favorited") + " class pack: " + preset.name);
+      }
+
+      function randomizeLibraryPreset() {
+        let pool = libraryVisiblePresets.slice();
+        if (pool.length === 0) pool = BUILTIN_PRESETS.slice();
+        if (pool.length === 0) {
+          setBuilderStatus("No class packs available.");
+          return;
+        }
+        const currentId = (elLibraryPresetSelect.value || "").trim();
+        if (pool.length > 1) {
+          pool = pool.filter(function (p) { return p.id !== currentId; });
+        }
+        const choice = pool[Math.floor(Math.random() * pool.length)];
+        if (!choice) {
+          setBuilderStatus("Could not pick a random class pack.");
+          return;
+        }
+        elLibraryPresetSelect.value = choice.id;
+        updateLibraryPresetHelp();
+        updateLibraryFavoriteButton();
+        applyLibraryPreset();
+      }
+
+      function previewCurrentLibraryPack() {
+        const preset = selectedLibraryPreset();
+        if (!preset) {
+          setBuilderStatus("No class pack selected.");
+          return;
+        }
+        applyBuilderState(preset.state);
+        elPresetName.value = preset.name;
+        const target = preset.state && preset.state.target ? preset.state.target : elTarget.value;
+        if (target && Object.prototype.hasOwnProperty.call(previewTargets, target)) {
+          elTarget.value = target;
+        }
+        previewMode = "after";
+        updatePreviewModeUI();
+        builderStyleTag.disabled = false;
+        if (!elBuilderAutoApply.checked) {
+          elBuilderAutoApply.checked = true;
+        }
+        renderBuilder();
+        updateLive();
+        updateLibraryPresetHelp();
+        updateLibraryFavoriteButton();
+        updatePreviewCycleUI();
+        flashActivePreviewPanel();
+        setBuilderStatus("Previewing class pack: " + preset.name + " on target: " + (elTarget.value || "card") + ".");
+      }
+
+      function applyLibraryPreset() {
+        const preset = selectedLibraryPreset();
+        if (!preset) {
+          setBuilderStatus("No built-in class pack selected.");
+          return;
+        }
+        previewMode = "after";
+        updatePreviewModeUI();
+        previewCurrentLibraryPack();
+        setBuilderStatus("Loaded class pack: " + preset.name + ". Preview target: " + (elTarget.value || "card") + ".");
+      }
+
+      function savePreset() {
+        const name = (elPresetName.value || "").trim();
+        if (!name) {
+          setBuilderStatus("Preset name is required.");
+          return;
+        }
+        const presets = readPresets();
+        presets[name] = snapshotBuilderState();
+        writePresets(presets);
+        renderPresetList();
+        elPresetSelect.value = name;
+        setBuilderStatus("Preset saved: " + name);
+      }
+
+      function loadPreset() {
+        const name = (elPresetSelect.value || "").trim();
+        if (!name) {
+          setBuilderStatus("No preset selected.");
+          return;
+        }
+        const presets = readPresets();
+        if (!presets[name]) {
+          setBuilderStatus("Preset not found.");
+          return;
+        }
+        applyBuilderState(presets[name]);
+        elPresetName.value = name;
+        setBuilderStatus("Preset loaded: " + name);
+      }
+
+      function deletePreset() {
+        const name = (elPresetSelect.value || "").trim();
+        if (!name) {
+          setBuilderStatus("No preset selected.");
+          return;
+        }
+        const presets = readPresets();
+        if (!presets[name]) {
+          setBuilderStatus("Preset not found.");
+          return;
+        }
+        delete presets[name];
+        writePresets(presets);
+        renderPresetList();
+        setBuilderStatus("Preset deleted: " + name);
+      }
+
+      function currentDataset() {
+        const cat = elCategory.value;
+        const existing = datasets[cat] || [];
+        if (existing.length > 0) return existing;
+        const sourceId = datasetSourceByCategory[cat];
+        const reparsed = sourceId ? parseData(sourceId) : [];
+        if (reparsed.length > 0) datasets[cat] = reparsed;
+        return reparsed;
+      }
+
+      function selectedItem() {
+        const cat = elCategory.value;
+        const list = currentDataset();
+        const found = list.find(function (x) { return x.name === elItem.value; });
+        return found || list[0] || null;
+      }
+
+      function updateFlowStatus() {
+        if (!elFlowStatus) return;
+        const item = selectedItem();
+        const itemLabel = item ? (elCategory.value + " -> " + item.name) : "none selected";
+        const canSendToBuilder = Boolean(latestBuilderCandidate);
+        const hasBuilderContent = builderVariables.length > 0 || builderRules.some(function (b) { return (b.declarations || []).length > 0; });
+        const media = currentBuilderMediaQuery();
+        const mediaLabel = ruleMediaLabel(media);
+        const selector = composeSelector();
+        const spec = computeSpecificity(selector);
+        elFlowStatus.textContent =
+          "Current item: " + itemLabel +
+          ". Step 3 status: " + (canSendToBuilder ? "ready to send into builder." : "pick a CSS-producing item/value.") +
+          " Builder status: " + (hasBuilderContent ? "has stacked rules/variables." : "empty.") +
+          " Active rule layer: " + mediaLabel +
+          ". Selector specificity: (" + spec.a + "," + spec.b + "," + spec.c + ")" +
+          ". Preview mode: " + previewMode +
+          ". Target cycle: " + (previewCycleTimer ? "on" : "off") + ".";
+      }
+
+      function populateItems() {
+        const list = currentDataset();
+        const search = elSearch.value.trim().toLowerCase();
+        let filtered = list.filter(function (item) {
+          return !search || item.name.toLowerCase().includes(search) || item.syntax.toLowerCase().includes(search);
+        });
+
+        // If category switch + stale search yields nothing, recover automatically.
+        if (filtered.length === 0 && search) {
+          elSearch.value = "";
+          filtered = list.slice();
+        }
+
+        const prev = elItem.value;
+        elItem.innerHTML = "";
+
+        filtered.forEach(function (item) {
+          const opt = document.createElement("option");
+          opt.value = item.name;
+          opt.textContent = item.name;
+          elItem.appendChild(opt);
+        });
+
+        if (filtered.length === 0) {
+          const opt = document.createElement("option");
+          opt.value = "";
+          opt.textContent = "No matches";
+          elItem.appendChild(opt);
+          elItem.value = "";
+          renderEverything();
+          return;
+        }
+
+        if (filtered.some(function (x) { return x.name === prev; })) {
+          elItem.value = prev;
+        } else {
+          elItem.selectedIndex = 0;
+        }
+
+        if (elCategory.value === "function") {
+          const item = selectedItem();
+          if (item) {
+            elFunctionProperty.value = functionPropertyDefaults[item.name] || "filter";
+          }
+        }
+
+        renderEverything();
+      }
+
+      function createParamModel(item) {
+        const cat = elCategory.value;
+        const model = [];
+
+        if (!item) return model;
+
+        if (cat === "attribute") {
+          if (item.name === "data-*") {
+            model.push({ key: "value", label: "value", type: "text", value: "sample-value" });
+            return model;
+          }
+
+          if (item.syntax.indexOf("=") < 0) {
+            model.push({ key: "enabled", label: item.name, type: "checkbox", value: true });
+            return model;
+          }
+
+          let valueSyntax = item.syntax.split("=").slice(1).join("=").trim();
+          valueSyntax = valueSyntax.replace(/^"|"$/g, "");
+
+          const placeholders = extractPlaceholders(valueSyntax);
+          if (placeholders.length > 0) {
+            placeholders.forEach(function (token) {
+              if (token.indexOf("|") >= 0) {
+                const options = token.split("|");
+                model.push({ key: token, label: token, type: "select", options: options, value: options[0] });
+              } else {
+                model.push({ key: token, label: token, type: "text", value: defaultValueForToken(token) });
+              }
+            });
+            return model;
+          }
+
+          if (valueSyntax.indexOf("|") >= 0) {
+            const options = valueSyntax.split("|");
+            model.push({ key: "value", label: "value", type: "select", options: options, value: options[0] });
+            return model;
+          }
+
+          model.push({ key: "value", label: "value", type: item.name === "style" ? "textarea" : "text", value: valueSyntax });
+          return model;
+        }
+
+        if (cat === "property") {
+          let valueSyntax = item.syntax.split(":").slice(1).join(":").trim();
+          if (valueSyntax.endsWith(";")) valueSyntax = valueSyntax.slice(0, -1).trim();
+
+          const placeholders = extractPlaceholders(valueSyntax);
+          if (placeholders.length > 0) {
+            placeholders.forEach(function (token) {
+              if (token.indexOf("|") >= 0) {
+                const options = token.split("|");
+                model.push({ key: token, label: token, type: "select", options: options, value: options[0] });
+              } else {
+                model.push({ key: token, label: token, type: "text", value: defaultValueForToken(token) });
+              }
+            });
+            return model;
+          }
+
+          if (valueSyntax.indexOf("|") >= 0) {
+            const options = valueSyntax.split("|");
+            model.push({ key: "value", label: "value", type: "select", options: options, value: options[0] });
+            return model;
+          }
+
+          model.push({ key: "value", label: "value", type: "text", value: valueSyntax });
+          return model;
+        }
+
+        if (cat === "function") {
+          const placeholders = extractPlaceholders(item.syntax);
+          placeholders.forEach(function (token) {
+            if (token.indexOf("|") >= 0) {
+              const options = token.split("|");
+              model.push({ key: token, label: token, type: "select", options: options, value: options[0] });
+            } else {
+              model.push({ key: token, label: token, type: "text", value: defaultValueForToken(token) });
+            }
+          });
+          if (model.length === 0) {
+            model.push({ key: "value", label: "value", type: "text", value: item.syntax });
+          }
+          return model;
+        }
+
+        return model;
+      }
+
+      function styleTextareaParamIndex() {
+        for (let i = 0; i < activeParams.length; i++) {
+          if (activeParams[i].type === "textarea" && activeParams[i].key === "value") return i;
+        }
+        return -1;
+      }
+
+      function samplePropertyValue(item) {
+        if (!item || !item.syntax) return "value";
+        let valueSyntax = item.syntax.split(":").slice(1).join(":").trim();
+        if (valueSyntax.endsWith(";")) valueSyntax = valueSyntax.slice(0, -1).trim();
+        if (!valueSyntax) return "value";
+
+        const placeholders = extractPlaceholders(valueSyntax);
+        if (placeholders.length > 0) {
+          const map = {};
+          placeholders.forEach(function (token) {
+            if (token.indexOf("|") >= 0) {
+              map[token] = token.split("|")[0];
+            } else {
+              map[token] = defaultValueForToken(token);
+            }
+          });
+          return replacePlaceholders(valueSyntax, map);
+        }
+
+        if (valueSyntax.indexOf("|") >= 0) {
+          return valueSyntax.split("|")[0];
+        }
+
+        return valueSyntax;
+      }
+
+      function populateStylePropertyList() {
+        const list = datasets.property || [];
+        const prev = elStyleProperty.value;
+        elStyleProperty.innerHTML = "";
+
+        list.forEach(function (entry) {
+          const option = document.createElement("option");
+          option.value = entry.name;
+          option.textContent = entry.name;
+          elStyleProperty.appendChild(option);
+        });
+
+        if (list.length === 0) {
+          const option = document.createElement("option");
+          option.value = "";
+          option.textContent = "No properties";
+          elStyleProperty.appendChild(option);
+          elStylePropertyValue.value = "";
+          return;
+        }
+
+        if (list.some(function (entry) { return entry.name === prev; })) {
+          elStyleProperty.value = prev;
+        } else {
+          elStyleProperty.selectedIndex = 0;
+        }
+        syncStylePropertyValueFromSelection();
+      }
+
+      function syncStylePropertyValueFromSelection() {
+        const name = (elStyleProperty.value || "").trim();
+        if (!name) {
+          elStylePropertyValue.value = "";
+          return;
+        }
+        const item = (datasets.property || []).find(function (entry) { return entry.name === name; });
+        elStylePropertyValue.value = samplePropertyValue(item);
+      }
+
+      function appendStyleDeclaration() {
+        const idx = styleTextareaParamIndex();
+        if (idx < 0) return;
+
+        const prop = (elStyleProperty.value || "").trim();
+        const value = (elStylePropertyValue.value || "").trim();
+        if (!prop || !value) return;
+
+        const declaration = ensureSemicolon(prop + ": " + value);
+        const current = String(activeParams[idx].value || "").trim();
+        let next = declaration;
+        if (current) {
+          if (current.endsWith(";")) {
+            next = current + "\n" + declaration;
+          } else {
+            next = current + ";\n" + declaration;
+          }
+        }
+
+        activeParams[idx].value = next;
+        const textarea = elParams.querySelector('textarea[data-param-index="' + idx + '"]');
+        if (textarea) textarea.value = next;
+        updateLive();
+      }
+
+      function renderParamControls() {
+        const item = selectedItem();
+        activeParams = createParamModel(item);
+        elParams.innerHTML = "";
+
+        activeParams.forEach(function (param, index) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "param-item";
+
+          const title = document.createElement("div");
+          title.className = "param-title";
+          title.textContent = param.label;
+          wrapper.appendChild(title);
+
+          let input;
+          if (param.type === "select") {
+            input = document.createElement("select");
+            param.options.forEach(function (opt) {
+              const option = document.createElement("option");
+              option.value = opt;
+              option.textContent = opt;
+              input.appendChild(option);
+            });
+            input.value = param.value;
+          } else if (param.type === "checkbox") {
+            input = document.createElement("input");
+            input.type = "checkbox";
+            input.checked = Boolean(param.value);
+            const line = document.createElement("label");
+            line.className = "inline";
+            line.style.display = "inline-flex";
+            line.style.alignItems = "center";
+            line.style.gap = "6px";
+            line.style.minWidth = "0";
+            line.appendChild(input);
+            line.appendChild(document.createTextNode("enabled"));
+            wrapper.appendChild(line);
+            input.dataset.paramIndex = String(index);
+            input.addEventListener("change", handleParamChange);
+            elParams.appendChild(wrapper);
+            return;
+          } else if (param.type === "textarea") {
+            input = document.createElement("textarea");
+            input.value = param.value;
+          } else {
+            input = document.createElement("input");
+            input.value = param.value;
+          }
+
+          input.dataset.paramIndex = String(index);
+          input.addEventListener("input", handleParamChange);
+          input.addEventListener("change", handleParamChange);
+          wrapper.appendChild(input);
+          elParams.appendChild(wrapper);
+        });
+      }
+
+      function handleParamChange(e) {
+        const idx = Number(e.target.dataset.paramIndex);
+        if (Number.isNaN(idx) || !activeParams[idx]) return;
+
+        if (activeParams[idx].type === "checkbox") {
+          activeParams[idx].value = e.target.checked;
+        } else {
+          activeParams[idx].value = e.target.value;
+        }
+        updateLive();
+      }
+
+      function valuesMap() {
+        const out = {};
+        activeParams.forEach(function (p) {
+          out[p.key] = p.value;
+        });
+        return out;
+      }
+
+      function replacePlaceholders(template, map) {
+        return template.replace(/<([^>]+)>/g, function (full, token) {
+          const key = token.trim();
+          if (Object.prototype.hasOwnProperty.call(map, key)) {
+            return map[key];
+          }
+          return full;
+        });
+      }
+
+      function resetPreview() {
+        [previewCard, previewInput, previewButton, previewImage, previewOverlap, previewSandbox].forEach(function (el) {
+          const attrs = Array.from(el.attributes).map(function (a) { return a.name; });
+          attrs.forEach(function (name) {
+            if (
+              name === "id" ||
+              name === "class" ||
+              name === "type" ||
+              name === "placeholder" ||
+              name === "value" ||
+              name === "src" ||
+              name === "alt" ||
+              name === "data-base-class"
+            ) return;
+            el.removeAttribute(name);
+          });
+
+          const base = el.getAttribute("data-base-class") || "";
+          el.className = base;
+          if (el.id === "preview-button") {
+            el.type = "button";
+            el.textContent = "Preview Button";
+          }
+          if (el.id === "preview-card") {
+            el.textContent = "Preview Card";
+          }
+          if (el.id === "preview-input") {
+            el.placeholder = "Preview Input";
+            el.disabled = false;
+            el.readOnly = false;
+            el.required = false;
+          }
+          if (el.id === "preview-image") {
+            el.src = previewImageDefaultSrc;
+            el.alt = "Preview Image";
+          }
+          if (el.id === "preview-sandbox") {
+            // Preserve sandbox structure and just reset styling hooks.
+            el.querySelectorAll(".mini-btn").forEach(function (b) {
+              b.disabled = false;
+            });
+          }
+          if (el.id === "preview-overlap") {
+            // Layer nodes stay in place; only target-level styling is reset.
+          }
+          el.hidden = false;
+          el.style.cssText = "";
+        });
+      }
+
+      function targetElement() {
+        return previewTargets[elTarget.value] || previewCard;
+      }
+
+      function updatePreviewFocus() {
+        const current = elTarget.value || "card";
+        previewPanels.forEach(function (panel) {
+          const active = panel.getAttribute("data-preview-key") === current;
+          panel.classList.toggle("preview-panel-active", active);
+          panel.classList.toggle("preview-panel-inactive", !active);
+        });
+        elPreviewActiveHelp.textContent =
+          "Active preview target: " + previewTargetLabel(current) +
+          ". The highlighted panel receives the current styles.";
+      }
+
+      function flashActivePreviewPanel() {
+        const current = elTarget.value || "card";
+        previewPanels.forEach(function (panel) {
+          panel.classList.remove("preview-panel-flash");
+          if (panel.getAttribute("data-preview-key") === current) {
+            void panel.offsetWidth;
+            panel.classList.add("preview-panel-flash");
+          }
+        });
+      }
+
+      function buildAttributeOutput(item, map, target) {
+        if (item.name === "data-*") {
+          const attrName = (elCustomAttrName.value || "data-test").trim();
+          const attrValue = map.value || "sample-value";
+          target.setAttribute(attrName, attrValue);
+          return {
+            syntax: attrName + "=\"" + attrValue + "\"",
+            attributeName: attrName,
+            resolvedValue: attrValue,
+            styleValue: ""
+          };
+        }
+
+        if (item.syntax.indexOf("=") < 0) {
+          const enabled = map.enabled !== false;
+          if (enabled) {
+            target.setAttribute(item.name, "");
+            return {
+              syntax: item.name,
+              attributeName: item.name,
+              resolvedValue: "",
+              styleValue: ""
+            };
+          }
+          return {
+            syntax: "(attribute omitted)",
+            attributeName: item.name,
+            resolvedValue: "",
+            styleValue: ""
+          };
+        }
+
+        const attrName = item.name;
+        let valueSyntax = item.syntax.split("=").slice(1).join("=").trim();
+        valueSyntax = valueSyntax.replace(/^"|"$/g, "");
+
+        let resolved = valueSyntax;
+        if (extractPlaceholders(valueSyntax).length > 0) {
+          resolved = replacePlaceholders(valueSyntax, map);
+        } else if (Object.prototype.hasOwnProperty.call(map, "value")) {
+          resolved = map.value;
+        }
+
+        if (attrName === "class") {
+          const base = target.getAttribute("data-base-class") || "";
+          target.className = base + " " + resolved;
+        } else if (attrName === "style") {
+          target.style.cssText += resolved;
+        } else {
+          target.setAttribute(attrName, resolved);
+        }
+
+        return {
+          syntax: attrName + "=\"" + resolved + "\"",
+          attributeName: attrName,
+          resolvedValue: resolved,
+          styleValue: attrName === "style" ? resolved : ""
+        };
+      }
+
+      function buildPropertyOutput(item, map, target) {
+        const prop = item.name;
+        let valueSyntax = item.syntax.split(":").slice(1).join(":").trim();
+        if (valueSyntax.endsWith(";")) valueSyntax = valueSyntax.slice(0, -1).trim();
+
+        let resolved = valueSyntax;
+        if (extractPlaceholders(valueSyntax).length > 0) {
+          resolved = replacePlaceholders(valueSyntax, map);
+        } else if (Object.prototype.hasOwnProperty.call(map, "value")) {
+          resolved = map.value;
+        }
+
+        target.style.setProperty(prop, resolved);
+        return prop + ": " + resolved + ";";
+      }
+
+      function buildFunctionOutput(item, map, target) {
+        let fnCall = replacePlaceholders(item.syntax, map);
+        if (Object.prototype.hasOwnProperty.call(map, "value") && extractPlaceholders(item.syntax).length === 0) {
+          fnCall = map.value;
+        }
+        const prop = (elFunctionProperty.value || functionPropertyDefaults[item.name] || "filter").trim();
+        target.style.setProperty(prop, fnCall);
+        return {
+          call: fnCall,
+          declaration: prop + ": " + fnCall + ";"
+        };
+      }
+
+      function updateFunctionHelp(item, fnCall) {
+        if (elCategory.value !== "function" || !item) {
+          elFunctionHelpSyntax.textContent = "filter: blur(6px);";
+          return;
+        }
+        const property = (elFunctionProperty.value || functionPropertyDefaults[item.name] || "filter").trim();
+        const call = fnCall || item.syntax;
+        elFunctionHelpSyntax.textContent = property + ": " + call + ";";
+      }
+
+      function renderBuilder() {
+        updateSelectorPreview();
+
+        const css = buildStylesheetText();
+        elBuilderCSS.textContent = css;
+        builderStyleTag.textContent = css;
+        builderStyleTag.disabled = previewMode === "before";
+
+        elBuilderVars.innerHTML = "";
+        if (builderVariables.length === 0) {
+          const emptyVar = document.createElement("div");
+          emptyVar.className = "tiny";
+          emptyVar.textContent = "No variables yet.";
+          elBuilderVars.appendChild(emptyVar);
+        } else {
+          builderVariables.forEach(function (v, idx) {
+            const item = document.createElement("div");
+            item.className = "builder-var-item";
+
+            const code = document.createElement("code");
+            code.textContent = v.scope + " { " + v.name + ": " + v.value + "; }";
+            item.appendChild(code);
+
+            const btn = document.createElement("button");
+            btn.className = "builder-remove";
+            btn.type = "button";
+            btn.dataset.varIndex = String(idx);
+            btn.textContent = "Remove";
+            item.appendChild(btn);
+
+            elBuilderVars.appendChild(item);
+          });
+        }
+
+        elBuilderRules.innerHTML = "";
+        if (builderRules.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "tiny";
+          empty.textContent = "No rules added yet.";
+          elBuilderRules.appendChild(empty);
+          updateFlowStatus();
+          return;
+        }
+
+        builderRules.forEach(function (block, blockIdx) {
+          block.declarations.forEach(function (decl, declIdx) {
+            const item = document.createElement("div");
+            item.className = "builder-item";
+
+            const code = document.createElement("code");
+            if (block.media) {
+              code.textContent = "@media " + block.media + " { " + block.selector + " { " + decl + " } }";
+            } else {
+              code.textContent = block.selector + " { " + decl + " }";
+            }
+            item.appendChild(code);
+
+            const btn = document.createElement("button");
+            btn.className = "builder-remove";
+            btn.type = "button";
+            btn.dataset.blockIndex = String(blockIdx);
+            btn.dataset.declIndex = String(declIdx);
+            btn.textContent = "Remove";
+            item.appendChild(btn);
+
+            elBuilderRules.appendChild(item);
+          });
+        });
+        updateFlowStatus();
+      }
+
+      function applyBuilderClassToTarget() {
+        const className = sanitizeClassName(elBuilderClass.value);
+        if (!elBuilderAutoApply.checked) return;
+        if (!className) return;
+        const target = targetElement();
+        target.classList.add(className);
+      }
+
+      function addRules(rules) {
+        const media = currentBuilderMediaQuery();
+        if (elBuilderMediaLayer.value === "custom" && !media) {
+          setBuilderStatus("Custom media query is empty. Fill it or switch back to All Screens.");
+          return;
+        }
+        const selector = composeSelector();
+        const added = addDeclarationsToSelector(selector, rules || [], media);
+        if (added === 0) {
+          setBuilderStatus("No valid CSS declaration to add.");
+          return;
+        }
+        renderBuilder();
+        updateLive();
+        setBuilderStatus(
+          "Added " + added + " rule" + (added > 1 ? "s" : "") +
+          " to " + selector +
+          " in " + ruleMediaLabel(media) + "."
+        );
+      }
+
+      function addCurrentRuleToBuilder() {
+        if (!latestBuilderCandidate) {
+          setBuilderStatus("No current rule available.");
+          return;
+        }
+        if (latestBuilderCandidate.kind === "multi") {
+          addRules(latestBuilderCandidate.rules);
+          return;
+        }
+        if (latestBuilderCandidate.kind === "single") {
+          addRules([latestBuilderCandidate.rule]);
+          return;
+        }
+        setBuilderStatus("Current selection does not produce a CSS declaration. Pick a CSS property/function or a style attribute.");
+      }
+
+      function renderEverything() {
+        const item = selectedItem();
+        if (!item) {
+          elTemplateSyntax.textContent = "";
+          elLiveSyntax.textContent = "No item selected.";
+          elParams.innerHTML = "";
+          elStyleHelperWrap.classList.add("hidden");
+          updateLive();
+          return;
+        }
+
+        elTemplateSyntax.textContent = item.syntax;
+
+        elFunctionPropertyWrap.classList.toggle("hidden", elCategory.value !== "function");
+        elAttributeNameWrap.classList.toggle("hidden", !(elCategory.value === "attribute" && item.name === "data-*"));
+        const styleMode = elCategory.value === "attribute" && item.name === "style";
+        elStyleHelperWrap.classList.toggle("hidden", !styleMode);
+        if (styleMode) {
+          populateStylePropertyList();
+        }
+        updateFunctionHelp(item, item.syntax);
+
+        renderParamControls();
+        updateLive();
+        updateFlowStatus();
+      }
+
+      function updateLive() {
+        const item = selectedItem();
+        resetPreview();
+        builderStyleTag.disabled = previewMode === "before";
+        const target = targetElement();
+        const beforeMode = previewMode === "before";
+        latestBuilderCandidate = null;
+        updatePreviewFocus();
+
+        if (!item) {
+          if (!beforeMode) {
+            applyBuilderClassToTarget();
+          }
+          updateFlowStatus();
+          return;
+        }
+
+        const map = valuesMap();
+
+        if (elCategory.value === "attribute") {
+          const attr = buildAttributeOutput(item, map, target);
+          elLiveSyntax.textContent = "<div " + attr.syntax + ">...</div>";
+          if (attr.attributeName === "style") {
+            const styleRules = parseDeclarations(attr.styleValue);
+            if (styleRules.length > 0) {
+              latestBuilderCandidate = { kind: "multi", rules: styleRules };
+            }
+          }
+          if (beforeMode) {
+            resetPreview();
+          } else {
+            applyBuilderClassToTarget();
+          }
+          updateFlowStatus();
+          return;
+        }
+
+        if (elCategory.value === "property") {
+          const decl = buildPropertyOutput(item, map, target);
+          elLiveSyntax.textContent = ".demo-target {\n  " + decl + "\n}";
+          latestBuilderCandidate = { kind: "single", rule: decl };
+          if (beforeMode) {
+            resetPreview();
+          } else {
+            applyBuilderClassToTarget();
+          }
+          updateFlowStatus();
+          return;
+        }
+
+        const fn = buildFunctionOutput(item, map, target);
+        elLiveSyntax.textContent = fn.call + "\n\n" + ".demo-target {\n  " + fn.declaration + "\n}";
+        updateFunctionHelp(item, fn.call);
+        latestBuilderCandidate = { kind: "single", rule: fn.declaration };
+        if (beforeMode) {
+          resetPreview();
+        } else {
+          applyBuilderClassToTarget();
+        }
+        updateFlowStatus();
+      }
+
+      async function copyLiveSyntax() {
+        try {
+          await navigator.clipboard.writeText(elLiveSyntax.textContent);
+          elCopySyntax.textContent = "Copied";
+          setTimeout(function () { elCopySyntax.textContent = "Copy Live Syntax"; }, 1200);
+        } catch (err) {
+          elCopySyntax.textContent = "Copy Failed";
+          setTimeout(function () { elCopySyntax.textContent = "Copy Live Syntax"; }, 1200);
+        }
+      }
+
+      async function copyBuilderCSS() {
+        try {
+          await navigator.clipboard.writeText(elBuilderCSS.textContent);
+          elCopyBuilderCSS.textContent = "Copied";
+          setTimeout(function () { elCopyBuilderCSS.textContent = "Copy Builder CSS"; }, 1200);
+        } catch (err) {
+          elCopyBuilderCSS.textContent = "Copy Failed";
+          setTimeout(function () { elCopyBuilderCSS.textContent = "Copy Builder CSS"; }, 1200);
+        }
+      }
+
+      function addCustomRuleToBuilder() {
+        const rules = parseDeclarations(elCustomRule.value);
+        if (!rules.length) {
+          setBuilderStatus("Custom rule is empty.");
+          return;
+        }
+        addRules(rules);
+        elCustomRule.value = "";
+      }
+
+      function clearBuilder() {
+        builderRules = [];
+        builderVariables = [];
+        renderBuilder();
+        updateLive();
+        setBuilderStatus("Builder cleared.");
+      }
+
+      function resetValues() {
+        renderEverything();
+        setBuilderStatus("");
+      }
+
+      elCategory.addEventListener("change", populateItems);
+      elSearch.addEventListener("input", populateItems);
+      elItem.addEventListener("focus", function () {
+        if (elItem.options.length === 0) populateItems();
+      });
+      elItem.addEventListener("change", function () {
+        if (elCategory.value === "function") {
+          const item = selectedItem();
+          if (item) {
+            elFunctionProperty.value = functionPropertyDefaults[item.name] || "filter";
+          }
+        }
+        renderEverything();
+      });
+      elTarget.addEventListener("change", function () {
+        updateLive();
+        updatePreviewCycleUI();
+      });
+      elFunctionProperty.addEventListener("input", updateLive);
+      elCustomAttrName.addEventListener("input", updateLive);
+      elStyleProperty.addEventListener("change", syncStylePropertyValueFromSelection);
+      elAddStyleDeclaration.addEventListener("click", appendStyleDeclaration);
+      elStylePropertyValue.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          appendStyleDeclaration();
+        }
+      });
+      elResetValues.addEventListener("click", resetValues);
+      elCopySyntax.addEventListener("click", copyLiveSyntax);
+      elSyntaxAddCurrentRule.addEventListener("click", addCurrentRuleToBuilder);
+      elAddCurrentRule.addEventListener("click", addCurrentRuleToBuilder);
+      elAddCustomRule.addEventListener("click", addCustomRuleToBuilder);
+      elCopyBuilderCSS.addEventListener("click", copyBuilderCSS);
+      elClearBuilder.addEventListener("click", clearBuilder);
+      elAddVariable.addEventListener("click", addVariable);
+      elSelectorGraphEnabled.addEventListener("change", function () {
+        if (elSelectorGraphEnabled.checked) {
+          seedSelectorGraphFromLegacy();
+        }
+        renderSelectorGraph();
+        updateFlowStatus();
+      });
+      elSelectorGraphAdd.addEventListener("click", addSelectorGraphSegment);
+      elSelectorGraphClear.addEventListener("click", clearSelectorGraphSegments);
+      elBuilderMediaLayer.addEventListener("change", function () {
+        updateBuilderMediaControlVisibility();
+        updateFlowStatus();
+      });
+      elBuilderMediaCustom.addEventListener("input", updateFlowStatus);
+      elBuilderMediaCustom.addEventListener("change", updateFlowStatus);
+      elPreviewToggleState.addEventListener("click", togglePreviewMode);
+      elLibraryApplyPreset.addEventListener("click", applyLibraryPreset);
+      elLibrarySearch.addEventListener("input", renderLibraryPresetList);
+      elLibraryCategory.addEventListener("change", renderLibraryPresetList);
+      elLibraryFavoritesOnly.addEventListener("change", renderLibraryPresetList);
+      elLibraryPreviewPack.addEventListener("click", previewCurrentLibraryPack);
+      elLibraryCycleTargets.addEventListener("click", togglePreviewTargetCycle);
+      elLibraryToggleFavorite.addEventListener("click", toggleLibraryFavorite);
+      elLibraryRandom.addEventListener("click", randomizeLibraryPreset);
+      elLibraryPresetSelect.addEventListener("change", function () {
+        updateLibraryPresetHelp();
+        updateLibraryFavoriteButton();
+        applyLibraryPreset();
+      });
+      elSavePreset.addEventListener("click", savePreset);
+      elLoadPreset.addEventListener("click", loadPreset);
+      elDeletePreset.addEventListener("click", deletePreset);
+      elBuilderAutoApply.addEventListener("change", updateLive);
+      elBuilderClass.addEventListener("input", function () {
+        const oldDefault = "." + lastAutoBaseClass;
+        const currentBase = (elBuilderBaseSelector.value || "").trim();
+        const newClass = sanitizeClassName(elBuilderClass.value);
+        if (!currentBase || currentBase === oldDefault) {
+          elBuilderBaseSelector.value = "." + newClass;
+        }
+        lastAutoBaseClass = newClass;
+        renderBuilder();
+        updateLive();
+      });
+      [elBuilderBaseSelector, elBuilderCombinator, elBuilderRelativeSelector, elBuilderPseudoSelector, elBuilderSelectorOverride, elBuilderVariableScope].forEach(function (el) {
+        el.addEventListener("input", function () {
+          renderBuilder();
+          updateLive();
+        });
+        el.addEventListener("change", function () {
+          renderBuilder();
+          updateLive();
+        });
+      });
+      elCustomRule.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          addCustomRuleToBuilder();
+        }
+      });
+      elBuilderVarValue.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          addVariable();
+        }
+      });
+      elBuilderVarName.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          addVariable();
+        }
+      });
+      elPresetName.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          savePreset();
+        }
+      });
+      elBuilderRules.addEventListener("click", function (e) {
+        const btn = e.target.closest(".builder-remove");
+        if (!btn) return;
+        const blockIdx = Number(btn.dataset.blockIndex);
+        const declIdx = Number(btn.dataset.declIndex);
+        if (Number.isNaN(blockIdx) || Number.isNaN(declIdx)) return;
+        if (!builderRules[blockIdx]) return;
+        builderRules[blockIdx].declarations.splice(declIdx, 1);
+        cleanRuleBlocks();
+        renderBuilder();
+        updateLive();
+        setBuilderStatus("Removed rule.");
+      });
+      elBuilderVars.addEventListener("click", function (e) {
+        const btn = e.target.closest(".builder-remove");
+        if (!btn) return;
+        const idx = Number(btn.dataset.varIndex);
+        if (Number.isNaN(idx)) return;
+        removeVariable(idx);
+      });
+      elPresetSelect.addEventListener("change", function () {
+        elPresetName.value = elPresetSelect.value || "";
+      });
+
+      seedSelectorGraphFromLegacy();
+      renderSelectorGraph();
+      updatePreviewModeUI();
+      updatePreviewCycleUI();
+      updateBuilderMediaControlVisibility();
+      renderLibraryCategoryList();
+      renderLibraryPresetList();
+      renderPresetList();
+      renderBuilder();
+      populateItems();
+      updateFlowStatus();
+      } catch (err) {
+        const status = document.getElementById("builder-status");
+        if (status) {
+          status.textContent = "Initialization error. Open browser console for details.";
+        }
+        if (typeof console !== "undefined" && console.error) {
+          console.error("Playground initialization failed:", err);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
