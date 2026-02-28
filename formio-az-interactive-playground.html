@@ -1529,6 +1529,10 @@
                         <div class="label">Alignment Status</div>
                         <div id="trigger-sync-status">All three surfaces start aligned on Always On.</div>
                       </div>
+                      <div class="info-tile">
+                        <div class="label">Last Trigger Change</div>
+                        <div id="trigger-sync-last-change">Initial load. Shared trigger state not edited yet.</div>
+                      </div>
                     </div>
                     <div class="inline">
                       <button id="trigger-align-builder" type="button">Align All To Step 2</button>
@@ -2145,6 +2149,7 @@ translateY()	translateY(<length|percentage>)
       const elTriggerSyncPreviewState = document.getElementById("trigger-sync-preview-state");
       const elTriggerSyncActualState = document.getElementById("trigger-sync-actual-state");
       const elTriggerSyncStatus = document.getElementById("trigger-sync-status");
+      const elTriggerSyncLastChange = document.getElementById("trigger-sync-last-change");
       const elTriggerAlignBuilder = document.getElementById("trigger-align-builder");
       const elTriggerAlignAnimation = document.getElementById("trigger-align-animation");
       const elTriggerAlignActual = document.getElementById("trigger-align-actual");
@@ -2237,6 +2242,7 @@ translateY()	translateY(<length|percentage>)
           active: false
         };
       });
+      let triggerSyncLastChangeMessage = "Initial load. Shared trigger state not edited yet.";
 
       const previewImageDefaultSrc = previewImage.src;
       const builderStyleTag = document.createElement("style");
@@ -4021,6 +4027,46 @@ translateY()	translateY(<length|percentage>)
         elTriggerFollowNote.textContent = "Live follow is on. The simulator is mirroring the actual " + actualState.label + " state.";
       }
 
+      function setTriggerSyncLastChange(message) {
+        triggerSyncLastChangeMessage = message || "Initial load. Shared trigger state not edited yet.";
+        if (elTriggerSyncLastChange) {
+          elTriggerSyncLastChange.textContent = triggerSyncLastChangeMessage;
+        }
+      }
+
+      function updateTriggerSyncAuthority(builderPseudo, animationPseudo, previewPseudo, actualState) {
+        if (!elTriggerSyncStatus) return "";
+
+        if (builderPseudo && !isSharedTriggerValue(builderPseudo)) {
+          return "Source of truth: Step 2 Rule, because a custom pseudo can only be edited there.";
+        }
+
+        if (elTriggerSyncEnabled && elTriggerSyncEnabled.checked) {
+          if (elTriggerFollowActual && elTriggerFollowActual.checked && !actualState.mixed && actualState.pseudo === previewPseudo) {
+            return "Source of truth: Actual Preview is driving the simulator, while Step 2 and Animation Lab stay linked.";
+          }
+          return "Source of truth: Step 2 Rule and Animation Lab are linked, so editing either shared trigger updates the pair.";
+        }
+
+        if (builderPseudo === animationPseudo && animationPseudo === previewPseudo) {
+          return "Source of truth: all three surfaces currently agree, so the next edit becomes the new reference.";
+        }
+
+        if (builderPseudo === animationPseudo) {
+          return "Source of truth: Step 2 Rule and Animation Lab still match each other; Preview Simulator is the surface that drifted.";
+        }
+
+        if (animationPseudo === previewPseudo) {
+          return "Source of truth: Animation Lab and Preview Simulator currently agree; Step 2 is the outlier.";
+        }
+
+        if (builderPseudo === previewPseudo) {
+          return "Source of truth: Step 2 Rule and Preview Simulator currently agree; Animation Lab is the outlier.";
+        }
+
+        return "Source of truth: there is no shared reference right now, so use the most recent trigger change or an align action to re-establish one.";
+      }
+
       function syncPreviewSimulatorToActualIfEnabled(target) {
         if (!elTriggerFollowActual || !elTriggerFollowActual.checked) {
           updateTriggerFollowNote();
@@ -4034,6 +4080,7 @@ translateY()	translateY(<length|percentage>)
         const next = actualState.key || "default";
         if ((elPreviewInteractionState.value || "default").trim() !== next) {
           elPreviewInteractionState.value = next;
+          setTriggerSyncLastChange("Actual Preview mirrored " + actualState.label + " into Preview Simulator.");
           updatePreviewInteractionHelp();
           updateSelectorSimulatorRootClass();
         }
@@ -4046,7 +4093,8 @@ translateY()	translateY(<length|percentage>)
           !elTriggerSyncAnimationState ||
           !elTriggerSyncPreviewState ||
           !elTriggerSyncActualState ||
-          !elTriggerSyncStatus
+          !elTriggerSyncStatus ||
+          !elTriggerSyncLastChange
         ) {
           return;
         }
@@ -4094,7 +4142,9 @@ translateY()	translateY(<length|percentage>)
           status += " Actual preview is currently " + actualState.label + ", so use Match All To Actual Preview when you want the other surfaces to follow it.";
         }
 
+        status += " " + updateTriggerSyncAuthority(builderPseudo, animationPseudo, previewPseudo, actualState);
         elTriggerSyncStatus.textContent = status;
+        elTriggerSyncLastChange.textContent = triggerSyncLastChangeMessage;
         updateTriggerFollowNote();
       }
 
@@ -4152,6 +4202,7 @@ translateY()	translateY(<length|percentage>)
           return;
         }
         elAnimationLabTrigger.value = pseudo;
+        setTriggerSyncLastChange("Align action used Step 2 Rule as the shared trigger (" + formatSharedTriggerLabel(pseudo, "Always On") + ").");
         updateAnimationLabOutputs();
         syncPreviewInteractionStateFromPseudo(pseudo, "Step 2, Animation Lab, and Preview now share the Step 2 trigger.");
         updateTriggerSyncNote();
@@ -4159,6 +4210,7 @@ translateY()	translateY(<length|percentage>)
 
       function alignAllTriggersToAnimationLab() {
         const trigger = (elAnimationLabTrigger.value || "").trim();
+        setTriggerSyncLastChange("Align action used Animation Lab as the shared trigger (" + formatSharedTriggerLabel(trigger, "Always On") + ").");
         syncPseudoControlFromValue(trigger);
         renderBuilder();
         updateLive();
@@ -4173,6 +4225,7 @@ translateY()	translateY(<length|percentage>)
           updateTriggerSyncNote();
           return;
         }
+        setTriggerSyncLastChange("Align action used Actual Preview as the shared trigger (" + actualState.label + ").");
         elAnimationLabTrigger.value = actualState.pseudo;
         syncPseudoControlFromValue(actualState.pseudo);
         renderBuilder();
@@ -5411,6 +5464,9 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabDirection.value = preset.direction;
         elAnimationLabFill.value = preset.fill;
         elAnimationLabPlay.value = preset.play;
+        setTriggerSyncLastChange(
+          "Animation Lab preset loaded " + preset.name + " (" + formatSharedTriggerLabel((elAnimationLabTrigger.value || "").trim(), "Always On") + ")."
+        );
         syncBuilderPseudoFromAnimationLab();
         updateAnimationLabOutputs();
       }
@@ -7722,6 +7778,11 @@ translateY()	translateY(<length|percentage>)
       });
       elAnimationLabPreset.addEventListener("change", applyAnimationLabPreset);
       elTriggerSyncEnabled.addEventListener("change", function () {
+        setTriggerSyncLastChange(
+          elTriggerSyncEnabled.checked
+            ? "Trigger link turned on. Step 2 and Animation Lab now share one trigger."
+            : "Trigger link turned off. Step 2 and Animation Lab can now drift independently."
+        );
         if (elTriggerSyncEnabled.checked) {
           syncBuilderPseudoFromAnimationLab();
           syncAnimationLabTriggerFromBuilder();
@@ -7742,6 +7803,9 @@ translateY()	translateY(<length|percentage>)
       ].forEach(function (el) {
         el.addEventListener("change", function () {
           if (el === elAnimationLabTrigger) {
+            setTriggerSyncLastChange(
+              "Animation Lab trigger changed to " + formatSharedTriggerLabel((elAnimationLabTrigger.value || "").trim(), "Always On") + "."
+            );
             syncBuilderPseudoFromAnimationLab();
           }
           updateAnimationLabOutputs();
@@ -7757,6 +7821,11 @@ translateY()	translateY(<length|percentage>)
       elTriggerAlignAnimation.addEventListener("click", alignAllTriggersToAnimationLab);
       elTriggerAlignActual.addEventListener("click", alignAllTriggersToActualPreview);
       elTriggerFollowActual.addEventListener("change", function () {
+        setTriggerSyncLastChange(
+          elTriggerFollowActual.checked
+            ? "Live follow turned on. Actual Preview may now drive the Preview Simulator."
+            : "Live follow turned off. Preview Simulator is back to manual control."
+        );
         syncPreviewSimulatorToActualIfEnabled(targetElement());
         updateLive();
         setBuilderStatus(
@@ -7785,11 +7854,17 @@ translateY()	translateY(<length|percentage>)
       elBuilderAutoApply.addEventListener("change", updateLive);
       elBuilderPseudoSelector.addEventListener("change", function () {
         syncPseudoControlFromValue(elBuilderPseudoSelector.value);
+        setTriggerSyncLastChange(
+          "Step 2 Rule changed to " + formatSharedTriggerLabel(getSelectedPseudoSelector(), "Always On") + "."
+        );
         syncAnimationLabTriggerFromBuilder();
         renderBuilder();
         updateLive();
       });
       elBuilderPseudoCustom.addEventListener("input", function () {
+        setTriggerSyncLastChange(
+          "Step 2 Rule custom pseudo changed to " + formatSharedTriggerLabel(getSelectedPseudoSelector(), "Always On") + "."
+        );
         syncAnimationLabTriggerFromBuilder();
         renderBuilder();
         updateLive();
@@ -7802,6 +7877,9 @@ translateY()	translateY(<length|percentage>)
         syncPreviewInteractionStateFromPseudo(pseudo, message);
       });
       elPreviewInteractionState.addEventListener("change", function () {
+        setTriggerSyncLastChange(
+          "Preview Simulator changed to " + formatSharedTriggerLabel(previewInteractionPseudoValue(), "Always On") + "."
+        );
         updatePreviewInteractionHelp();
         updateSelectorSimulatorRootClass();
         updateLive();
