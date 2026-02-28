@@ -1650,6 +1650,27 @@
                 <label class="label">Keyframes Block</label>
                 <pre id="animation-lab-keyframes"></pre>
               </div>
+              <div class="help-box">
+                <div><strong>Motion Guidance</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Intensity</div>
+                    <div id="animation-lab-intensity">Balanced motion ready for reuse.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Trigger Fit</div>
+                    <div id="animation-lab-trigger-fit">Choose a trigger to decide when the motion should start.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Reduced Motion</div>
+                    <div id="animation-lab-reduce-note">A calmer fallback recommendation will appear here.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Reduced-Motion Fallback</label>
+                  <pre id="animation-lab-reduce-css"></pre>
+                </div>
+              </div>
             </div>
           </details>
 
@@ -2291,6 +2312,10 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabSelectorNote = document.getElementById("animation-lab-selector-note");
       const elAnimationLabOutput = document.getElementById("animation-lab-output");
       const elAnimationLabKeyframes = document.getElementById("animation-lab-keyframes");
+      const elAnimationLabIntensity = document.getElementById("animation-lab-intensity");
+      const elAnimationLabTriggerFit = document.getElementById("animation-lab-trigger-fit");
+      const elAnimationLabReduceNote = document.getElementById("animation-lab-reduce-note");
+      const elAnimationLabReduceCss = document.getElementById("animation-lab-reduce-css");
       const elSyntaxAddCurrentRule = document.getElementById("syntax-add-current-rule");
       const elCustomRule = document.getElementById("custom-rule");
       const elCustomRuleHelperType = document.getElementById("custom-rule-helper-type");
@@ -5512,6 +5537,81 @@ translateY()	translateY(<length|percentage>)
         return declarations;
       }
 
+      function parseAnimationLabTimeMs(value) {
+        const raw = String(value || "").trim().toLowerCase();
+        if (!raw) return 0;
+        if (/^-?\d*\.?\d+ms$/.test(raw)) return Number(raw.replace(/ms$/, "")) || 0;
+        if (/^-?\d*\.?\d+s$/.test(raw)) return (Number(raw.replace(/s$/, "")) || 0) * 1000;
+        return Number(raw) || 0;
+      }
+
+      function animationLabCycleCount(values) {
+        const raw = String(values && values.iterations || "").trim().toLowerCase();
+        if (!raw || raw === "infinite") return Infinity;
+        const parsed = Number(raw);
+        return parsed > 0 ? parsed : 1;
+      }
+
+      function animationLabIntensitySummary(values) {
+        const durationMs = parseAnimationLabTimeMs(values.duration);
+        const cycles = animationLabCycleCount(values);
+        const name = String(values.keyframes || "").trim().toLowerCase();
+        let score = 0;
+        if (durationMs && durationMs <= 250) score += 2;
+        else if (durationMs && durationMs <= 700) score += 1;
+        if (cycles === Infinity) score += 3;
+        else if (cycles >= 3) score += 2;
+        else if (cycles >= 2) score += 1;
+        if (/(bounce|pulse|shake|spin|wiggle|flash)/.test(name)) score += 2;
+        else if (/(slide|lift|glide|drift|float|fade)/.test(name)) score += 1;
+        if (String(values.direction || "").indexOf("alternate") >= 0) score += 1;
+        if (score <= 2) return "Gentle motion. Safe for onboarding, hints, and subtle feedback.";
+        if (score <= 5) return "Balanced motion. Visible enough for most UI affordances without dominating the screen.";
+        return "Assertive motion. Best reserved for hero moments, strong emphasis, or short-lived attention cues.";
+      }
+
+      function animationLabTriggerGuidance(values) {
+        const trigger = String(values.trigger || "").trim();
+        const cycles = animationLabCycleCount(values);
+        const play = String(values.play || "running").trim();
+        if (play === "paused") {
+          return "Play state is paused, so the trigger is configured but the animation will not visibly run until you switch it back on.";
+        }
+        if (!trigger && cycles === Infinity) {
+          return "Always-on infinite motion is high risk. Prefer a trigger state or cap the animation to one or two cycles.";
+        }
+        if (!trigger) {
+          return "Always-on works best for short entry motion. Keep it brief so idle surfaces do not feel busy.";
+        }
+        if ((trigger === ":hover" || trigger === ":focus" || trigger === ":focus-visible") && cycles === Infinity) {
+          return "The interaction trigger is appropriate, but infinite looping can linger while the control stays active. Two cycles is usually enough.";
+        }
+        if (trigger === ":disabled" && cycles === Infinity) {
+          return "Disabled styling should stay calm. Infinite loops on disabled states can feel broken or distracting.";
+        }
+        return "Trigger and motion package are aligned. This should feel intentional as long as the preview target matches the same state.";
+      }
+
+      function animationLabReducedMotionNote(values) {
+        const cycles = animationLabCycleCount(values);
+        const durationMs = parseAnimationLabTimeMs(values.duration);
+        if (cycles === Infinity || durationMs > 700) {
+          return "Strongly recommended for this motion package because it is persistent or long-running.";
+        }
+        return "Recommended when exporting this pattern so motion-sensitive users get a calm fallback.";
+      }
+
+      function animationLabReducedMotionCss(selector) {
+        const safeSelector = String(selector || getBaseSelector()).trim() || ".target";
+        return [
+          "@media (prefers-reduced-motion: reduce) {",
+          "  " + safeSelector + " {",
+          "    animation: none;",
+          "  }",
+          "}"
+        ].join("\n");
+      }
+
       function setSelectValueIfPresent(selectEl, value, fallbackValue) {
         if (!selectEl) return;
         const next = String(value || "").trim();
@@ -5587,6 +5687,10 @@ translateY()	translateY(<length|percentage>)
           selector + " | Trigger: " + trigger + " | Applies" + scopeText + ".";
         elAnimationLabOutput.textContent = declarations.join("\n");
         elAnimationLabKeyframes.textContent = keyframesBlock(values.keyframes) || "No built-in keyframes found for " + values.keyframes + ".";
+        elAnimationLabIntensity.textContent = animationLabIntensitySummary(values);
+        elAnimationLabTriggerFit.textContent = animationLabTriggerGuidance(values);
+        elAnimationLabReduceNote.textContent = animationLabReducedMotionNote(values);
+        elAnimationLabReduceCss.textContent = animationLabReducedMotionCss(selector);
       }
 
       function applyAnimationLabPreset() {
