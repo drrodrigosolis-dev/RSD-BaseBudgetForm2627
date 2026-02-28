@@ -4954,6 +4954,7 @@ translateY()	translateY(<length|percentage>)
 
       function animationLabPresetValues() {
         return {
+          presetId: (elAnimationLabPreset.value || "").trim(),
           trigger: (elAnimationLabTrigger.value || "").trim(),
           keyframes: (elAnimationLabName.value || DEFAULT_ANIMATION_PREVIEW.name).trim(),
           duration: (elAnimationLabDuration.value || DEFAULT_ANIMATION_PREVIEW.duration).trim(),
@@ -5008,6 +5009,43 @@ translateY()	translateY(<length|percentage>)
           declarations.push("animation-play-state: " + values.play + ";");
         }
         return declarations;
+      }
+
+      function setSelectValueIfPresent(selectEl, value, fallbackValue) {
+        if (!selectEl) return;
+        const next = String(value || "").trim();
+        const fallback = String(fallbackValue || "").trim();
+        const options = Array.from(selectEl.options).map(function (option) { return option.value; });
+        if (options.indexOf(next) >= 0) {
+          selectEl.value = next;
+          return;
+        }
+        if (options.indexOf(fallback) >= 0) {
+          selectEl.value = fallback;
+          return;
+        }
+        if (options.length > 0) {
+          selectEl.value = options[0];
+        }
+      }
+
+      function applyAnimationLabState(state) {
+        if (!state || typeof state !== "object") {
+          updateAnimationLabOutputs();
+          return;
+        }
+        const fallback = DEFAULT_ANIMATION_PREVIEW;
+        setSelectValueIfPresent(elAnimationLabPreset, state.presetId, elAnimationLabPreset.value);
+        setSelectValueIfPresent(elAnimationLabTrigger, state.trigger, "");
+        setSelectValueIfPresent(elAnimationLabName, state.keyframes, fallback.name);
+        setSelectValueIfPresent(elAnimationLabDuration, state.duration, fallback.duration);
+        setSelectValueIfPresent(elAnimationLabEasing, state.easing, fallback.timingFunction);
+        setSelectValueIfPresent(elAnimationLabDelay, state.delay, fallback.delay);
+        setSelectValueIfPresent(elAnimationLabIterations, state.iterations, fallback.iterationCount);
+        setSelectValueIfPresent(elAnimationLabDirection, state.direction, fallback.direction);
+        setSelectValueIfPresent(elAnimationLabFill, state.fill, fallback.fillMode);
+        setSelectValueIfPresent(elAnimationLabPlay, state.play, fallback.playState);
+        updateAnimationLabOutputs();
       }
 
       function animationLabSelector() {
@@ -5439,6 +5477,7 @@ translateY()	translateY(<length|percentage>)
           variableScope: elBuilderVariableScope.value,
           mediaLayer: elBuilderMediaLayer.value,
           mediaCustom: elBuilderMediaCustom.value,
+          animationLab: animationLabPresetValues(),
           previewMode: previewMode,
           previewInteractionState: elPreviewInteractionState.value,
           autoApply: elBuilderAutoApply.checked,
@@ -5468,6 +5507,7 @@ translateY()	translateY(<length|percentage>)
         elBuilderMediaLayer.value = state.mediaLayer || "all";
         elBuilderMediaCustom.value = state.mediaCustom || "";
         updateBuilderMediaControlVisibility();
+        applyAnimationLabState(state.animationLab);
         previewMode = state.previewMode === "before" ? "before" : "after";
         updatePreviewModeUI();
         elPreviewInteractionState.value =
