@@ -1657,6 +1657,127 @@
             <label class="label" for="custom-rule">Custom Declaration</label>
             <input id="custom-rule" placeholder="border-radius: 12px;" title="Write one or more declarations separated by semicolons." />
           </div>
+          <details id="custom-rule-studio-disclosure" class="disclosure">
+            <summary>Custom Declaration Studio</summary>
+            <div class="disclosure-body">
+              <p class="tiny">Use guided controls for common declaration patterns, then load or append the generated draft into the freeform field above.</p>
+              <div class="row">
+                <label class="label" for="custom-rule-helper-type">Declaration Type</label>
+                <select id="custom-rule-helper-type" title="Choose a structured declaration pattern to generate.">
+                  <option value="border-radius">Border Radius</option>
+                  <option value="box-shadow">Box Shadow</option>
+                  <option value="transition">Transition</option>
+                </select>
+              </div>
+              <div id="custom-rule-helper-radius-group" class="builder-row">
+                <div class="row">
+                  <label class="label" for="custom-rule-helper-radius-value">Radius Amount</label>
+                  <input id="custom-rule-helper-radius-value" type="number" min="0" step="1" value="12" title="Numeric value for the border radius." />
+                </div>
+                <div class="row">
+                  <label class="label" for="custom-rule-helper-radius-unit">Radius Unit</label>
+                  <select id="custom-rule-helper-radius-unit" title="Unit for the border radius value.">
+                    <option value="px">px</option>
+                    <option value="rem">rem</option>
+                    <option value="%">%</option>
+                  </select>
+                </div>
+              </div>
+              <div id="custom-rule-helper-shadow-group" class="hidden">
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-shadow-x">Offset X</label>
+                    <input id="custom-rule-helper-shadow-x" type="number" step="1" value="0" title="Horizontal shadow offset in pixels." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-shadow-y">Offset Y</label>
+                    <input id="custom-rule-helper-shadow-y" type="number" step="1" value="12" title="Vertical shadow offset in pixels." />
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-shadow-blur">Blur</label>
+                    <input id="custom-rule-helper-shadow-blur" type="number" min="0" step="1" value="24" title="Blur radius in pixels." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-shadow-spread">Spread</label>
+                    <input id="custom-rule-helper-shadow-spread" type="number" step="1" value="0" title="Spread radius in pixels." />
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-shadow-color">Shadow Color</label>
+                    <input id="custom-rule-helper-shadow-color" type="color" value="#214f9b" title="Color used for the shadow." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-shadow-alpha">Shadow Alpha</label>
+                    <input id="custom-rule-helper-shadow-alpha" type="number" min="0" max="1" step="0.01" value="0.18" title="Opacity for the shadow color." />
+                  </div>
+                </div>
+                <div class="row">
+                  <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+                    <input id="custom-rule-helper-shadow-inset" type="checkbox" />
+                    Use inset shadow
+                  </label>
+                </div>
+              </div>
+              <div id="custom-rule-helper-transition-group" class="hidden">
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-transition-property">Property</label>
+                    <select id="custom-rule-helper-transition-property" title="Property that should animate.">
+                      <option value="all">all</option>
+                      <option value="background-color">background-color</option>
+                      <option value="color">color</option>
+                      <option value="opacity">opacity</option>
+                      <option value="transform">transform</option>
+                      <option value="box-shadow">box-shadow</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-transition-duration">Duration</label>
+                    <select id="custom-rule-helper-transition-duration" title="How long the transition lasts.">
+                      <option value="120ms">120ms</option>
+                      <option value="200ms" selected>200ms</option>
+                      <option value="300ms">300ms</option>
+                      <option value="500ms">500ms</option>
+                      <option value="1s">1s</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-transition-easing">Easing</label>
+                    <select id="custom-rule-helper-transition-easing" title="How the transition accelerates.">
+                      <option value="ease" selected>ease</option>
+                      <option value="ease-in">ease-in</option>
+                      <option value="ease-out">ease-out</option>
+                      <option value="ease-in-out">ease-in-out</option>
+                      <option value="linear">linear</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-transition-delay">Delay</label>
+                    <select id="custom-rule-helper-transition-delay" title="How long the transition waits before starting.">
+                      <option value="0s" selected>0s</option>
+                      <option value="80ms">80ms</option>
+                      <option value="150ms">150ms</option>
+                      <option value="250ms">250ms</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="label">Generated Declaration</label>
+                <div id="custom-rule-helper-output" class="selector-preview">border-radius: 12px;</div>
+              </div>
+              <div id="custom-rule-helper-note" class="input-hint">Use this when you want rounded corners without hand-typing the declaration.</div>
+              <div class="inline">
+                <button id="custom-rule-helper-load" type="button">Load Draft</button>
+                <button id="custom-rule-helper-append" type="button">Append Draft</button>
+              </div>
+            </div>
+          </details>
           <div class="builder-row">
             <div class="row">
               <label class="label" for="builder-media-layer">Rule Media Layer</label>
@@ -2172,6 +2293,27 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabKeyframes = document.getElementById("animation-lab-keyframes");
       const elSyntaxAddCurrentRule = document.getElementById("syntax-add-current-rule");
       const elCustomRule = document.getElementById("custom-rule");
+      const elCustomRuleHelperType = document.getElementById("custom-rule-helper-type");
+      const elCustomRuleHelperRadiusGroup = document.getElementById("custom-rule-helper-radius-group");
+      const elCustomRuleHelperRadiusValue = document.getElementById("custom-rule-helper-radius-value");
+      const elCustomRuleHelperRadiusUnit = document.getElementById("custom-rule-helper-radius-unit");
+      const elCustomRuleHelperShadowGroup = document.getElementById("custom-rule-helper-shadow-group");
+      const elCustomRuleHelperShadowX = document.getElementById("custom-rule-helper-shadow-x");
+      const elCustomRuleHelperShadowY = document.getElementById("custom-rule-helper-shadow-y");
+      const elCustomRuleHelperShadowBlur = document.getElementById("custom-rule-helper-shadow-blur");
+      const elCustomRuleHelperShadowSpread = document.getElementById("custom-rule-helper-shadow-spread");
+      const elCustomRuleHelperShadowColor = document.getElementById("custom-rule-helper-shadow-color");
+      const elCustomRuleHelperShadowAlpha = document.getElementById("custom-rule-helper-shadow-alpha");
+      const elCustomRuleHelperShadowInset = document.getElementById("custom-rule-helper-shadow-inset");
+      const elCustomRuleHelperTransitionGroup = document.getElementById("custom-rule-helper-transition-group");
+      const elCustomRuleHelperTransitionProperty = document.getElementById("custom-rule-helper-transition-property");
+      const elCustomRuleHelperTransitionDuration = document.getElementById("custom-rule-helper-transition-duration");
+      const elCustomRuleHelperTransitionEasing = document.getElementById("custom-rule-helper-transition-easing");
+      const elCustomRuleHelperTransitionDelay = document.getElementById("custom-rule-helper-transition-delay");
+      const elCustomRuleHelperOutput = document.getElementById("custom-rule-helper-output");
+      const elCustomRuleHelperNote = document.getElementById("custom-rule-helper-note");
+      const elCustomRuleHelperLoad = document.getElementById("custom-rule-helper-load");
+      const elCustomRuleHelperAppend = document.getElementById("custom-rule-helper-append");
       const elBuilderMediaLayer = document.getElementById("builder-media-layer");
       const elBuilderMediaCustomWrap = document.getElementById("builder-media-custom-wrap");
       const elBuilderMediaCustom = document.getElementById("builder-media-custom");
@@ -7622,6 +7764,77 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      function customRuleHelperDeclaration() {
+        const type = (elCustomRuleHelperType.value || "border-radius").trim();
+        if (type === "box-shadow") {
+          const x = Number(elCustomRuleHelperShadowX.value || 0);
+          const y = Number(elCustomRuleHelperShadowY.value || 0);
+          const blur = Math.max(0, Number(elCustomRuleHelperShadowBlur.value || 0));
+          const spread = Number(elCustomRuleHelperShadowSpread.value || 0);
+          const rgb = parseCssColorToRgb(elCustomRuleHelperShadowColor.value || "#214f9b");
+          const alphaRaw = Number(elCustomRuleHelperShadowAlpha.value);
+          const alpha = Number.isFinite(alphaRaw) ? Math.max(0, Math.min(1, alphaRaw)) : 0.18;
+          const prefix = elCustomRuleHelperShadowInset.checked ? "inset " : "";
+          return "box-shadow: " + prefix + x + "px " + y + "px " + blur + "px " + spread + "px rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + alpha.toFixed(2) + ");";
+        }
+        if (type === "transition") {
+          return "transition: " +
+            (elCustomRuleHelperTransitionProperty.value || "all") + " " +
+            (elCustomRuleHelperTransitionDuration.value || "200ms") + " " +
+            (elCustomRuleHelperTransitionEasing.value || "ease") + " " +
+            (elCustomRuleHelperTransitionDelay.value || "0s") + ";";
+        }
+        const amount = Math.max(0, Number(elCustomRuleHelperRadiusValue.value || 0));
+        return "border-radius: " + amount + (elCustomRuleHelperRadiusUnit.value || "px") + ";";
+      }
+
+      function appendDeclarationToCustomRule(declaration) {
+        const next = String(declaration || "").trim();
+        if (!next) return;
+        const current = String(elCustomRule.value || "").trim();
+        if (!current) {
+          elCustomRule.value = next;
+          return;
+        }
+        if (current.endsWith(";")) {
+          elCustomRule.value = current + "\n" + next;
+        } else {
+          elCustomRule.value = current + ";\n" + next;
+        }
+      }
+
+      function updateCustomRuleHelper() {
+        const type = (elCustomRuleHelperType.value || "border-radius").trim();
+        elCustomRuleHelperRadiusGroup.classList.toggle("hidden", type !== "border-radius");
+        elCustomRuleHelperShadowGroup.classList.toggle("hidden", type !== "box-shadow");
+        elCustomRuleHelperTransitionGroup.classList.toggle("hidden", type !== "transition");
+
+        if (type === "box-shadow") {
+          elCustomRuleHelperNote.textContent = "Build a reusable shadow with consistent offsets, blur, spread, color, and optional inset behavior.";
+        } else if (type === "transition") {
+          elCustomRuleHelperNote.textContent = "Use this for common interactive motion so timing stays explicit and readable.";
+        } else {
+          elCustomRuleHelperNote.textContent = "Use this when you want rounded corners without hand-typing the declaration.";
+        }
+
+        elCustomRuleHelperOutput.textContent = customRuleHelperDeclaration();
+      }
+
+      function loadCustomRuleHelperDraft(append) {
+        const declaration = customRuleHelperDeclaration();
+        if (!declaration) {
+          setBuilderStatus("Custom declaration studio could not build a draft.");
+          return;
+        }
+        if (append) {
+          appendDeclarationToCustomRule(declaration);
+          setBuilderStatus("Custom declaration draft appended.");
+        } else {
+          elCustomRule.value = declaration;
+          setBuilderStatus("Custom declaration draft loaded.");
+        }
+      }
+
       function addCustomRuleToBuilder() {
         const rules = parseDeclarations(elCustomRule.value);
         if (!rules.length) {
@@ -7746,6 +7959,31 @@ translateY()	translateY(<length|percentage>)
       elSyntaxAddCurrentRule.addEventListener("click", addCurrentRuleToBuilder);
       elAddCurrentRule.addEventListener("click", addCurrentRuleToBuilder);
       elAddCustomRule.addEventListener("click", addCustomRuleToBuilder);
+      elCustomRuleHelperType.addEventListener("change", updateCustomRuleHelper);
+      [
+        elCustomRuleHelperRadiusValue,
+        elCustomRuleHelperRadiusUnit,
+        elCustomRuleHelperShadowX,
+        elCustomRuleHelperShadowY,
+        elCustomRuleHelperShadowBlur,
+        elCustomRuleHelperShadowSpread,
+        elCustomRuleHelperShadowColor,
+        elCustomRuleHelperShadowAlpha,
+        elCustomRuleHelperTransitionProperty,
+        elCustomRuleHelperTransitionDuration,
+        elCustomRuleHelperTransitionEasing,
+        elCustomRuleHelperTransitionDelay
+      ].forEach(function (el) {
+        el.addEventListener("input", updateCustomRuleHelper);
+        el.addEventListener("change", updateCustomRuleHelper);
+      });
+      elCustomRuleHelperShadowInset.addEventListener("change", updateCustomRuleHelper);
+      elCustomRuleHelperLoad.addEventListener("click", function () {
+        loadCustomRuleHelperDraft(false);
+      });
+      elCustomRuleHelperAppend.addEventListener("click", function () {
+        loadCustomRuleHelperDraft(true);
+      });
       elCopyBuilderCSS.addEventListener("click", copyBuilderCSS);
       elExportFormat.addEventListener("change", updateExportWizard);
       elExportTag.addEventListener("change", updateExportWizard);
@@ -7980,6 +8218,7 @@ translateY()	translateY(<length|percentage>)
       renderLibraryCategoryList();
       renderLibraryPresetList();
       renderPresetList();
+      updateCustomRuleHelper();
       renderBuilder();
       populateItems();
       updateExportWizard();
