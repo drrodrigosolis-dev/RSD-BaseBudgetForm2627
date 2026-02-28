@@ -1831,6 +1831,7 @@
                   <option value="spacing">Spacing</option>
                   <option value="gradient">Gradient Fill</option>
                   <option value="transition">Transition</option>
+                  <option value="fluid-clamp">Fluid Clamp</option>
                 </select>
               </div>
               <div id="custom-rule-helper-radius-group" class="builder-row">
@@ -2014,6 +2015,47 @@
                       <option value="150ms">150ms</option>
                       <option value="250ms">250ms</option>
                     </select>
+                  </div>
+                </div>
+              </div>
+              <div id="custom-rule-helper-fluid-group" class="hidden">
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-fluid-property">Property</label>
+                    <select id="custom-rule-helper-fluid-property" title="Property that should scale fluidly between a small and large viewport.">
+                      <option value="font-size">font-size</option>
+                      <option value="padding">padding</option>
+                      <option value="gap">gap</option>
+                      <option value="border-radius">border-radius</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-fluid-unit">Unit</label>
+                    <select id="custom-rule-helper-fluid-unit" title="Unit for the minimum and maximum values used in the clamp expression.">
+                      <option value="rem" selected>rem</option>
+                      <option value="px">px</option>
+                      <option value="%">%</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-fluid-min">Minimum</label>
+                    <input id="custom-rule-helper-fluid-min" type="number" min="0" step="0.1" value="1" title="Small-screen value used as the lower clamp bound." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-fluid-max">Maximum</label>
+                    <input id="custom-rule-helper-fluid-max" type="number" min="0" step="0.1" value="2" title="Large-screen value used as the upper clamp bound." />
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-fluid-vw">Viewport Rate</label>
+                    <input id="custom-rule-helper-fluid-vw" type="number" min="0" step="0.1" value="2.5" title="Middle clamp value expressed in vw, for example 2.5 becomes 2.5vw." />
+                  </div>
+                  <div class="row">
+                    <div class="label">Clamp Guardrail</div>
+                    <div class="input-hint">Use this when a property should flex across screen sizes without overshooting its safe range.</div>
                   </div>
                 </div>
               </div>
@@ -2760,6 +2802,12 @@ translateY()	translateY(<length|percentage>)
       const elCustomRuleHelperTransitionDuration = document.getElementById("custom-rule-helper-transition-duration");
       const elCustomRuleHelperTransitionEasing = document.getElementById("custom-rule-helper-transition-easing");
       const elCustomRuleHelperTransitionDelay = document.getElementById("custom-rule-helper-transition-delay");
+      const elCustomRuleHelperFluidGroup = document.getElementById("custom-rule-helper-fluid-group");
+      const elCustomRuleHelperFluidProperty = document.getElementById("custom-rule-helper-fluid-property");
+      const elCustomRuleHelperFluidUnit = document.getElementById("custom-rule-helper-fluid-unit");
+      const elCustomRuleHelperFluidMin = document.getElementById("custom-rule-helper-fluid-min");
+      const elCustomRuleHelperFluidMax = document.getElementById("custom-rule-helper-fluid-max");
+      const elCustomRuleHelperFluidVw = document.getElementById("custom-rule-helper-fluid-vw");
       const elCustomRuleHelperOutput = document.getElementById("custom-rule-helper-output");
       const elCustomRuleHelperNote = document.getElementById("custom-rule-helper-note");
       const elCustomRuleHelperLoad = document.getElementById("custom-rule-helper-load");
@@ -9127,6 +9175,15 @@ translateY()	translateY(<length|percentage>)
             (elCustomRuleHelperTransitionEasing.value || "ease") + " " +
             (elCustomRuleHelperTransitionDelay.value || "0s") + ";";
         }
+        if (type === "fluid-clamp") {
+          const prop = (elCustomRuleHelperFluidProperty.value || "font-size").trim();
+          const unit = (elCustomRuleHelperFluidUnit.value || "rem").trim();
+          const min = Math.max(0, Number(elCustomRuleHelperFluidMin.value || 0));
+          const max = Math.max(min, Number(elCustomRuleHelperFluidMax.value || min));
+          const vw = Math.max(0, Number(elCustomRuleHelperFluidVw.value || 0));
+          const vwText = String(Math.round(vw * 100) / 100).replace(/\.0+$/, "").replace(/(\.\d*[1-9])0+$/, "$1");
+          return prop + ": clamp(" + min + unit + ", " + (vwText || "0") + "vw, " + max + unit + ");";
+        }
         const amount = Math.max(0, Number(elCustomRuleHelperRadiusValue.value || 0));
         return "border-radius: " + amount + (elCustomRuleHelperRadiusUnit.value || "px") + ";";
       }
@@ -9153,6 +9210,7 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperSpacingGroup.classList.toggle("hidden", type !== "spacing");
         elCustomRuleHelperGradientGroup.classList.toggle("hidden", type !== "gradient");
         elCustomRuleHelperTransitionGroup.classList.toggle("hidden", type !== "transition");
+        elCustomRuleHelperFluidGroup.classList.toggle("hidden", type !== "fluid-clamp");
         updateSpacingHelperControlState();
 
         if (type === "box-shadow") {
@@ -9163,6 +9221,8 @@ translateY()	translateY(<length|percentage>)
           elCustomRuleHelperNote.textContent = "Build a two-stop gradient with controlled direction and color stops, then load it as a full background declaration.";
         } else if (type === "transition") {
           elCustomRuleHelperNote.textContent = "Use this for common interactive motion so timing stays explicit and readable.";
+        } else if (type === "fluid-clamp") {
+          elCustomRuleHelperNote.textContent = "Generate a bounded clamp() value so typography and spacing can scale across breakpoints without hand-tuning every viewport.";
         } else {
           elCustomRuleHelperNote.textContent = "Use this when you want rounded corners without hand-typing the declaration.";
         }
@@ -9337,7 +9397,12 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperTransitionProperty,
         elCustomRuleHelperTransitionDuration,
         elCustomRuleHelperTransitionEasing,
-        elCustomRuleHelperTransitionDelay
+        elCustomRuleHelperTransitionDelay,
+        elCustomRuleHelperFluidProperty,
+        elCustomRuleHelperFluidUnit,
+        elCustomRuleHelperFluidMin,
+        elCustomRuleHelperFluidMax,
+        elCustomRuleHelperFluidVw
       ].forEach(function (el) {
         el.addEventListener("input", updateCustomRuleHelper);
         el.addEventListener("change", updateCustomRuleHelper);
