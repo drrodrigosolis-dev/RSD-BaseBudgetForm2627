@@ -113,7 +113,8 @@
       background: #fff;
     }
 
-    input[type="checkbox"] {
+    input[type="checkbox"],
+    input[type="radio"] {
       width: auto;
       min-height: 0;
       margin-right: 6px;
@@ -294,6 +295,103 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.03em;
+    }
+
+    .preview-formio-shell {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      padding: 12px;
+    }
+
+    .preview-formio-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #314a79;
+    }
+
+    .preview-formio-meta {
+      font-size: 0.74rem;
+      color: #617296;
+      line-height: 1.35;
+    }
+
+    .preview-formio-inline-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 0;
+      width: fit-content;
+    }
+
+    .preview-formio-inline-check .form-check-input {
+      margin: 0;
+      flex: 0 0 auto;
+    }
+
+    .preview-formio-inline-check .form-check-label {
+      font-size: 0.82rem;
+      color: #30456d;
+    }
+
+    .preview-formio-choices {
+      overflow: visible;
+    }
+
+    .preview-formio-choices .choices {
+      position: relative;
+      width: 100%;
+    }
+
+    .preview-formio-choices .choices__inner {
+      background: #fff;
+      border: 1px solid #c9d5ef;
+      border-radius: 8px;
+      min-height: 38px;
+      padding: 8px 10px;
+    }
+
+    .preview-formio-choices .choices__list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .preview-formio-choices .choices__list--single {
+      display: block;
+      padding-right: 18px;
+    }
+
+    .preview-formio-choices .choices__list--dropdown {
+      position: static;
+      visibility: visible;
+      margin-top: 6px;
+      border: 1px solid #d5def0;
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .preview-formio-choices .choices__item {
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      color: #213864;
+    }
+
+    .preview-formio-choices .choices__item--selectable.is-highlighted {
+      background: #eef4ff;
+    }
+
+    .preview-formio-file-copy {
+      font-size: 0.8rem;
+      color: #516287;
+      line-height: 1.4;
+    }
+
+    .preview-formio-file-copy .browse {
+      color: #165fc7;
+      font-weight: 700;
     }
 
     #preview-card {
@@ -1643,6 +1741,23 @@
                 <button id="animation-lab-match-preview" type="button">Match Preview To Trigger</button>
                 <button id="animation-lab-restart" type="button">Restart Preview</button>
               </div>
+              <div class="help-box">
+                <div><strong>Motion Pack Brief</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Preset Intent</div>
+                    <div id="animation-lab-preset-intent">Choose a motion pack to see what job it is designed to do.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Best For</div>
+                    <div id="animation-lab-preset-best-for">Recommended surfaces and interaction moments will appear here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Watch Out</div>
+                    <div id="animation-lab-preset-guardrail">Each motion pack includes a guardrail so it stays intentional in production.</div>
+                  </div>
+                </div>
+              </div>
               <div class="row">
                 <label class="label">Effective Selector</label>
                 <div id="animation-lab-selector-note" class="selector-preview">The lab will target your current builder selector.</div>
@@ -2014,6 +2129,14 @@
               <option value="image">Image</option>
               <option value="overlap">Overlap / z-index</option>
               <option value="sandbox">Sandbox (children/siblings)</option>
+              <option value="formio-textfield">Form.io Text Field</option>
+              <option value="formio-select">Form.io Native Select</option>
+              <option value="formio-choices">Form.io Enhanced Select</option>
+              <option value="formio-textarea">Form.io Textarea</option>
+              <option value="formio-checkbox">Form.io Checkbox</option>
+              <option value="formio-radio">Form.io Radio</option>
+              <option value="formio-submit">Form.io Submit Button</option>
+              <option value="formio-file">Form.io File Dropzone</option>
             </select>
           </div>
           <div class="row">
@@ -2079,6 +2202,170 @@
                   <div class="box beta">.box.beta</div>
                   <div class="box gamma">.box.gamma</div>
                   <button type="button" class="mini-btn">.mini-btn</button>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-textfield">
+                <div class="preview-title">Form.io Text Field</div>
+                <div
+                  id="preview-formio-textfield"
+                  class="preview-target preview-formio-shell"
+                  data-base-class="preview-target preview-formio-shell"
+                  data-preview-proxy=".form-control"
+                >
+                  <label class="preview-formio-label" for="preview-formio-textfield-input">Text field</label>
+                  <input
+                    id="preview-formio-textfield-input"
+                    class="form-control"
+                    data-base-class="form-control"
+                    data-base-value=""
+                    placeholder="name@example.com"
+                  />
+                  <div class="preview-formio-meta">Reusable starter for Form.io text, email, password, and number inputs.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-select">
+                <div class="preview-title">Form.io Native Select</div>
+                <div
+                  id="preview-formio-select"
+                  class="preview-target preview-formio-shell"
+                  data-base-class="preview-target preview-formio-shell"
+                  data-preview-proxy=".form-select"
+                >
+                  <label class="preview-formio-label" for="preview-formio-select-input">Dropdown</label>
+                  <select
+                    id="preview-formio-select-input"
+                    class="form-select"
+                    data-base-class="form-select"
+                    data-base-value="starter"
+                  >
+                    <option value="starter">Starter plan</option>
+                    <option value="growth">Growth plan</option>
+                    <option value="enterprise">Enterprise plan</option>
+                  </select>
+                  <div class="preview-formio-meta">Baseline for native select components using <code>.form-select</code>.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-choices">
+                <div class="preview-title">Form.io Enhanced Select</div>
+                <div
+                  id="preview-formio-choices"
+                  class="preview-target preview-formio-shell preview-formio-choices"
+                  data-base-class="preview-target preview-formio-shell preview-formio-choices"
+                  data-preview-proxy=".choices__inner"
+                >
+                  <div class="preview-formio-label">Choices.js shell</div>
+                  <div class="choices is-open is-focused">
+                    <div class="choices__inner" data-base-class="choices__inner" tabindex="0">
+                      <div class="choices__list choices__list--single">
+                        <div class="choices__item">Premium support</div>
+                      </div>
+                    </div>
+                    <div class="choices__list choices__list--dropdown is-active">
+                      <div class="choices__list">
+                        <div class="choices__item choices__item--selectable is-highlighted">Premium support</div>
+                        <div class="choices__item choices__item--selectable">Standard</div>
+                        <div class="choices__item choices__item--selectable">Basic</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="preview-formio-meta">Use this for enhanced Form.io selects that render through Choices.js.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-textarea">
+                <div class="preview-title">Form.io Textarea</div>
+                <div
+                  id="preview-formio-textarea"
+                  class="preview-target preview-formio-shell"
+                  data-base-class="preview-target preview-formio-shell"
+                  data-preview-proxy=".form-control"
+                >
+                  <label class="preview-formio-label" for="preview-formio-textarea-input">Textarea</label>
+                  <textarea
+                    id="preview-formio-textarea-input"
+                    class="form-control"
+                    data-base-class="form-control"
+                    data-base-value="Tell us more about your request."
+                    rows="4"
+                  >Tell us more about your request.</textarea>
+                  <div class="preview-formio-meta">Starter for multi-line fields, notes, and rich-text wrappers.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-checkbox">
+                <div class="preview-title">Form.io Checkbox</div>
+                <div
+                  id="preview-formio-checkbox"
+                  class="preview-target preview-formio-shell"
+                  data-base-class="preview-target preview-formio-shell"
+                  data-preview-proxy=".form-check-input"
+                >
+                  <div class="preview-formio-label">Checkbox group item</div>
+                  <label class="preview-formio-inline-check form-check">
+                    <input
+                      id="preview-formio-checkbox-input"
+                      type="checkbox"
+                      class="form-check-input"
+                      data-base-class="form-check-input"
+                      data-base-value=""
+                    />
+                    <span class="form-check-label">Email me release updates</span>
+                  </label>
+                  <div class="preview-formio-meta">Targets the checkbox control inside a standard <code>.form-check</code> row.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-radio">
+                <div class="preview-title">Form.io Radio</div>
+                <div
+                  id="preview-formio-radio"
+                  class="preview-target preview-formio-shell"
+                  data-base-class="preview-target preview-formio-shell"
+                  data-preview-proxy=".form-check-input"
+                >
+                  <div class="preview-formio-label">Radio option</div>
+                  <label class="preview-formio-inline-check form-check">
+                    <input
+                      id="preview-formio-radio-input"
+                      type="radio"
+                      class="form-check-input"
+                      data-base-class="form-check-input"
+                      data-base-value=""
+                    />
+                    <span class="form-check-label">Contact me by phone</span>
+                  </label>
+                  <div class="preview-formio-meta">Use when styling radio groups and option states.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-submit">
+                <div class="preview-title">Form.io Submit Button</div>
+                <div
+                  id="preview-formio-submit"
+                  class="preview-target preview-formio-shell"
+                  data-base-class="preview-target preview-formio-shell"
+                  data-preview-proxy=".btn"
+                >
+                  <div class="preview-formio-label">Submit action</div>
+                  <button
+                    id="preview-formio-submit-button"
+                    type="button"
+                    class="btn btn-primary"
+                    data-base-class="btn btn-primary"
+                    data-base-value="Submit Form"
+                  >Submit Form</button>
+                  <div class="preview-formio-meta">Baseline for Form.io button and submit components.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-file">
+                <div class="preview-title">Form.io File Dropzone</div>
+                <div
+                  id="preview-formio-file"
+                  class="preview-target preview-formio-shell"
+                  data-base-class="preview-target preview-formio-shell"
+                  data-preview-proxy=".fileSelector"
+                >
+                  <div class="preview-formio-label">File upload</div>
+                  <div id="preview-formio-file-dropzone" class="fileSelector" data-base-class="fileSelector" tabindex="0">
+                    <div class="preview-formio-file-copy">Drop files here or <span class="browse">browse</span></div>
+                  </div>
+                  <div class="preview-formio-meta">Starter for drag-and-drop upload styling and browse affordances.</div>
                 </div>
               </div>
             </div>
@@ -2383,6 +2670,9 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabApplyBuilder = document.getElementById("animation-lab-apply-builder");
       const elAnimationLabMatchPreview = document.getElementById("animation-lab-match-preview");
       const elAnimationLabRestart = document.getElementById("animation-lab-restart");
+      const elAnimationLabPresetIntent = document.getElementById("animation-lab-preset-intent");
+      const elAnimationLabPresetBestFor = document.getElementById("animation-lab-preset-best-for");
+      const elAnimationLabPresetGuardrail = document.getElementById("animation-lab-preset-guardrail");
       const elAnimationLabSelectorNote = document.getElementById("animation-lab-selector-note");
       const elAnimationLabOutput = document.getElementById("animation-lab-output");
       const elAnimationLabKeyframes = document.getElementById("animation-lab-keyframes");
@@ -2473,6 +2763,14 @@ translateY()	translateY(<length|percentage>)
       const previewImage = document.getElementById("preview-image");
       const previewOverlap = document.getElementById("preview-overlap");
       const previewSandbox = document.getElementById("preview-sandbox");
+      const previewFormioTextfield = document.getElementById("preview-formio-textfield");
+      const previewFormioSelect = document.getElementById("preview-formio-select");
+      const previewFormioChoices = document.getElementById("preview-formio-choices");
+      const previewFormioTextarea = document.getElementById("preview-formio-textarea");
+      const previewFormioCheckbox = document.getElementById("preview-formio-checkbox");
+      const previewFormioRadio = document.getElementById("preview-formio-radio");
+      const previewFormioSubmit = document.getElementById("preview-formio-submit");
+      const previewFormioFile = document.getElementById("preview-formio-file");
       const previewPanels = Array.from(document.querySelectorAll(".preview-panel"));
       const workspaceViewButtons = Array.from(document.querySelectorAll("[data-workspace-view-option]"));
       const workspaceCorePanels = Array.from(document.querySelectorAll(".view-core"));
@@ -2484,7 +2782,15 @@ translateY()	translateY(<length|percentage>)
         button: previewButton,
         image: previewImage,
         overlap: previewOverlap,
-        sandbox: previewSandbox
+        sandbox: previewSandbox,
+        "formio-textfield": previewFormioTextfield,
+        "formio-select": previewFormioSelect,
+        "formio-choices": previewFormioChoices,
+        "formio-textarea": previewFormioTextarea,
+        "formio-checkbox": previewFormioCheckbox,
+        "formio-radio": previewFormioRadio,
+        "formio-submit": previewFormioSubmit,
+        "formio-file": previewFormioFile
       };
       const previewActualStates = {};
       Object.keys(previewTargets).forEach(function (key) {
@@ -2492,7 +2798,8 @@ translateY()	translateY(<length|percentage>)
           hover: false,
           focus: false,
           "focus-visible": false,
-          active: false
+          active: false,
+          checked: false
         };
       });
       let triggerSyncLastChangeMessage = "Initial load. Shared trigger state not edited yet.";
@@ -3134,6 +3441,9 @@ translateY()	translateY(<length|percentage>)
         {
           id: "intro-fade",
           name: "Intro Fade",
+          intent: "Soft entry reveal that helps new content land without feeling abrupt.",
+          bestFor: "Page section reveals, helper text, and cards that should appear calmly once.",
+          guardrail: "Keep it one cycle and pair it with stable layout so the fade reads as polish, not delay.",
           trigger: "",
           keyframes: "fadeIn",
           duration: "700ms",
@@ -3147,6 +3457,9 @@ translateY()	translateY(<length|percentage>)
         {
           id: "pulse-attention",
           name: "Pulse Attention",
+          intent: "Persistent emphasis that draws the eye to a control while it remains interactive.",
+          bestFor: "Short-lived callouts, upgrade prompts, or primary actions that need temporary emphasis.",
+          guardrail: "Use sparingly and shut it off after the user notices it. Infinite idle pulses can feel noisy fast.",
           trigger: ":hover",
           keyframes: "pulseGlow",
           duration: "1.2s",
@@ -3160,6 +3473,9 @@ translateY()	translateY(<length|percentage>)
         {
           id: "lift-hover",
           name: "Lift Hover",
+          intent: "Adds depth on hover so the target feels tactile before the click.",
+          bestFor: "Cards, buttons, and selectable tiles that benefit from a clear hover affordance.",
+          guardrail: "Reserve for pointer-friendly targets. Keyboard-only flows still need a strong non-motion focus state.",
           trigger: ":hover",
           keyframes: "float",
           duration: "900ms",
@@ -3173,6 +3489,9 @@ translateY()	translateY(<length|percentage>)
         {
           id: "button-press",
           name: "Button Press",
+          intent: "A quick press response that makes activation feel immediate and physical.",
+          bestFor: "Buttons and compact controls where the pressed state should confirm the action instantly.",
+          guardrail: "Keep it short. Press feedback that lingers after release can feel like input latency.",
           trigger: ":active",
           keyframes: "bounce",
           duration: "300ms",
@@ -3186,6 +3505,9 @@ translateY()	translateY(<length|percentage>)
         {
           id: "focus-wiggle",
           name: "Focus Wiggle",
+          intent: "Adds a brief focus cue so the target stands out during keyboard navigation.",
+          bestFor: "Tutorial moments, highlighted next steps, or spotlighted controls in guided flows.",
+          guardrail: "Do not let the wiggle replace the visible focus ring. Motion should support, not override, accessibility.",
           trigger: ":focus",
           keyframes: "wiggle",
           duration: "400ms",
@@ -3199,6 +3521,9 @@ translateY()	translateY(<length|percentage>)
         {
           id: "ambient-shimmer",
           name: "Ambient Shimmer",
+          intent: "Creates a continuous ambient sheen for decorative emphasis or placeholder-style motion.",
+          bestFor: "Loading-adjacent affordances, marketing accents, or small decorative highlights with clear purpose.",
+          guardrail: "Treat as a hero treatment, not a baseline UI pattern. Continuous shimmer can become exhausting.",
           trigger: "",
           keyframes: "shimmer",
           duration: "1.6s",
@@ -3212,6 +3537,9 @@ translateY()	translateY(<length|percentage>)
         {
           id: "continuous-spin",
           name: "Continuous Spin",
+          intent: "Signals ongoing activity with a classic rotational motion that reads as work in progress.",
+          bestFor: "Loading indicators, refresh affordances, or clearly temporary processing states.",
+          guardrail: "Only use while work is actually in progress. Infinite spin on an idle surface looks broken.",
           trigger: "",
           keyframes: "spin",
           duration: "1.4s",
@@ -3942,6 +4270,425 @@ translateY()	translateY(<length|percentage>)
             { name: "--accent-main", value: "#d44bc4" },
             { name: "--shadow-main", value: "0 14px 34px rgba(160,71,157,0.24)" }
           ]
+        ),
+        makeLibraryPreset(
+          "[Form.io] Text Field Baseline",
+          "Reusable text-input starter based on the imported Form.io form-control rules.",
+          "formio-textfield-pack",
+          "formio-textfield",
+          [
+            {
+              selector: ".formio-textfield-pack .form-control",
+              declarations: [
+                "display: block",
+                "width: 100%",
+                "padding: .375rem .75rem",
+                "font-size: 1rem",
+                "font-weight: 400",
+                "line-height: 1.5",
+                "color: #212529",
+                "background-color: #ffffff",
+                "background-clip: padding-box",
+                "border: 1px solid #ced4da",
+                "border-radius: .375rem",
+                "transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out"
+              ]
+            },
+            {
+              selector: ".formio-textfield-pack .form-control::placeholder",
+              declarations: [
+                "color: #6c757d",
+                "opacity: 1"
+              ]
+            },
+            {
+              selector: ".formio-textfield-pack .form-control:focus",
+              declarations: [
+                "color: #212529",
+                "background-color: #ffffff",
+                "border-color: #86b7fe",
+                "outline: 0",
+                "box-shadow: 0 0 0 .25rem rgba(13,110,253,0.25)"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-textfield-pack",
+            combinator: "descendant",
+            relativeSelector: ".form-control"
+          }
+        ),
+        makeLibraryPreset(
+          "[Form.io] Native Select Baseline",
+          "Starter pack for native Form.io dropdowns using the select/form-select structure.",
+          "formio-native-select-pack",
+          "formio-select",
+          [
+            {
+              selector: ".formio-native-select-pack .form-select",
+              declarations: [
+                "display: block",
+                "width: 100%",
+                "padding: .375rem 2.25rem .375rem .75rem",
+                "font-size: 1rem",
+                "font-weight: 400",
+                "line-height: 1.5",
+                "color: #212529",
+                "background-color: #ffffff",
+                "border: 1px solid #ced4da",
+                "border-radius: .375rem",
+                "transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out"
+              ]
+            },
+            {
+              selector: ".formio-native-select-pack .form-select:focus",
+              declarations: [
+                "border-color: #86b7fe",
+                "outline: 0",
+                "box-shadow: 0 0 0 .25rem rgba(13,110,253,0.25)"
+              ]
+            },
+            {
+              selector: ".formio-native-select-pack .form-select:disabled",
+              declarations: [
+                "background-color: #e9ecef"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-native-select-pack",
+            combinator: "descendant",
+            relativeSelector: ".form-select"
+          }
+        ),
+        makeLibraryPreset(
+          "[Form.io] Enhanced Select (Choices.js)",
+          "Starter for enhanced Form.io selects backed by Choices.js containers and dropdown lists.",
+          "formio-choices-pack",
+          "formio-choices",
+          [
+            {
+              selector: ".formio-choices-pack .choices__inner",
+              declarations: [
+                "display: inline-block",
+                "vertical-align: top",
+                "width: 100%",
+                "background-color: #f9f9f9",
+                "padding: 7.5px 7.5px 3.75px",
+                "border: 1px solid #dddddd",
+                "border-radius: 2.5px",
+                "font-size: 14px",
+                "min-height: 44px",
+                "overflow: hidden"
+              ]
+            },
+            {
+              selector: ".formio-choices-pack .choices__list--single",
+              declarations: [
+                "display: inline-block",
+                "padding: 4px 16px 4px 4px",
+                "width: 100%"
+              ]
+            },
+            {
+              selector: ".formio-choices-pack .choices__list--dropdown",
+              declarations: [
+                "visibility: visible",
+                "position: relative",
+                "width: 100%",
+                "background-color: #ffffff",
+                "border: 1px solid #dddddd",
+                "border-bottom-left-radius: 2.5px",
+                "border-bottom-right-radius: 2.5px",
+                "overflow: hidden"
+              ]
+            },
+            {
+              selector: ".formio-choices-pack .choices__list--dropdown .choices__item--selectable.is-highlighted",
+              declarations: [
+                "background-color: #f2f2f2"
+              ]
+            },
+            {
+              selector: ".formio-choices-pack .choices__list--multiple .choices__item",
+              declarations: [
+                "display: inline-block",
+                "border-radius: 20px",
+                "padding: 4px 10px",
+                "font-size: 12px",
+                "font-weight: 500",
+                "margin-right: 3.75px",
+                "margin-bottom: 3.75px",
+                "background-color: #00bcd4",
+                "border: 1px solid #00a5bb",
+                "color: #ffffff"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-choices-pack",
+            combinator: "descendant",
+            relativeSelector: ".choices__inner"
+          }
+        ),
+        makeLibraryPreset(
+          "[Form.io] Textarea Baseline",
+          "Multi-line field starter built from the imported form-control textarea rules.",
+          "formio-textarea-pack",
+          "formio-textarea",
+          [
+            {
+              selector: ".formio-textarea-pack .form-control",
+              declarations: [
+                "display: block",
+                "width: 100%",
+                "padding: .375rem .75rem",
+                "font-size: 1rem",
+                "font-weight: 400",
+                "line-height: 1.5",
+                "color: #212529",
+                "background-color: #ffffff",
+                "background-clip: padding-box",
+                "border: 1px solid #ced4da",
+                "border-radius: .375rem",
+                "min-height: calc(1.5em + .75rem + 2px)",
+                "resize: vertical"
+              ]
+            },
+            {
+              selector: ".formio-textarea-pack .form-control:focus",
+              declarations: [
+                "border-color: #86b7fe",
+                "outline: 0",
+                "box-shadow: 0 0 0 .25rem rgba(13,110,253,0.25)"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-textarea-pack",
+            combinator: "descendant",
+            relativeSelector: ".form-control"
+          }
+        ),
+        makeLibraryPreset(
+          "[Form.io] Checkbox Baseline",
+          "Checkbox starter extracted from the imported form-check rules for single and grouped toggles.",
+          "formio-checkbox-pack",
+          "formio-checkbox",
+          [
+            {
+              selector: ".formio-checkbox-pack .form-check",
+              declarations: [
+                "display: block",
+                "min-height: 1.5rem",
+                "padding-left: 1.5em",
+                "margin-bottom: .125rem"
+              ]
+            },
+            {
+              selector: ".formio-checkbox-pack .form-check-input",
+              declarations: [
+                "width: 1em",
+                "height: 1em",
+                "margin-top: .25em",
+                "margin-left: -1.5em",
+                "vertical-align: top",
+                "appearance: none",
+                "background-color: #ffffff",
+                "background-repeat: no-repeat",
+                "background-position: center",
+                "background-size: contain",
+                "border: 1px solid #ced4da",
+                "border-radius: .25em"
+              ]
+            },
+            {
+              selector: ".formio-checkbox-pack .form-check-input:focus",
+              declarations: [
+                "border-color: #86b7fe",
+                "outline: 0",
+                "box-shadow: 0 0 0 .25rem rgba(13,110,253,0.25)"
+              ]
+            },
+            {
+              selector: ".formio-checkbox-pack .form-check-input:checked",
+              declarations: [
+                "background-color: #0d6efd",
+                "border-color: #0d6efd"
+              ]
+            },
+            {
+              selector: ".formio-checkbox-pack .form-check-label",
+              declarations: [
+                "color: #212529"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-checkbox-pack",
+            combinator: "descendant",
+            relativeSelector: ".form-check-input"
+          }
+        ),
+        makeLibraryPreset(
+          "[Form.io] Radio Baseline",
+          "Radio starter built from the imported form-check-input radio rules.",
+          "formio-radio-pack",
+          "formio-radio",
+          [
+            {
+              selector: ".formio-radio-pack .form-check",
+              declarations: [
+                "display: block",
+                "min-height: 1.5rem",
+                "padding-left: 1.5em",
+                "margin-bottom: .125rem"
+              ]
+            },
+            {
+              selector: ".formio-radio-pack .form-check-input",
+              declarations: [
+                "width: 1em",
+                "height: 1em",
+                "margin-top: .25em",
+                "margin-left: -1.5em",
+                "vertical-align: top",
+                "appearance: none",
+                "background-color: #ffffff",
+                "background-repeat: no-repeat",
+                "background-position: center",
+                "background-size: contain",
+                "border: 1px solid #ced4da",
+                "border-radius: 50%"
+              ]
+            },
+            {
+              selector: ".formio-radio-pack .form-check-input:focus",
+              declarations: [
+                "border-color: #86b7fe",
+                "outline: 0",
+                "box-shadow: 0 0 0 .25rem rgba(13,110,253,0.25)"
+              ]
+            },
+            {
+              selector: ".formio-radio-pack .form-check-input:checked",
+              declarations: [
+                "background-color: #0d6efd",
+                "border-color: #0d6efd"
+              ]
+            },
+            {
+              selector: ".formio-radio-pack .form-check-label",
+              declarations: [
+                "color: #212529"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-radio-pack",
+            combinator: "descendant",
+            relativeSelector: ".form-check-input"
+          }
+        ),
+        makeLibraryPreset(
+          "[Form.io] Submit Button Primary",
+          "Primary button starter derived from the imported btn and btn-primary rules.",
+          "formio-submit-pack",
+          "formio-submit",
+          [
+            {
+              selector: ".formio-submit-pack .btn",
+              declarations: [
+                "display: inline-block",
+                "padding: .375rem .75rem",
+                "font-size: 1rem",
+                "font-weight: 400",
+                "line-height: 1.5",
+                "color: #ffffff",
+                "text-align: center",
+                "vertical-align: middle",
+                "cursor: pointer",
+                "user-select: none",
+                "border: 1px solid #0d6efd",
+                "border-radius: .375rem",
+                "background-color: #0d6efd",
+                "transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out"
+              ]
+            },
+            {
+              selector: ".formio-submit-pack .btn:hover",
+              declarations: [
+                "color: #ffffff",
+                "background-color: #0b5ed7",
+                "border-color: #0a58ca"
+              ]
+            },
+            {
+              selector: ".formio-submit-pack .btn:focus-visible",
+              declarations: [
+                "outline: 0",
+                "box-shadow: 0 0 0 .25rem rgba(49,132,253,0.5)"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-submit-pack",
+            combinator: "descendant",
+            relativeSelector: ".btn"
+          }
+        ),
+        makeLibraryPreset(
+          "[Form.io] File Dropzone",
+          "Upload dropzone starter based on the imported .formio-component-file .fileSelector rules.",
+          "formio-file-pack",
+          "formio-file",
+          [
+            {
+              selector: ".formio-file-pack .fileSelector",
+              declarations: [
+                "position: relative",
+                "padding: 15px",
+                "border: 2px dashed #dddddd",
+                "border-radius: .5rem",
+                "text-align: center",
+                "background-color: #ffffff"
+              ]
+            },
+            {
+              selector: ".formio-file-pack .fileSelector.fileDragOver",
+              declarations: [
+                "border-color: #127abe",
+                "background-color: #f3f8ff"
+              ]
+            },
+            {
+              selector: ".formio-file-pack .fileSelector a",
+              declarations: [
+                "text-decoration: underline"
+              ]
+            },
+            {
+              selector: ".formio-file-pack .fileSelector .browse",
+              declarations: [
+                "cursor: pointer",
+                "color: #127abe",
+                "font-weight: 700"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-file-pack",
+            combinator: "descendant",
+            relativeSelector: ".fileSelector"
+          }
         )
       ];
       const BUILTIN_PRESETS_BY_ID = BUILTIN_PRESETS.reduce(function (acc, preset) {
@@ -3958,7 +4705,21 @@ translateY()	translateY(<length|percentage>)
       let lastAutoBaseClass = sanitizeClassName(elBuilderClass.value);
       let selectorGraphSegments = [];
       let previewMode = "after";
-      const previewCycleTargets = ["card", "input", "button", "image", "overlap"];
+      const previewCycleTargets = [
+        "card",
+        "input",
+        "button",
+        "image",
+        "overlap",
+        "formio-textfield",
+        "formio-select",
+        "formio-choices",
+        "formio-textarea",
+        "formio-checkbox",
+        "formio-radio",
+        "formio-submit",
+        "formio-file"
+      ];
       let previewCycleIndex = 0;
       let previewCycleTimer = null;
       const builderMediaLayerMap = {
@@ -4641,6 +5402,13 @@ translateY()	translateY(<length|percentage>)
         });
       }
 
+      function previewInteractiveElement(target) {
+        if (!target || typeof target.getAttribute !== "function") return target || null;
+        const selector = (target.getAttribute("data-preview-proxy") || "").trim();
+        if (!selector) return target;
+        return target.querySelector(selector) || target;
+      }
+
       function buildPreviewMirrorSelector(selector) {
         let mirrored = String(selector || "");
         let changed = false;
@@ -4730,7 +5498,10 @@ translateY()	translateY(<length|percentage>)
         const keys = Object.keys(previewTargets);
         for (let i = 0; i < keys.length; i++) {
           const key = keys[i];
-          if (previewTargets[key] === target) return key;
+          const host = previewTargets[key];
+          if (!host || !target) continue;
+          if (host === target) return key;
+          if (typeof host.contains === "function" && host.contains(target)) return key;
         }
         return "";
       }
@@ -4761,6 +5532,7 @@ translateY()	translateY(<length|percentage>)
         if (state.hover) labels.push("Hover");
         if (state.focus) labels.push("Focus");
         if (state.active) labels.push("Active");
+        if (state.checked) labels.push("Checked");
         if (!labels.length) return "none";
         return labels.join(" + ");
       }
@@ -4845,25 +5617,38 @@ translateY()	translateY(<length|percentage>)
 
       function applyPreviewInteractionStateToElement(target) {
         if (!target) return;
+        const interactive = previewInteractiveElement(target);
         const selected = (elPreviewInteractionState.value || "default").trim();
+        const classTargets = interactive && interactive !== target ? [target, interactive] : [target];
         Object.keys(PREVIEW_STATE_SELECTOR_MAP).forEach(function (key) {
-          target.classList.remove(PREVIEW_STATE_SELECTOR_MAP[key].className);
+          classTargets.forEach(function (node) {
+            if (!node || !node.classList) return;
+            node.classList.remove(PREVIEW_STATE_SELECTOR_MAP[key].className);
+          });
         });
-        if (target.id === "preview-input") target.disabled = false;
-        if (target.id === "preview-button") target.disabled = false;
+        if (interactive && "disabled" in interactive) {
+          interactive.disabled = false;
+        }
+        if (interactive && "checked" in interactive) {
+          interactive.checked = actualPreviewStateActive("checked", target);
+        }
         if (selected === "default") {
           return;
         }
         const entry = PREVIEW_STATE_SELECTOR_MAP[selected];
         if (!entry) return;
-        target.classList.add(entry.className);
-        if (selected === "disabled") {
-          if (target.id === "preview-input" || target.id === "preview-button") {
-            target.disabled = true;
-          }
+        classTargets.forEach(function (node) {
+          if (!node || !node.classList) return;
+          node.classList.add(entry.className);
+        });
+        if (selected === "disabled" && interactive && "disabled" in interactive) {
+          interactive.disabled = true;
         }
-        if ((selected === "focus" || selected === "focus-visible") && typeof target.focus === "function") {
-          try { target.focus({ preventScroll: true }); } catch (err) { target.focus(); }
+        if (selected === "checked" && interactive && "checked" in interactive) {
+          interactive.checked = true;
+        }
+        if ((selected === "focus" || selected === "focus-visible") && interactive && typeof interactive.focus === "function") {
+          try { interactive.focus({ preventScroll: true }); } catch (err) { interactive.focus(); }
         }
       }
 
@@ -5467,6 +6252,14 @@ translateY()	translateY(<length|percentage>)
         if (key === "image") return "Image";
         if (key === "overlap") return "Overlap";
         if (key === "sandbox") return "Sandbox";
+        if (key === "formio-textfield") return "Form.io Text Field";
+        if (key === "formio-select") return "Form.io Native Select";
+        if (key === "formio-choices") return "Form.io Enhanced Select";
+        if (key === "formio-textarea") return "Form.io Textarea";
+        if (key === "formio-checkbox") return "Form.io Checkbox";
+        if (key === "formio-radio") return "Form.io Radio";
+        if (key === "formio-submit") return "Form.io Submit Button";
+        if (key === "formio-file") return "Form.io File Dropzone";
         return key || "Unknown";
       }
 
@@ -5708,6 +6501,21 @@ translateY()	translateY(<length|percentage>)
         return declarations;
       }
 
+      function animationLabValuesMatchPreset(values, preset) {
+        if (!values || !preset) return false;
+        return (
+          (values.trigger || "") === (preset.trigger || "") &&
+          (values.keyframes || "") === (preset.keyframes || "") &&
+          (values.duration || "") === (preset.duration || "") &&
+          (values.easing || "") === (preset.easing || "") &&
+          (values.delay || "") === (preset.delay || "") &&
+          (values.iterations || "") === (preset.iterations || "") &&
+          (values.direction || "") === (preset.direction || "") &&
+          (values.fill || "") === (preset.fill || "") &&
+          (values.play || "") === (preset.play || "")
+        );
+      }
+
       function parseAnimationLabTimeMs(value) {
         const raw = String(value || "").trim().toLowerCase();
         if (!raw) return 0;
@@ -5884,6 +6692,29 @@ translateY()	translateY(<length|percentage>)
         return "Exercise the current trigger a few times and confirm the motion reads as feedback, not decoration.";
       }
 
+      function animationLabPresetBrief(values) {
+        const preset = selectedAnimationLabPreset();
+        if (!preset) {
+          return {
+            intent: "Custom motion package assembled in the lab. Use the notes below to make sure the behavior matches the user moment.",
+            bestFor: "Targets that benefit from a " + animationLabTriggerLabel(values.trigger).toLowerCase() + " motion cue without rewriting animation shorthand by hand.",
+            guardrail: animationLabTriggerGuidance(values)
+          };
+        }
+        if (!animationLabValuesMatchPreset(values, preset)) {
+          return {
+            intent: "Adapted from " + preset.name + ". Original goal: " + preset.intent,
+            bestFor: preset.bestFor,
+            guardrail: "This preset has been customized. Re-check trigger fit, rollout timing, and reduced-motion fallback before shipping."
+          };
+        }
+        return {
+          intent: preset.intent,
+          bestFor: preset.bestFor,
+          guardrail: preset.guardrail
+        };
+      }
+
       function setSelectValueIfPresent(selectEl, value, fallbackValue) {
         if (!selectEl) return;
         const next = String(value || "").trim();
@@ -5954,7 +6785,11 @@ translateY()	translateY(<length|percentage>)
         const declarations = animationLabDeclarations(values);
         const selector = animationLabSelector();
         const media = currentBuilderMediaQuery();
+        const brief = animationLabPresetBrief(values);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
+        elAnimationLabPresetIntent.textContent = brief.intent;
+        elAnimationLabPresetBestFor.textContent = brief.bestFor;
+        elAnimationLabPresetGuardrail.textContent = brief.guardrail;
         elAnimationLabSelectorNote.textContent =
           selector + " | Trigger: " + trigger + " | Applies" + scopeText + ".";
         elAnimationLabOutput.textContent = declarations.join("\n");
@@ -7317,8 +8152,8 @@ translateY()	translateY(<length|percentage>)
       }
 
       function resetPreview() {
-        [previewCard, previewInput, previewButton, previewImage, previewOverlap, previewSandbox].forEach(function (el) {
-          resetPreviewElement(el);
+        Object.keys(previewTargets).forEach(function (key) {
+          resetPreviewElement(previewTargets[key]);
         });
       }
 
@@ -7516,7 +8351,7 @@ translateY()	translateY(<length|percentage>)
         target.classList.add(className);
       }
 
-      function resetPreviewElement(el) {
+      function resetPreviewNode(el) {
         if (!el) return;
         const attrs = Array.from(el.attributes).map(function (a) { return a.name; });
         attrs.forEach(function (name) {
@@ -7528,15 +8363,46 @@ translateY()	translateY(<length|percentage>)
             name === "value" ||
             name === "src" ||
             name === "alt" ||
-            name === "data-base-class"
+            name === "rows" ||
+            name === "tabindex" ||
+            name === "data-base-class" ||
+            name === "data-preview-proxy" ||
+            name === "data-base-value"
           ) return;
           el.removeAttribute(name);
         });
 
         const base = el.getAttribute("data-base-class") || "";
+        const baseValue = el.getAttribute("data-base-value");
         el.className = base;
-        if (el.id === "preview-button") {
+        if (el.tagName === "INPUT") {
+          if (el.type === "checkbox" || el.type === "radio") {
+            el.checked = baseValue === "checked";
+          } else {
+            el.value = baseValue !== null ? baseValue : "";
+          }
+          el.disabled = false;
+          el.readOnly = false;
+          el.required = false;
+        }
+        if (el.tagName === "TEXTAREA") {
+          el.value = baseValue !== null ? baseValue : "";
+          el.disabled = false;
+          el.readOnly = false;
+          el.required = false;
+        }
+        if (el.tagName === "SELECT") {
+          if (baseValue !== null) el.value = baseValue;
+          el.disabled = false;
+        }
+        if (el.tagName === "BUTTON") {
           el.type = "button";
+          el.disabled = false;
+          if (baseValue !== null) {
+            el.textContent = baseValue;
+          }
+        }
+        if (el.id === "preview-button" && baseValue === null) {
           el.textContent = "Preview Button";
         }
         if (el.id === "preview-card") {
@@ -7544,9 +8410,6 @@ translateY()	translateY(<length|percentage>)
         }
         if (el.id === "preview-input") {
           el.placeholder = "Preview Input";
-          el.disabled = false;
-          el.readOnly = false;
-          el.required = false;
         }
         if (el.id === "preview-image") {
           el.src = previewImageDefaultSrc;
@@ -7561,15 +8424,25 @@ translateY()	translateY(<length|percentage>)
         el.style.cssText = "";
       }
 
+      function resetPreviewElement(el) {
+        if (!el) return;
+        resetPreviewNode(el);
+        const interactive = previewInteractiveElement(el);
+        if (interactive && interactive !== el) {
+          resetPreviewNode(interactive);
+        }
+      }
+
       function applyCurrentVisualStateToTarget(item, map, target, includeBuilderClass) {
         if (!target) return;
+        const liveTarget = previewInteractiveElement(target);
         if (item) {
           if (elCategory.value === "attribute") {
-            buildAttributeOutput(item, map, target);
+            buildAttributeOutput(item, map, liveTarget);
           } else if (elCategory.value === "property") {
-            buildPropertyOutput(item, map, target);
+            buildPropertyOutput(item, map, liveTarget);
           } else {
-            buildFunctionOutput(item, map, target);
+            buildFunctionOutput(item, map, liveTarget);
           }
         }
         if (includeBuilderClass) {
@@ -7625,7 +8498,8 @@ translateY()	translateY(<length|percentage>)
       }
 
       function captureStyleSnapshot(target) {
-        const computed = getComputedStyle(target);
+        const node = previewInteractiveElement(target) || target;
+        const computed = getComputedStyle(node);
         const out = {};
         VISUAL_DIFF_PROPERTIES.forEach(function (prop) {
           out[prop] = computed.getPropertyValue(prop).trim();
@@ -8293,35 +9167,42 @@ translateY()	translateY(<length|percentage>)
       });
       Object.keys(previewTargets).forEach(function (key) {
         const target = previewTargets[key];
-        if (!target) return;
+        const interactive = previewInteractiveElement(target) || target;
+        if (!interactive) return;
 
-        target.addEventListener("mouseenter", function () {
-          setActualPreviewState(target, "hover", true);
+        interactive.addEventListener("mouseenter", function () {
+          setActualPreviewState(interactive, "hover", true);
           updateLive();
         });
-        target.addEventListener("mouseleave", function () {
-          setActualPreviewState(target, "hover", false);
-          setActualPreviewState(target, "active", false);
+        interactive.addEventListener("mouseleave", function () {
+          setActualPreviewState(interactive, "hover", false);
+          setActualPreviewState(interactive, "active", false);
           updateLive();
         });
-        target.addEventListener("focus", function () {
-          setActualPreviewState(target, "focus", true);
-          setActualPreviewState(target, "focus-visible", true);
+        interactive.addEventListener("focus", function () {
+          setActualPreviewState(interactive, "focus", true);
+          setActualPreviewState(interactive, "focus-visible", true);
           updateLive();
         });
-        target.addEventListener("blur", function () {
-          setActualPreviewState(target, "focus", false);
-          setActualPreviewState(target, "active", false);
+        interactive.addEventListener("blur", function () {
+          setActualPreviewState(interactive, "focus", false);
+          setActualPreviewState(interactive, "active", false);
           updateLive();
         });
-        target.addEventListener("mousedown", function () {
-          setActualPreviewState(target, "active", true);
+        interactive.addEventListener("mousedown", function () {
+          setActualPreviewState(interactive, "active", true);
           updateLive();
         });
-        target.addEventListener("mouseup", function () {
-          setActualPreviewState(target, "active", false);
+        interactive.addEventListener("mouseup", function () {
+          setActualPreviewState(interactive, "active", false);
           updateLive();
         });
+        if ("checked" in interactive) {
+          interactive.addEventListener("change", function () {
+            setActualPreviewState(interactive, "checked", Boolean(interactive.checked));
+            updateLive();
+          });
+        }
       });
       elFunctionProperty.addEventListener("change", function () {
         const custom = elFunctionProperty.value === "__custom__";
