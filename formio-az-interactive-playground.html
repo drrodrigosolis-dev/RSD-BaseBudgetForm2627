@@ -1687,6 +1687,7 @@
                 <select id="custom-rule-helper-type" title="Choose a structured declaration pattern to generate.">
                   <option value="border-radius">Border Radius</option>
                   <option value="box-shadow">Box Shadow</option>
+                  <option value="spacing">Spacing</option>
                   <option value="transition">Transition</option>
                 </select>
               </div>
@@ -1740,6 +1741,51 @@
                     <input id="custom-rule-helper-shadow-inset" type="checkbox" />
                     Use inset shadow
                   </label>
+                </div>
+              </div>
+              <div id="custom-rule-helper-spacing-group" class="hidden">
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-spacing-property">Property</label>
+                    <select id="custom-rule-helper-spacing-property" title="Choose whether this draft writes padding or margin.">
+                      <option value="padding">padding</option>
+                      <option value="margin">margin</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-spacing-unit">Unit</label>
+                    <select id="custom-rule-helper-spacing-unit" title="Unit used for the spacing values.">
+                      <option value="px">px</option>
+                      <option value="rem">rem</option>
+                      <option value="%">%</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+                    <input id="custom-rule-helper-spacing-linked" type="checkbox" checked />
+                    Keep all sides matched
+                  </label>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-spacing-top">Top</label>
+                    <input id="custom-rule-helper-spacing-top" type="number" step="1" value="12" title="Top spacing value." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-spacing-right">Right</label>
+                    <input id="custom-rule-helper-spacing-right" type="number" step="1" value="12" title="Right spacing value." />
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-spacing-bottom">Bottom</label>
+                    <input id="custom-rule-helper-spacing-bottom" type="number" step="1" value="12" title="Bottom spacing value." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-spacing-left">Left</label>
+                    <input id="custom-rule-helper-spacing-left" type="number" step="1" value="12" title="Left spacing value." />
+                  </div>
                 </div>
               </div>
               <div id="custom-rule-helper-transition-group" class="hidden">
@@ -2330,6 +2376,14 @@ translateY()	translateY(<length|percentage>)
       const elCustomRuleHelperShadowColor = document.getElementById("custom-rule-helper-shadow-color");
       const elCustomRuleHelperShadowAlpha = document.getElementById("custom-rule-helper-shadow-alpha");
       const elCustomRuleHelperShadowInset = document.getElementById("custom-rule-helper-shadow-inset");
+      const elCustomRuleHelperSpacingGroup = document.getElementById("custom-rule-helper-spacing-group");
+      const elCustomRuleHelperSpacingProperty = document.getElementById("custom-rule-helper-spacing-property");
+      const elCustomRuleHelperSpacingUnit = document.getElementById("custom-rule-helper-spacing-unit");
+      const elCustomRuleHelperSpacingLinked = document.getElementById("custom-rule-helper-spacing-linked");
+      const elCustomRuleHelperSpacingTop = document.getElementById("custom-rule-helper-spacing-top");
+      const elCustomRuleHelperSpacingRight = document.getElementById("custom-rule-helper-spacing-right");
+      const elCustomRuleHelperSpacingBottom = document.getElementById("custom-rule-helper-spacing-bottom");
+      const elCustomRuleHelperSpacingLeft = document.getElementById("custom-rule-helper-spacing-left");
       const elCustomRuleHelperTransitionGroup = document.getElementById("custom-rule-helper-transition-group");
       const elCustomRuleHelperTransitionProperty = document.getElementById("custom-rule-helper-transition-property");
       const elCustomRuleHelperTransitionDuration = document.getElementById("custom-rule-helper-transition-duration");
@@ -7868,6 +7922,21 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      function updateSpacingHelperControlState(sourceInput) {
+        if (!elCustomRuleHelperSpacingLinked.checked) {
+          [elCustomRuleHelperSpacingRight, elCustomRuleHelperSpacingBottom, elCustomRuleHelperSpacingLeft].forEach(function (input) {
+            input.disabled = false;
+          });
+          return;
+        }
+        const source = sourceInput || elCustomRuleHelperSpacingTop;
+        const nextValue = String(source.value || 0);
+        [elCustomRuleHelperSpacingRight, elCustomRuleHelperSpacingBottom, elCustomRuleHelperSpacingLeft].forEach(function (input) {
+          input.value = nextValue;
+          input.disabled = true;
+        });
+      }
+
       function customRuleHelperDeclaration() {
         const type = (elCustomRuleHelperType.value || "border-radius").trim();
         if (type === "box-shadow") {
@@ -7880,6 +7949,21 @@ translateY()	translateY(<length|percentage>)
           const alpha = Number.isFinite(alphaRaw) ? Math.max(0, Math.min(1, alphaRaw)) : 0.18;
           const prefix = elCustomRuleHelperShadowInset.checked ? "inset " : "";
           return "box-shadow: " + prefix + x + "px " + y + "px " + blur + "px " + spread + "px rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + alpha.toFixed(2) + ");";
+        }
+        if (type === "spacing") {
+          const prop = (elCustomRuleHelperSpacingProperty.value || "padding").trim();
+          const unit = (elCustomRuleHelperSpacingUnit.value || "px").trim();
+          const top = Number(elCustomRuleHelperSpacingTop.value || 0);
+          const right = Number(elCustomRuleHelperSpacingRight.value || 0);
+          const bottom = Number(elCustomRuleHelperSpacingBottom.value || 0);
+          const left = Number(elCustomRuleHelperSpacingLeft.value || 0);
+          const values = [top, right, bottom, left].map(function (value) {
+            return String(value) + unit;
+          });
+          if (top === right && right === bottom && bottom === left) {
+            return prop + ": " + values[0] + ";";
+          }
+          return prop + ": " + values.join(" ") + ";";
         }
         if (type === "transition") {
           return "transition: " +
@@ -7911,10 +7995,14 @@ translateY()	translateY(<length|percentage>)
         const type = (elCustomRuleHelperType.value || "border-radius").trim();
         elCustomRuleHelperRadiusGroup.classList.toggle("hidden", type !== "border-radius");
         elCustomRuleHelperShadowGroup.classList.toggle("hidden", type !== "box-shadow");
+        elCustomRuleHelperSpacingGroup.classList.toggle("hidden", type !== "spacing");
         elCustomRuleHelperTransitionGroup.classList.toggle("hidden", type !== "transition");
+        updateSpacingHelperControlState();
 
         if (type === "box-shadow") {
           elCustomRuleHelperNote.textContent = "Build a reusable shadow with consistent offsets, blur, spread, color, and optional inset behavior.";
+        } else if (type === "spacing") {
+          elCustomRuleHelperNote.textContent = "Generate a clean padding or margin shorthand without manually ordering the four sides.";
         } else if (type === "transition") {
           elCustomRuleHelperNote.textContent = "Use this for common interactive motion so timing stays explicit and readable.";
         } else {
@@ -8073,6 +8161,8 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperShadowSpread,
         elCustomRuleHelperShadowColor,
         elCustomRuleHelperShadowAlpha,
+        elCustomRuleHelperSpacingProperty,
+        elCustomRuleHelperSpacingUnit,
         elCustomRuleHelperTransitionProperty,
         elCustomRuleHelperTransitionDuration,
         elCustomRuleHelperTransitionEasing,
@@ -8082,6 +8172,17 @@ translateY()	translateY(<length|percentage>)
         el.addEventListener("change", updateCustomRuleHelper);
       });
       elCustomRuleHelperShadowInset.addEventListener("change", updateCustomRuleHelper);
+      elCustomRuleHelperSpacingLinked.addEventListener("change", updateCustomRuleHelper);
+      [elCustomRuleHelperSpacingTop, elCustomRuleHelperSpacingRight, elCustomRuleHelperSpacingBottom, elCustomRuleHelperSpacingLeft].forEach(function (el) {
+        el.addEventListener("input", function () {
+          updateSpacingHelperControlState(el);
+          updateCustomRuleHelper();
+        });
+        el.addEventListener("change", function () {
+          updateSpacingHelperControlState(el);
+          updateCustomRuleHelper();
+        });
+      });
       elCustomRuleHelperLoad.addEventListener("click", function () {
         loadCustomRuleHelperDraft(false);
       });
