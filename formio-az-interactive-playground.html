@@ -2965,6 +2965,21 @@ translateY()	translateY(<length|percentage>)
         checked: { pseudo: ":checked", className: "is-preview-checked", label: "Checked" },
         visited: { pseudo: ":visited", className: "is-preview-visited", label: "Visited" }
       };
+      const SHARED_TRIGGER_OPTIONS = [
+        { value: "", builderLabel: "Base rule (always on)", animationLabel: "Always On" },
+        { value: PREVIEW_STATE_SELECTOR_MAP.hover.pseudo, builderLabel: "Hover (mouse over)", animationLabel: PREVIEW_STATE_SELECTOR_MAP.hover.label },
+        { value: PREVIEW_STATE_SELECTOR_MAP.focus.pseudo, builderLabel: "Focus (clicked into field)", animationLabel: PREVIEW_STATE_SELECTOR_MAP.focus.label },
+        { value: PREVIEW_STATE_SELECTOR_MAP["focus-visible"].pseudo, builderLabel: "Focus Visible (keyboard/tab)", animationLabel: PREVIEW_STATE_SELECTOR_MAP["focus-visible"].label },
+        { value: PREVIEW_STATE_SELECTOR_MAP.active.pseudo, builderLabel: "Active / pressed", animationLabel: "Active / Pressed" },
+        { value: PREVIEW_STATE_SELECTOR_MAP.disabled.pseudo, builderLabel: "Disabled / off", animationLabel: PREVIEW_STATE_SELECTOR_MAP.disabled.label },
+        { value: PREVIEW_STATE_SELECTOR_MAP.checked.pseudo, builderLabel: "Checked / on", animationLabel: PREVIEW_STATE_SELECTOR_MAP.checked.label },
+        { value: PREVIEW_STATE_SELECTOR_MAP.visited.pseudo, builderLabel: "Visited link", animationLabel: PREVIEW_STATE_SELECTOR_MAP.visited.label }
+      ];
+      const BUILDER_PSEUDO_EXTRA_OPTIONS = [
+        { value: "::before", label: "Before pseudo-element" },
+        { value: "::after", label: "After pseudo-element" },
+        { value: "__custom__", label: "Custom..." }
+      ];
       const WORKSPACE_VIEW_NOTES = {
         build: "Build shows the core workflow only: choose an item, adjust it, build CSS, and preview it.",
         learn: "Learn adds Beginner Mode, Guided Recipes, and the Glossary while keeping the main workflow visible.",
@@ -3829,6 +3844,44 @@ translateY()	translateY(<length|percentage>)
         } else {
           elBuilderPseudoHelp.textContent = "Current state rule: " + active + ". Match Preview Interaction State to this when testing.";
         }
+      }
+
+      function replaceSelectOptions(selectEl, options, selectedValue) {
+        if (!selectEl) return;
+        selectEl.innerHTML = "";
+        options.forEach(function (optionDef) {
+          const opt = document.createElement("option");
+          opt.value = optionDef.value;
+          opt.textContent = optionDef.label;
+          selectEl.appendChild(opt);
+        });
+        const normalized = String(selectedValue || "").trim();
+        const allowed = options.some(function (optionDef) { return optionDef.value === normalized; });
+        if (allowed) {
+          selectEl.value = normalized;
+        } else if (options.length) {
+          selectEl.value = options[0].value;
+        }
+      }
+
+      function renderSharedTriggerControls() {
+        const currentPseudo = getSelectedPseudoSelector();
+        replaceSelectOptions(
+          elBuilderPseudoSelector,
+          SHARED_TRIGGER_OPTIONS.map(function (optionDef) {
+            return { value: optionDef.value, label: optionDef.builderLabel };
+          }).concat(BUILDER_PSEUDO_EXTRA_OPTIONS),
+          currentPseudo
+        );
+        syncPseudoControlFromValue(currentPseudo);
+
+        replaceSelectOptions(
+          elAnimationLabTrigger,
+          SHARED_TRIGGER_OPTIONS.map(function (optionDef) {
+            return { value: optionDef.value, label: optionDef.animationLabel };
+          }),
+          elAnimationLabTrigger.value
+        );
       }
 
       function selectedStyleHelperValue() {
@@ -7448,7 +7501,7 @@ translateY()	translateY(<length|percentage>)
       }
 
       syncFunctionPropertyControl("");
-      syncPseudoControlFromValue(getSelectedPseudoSelector());
+      renderSharedTriggerControls();
       injectFieldHints();
       writeBuiltInKeyframesStyles();
       seedSelectorGraphFromLegacy();
