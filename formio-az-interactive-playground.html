@@ -1535,6 +1535,13 @@
                       <button id="trigger-align-animation" type="button">Align All To Animation Lab</button>
                       <button id="trigger-align-actual" type="button">Match All To Actual Preview</button>
                     </div>
+                    <div class="row" style="margin-top:8px;">
+                      <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+                        <input id="trigger-follow-actual" type="checkbox" />
+                        Preview simulator follows live interactions
+                      </label>
+                      <div id="trigger-follow-note" class="input-hint">When enabled, the preview simulator mirrors the active preview target whenever one live state is active.</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2141,6 +2148,8 @@ translateY()	translateY(<length|percentage>)
       const elTriggerAlignBuilder = document.getElementById("trigger-align-builder");
       const elTriggerAlignAnimation = document.getElementById("trigger-align-animation");
       const elTriggerAlignActual = document.getElementById("trigger-align-actual");
+      const elTriggerFollowActual = document.getElementById("trigger-follow-actual");
+      const elTriggerFollowNote = document.getElementById("trigger-follow-note");
       const elAnimationLabName = document.getElementById("animation-lab-name");
       const elAnimationLabDuration = document.getElementById("animation-lab-duration");
       const elAnimationLabEasing = document.getElementById("animation-lab-easing");
@@ -3994,6 +4003,43 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function updateTriggerFollowNote() {
+        if (!elTriggerFollowNote || !elTriggerFollowActual) return;
+        if (!elTriggerFollowActual.checked) {
+          elTriggerFollowNote.textContent = "Live follow is off. Use the Preview Simulator dropdown when you want to test a specific state manually.";
+          return;
+        }
+        const actualState = actualSharedPreviewState();
+        if (actualState.mixed) {
+          elTriggerFollowNote.textContent = "Live follow is on, but the actual preview has multiple states at once. Leave only one live state active to mirror it.";
+          return;
+        }
+        if (!actualState.key) {
+          elTriggerFollowNote.textContent = "Live follow is on. The simulator will return to Default whenever the active preview target is idle.";
+          return;
+        }
+        elTriggerFollowNote.textContent = "Live follow is on. The simulator is mirroring the actual " + actualState.label + " state.";
+      }
+
+      function syncPreviewSimulatorToActualIfEnabled(target) {
+        if (!elTriggerFollowActual || !elTriggerFollowActual.checked) {
+          updateTriggerFollowNote();
+          return;
+        }
+        const actualState = actualSharedPreviewState(target || targetElement());
+        if (actualState.mixed) {
+          updateTriggerFollowNote();
+          return;
+        }
+        const next = actualState.key || "default";
+        if ((elPreviewInteractionState.value || "default").trim() !== next) {
+          elPreviewInteractionState.value = next;
+          updatePreviewInteractionHelp();
+          updateSelectorSimulatorRootClass();
+        }
+        updateTriggerFollowNote();
+      }
+
       function updateTriggerAlignmentConsole() {
         if (
           !elTriggerSyncRuleState ||
@@ -4049,6 +4095,7 @@ translateY()	translateY(<length|percentage>)
         }
 
         elTriggerSyncStatus.textContent = status;
+        updateTriggerFollowNote();
       }
 
       function updateTriggerSyncNote() {
@@ -4313,6 +4360,7 @@ translateY()	translateY(<length|percentage>)
         if (key === "focus" && !value) {
           previewActualStates[targetKey]["focus-visible"] = false;
         }
+        syncPreviewSimulatorToActualIfEnabled(targetElement());
       }
 
       function actualStateSummaryForTarget(target) {
@@ -5055,6 +5103,7 @@ translateY()	translateY(<length|percentage>)
         elTarget.value = target;
         previewMode = "after";
         updatePreviewModeUI();
+        syncPreviewSimulatorToActualIfEnabled(targetElement());
         updateLive();
         updatePreviewCycleUI();
       }
@@ -5739,6 +5788,7 @@ translateY()	translateY(<length|percentage>)
           animationLab: animationLabPresetValues(),
           previewMode: previewMode,
           previewInteractionState: elPreviewInteractionState.value,
+          followActualPreview: Boolean(elTriggerFollowActual && elTriggerFollowActual.checked),
           autoApply: elBuilderAutoApply.checked,
           rules: builderRules.map(function (b) {
             return { selector: b.selector, media: b.media || "", declarations: b.declarations.slice() };
@@ -5774,6 +5824,9 @@ translateY()	translateY(<length|percentage>)
             ? (state.previewInteractionState || "default")
             : detectPreviewStateFromRules(state.rules);
         updatePreviewInteractionHelp();
+        if (elTriggerFollowActual) {
+          elTriggerFollowActual.checked = Boolean(state.followActualPreview);
+        }
         renderSelectorGraph();
         elBuilderAutoApply.checked = state.autoApply !== false;
         builderRules = Array.isArray(state.rules) ? state.rules.map(function (b) {
@@ -5792,6 +5845,7 @@ translateY()	translateY(<length|percentage>)
         if (state.target && Object.prototype.hasOwnProperty.call(previewTargets, state.target)) {
           elTarget.value = state.target;
         }
+        syncPreviewSimulatorToActualIfEnabled(targetElement());
         if (state.category && datasets[state.category]) {
           elCategory.value = state.category;
           if (typeof state.search === "string") {
@@ -7550,6 +7604,7 @@ translateY()	translateY(<length|percentage>)
         renderEverything();
       });
       elTarget.addEventListener("change", function () {
+        syncPreviewSimulatorToActualIfEnabled(targetElement());
         updateLive();
         updatePreviewCycleUI();
       });
@@ -7701,6 +7756,15 @@ translateY()	translateY(<length|percentage>)
       elTriggerAlignBuilder.addEventListener("click", alignAllTriggersToBuilder);
       elTriggerAlignAnimation.addEventListener("click", alignAllTriggersToAnimationLab);
       elTriggerAlignActual.addEventListener("click", alignAllTriggersToActualPreview);
+      elTriggerFollowActual.addEventListener("change", function () {
+        syncPreviewSimulatorToActualIfEnabled(targetElement());
+        updateLive();
+        setBuilderStatus(
+          elTriggerFollowActual.checked
+            ? "Preview simulator now follows live interactions on the active preview target."
+            : "Preview simulator is back to manual mode."
+        );
+      });
       elPreviewToggleState.addEventListener("click", togglePreviewMode);
       elLibraryApplyPreset.addEventListener("click", applyLibraryPreset);
       elLibrarySearch.addEventListener("input", renderLibraryPresetList);
