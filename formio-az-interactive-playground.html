@@ -1676,6 +1676,27 @@
                   <pre id="animation-lab-reduce-css"></pre>
                 </div>
               </div>
+              <div class="help-box">
+                <div><strong>Motion Rollout Planner</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Active Window</div>
+                    <div id="animation-lab-active-window">Choose timing values to estimate how long this motion stays active.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">First Movement</div>
+                    <div id="animation-lab-first-movement">The planner will explain when the first visible frame starts.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Settle Behavior</div>
+                    <div id="animation-lab-settle-behavior">Fill mode and direction decide what remains after the motion ends.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">QA Prompt</div>
+                    <div id="animation-lab-qa-prompt">A quick validation prompt will appear here for the current trigger.</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </details>
 
@@ -2369,6 +2390,10 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabTriggerFit = document.getElementById("animation-lab-trigger-fit");
       const elAnimationLabReduceNote = document.getElementById("animation-lab-reduce-note");
       const elAnimationLabReduceCss = document.getElementById("animation-lab-reduce-css");
+      const elAnimationLabActiveWindow = document.getElementById("animation-lab-active-window");
+      const elAnimationLabFirstMovement = document.getElementById("animation-lab-first-movement");
+      const elAnimationLabSettleBehavior = document.getElementById("animation-lab-settle-behavior");
+      const elAnimationLabQaPrompt = document.getElementById("animation-lab-qa-prompt");
       const elSyntaxAddCurrentRule = document.getElementById("syntax-add-current-rule");
       const elCustomRule = document.getElementById("custom-rule");
       const elCustomRuleHelperType = document.getElementById("custom-rule-helper-type");
@@ -5758,6 +5783,107 @@ translateY()	translateY(<length|percentage>)
         ].join("\n");
       }
 
+      function formatAnimationLabDurationMs(value) {
+        const ms = Math.max(0, Math.round(Number(value) || 0));
+        if (!ms) return "0s";
+        if (ms % 1000 === 0) return (ms / 1000) + "s";
+        if (ms >= 1000) {
+          const seconds = (ms / 1000).toFixed(ms % 100 === 0 ? 1 : 2).replace(/0+$/, "").replace(/\.$/, "");
+          return seconds + "s";
+        }
+        return ms + "ms";
+      }
+
+      function animationLabActiveWindowSummary(values) {
+        const play = String(values.play || "running").trim();
+        const durationMs = parseAnimationLabTimeMs(values.duration);
+        const delayMs = parseAnimationLabTimeMs(values.delay);
+        const cycles = animationLabCycleCount(values);
+        if (play === "paused") {
+          return "Paused until resumed. No visible motion window starts yet.";
+        }
+        if (!durationMs) {
+          return "No cycle duration selected yet, so the active window cannot be estimated.";
+        }
+        if (cycles === Infinity) {
+          return "Starts after " + formatAnimationLabDurationMs(delayMs) + " and keeps running until the trigger stops it.";
+        }
+        const totalMs = delayMs + durationMs * cycles;
+        return "Starts after " + formatAnimationLabDurationMs(delayMs) + " and settles after " + formatAnimationLabDurationMs(totalMs) + " total.";
+      }
+
+      function animationLabFirstMovementSummary(values) {
+        const play = String(values.play || "running").trim();
+        const delayMs = parseAnimationLabTimeMs(values.delay);
+        if (play === "paused") {
+          return "No movement occurs until you switch play state back to running.";
+        }
+        if (!delayMs) {
+          return "The first visible frame starts immediately when the trigger becomes active.";
+        }
+        if (delayMs <= 150) {
+          return "A short " + formatAnimationLabDurationMs(delayMs) + " delay gives the interaction a slight breath before motion begins.";
+        }
+        if (delayMs <= 400) {
+          return "The first motion waits " + formatAnimationLabDurationMs(delayMs) + ", which feels intentional but still responsive.";
+        }
+        return "The " + formatAnimationLabDurationMs(delayMs) + " delay is noticeable. Validate that the motion still feels connected to the user action.";
+      }
+
+      function animationLabSettleBehaviorSummary(values) {
+        const play = String(values.play || "running").trim();
+        const fill = String(values.fill || "none").trim();
+        const direction = String(values.direction || "normal").trim();
+        const cycles = animationLabCycleCount(values);
+        if (play === "paused") {
+          return "The animation holds its current frame while paused. Resume it before validating the final resting state.";
+        }
+        if (cycles === Infinity) {
+          if (fill === "none") return "There is no resting state because the animation loops forever and discards fill outside the active run.";
+          return "There is no natural resting state because the animation loops forever, even though fill mode is set to " + fill + ".";
+        }
+        if (fill === "forwards" || fill === "both") {
+          if (direction === "reverse" || direction === "alternate-reverse") {
+            return "The element keeps the last reversed frame after the animation ends because fill mode preserves the ending state.";
+          }
+          return "The element keeps the final animated frame after the motion ends because fill mode preserves the ending state.";
+        }
+        if (fill === "backwards") {
+          return "The starting keyframe applies during the delay, but the element returns to its base styles after the motion finishes.";
+        }
+        return "The element returns to its base styles after the motion finishes, so the effect behaves like a temporary flourish.";
+      }
+
+      function animationLabQaPrompt(values) {
+        const trigger = String(values.trigger || "").trim();
+        const play = String(values.play || "running").trim();
+        const cycles = animationLabCycleCount(values);
+        if (play === "paused") {
+          return "Resume the animation, then confirm pause is only used as an intentional staged state and not an accidental dead end.";
+        }
+        if (!trigger) {
+          return cycles === Infinity
+            ? "Check idle screens for distraction and verify reduced-motion users are not left with persistent motion."
+            : "Refresh the preview and confirm the entry motion finishes cleanly without making the idle surface feel busy.";
+        }
+        if (trigger === ":hover") {
+          return "Hover in and out repeatedly. Confirm the animation starts fast enough to feel responsive and stops cleanly when the pointer leaves.";
+        }
+        if (trigger === ":focus" || trigger === ":focus-visible") {
+          return "Tab into the target and out again. Confirm keyboard users get the motion cue without losing the visible focus treatment.";
+        }
+        if (trigger === ":active") {
+          return "Press and release quickly. Make sure the motion still reads during short clicks and does not require a long press.";
+        }
+        if (trigger === ":disabled") {
+          return "Confirm the disabled state stays calm and still communicates inactivity instead of looking interactive.";
+        }
+        if (trigger === ":checked") {
+          return "Toggle the checked state on and off to confirm the motion reinforces the state change instead of delaying it.";
+        }
+        return "Exercise the current trigger a few times and confirm the motion reads as feedback, not decoration.";
+      }
+
       function setSelectValueIfPresent(selectEl, value, fallbackValue) {
         if (!selectEl) return;
         const next = String(value || "").trim();
@@ -5837,6 +5963,10 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabTriggerFit.textContent = animationLabTriggerGuidance(values);
         elAnimationLabReduceNote.textContent = animationLabReducedMotionNote(values);
         elAnimationLabReduceCss.textContent = animationLabReducedMotionCss(selector);
+        elAnimationLabActiveWindow.textContent = animationLabActiveWindowSummary(values);
+        elAnimationLabFirstMovement.textContent = animationLabFirstMovementSummary(values);
+        elAnimationLabSettleBehavior.textContent = animationLabSettleBehaviorSummary(values);
+        elAnimationLabQaPrompt.textContent = animationLabQaPrompt(values);
       }
 
       function applyAnimationLabPreset() {
