@@ -1533,11 +1533,16 @@
                         <div class="label">Last Trigger Change</div>
                         <div id="trigger-sync-last-change">Initial load. Shared trigger state not edited yet.</div>
                       </div>
+                      <div class="info-tile">
+                        <div class="label">Suggested Fix</div>
+                        <div id="trigger-sync-recommendation">Already aligned. No action needed.</div>
+                      </div>
                     </div>
                     <div class="inline">
                       <button id="trigger-align-builder" type="button">Align All To Step 2</button>
                       <button id="trigger-align-animation" type="button">Align All To Animation Lab</button>
                       <button id="trigger-align-actual" type="button">Match All To Actual Preview</button>
+                      <button id="trigger-align-recommended" type="button">Apply Suggested Fix</button>
                     </div>
                     <div class="row" style="margin-top:8px;">
                       <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
@@ -2338,9 +2343,11 @@ translateY()	translateY(<length|percentage>)
       const elTriggerSyncActualState = document.getElementById("trigger-sync-actual-state");
       const elTriggerSyncStatus = document.getElementById("trigger-sync-status");
       const elTriggerSyncLastChange = document.getElementById("trigger-sync-last-change");
+      const elTriggerSyncRecommendation = document.getElementById("trigger-sync-recommendation");
       const elTriggerAlignBuilder = document.getElementById("trigger-align-builder");
       const elTriggerAlignAnimation = document.getElementById("trigger-align-animation");
       const elTriggerAlignActual = document.getElementById("trigger-align-actual");
+      const elTriggerAlignRecommended = document.getElementById("trigger-align-recommended");
       const elTriggerFollowActual = document.getElementById("trigger-follow-actual");
       const elTriggerFollowNote = document.getElementById("trigger-follow-note");
       const elAnimationLabName = document.getElementById("animation-lab-name");
@@ -4308,6 +4315,62 @@ translateY()	translateY(<length|percentage>)
         updateTriggerFollowNote();
       }
 
+      function recommendedTriggerAlignment(builderPseudo, animationPseudo, previewPseudo, actualState) {
+        if (builderPseudo && !isSharedTriggerValue(builderPseudo)) {
+          return {
+            action: "",
+            label: "Step 2 is on a custom pseudo. Switch it back to a shared preset state before aligning all surfaces."
+          };
+        }
+
+        if (builderPseudo === animationPseudo && builderPseudo === previewPseudo) {
+          return {
+            action: "",
+            label: "Already aligned. No action needed."
+          };
+        }
+
+        if (!actualState.mixed && elTriggerFollowActual && elTriggerFollowActual.checked && actualState.pseudo !== previewPseudo) {
+          return {
+            action: "actual",
+            label: "Live follow is on and the simulator drifted. Match everything to the current Actual Preview state."
+          };
+        }
+
+        if (builderPseudo === animationPseudo && builderPseudo !== previewPseudo) {
+          return {
+            action: "builder",
+            label: "Step 2 and Animation Lab agree. Align Preview back to the shared Step 2 trigger."
+          };
+        }
+
+        if (animationPseudo === previewPseudo && animationPseudo !== builderPseudo) {
+          return {
+            action: "animation",
+            label: "Animation Lab and Preview already match. Use the lab trigger as the shared source of truth."
+          };
+        }
+
+        if (builderPseudo === previewPseudo && builderPseudo !== animationPseudo) {
+          return {
+            action: "builder",
+            label: "Step 2 and Preview already match. Pull Animation Lab back to the active Step 2 trigger."
+          };
+        }
+
+        if (!actualState.mixed && actualState.pseudo && (actualState.pseudo === builderPseudo || actualState.pseudo === animationPseudo || actualState.pseudo === previewPseudo)) {
+          return {
+            action: "actual",
+            label: "Actual Preview still matches one surface. Use it to re-center the other trigger controls."
+          };
+        }
+
+        return {
+          action: "builder",
+          label: "All surfaces drifted. Step 2 is the safest reset point because it defines the rule you are building."
+        };
+      }
+
       function updateTriggerAlignmentConsole() {
         if (
           !elTriggerSyncRuleState ||
@@ -4315,7 +4378,9 @@ translateY()	translateY(<length|percentage>)
           !elTriggerSyncPreviewState ||
           !elTriggerSyncActualState ||
           !elTriggerSyncStatus ||
-          !elTriggerSyncLastChange
+          !elTriggerSyncLastChange ||
+          !elTriggerSyncRecommendation ||
+          !elTriggerAlignRecommended
         ) {
           return;
         }
@@ -4323,11 +4388,14 @@ translateY()	translateY(<length|percentage>)
         const animationPseudo = (elAnimationLabTrigger.value || "").trim();
         const previewPseudo = previewInteractionPseudoValue();
         const actualState = actualSharedPreviewState();
+        const recommendation = recommendedTriggerAlignment(builderPseudo, animationPseudo, previewPseudo, actualState);
 
         elTriggerSyncRuleState.textContent = formatSharedTriggerLabel(builderPseudo, "Always On");
         elTriggerSyncAnimationState.textContent = formatSharedTriggerLabel(animationPseudo, "Always On");
         elTriggerSyncPreviewState.textContent = formatSharedTriggerLabel(previewPseudo, "Always On");
         elTriggerSyncActualState.textContent = actualState.label;
+        elTriggerSyncRecommendation.textContent = recommendation.label;
+        elTriggerAlignRecommended.disabled = !recommendation.action;
 
         if (elTriggerAlignBuilder) {
           elTriggerAlignBuilder.disabled = Boolean(builderPseudo) && !isSharedTriggerValue(builderPseudo);
@@ -4399,6 +4467,30 @@ translateY()	translateY(<length|percentage>)
           elAnimationLabTrigger.value = pseudo;
         }
         updateAnimationLabOutputs();
+        updateTriggerSyncNote();
+      }
+
+      function applyRecommendedTriggerAlignment() {
+        const builderPseudo = getSelectedPseudoSelector();
+        const animationPseudo = (elAnimationLabTrigger.value || "").trim();
+        const previewPseudo = previewInteractionPseudoValue();
+        const actualState = actualSharedPreviewState();
+        const recommendation = recommendedTriggerAlignment(builderPseudo, animationPseudo, previewPseudo, actualState);
+
+        if (recommendation.action === "builder") {
+          alignAllTriggersToBuilder();
+          return;
+        }
+        if (recommendation.action === "animation") {
+          alignAllTriggersToAnimationLab();
+          return;
+        }
+        if (recommendation.action === "actual") {
+          alignAllTriggersToActualPreview();
+          return;
+        }
+
+        setBuilderStatus(recommendation.label);
         updateTriggerSyncNote();
       }
 
@@ -8263,6 +8355,7 @@ translateY()	translateY(<length|percentage>)
       elTriggerAlignBuilder.addEventListener("click", alignAllTriggersToBuilder);
       elTriggerAlignAnimation.addEventListener("click", alignAllTriggersToAnimationLab);
       elTriggerAlignActual.addEventListener("click", alignAllTriggersToActualPreview);
+      elTriggerAlignRecommended.addEventListener("click", applyRecommendedTriggerAlignment);
       elTriggerFollowActual.addEventListener("change", function () {
         setTriggerSyncLastChange(
           elTriggerFollowActual.checked
