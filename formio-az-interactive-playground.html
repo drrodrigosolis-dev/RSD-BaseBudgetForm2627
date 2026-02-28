@@ -1396,6 +1396,7 @@
               </select>
               <input id="builder-pseudo-custom" class="hidden" placeholder=":nth-child(2)" title="Only use this when the preset states are not enough. Example: :nth-child(2), :not(.active), ::marker." />
               <div id="builder-pseudo-help" class="input-hint">Use Hover for mouse-over styles, Focus for clicked/tabbed fields, and Active for pressed/clicked states.</div>
+              <button id="builder-match-preview" type="button">Match Preview To Rule</button>
             </div>
             <div class="row">
               <label class="label" for="builder-selector-override">Full Selector Override (optional)</label>
@@ -2071,6 +2072,7 @@ translateY()	translateY(<length|percentage>)
       const elBuilderPseudoSelector = document.getElementById("builder-pseudo-selector");
       const elBuilderPseudoCustom = document.getElementById("builder-pseudo-custom");
       const elBuilderPseudoHelp = document.getElementById("builder-pseudo-help");
+      const elBuilderMatchPreview = document.getElementById("builder-match-preview");
       const elBuilderSelectorOverride = document.getElementById("builder-selector-override");
       const elBuilderLegacyRow1 = document.getElementById("builder-legacy-row-1");
       const elBuilderLegacyRow2 = document.getElementById("builder-legacy-row-2");
@@ -4919,6 +4921,19 @@ translateY()	translateY(<length|percentage>)
         return raw;
       }
 
+      function syncPreviewInteractionStateFromPseudo(pseudo, statusMessage) {
+        const raw = String(pseudo || "").trim();
+        const next = stateKeyForPseudoSelector(raw) || "default";
+        elPreviewInteractionState.value = next;
+        updatePreviewInteractionHelp();
+        updateSelectorSimulatorRootClass();
+        updateLive();
+        if (statusMessage) {
+          setBuilderStatus(statusMessage);
+        }
+        return next;
+      }
+
       function animationLabShorthand(values) {
         const parts = [
           values.keyframes || DEFAULT_ANIMATION_PREVIEW.name,
@@ -5003,11 +5018,7 @@ translateY()	translateY(<length|percentage>)
 
       function syncPreviewInteractionToAnimationLab() {
         const trigger = (elAnimationLabTrigger.value || "").trim();
-        const key = stateKeyForPseudoSelector(trigger);
-        elPreviewInteractionState.value = key || "default";
-        updatePreviewInteractionHelp();
-        updateSelectorSimulatorRootClass();
-        updateLive();
+        syncPreviewInteractionStateFromPseudo(trigger, "Preview matched to the Animation Lab trigger.");
       }
 
       function loadAnimationLabIntoStep2() {
@@ -5031,11 +5042,8 @@ translateY()	translateY(<length|percentage>)
         elItem.value = "animation";
         renderEverything();
         syncPseudoControlFromValue(values.trigger);
-        elPreviewInteractionState.value = stateKeyForPseudoSelector(values.trigger) || "default";
-        updatePreviewInteractionHelp();
-        updateSelectorSimulatorRootClass();
         renderBuilder();
-        updateLive();
+        syncPreviewInteractionStateFromPseudo(values.trigger);
         setBuilderStatus("Animation Lab loaded into Step 2.");
       }
 
@@ -5050,11 +5058,7 @@ translateY()	translateY(<length|percentage>)
           return;
         }
         renderBuilder();
-        const stateKey = stateKeyForPseudoSelector(values.trigger);
-        elPreviewInteractionState.value = stateKey || "default";
-        updatePreviewInteractionHelp();
-        updateSelectorSimulatorRootClass();
-        updateLive();
+        syncPreviewInteractionStateFromPseudo(values.trigger);
         flashActivePreviewPanel();
         setBuilderStatus("Animation Lab added " + added + " declaration" + (added === 1 ? "" : "s") + " to " + selector + ".");
       }
@@ -7354,6 +7358,13 @@ translateY()	translateY(<length|percentage>)
       elBuilderPseudoCustom.addEventListener("input", function () {
         renderBuilder();
         updateLive();
+      });
+      elBuilderMatchPreview.addEventListener("click", function () {
+        const pseudo = getSelectedPseudoSelector();
+        const message = pseudo
+          ? "Preview matched to the current Step 2 rule."
+          : "Preview reset to Default because the current Step 2 rule is always on.";
+        syncPreviewInteractionStateFromPseudo(pseudo, message);
       });
       elPreviewInteractionState.addEventListener("change", function () {
         updatePreviewInteractionHelp();
