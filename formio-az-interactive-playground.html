@@ -1829,6 +1829,7 @@
                   <option value="border-radius">Border Radius</option>
                   <option value="box-shadow">Box Shadow</option>
                   <option value="spacing">Spacing</option>
+                  <option value="gradient">Gradient Fill</option>
                   <option value="transition">Transition</option>
                 </select>
               </div>
@@ -1926,6 +1927,47 @@
                   <div class="row">
                     <label class="label" for="custom-rule-helper-spacing-left">Left</label>
                     <input id="custom-rule-helper-spacing-left" type="number" step="1" value="12" title="Left spacing value." />
+                  </div>
+                </div>
+              </div>
+              <div id="custom-rule-helper-gradient-group" class="hidden">
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-gradient-property">Property</label>
+                    <select id="custom-rule-helper-gradient-property" title="Choose whether the draft writes background or background-image.">
+                      <option value="background">background</option>
+                      <option value="background-image">background-image</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-gradient-angle">Direction</label>
+                    <select id="custom-rule-helper-gradient-angle" title="The angle used by the linear gradient.">
+                      <option value="90deg">Top to Bottom</option>
+                      <option value="135deg" selected>Diagonal Down</option>
+                      <option value="180deg">Bottom to Top</option>
+                      <option value="to right">Left to Right</option>
+                      <option value="to left">Right to Left</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-gradient-start-color">Start Color</label>
+                    <input id="custom-rule-helper-gradient-start-color" type="color" value="#eff4ff" title="Starting color for the gradient." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-gradient-start-stop">Start Stop</label>
+                    <input id="custom-rule-helper-gradient-start-stop" type="number" min="0" max="100" step="1" value="0" title="Percent where the first color starts." />
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-gradient-end-color">End Color</label>
+                    <input id="custom-rule-helper-gradient-end-color" type="color" value="#d8e6ff" title="Ending color for the gradient." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-gradient-end-stop">End Stop</label>
+                    <input id="custom-rule-helper-gradient-end-stop" type="number" min="0" max="100" step="1" value="100" title="Percent where the second color settles." />
                   </div>
                 </div>
               </div>
@@ -2706,6 +2748,13 @@ translateY()	translateY(<length|percentage>)
       const elCustomRuleHelperSpacingRight = document.getElementById("custom-rule-helper-spacing-right");
       const elCustomRuleHelperSpacingBottom = document.getElementById("custom-rule-helper-spacing-bottom");
       const elCustomRuleHelperSpacingLeft = document.getElementById("custom-rule-helper-spacing-left");
+      const elCustomRuleHelperGradientGroup = document.getElementById("custom-rule-helper-gradient-group");
+      const elCustomRuleHelperGradientProperty = document.getElementById("custom-rule-helper-gradient-property");
+      const elCustomRuleHelperGradientAngle = document.getElementById("custom-rule-helper-gradient-angle");
+      const elCustomRuleHelperGradientStartColor = document.getElementById("custom-rule-helper-gradient-start-color");
+      const elCustomRuleHelperGradientStartStop = document.getElementById("custom-rule-helper-gradient-start-stop");
+      const elCustomRuleHelperGradientEndColor = document.getElementById("custom-rule-helper-gradient-end-color");
+      const elCustomRuleHelperGradientEndStop = document.getElementById("custom-rule-helper-gradient-end-stop");
       const elCustomRuleHelperTransitionGroup = document.getElementById("custom-rule-helper-transition-group");
       const elCustomRuleHelperTransitionProperty = document.getElementById("custom-rule-helper-transition-property");
       const elCustomRuleHelperTransitionDuration = document.getElementById("custom-rule-helper-transition-duration");
@@ -9061,6 +9110,16 @@ translateY()	translateY(<length|percentage>)
           }
           return prop + ": " + values.join(" ") + ";";
         }
+        if (type === "gradient") {
+          const prop = (elCustomRuleHelperGradientProperty.value || "background").trim();
+          const angle = (elCustomRuleHelperGradientAngle.value || "135deg").trim();
+          const startColor = (elCustomRuleHelperGradientStartColor.value || "#eff4ff").trim();
+          const endColor = (elCustomRuleHelperGradientEndColor.value || "#d8e6ff").trim();
+          const startStop = clampNumber(Number(elCustomRuleHelperGradientStartStop.value || 0), 0, 100);
+          const endStop = clampNumber(Number(elCustomRuleHelperGradientEndStop.value || 100), 0, 100);
+          const normalizedEnd = Math.max(startStop, endStop);
+          return prop + ": linear-gradient(" + angle + ", " + startColor + " " + startStop + "%, " + endColor + " " + normalizedEnd + "%);";
+        }
         if (type === "transition") {
           return "transition: " +
             (elCustomRuleHelperTransitionProperty.value || "all") + " " +
@@ -9092,6 +9151,7 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperRadiusGroup.classList.toggle("hidden", type !== "border-radius");
         elCustomRuleHelperShadowGroup.classList.toggle("hidden", type !== "box-shadow");
         elCustomRuleHelperSpacingGroup.classList.toggle("hidden", type !== "spacing");
+        elCustomRuleHelperGradientGroup.classList.toggle("hidden", type !== "gradient");
         elCustomRuleHelperTransitionGroup.classList.toggle("hidden", type !== "transition");
         updateSpacingHelperControlState();
 
@@ -9099,6 +9159,8 @@ translateY()	translateY(<length|percentage>)
           elCustomRuleHelperNote.textContent = "Build a reusable shadow with consistent offsets, blur, spread, color, and optional inset behavior.";
         } else if (type === "spacing") {
           elCustomRuleHelperNote.textContent = "Generate a clean padding or margin shorthand without manually ordering the four sides.";
+        } else if (type === "gradient") {
+          elCustomRuleHelperNote.textContent = "Build a two-stop gradient with controlled direction and color stops, then load it as a full background declaration.";
         } else if (type === "transition") {
           elCustomRuleHelperNote.textContent = "Use this for common interactive motion so timing stays explicit and readable.";
         } else {
@@ -9266,6 +9328,12 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperShadowAlpha,
         elCustomRuleHelperSpacingProperty,
         elCustomRuleHelperSpacingUnit,
+        elCustomRuleHelperGradientProperty,
+        elCustomRuleHelperGradientAngle,
+        elCustomRuleHelperGradientStartColor,
+        elCustomRuleHelperGradientStartStop,
+        elCustomRuleHelperGradientEndColor,
+        elCustomRuleHelperGradientEndStop,
         elCustomRuleHelperTransitionProperty,
         elCustomRuleHelperTransitionDuration,
         elCustomRuleHelperTransitionEasing,
