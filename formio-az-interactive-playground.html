@@ -1480,6 +1480,132 @@
             </div>
           </details>
 
+          <details id="animation-lab-disclosure" class="disclosure">
+            <summary>Animation Lab</summary>
+            <div class="disclosure-body">
+              <p class="tiny">Build motion as a guided package instead of assembling animation shorthand by hand. Use this lab to choose a keyframe, trigger, timing, then either preview it in Step 2 or add it directly to the CSS Builder.</p>
+              <div class="builder-row">
+                <div class="row">
+                  <label class="label" for="animation-lab-preset">Motion Pack</label>
+                  <select id="animation-lab-preset" title="Choose a ready-made animation pack to populate the lab controls."></select>
+                </div>
+                <div class="row">
+                  <label class="label" for="animation-lab-trigger">Trigger / State</label>
+                  <select id="animation-lab-trigger" title="Choose when the animation should run.">
+                    <option value="">Always On</option>
+                    <option value=":hover">Hover</option>
+                    <option value=":focus">Focus</option>
+                    <option value=":focus-visible">Focus Visible</option>
+                    <option value=":active">Active / Pressed</option>
+                    <option value=":disabled">Disabled</option>
+                    <option value=":checked">Checked</option>
+                  </select>
+                </div>
+              </div>
+              <div class="builder-row">
+                <div class="row">
+                  <label class="label" for="animation-lab-name">Keyframes</label>
+                  <select id="animation-lab-name" title="Choose the motion path used by the animation."></select>
+                </div>
+                <div class="row">
+                  <label class="label" for="animation-lab-duration">Duration</label>
+                  <select id="animation-lab-duration" title="Choose how long one cycle lasts.">
+                    <option value="150ms">150ms</option>
+                    <option value="250ms">250ms</option>
+                    <option value="300ms">300ms</option>
+                    <option value="400ms">400ms</option>
+                    <option value="700ms">700ms</option>
+                    <option value="900ms">900ms</option>
+                    <option value="1.2s" selected>1.2s</option>
+                    <option value="1.6s">1.6s</option>
+                    <option value="2s">2s</option>
+                  </select>
+                </div>
+              </div>
+              <div class="builder-row">
+                <div class="row">
+                  <label class="label" for="animation-lab-easing">Easing</label>
+                  <select id="animation-lab-easing" title="Choose how the motion accelerates and decelerates.">
+                    <option value="ease">ease</option>
+                    <option value="ease-in">ease-in</option>
+                    <option value="ease-out">ease-out</option>
+                    <option value="ease-in-out" selected>ease-in-out</option>
+                    <option value="linear">linear</option>
+                    <option value="step-start">step-start</option>
+                    <option value="step-end">step-end</option>
+                  </select>
+                </div>
+                <div class="row">
+                  <label class="label" for="animation-lab-delay">Delay</label>
+                  <select id="animation-lab-delay" title="Choose how long the animation waits before starting.">
+                    <option value="0s" selected>0s</option>
+                    <option value="80ms">80ms</option>
+                    <option value="150ms">150ms</option>
+                    <option value="250ms">250ms</option>
+                    <option value="400ms">400ms</option>
+                    <option value="700ms">700ms</option>
+                  </select>
+                </div>
+              </div>
+              <div class="builder-row">
+                <div class="row">
+                  <label class="label" for="animation-lab-iterations">Iterations</label>
+                  <select id="animation-lab-iterations" title="Choose how many times the animation repeats.">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="infinite" selected>infinite</option>
+                  </select>
+                </div>
+                <div class="row">
+                  <label class="label" for="animation-lab-direction">Direction</label>
+                  <select id="animation-lab-direction" title="Choose whether the animation alternates or reverses.">
+                    <option value="normal">normal</option>
+                    <option value="reverse">reverse</option>
+                    <option value="alternate" selected>alternate</option>
+                    <option value="alternate-reverse">alternate-reverse</option>
+                  </select>
+                </div>
+              </div>
+              <div class="builder-row">
+                <div class="row">
+                  <label class="label" for="animation-lab-fill">Fill Mode</label>
+                  <select id="animation-lab-fill" title="Choose whether the animation keeps its start or end styles outside the active interval.">
+                    <option value="none">none</option>
+                    <option value="forwards">forwards</option>
+                    <option value="backwards">backwards</option>
+                    <option value="both" selected>both</option>
+                  </select>
+                </div>
+                <div class="row">
+                  <label class="label" for="animation-lab-play">Play State</label>
+                  <select id="animation-lab-play" title="Choose whether the animation is actively running or paused.">
+                    <option value="running" selected>running</option>
+                    <option value="paused">paused</option>
+                  </select>
+                </div>
+              </div>
+              <div class="inline">
+                <button id="animation-lab-load-step2" type="button">Load Into Step 2</button>
+                <button id="animation-lab-apply-builder" type="button">Add To CSS Builder</button>
+                <button id="animation-lab-match-preview" type="button">Match Preview To Trigger</button>
+                <button id="animation-lab-restart" type="button">Restart Preview</button>
+              </div>
+              <div class="row">
+                <label class="label">Effective Selector</label>
+                <div id="animation-lab-selector-note" class="selector-preview">The lab will target your current builder selector.</div>
+              </div>
+              <div class="row">
+                <label class="label">Generated Animation Declarations</label>
+                <pre id="animation-lab-output"></pre>
+              </div>
+              <div class="row">
+                <label class="label">Keyframes Block</label>
+                <pre id="animation-lab-keyframes"></pre>
+              </div>
+            </div>
+          </details>
+
           <div class="row">
             <label class="label" for="custom-rule">Custom Declaration</label>
             <input id="custom-rule" placeholder="border-radius: 12px;" title="Write one or more declarations separated by semicolons." />
@@ -1966,6 +2092,23 @@ translateY()	translateY(<length|percentage>)
       const elBuilderVarAlpha = document.getElementById("builder-var-alpha");
       const elAddVariable = document.getElementById("add-variable");
       const elBuilderVars = document.getElementById("builder-vars");
+      const elAnimationLabPreset = document.getElementById("animation-lab-preset");
+      const elAnimationLabTrigger = document.getElementById("animation-lab-trigger");
+      const elAnimationLabName = document.getElementById("animation-lab-name");
+      const elAnimationLabDuration = document.getElementById("animation-lab-duration");
+      const elAnimationLabEasing = document.getElementById("animation-lab-easing");
+      const elAnimationLabDelay = document.getElementById("animation-lab-delay");
+      const elAnimationLabIterations = document.getElementById("animation-lab-iterations");
+      const elAnimationLabDirection = document.getElementById("animation-lab-direction");
+      const elAnimationLabFill = document.getElementById("animation-lab-fill");
+      const elAnimationLabPlay = document.getElementById("animation-lab-play");
+      const elAnimationLabLoadStep2 = document.getElementById("animation-lab-load-step2");
+      const elAnimationLabApplyBuilder = document.getElementById("animation-lab-apply-builder");
+      const elAnimationLabMatchPreview = document.getElementById("animation-lab-match-preview");
+      const elAnimationLabRestart = document.getElementById("animation-lab-restart");
+      const elAnimationLabSelectorNote = document.getElementById("animation-lab-selector-note");
+      const elAnimationLabOutput = document.getElementById("animation-lab-output");
+      const elAnimationLabKeyframes = document.getElementById("animation-lab-keyframes");
       const elSyntaxAddCurrentRule = document.getElementById("syntax-add-current-rule");
       const elCustomRule = document.getElementById("custom-rule");
       const elBuilderMediaLayer = document.getElementById("builder-media-layer");
@@ -2644,8 +2787,24 @@ translateY()	translateY(<length|percentage>)
           "100% { opacity: 1; }",
         spin:
           "0% { transform: rotate(0deg); }\n" +
-          "100% { transform: rotate(360deg); }"
+          "100% { transform: rotate(360deg); }",
+        bounce:
+          "0%, 100% { transform: translateY(0); }\n" +
+          "35% { transform: translateY(-16px); }\n" +
+          "70% { transform: translateY(4px); }",
+        wiggle:
+          "0%, 100% { transform: rotate(0deg); }\n" +
+          "25% { transform: rotate(-4deg); }\n" +
+          "75% { transform: rotate(4deg); }",
+        float:
+          "0%, 100% { transform: translateY(0); }\n" +
+          "50% { transform: translateY(-10px); }",
+        shimmer:
+          "0% { filter: brightness(1); transform: translateX(0); }\n" +
+          "50% { filter: brightness(1.18); transform: translateX(2px); }\n" +
+          "100% { filter: brightness(1); transform: translateX(0); }"
       };
+      const BUILTIN_KEYFRAME_NAMES = Object.keys(BUILTIN_KEYFRAMES);
       const DEFAULT_ANIMATION_PREVIEW = {
         name: "pulseGlow",
         duration: "1.2s",
@@ -2656,6 +2815,103 @@ translateY()	translateY(<length|percentage>)
         fillMode: "both",
         playState: "running"
       };
+      const ANIMATION_LAB_PRESETS = [
+        {
+          id: "intro-fade",
+          name: "Intro Fade",
+          trigger: "",
+          keyframes: "fadeIn",
+          duration: "700ms",
+          easing: "ease-out",
+          delay: "0s",
+          iterations: "1",
+          direction: "normal",
+          fill: "both",
+          play: "running"
+        },
+        {
+          id: "pulse-attention",
+          name: "Pulse Attention",
+          trigger: ":hover",
+          keyframes: "pulseGlow",
+          duration: "1.2s",
+          easing: "ease-in-out",
+          delay: "0s",
+          iterations: "infinite",
+          direction: "alternate",
+          fill: "both",
+          play: "running"
+        },
+        {
+          id: "lift-hover",
+          name: "Lift Hover",
+          trigger: ":hover",
+          keyframes: "float",
+          duration: "900ms",
+          easing: "ease-in-out",
+          delay: "0s",
+          iterations: "infinite",
+          direction: "alternate",
+          fill: "both",
+          play: "running"
+        },
+        {
+          id: "button-press",
+          name: "Button Press",
+          trigger: ":active",
+          keyframes: "bounce",
+          duration: "300ms",
+          easing: "ease-out",
+          delay: "0s",
+          iterations: "1",
+          direction: "normal",
+          fill: "both",
+          play: "running"
+        },
+        {
+          id: "focus-wiggle",
+          name: "Focus Wiggle",
+          trigger: ":focus",
+          keyframes: "wiggle",
+          duration: "400ms",
+          easing: "ease-in-out",
+          delay: "0s",
+          iterations: "2",
+          direction: "normal",
+          fill: "both",
+          play: "running"
+        },
+        {
+          id: "ambient-shimmer",
+          name: "Ambient Shimmer",
+          trigger: "",
+          keyframes: "shimmer",
+          duration: "1.6s",
+          easing: "linear",
+          delay: "0s",
+          iterations: "infinite",
+          direction: "normal",
+          fill: "both",
+          play: "running"
+        },
+        {
+          id: "continuous-spin",
+          name: "Continuous Spin",
+          trigger: "",
+          keyframes: "spin",
+          duration: "1.4s",
+          easing: "linear",
+          delay: "0s",
+          iterations: "infinite",
+          direction: "normal",
+          fill: "both",
+          play: "running"
+        }
+      ];
+      const ANIMATION_LAB_PRESETS_BY_ID = ANIMATION_LAB_PRESETS.reduce(function (acc, preset) {
+        acc[preset.id] = preset;
+        return acc;
+      }, {});
       const FUNCTION_PROPERTY_OPTIONS = [
         "filter",
         "transform",
@@ -2671,10 +2927,10 @@ translateY()	translateY(<length|percentage>)
         "align-content::value": ["stretch", "flex-start", "center", "flex-end", "space-between", "space-around", "space-evenly"],
         "align-items::value": ["stretch", "flex-start", "center", "flex-end", "baseline"],
         "align-self::value": ["auto", "stretch", "flex-start", "center", "flex-end", "baseline"],
-        "animation::name": ["pulseGlow", "slideUp", "fadeIn", "spin"],
+        "animation::name": BUILTIN_KEYFRAME_NAMES.slice(),
         "animation-direction::value": ["normal", "reverse", "alternate", "alternate-reverse"],
         "animation-fill-mode::value": ["none", "forwards", "backwards", "both"],
-        "animation-name::keyframes-name": ["pulseGlow", "slideUp", "fadeIn", "spin"],
+        "animation-name::keyframes-name": BUILTIN_KEYFRAME_NAMES.slice(),
         "cursor::value": ["default", "pointer", "text", "move", "not-allowed", "grab", "zoom-in"],
         "font-weight::value": ["400", "500", "600", "700", "800"],
         "justify-content::value": ["flex-start", "center", "flex-end", "space-between", "space-around", "space-evenly"],
@@ -2690,7 +2946,7 @@ translateY()	translateY(<length|percentage>)
         property: ["all", "opacity", "transform", "box-shadow", "background-color", "color", "border-color"],
         "property-list": ["all", "opacity, transform", "box-shadow, transform", "background-color, color"],
         "track-list": ["1fr 1fr", "repeat(2, 1fr)", "200px 1fr", "repeat(3, minmax(0, 1fr))"],
-        "keyframes-name": ["pulseGlow", "slideUp", "fadeIn", "spin"],
+        "keyframes-name": BUILTIN_KEYFRAME_NAMES.slice(),
         "family-list": ["Georgia, serif", "\"Trebuchet MS\", sans-serif", "\"Courier New\", monospace", "\"Brush Script MT\", cursive"],
         "role-name": ["button", "presentation", "dialog", "status", "alert"],
         "language-tag": ["en", "es", "fr", "pt-BR"],
@@ -3365,6 +3621,7 @@ translateY()	translateY(<length|percentage>)
       let libraryVisiblePresets = BUILTIN_PRESETS.slice();
 
       let activeParams = [];
+      let pendingParamOverrides = null;
       let latestBuilderCandidate = null;
       let builderRules = [];
       let builderVariables = [];
@@ -3396,6 +3653,18 @@ translateY()	translateY(<length|percentage>)
             syntax: line.slice(tab + 1).trim()
           };
         }).filter(Boolean);
+      }
+
+      function consumePendingParamOverrides(model) {
+        const overrides = pendingParamOverrides;
+        pendingParamOverrides = null;
+        if (!overrides || !model || !model.length) return model;
+        model.forEach(function (param) {
+          if (Object.prototype.hasOwnProperty.call(overrides, param.key)) {
+            param.value = overrides[param.key];
+          }
+        });
+        return model;
       }
 
       function extractPlaceholders(text) {
@@ -4195,12 +4464,9 @@ translateY()	translateY(<length|percentage>)
         })];
       }
 
-      function composeSelectorFromGraph(base) {
-        if (!selectorGraphSegments.length) {
-          seedSelectorGraphFromLegacy();
-        }
+      function composeSelectorFromSegments(base, segments) {
         let selector = base;
-        selectorGraphSegments.forEach(function (seg) {
+        (segments || []).forEach(function (seg) {
           const relation = seg.relation || "descendant";
           const part = (seg.selector || "").trim();
           const pseudo = (seg.pseudo || "").trim();
@@ -4219,6 +4485,13 @@ translateY()	translateY(<length|percentage>)
           if (pseudo) selector += pseudo;
         });
         return selector.trim();
+      }
+
+      function composeSelectorFromGraph(base) {
+        if (!selectorGraphSegments.length) {
+          seedSelectorGraphFromLegacy();
+        }
+        return composeSelectorFromSegments(base, selectorGraphSegments);
       }
 
       function computeSpecificityForSingle(selector) {
@@ -4310,6 +4583,7 @@ translateY()	translateY(<length|percentage>)
           relation.addEventListener("change", function () {
             selectorGraphSegments[idx].relation = relation.value;
             updateSelectorPreview();
+            updateAnimationLabOutputs();
             updateFlowStatus();
           });
           relationWrap.appendChild(relationLabel);
@@ -4327,6 +4601,7 @@ translateY()	translateY(<length|percentage>)
           selectorInput.addEventListener("input", function () {
             selectorGraphSegments[idx].selector = selectorInput.value;
             updateSelectorPreview();
+            updateAnimationLabOutputs();
             updateFlowStatus();
           });
           selectorWrap.appendChild(selectorLabel);
@@ -4374,6 +4649,7 @@ translateY()	translateY(<length|percentage>)
             pseudoInput.classList.toggle("hidden", pseudoSelect.value !== "__custom__");
             selectorGraphSegments[idx].pseudo = nextValue;
             updateSelectorPreview();
+            updateAnimationLabOutputs();
             updateFlowStatus();
           };
           pseudoSelect.addEventListener("change", function () {
@@ -4398,6 +4674,7 @@ translateY()	translateY(<length|percentage>)
               selectorGraphSegments.splice(idx, 1);
             }
             renderSelectorGraph();
+            updateAnimationLabOutputs();
             updateFlowStatus();
           });
 
@@ -4421,12 +4698,14 @@ translateY()	translateY(<length|percentage>)
         if (!selectorGraphSegments.length) seedSelectorGraphFromLegacy();
         selectorGraphSegments.push({ relation: "descendant", selector: ".child", pseudo: "" });
         renderSelectorGraph();
+        updateAnimationLabOutputs();
         updateFlowStatus();
       }
 
       function clearSelectorGraphSegments() {
         selectorGraphSegments = [{ relation: "self", selector: "", pseudo: "" }];
         renderSelectorGraph();
+        updateAnimationLabOutputs();
         updateFlowStatus();
       }
 
@@ -4576,6 +4855,214 @@ translateY()	translateY(<length|percentage>)
         updateExportWizard();
         flashActivePreviewPanel();
         setBuilderStatus("Loaded guided recipe: " + recipe.name + ".");
+      }
+
+      function selectedAnimationLabPreset() {
+        const id = (elAnimationLabPreset.value || "").trim();
+        if (!id) return null;
+        return ANIMATION_LAB_PRESETS_BY_ID[id] || null;
+      }
+
+      function populateAnimationLabKeyframeList() {
+        const prev = (elAnimationLabName.value || "").trim();
+        elAnimationLabName.innerHTML = "";
+        BUILTIN_KEYFRAME_NAMES.forEach(function (name) {
+          const opt = document.createElement("option");
+          opt.value = name;
+          opt.textContent = name;
+          elAnimationLabName.appendChild(opt);
+        });
+        if (BUILTIN_KEYFRAME_NAMES.indexOf(prev) >= 0) {
+          elAnimationLabName.value = prev;
+        } else if (BUILTIN_KEYFRAME_NAMES.length > 0) {
+          elAnimationLabName.selectedIndex = 0;
+        }
+      }
+
+      function renderAnimationLabPresetList() {
+        const prev = (elAnimationLabPreset.value || "").trim();
+        populateAnimationLabKeyframeList();
+        elAnimationLabPreset.innerHTML = "";
+        ANIMATION_LAB_PRESETS.forEach(function (preset) {
+          const opt = document.createElement("option");
+          opt.value = preset.id;
+          opt.textContent = preset.name;
+          elAnimationLabPreset.appendChild(opt);
+        });
+        if (ANIMATION_LAB_PRESETS.some(function (preset) { return preset.id === prev; })) {
+          elAnimationLabPreset.value = prev;
+        } else if (ANIMATION_LAB_PRESETS.length > 0) {
+          elAnimationLabPreset.selectedIndex = 0;
+        }
+        applyAnimationLabPreset();
+      }
+
+      function animationLabPresetValues() {
+        return {
+          trigger: (elAnimationLabTrigger.value || "").trim(),
+          keyframes: (elAnimationLabName.value || DEFAULT_ANIMATION_PREVIEW.name).trim(),
+          duration: (elAnimationLabDuration.value || DEFAULT_ANIMATION_PREVIEW.duration).trim(),
+          easing: (elAnimationLabEasing.value || DEFAULT_ANIMATION_PREVIEW.timingFunction).trim(),
+          delay: (elAnimationLabDelay.value || DEFAULT_ANIMATION_PREVIEW.delay).trim(),
+          iterations: (elAnimationLabIterations.value || DEFAULT_ANIMATION_PREVIEW.iterationCount).trim(),
+          direction: (elAnimationLabDirection.value || DEFAULT_ANIMATION_PREVIEW.direction).trim(),
+          fill: (elAnimationLabFill.value || DEFAULT_ANIMATION_PREVIEW.fillMode).trim(),
+          play: (elAnimationLabPlay.value || DEFAULT_ANIMATION_PREVIEW.playState).trim()
+        };
+      }
+
+      function animationLabTriggerLabel(trigger) {
+        const raw = String(trigger || "").trim();
+        if (!raw) return "Always On";
+        const key = stateKeyForPseudoSelector(raw);
+        if (key && PREVIEW_STATE_SELECTOR_MAP[key]) return PREVIEW_STATE_SELECTOR_MAP[key].label;
+        return raw;
+      }
+
+      function animationLabShorthand(values) {
+        const parts = [
+          values.keyframes || DEFAULT_ANIMATION_PREVIEW.name,
+          values.duration || DEFAULT_ANIMATION_PREVIEW.duration,
+          values.easing || DEFAULT_ANIMATION_PREVIEW.timingFunction,
+          values.delay || DEFAULT_ANIMATION_PREVIEW.delay,
+          values.iterations || DEFAULT_ANIMATION_PREVIEW.iterationCount,
+          values.direction || DEFAULT_ANIMATION_PREVIEW.direction,
+          values.fill || DEFAULT_ANIMATION_PREVIEW.fillMode
+        ];
+        return parts.join(" ").trim();
+      }
+
+      function animationLabDeclarations(values) {
+        const declarations = [
+          "animation: " + animationLabShorthand(values) + ";"
+        ];
+        if ((values.play || "running") !== "running") {
+          declarations.push("animation-play-state: " + values.play + ";");
+        }
+        return declarations;
+      }
+
+      function animationLabSelector() {
+        const trigger = (elAnimationLabTrigger.value || "").trim();
+        const override = (elBuilderSelectorOverride.value || "").trim();
+        if (override) {
+          return (override + trigger).trim();
+        }
+        if (elSelectorGraphEnabled.checked) {
+          if (!selectorGraphSegments.length) seedSelectorGraphFromLegacy();
+          const clone = selectorGraphSegments.map(function (seg, idx) {
+            const normalized = normalizeGraphSegment(seg);
+            if (idx === selectorGraphSegments.length - 1) normalized.pseudo = "";
+            return normalized;
+          });
+          return (composeSelectorFromSegments(getBaseSelector(), clone) + trigger).trim();
+        }
+        const base = getBaseSelector();
+        const combinator = (elBuilderCombinator.value || "self").trim();
+        const relative = (elBuilderRelativeSelector.value || "").trim();
+        let selector = base;
+        if (combinator === "descendant") selector = base + " " + (relative || "*");
+        if (combinator === "child") selector = base + " > " + (relative || "*");
+        if (combinator === "adjacent") selector = base + " + " + (relative || "*");
+        if (combinator === "sibling") selector = base + " ~ " + (relative || "*");
+        return (selector + trigger).trim();
+      }
+
+      function updateAnimationLabOutputs() {
+        const values = animationLabPresetValues();
+        const trigger = animationLabTriggerLabel(values.trigger);
+        const declarations = animationLabDeclarations(values);
+        const selector = animationLabSelector();
+        const media = currentBuilderMediaQuery();
+        const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
+        elAnimationLabSelectorNote.textContent =
+          selector + " | Trigger: " + trigger + " | Applies" + scopeText + ".";
+        elAnimationLabOutput.textContent = declarations.join("\n");
+        elAnimationLabKeyframes.textContent = keyframesBlock(values.keyframes) || "No built-in keyframes found for " + values.keyframes + ".";
+      }
+
+      function applyAnimationLabPreset() {
+        const preset = selectedAnimationLabPreset();
+        if (!preset) {
+          updateAnimationLabOutputs();
+          return;
+        }
+        elAnimationLabTrigger.value = preset.trigger;
+        if (BUILTIN_KEYFRAME_NAMES.indexOf(preset.keyframes) >= 0) {
+          elAnimationLabName.value = preset.keyframes;
+        }
+        elAnimationLabDuration.value = preset.duration;
+        elAnimationLabEasing.value = preset.easing;
+        elAnimationLabDelay.value = preset.delay;
+        elAnimationLabIterations.value = preset.iterations;
+        elAnimationLabDirection.value = preset.direction;
+        elAnimationLabFill.value = preset.fill;
+        elAnimationLabPlay.value = preset.play;
+        updateAnimationLabOutputs();
+      }
+
+      function syncPreviewInteractionToAnimationLab() {
+        const trigger = (elAnimationLabTrigger.value || "").trim();
+        const key = stateKeyForPseudoSelector(trigger);
+        elPreviewInteractionState.value = key || "default";
+        updatePreviewInteractionHelp();
+        updateSelectorSimulatorRootClass();
+        updateLive();
+      }
+
+      function loadAnimationLabIntoStep2() {
+        const values = animationLabPresetValues();
+        elCategory.value = "property";
+        populateItems();
+        if (!Array.from(elItem.options).some(function (opt) { return opt.value === "animation"; })) {
+          pendingParamOverrides = null;
+          setBuilderStatus("Animation property is not available in the property dataset.");
+          return;
+        }
+        pendingParamOverrides = {
+          name: values.keyframes,
+          duration: values.duration,
+          "timing-function": values.easing,
+          delay: values.delay,
+          "iteration-count": values.iterations,
+          direction: values.direction,
+          "fill-mode": values.fill
+        };
+        elItem.value = "animation";
+        renderEverything();
+        syncPseudoControlFromValue(values.trigger);
+        elPreviewInteractionState.value = stateKeyForPseudoSelector(values.trigger) || "default";
+        updatePreviewInteractionHelp();
+        updateSelectorSimulatorRootClass();
+        renderBuilder();
+        updateLive();
+        setBuilderStatus("Animation Lab loaded into Step 2.");
+      }
+
+      function addAnimationLabToBuilder() {
+        const values = animationLabPresetValues();
+        const selector = animationLabSelector();
+        const media = currentBuilderMediaQuery();
+        const declarations = animationLabDeclarations(values);
+        const added = addDeclarationsToSelector(selector, declarations, media);
+        if (!added) {
+          setBuilderStatus("Animation Lab could not add a valid rule.");
+          return;
+        }
+        renderBuilder();
+        const stateKey = stateKeyForPseudoSelector(values.trigger);
+        elPreviewInteractionState.value = stateKey || "default";
+        updatePreviewInteractionHelp();
+        updateSelectorSimulatorRootClass();
+        updateLive();
+        flashActivePreviewPanel();
+        setBuilderStatus("Animation Lab added " + added + " declaration" + (added === 1 ? "" : "s") + " to " + selector + ".");
+      }
+
+      function restartAnimationLabPreview() {
+        updateLive();
+        flashActivePreviewPanel();
+        setBuilderStatus("Animation preview restarted on " + previewTargetLabel(elTarget.value) + ".");
       }
 
       function filteredGlossaryTerms() {
@@ -5709,7 +6196,7 @@ translateY()	translateY(<length|percentage>)
 
       function renderParamControls() {
         const item = selectedItem();
-        activeParams = createParamModel(item);
+        activeParams = consumePendingParamOverrides(createParamModel(item));
         elParams.innerHTML = "";
 
         activeParams.forEach(function (param, index) {
@@ -6405,6 +6892,7 @@ translateY()	translateY(<length|percentage>)
         previewStateStyleTag.disabled = previewMode === "before";
         updateSelectorSimulatorRootClass();
         updateExportWizard();
+        updateAnimationLabOutputs();
 
         elBuilderVars.innerHTML = "";
         if (builderVariables.length === 0) {
@@ -6803,16 +7291,43 @@ translateY()	translateY(<length|percentage>)
           seedSelectorGraphFromLegacy();
         }
         renderSelectorGraph();
+        updateAnimationLabOutputs();
         updateFlowStatus();
       });
       elSelectorGraphAdd.addEventListener("click", addSelectorGraphSegment);
       elSelectorGraphClear.addEventListener("click", clearSelectorGraphSegments);
       elBuilderMediaLayer.addEventListener("change", function () {
         updateBuilderMediaControlVisibility();
+        updateAnimationLabOutputs();
         updateFlowStatus();
       });
-      elBuilderMediaCustom.addEventListener("input", updateFlowStatus);
-      elBuilderMediaCustom.addEventListener("change", updateFlowStatus);
+      elBuilderMediaCustom.addEventListener("input", function () {
+        updateAnimationLabOutputs();
+        updateFlowStatus();
+      });
+      elBuilderMediaCustom.addEventListener("change", function () {
+        updateAnimationLabOutputs();
+        updateFlowStatus();
+      });
+      elAnimationLabPreset.addEventListener("change", applyAnimationLabPreset);
+      [
+        elAnimationLabTrigger,
+        elAnimationLabName,
+        elAnimationLabDuration,
+        elAnimationLabEasing,
+        elAnimationLabDelay,
+        elAnimationLabIterations,
+        elAnimationLabDirection,
+        elAnimationLabFill,
+        elAnimationLabPlay
+      ].forEach(function (el) {
+        el.addEventListener("change", updateAnimationLabOutputs);
+        el.addEventListener("input", updateAnimationLabOutputs);
+      });
+      elAnimationLabLoadStep2.addEventListener("click", loadAnimationLabIntoStep2);
+      elAnimationLabApplyBuilder.addEventListener("click", addAnimationLabToBuilder);
+      elAnimationLabMatchPreview.addEventListener("click", syncPreviewInteractionToAnimationLab);
+      elAnimationLabRestart.addEventListener("click", restartAnimationLabPreview);
       elPreviewToggleState.addEventListener("click", togglePreviewMode);
       elLibraryApplyPreset.addEventListener("click", applyLibraryPreset);
       elLibrarySearch.addEventListener("input", renderLibraryPresetList);
@@ -6932,6 +7447,7 @@ translateY()	translateY(<length|percentage>)
       updatePreviewInteractionHelp();
       updatePreviewCycleUI();
       updateBuilderMediaControlVisibility();
+      renderAnimationLabPresetList();
       renderSelectorSimulatorTemplateList();
       loadSelectorSimulatorTemplate();
       renderRecipeList();
