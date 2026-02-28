@@ -1506,6 +1506,31 @@
                     Link with Step 2 state
                   </label>
                   <div id="trigger-sync-note" class="input-hint">When enabled, Step 2 state and Animation Lab trigger stay matched for shared interaction states.</div>
+                  <div class="help-box">
+                    <div><strong>Trigger Sync Console</strong></div>
+                    <div class="info-grid">
+                      <div class="info-tile">
+                        <div class="label">Step 2 Rule</div>
+                        <div id="trigger-sync-rule-state">Always On</div>
+                      </div>
+                      <div class="info-tile">
+                        <div class="label">Animation Lab</div>
+                        <div id="trigger-sync-animation-state">Always On</div>
+                      </div>
+                      <div class="info-tile">
+                        <div class="label">Preview Simulator</div>
+                        <div id="trigger-sync-preview-state">Always On</div>
+                      </div>
+                      <div class="info-tile">
+                        <div class="label">Alignment Status</div>
+                        <div id="trigger-sync-status">All three surfaces start aligned on Always On.</div>
+                      </div>
+                    </div>
+                    <div class="inline">
+                      <button id="trigger-align-builder" type="button">Align All To Step 2</button>
+                      <button id="trigger-align-animation" type="button">Align All To Animation Lab</button>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="builder-row">
@@ -2103,6 +2128,12 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabTrigger = document.getElementById("animation-lab-trigger");
       const elTriggerSyncEnabled = document.getElementById("trigger-sync-enabled");
       const elTriggerSyncNote = document.getElementById("trigger-sync-note");
+      const elTriggerSyncRuleState = document.getElementById("trigger-sync-rule-state");
+      const elTriggerSyncAnimationState = document.getElementById("trigger-sync-animation-state");
+      const elTriggerSyncPreviewState = document.getElementById("trigger-sync-preview-state");
+      const elTriggerSyncStatus = document.getElementById("trigger-sync-status");
+      const elTriggerAlignBuilder = document.getElementById("trigger-align-builder");
+      const elTriggerAlignAnimation = document.getElementById("trigger-align-animation");
       const elAnimationLabName = document.getElementById("animation-lab-name");
       const elAnimationLabDuration = document.getElementById("animation-lab-duration");
       const elAnimationLabEasing = document.getElementById("animation-lab-easing");
@@ -3899,19 +3930,82 @@ translateY()	translateY(<length|percentage>)
         });
       }
 
+      function previewInteractionPseudoValue() {
+        const selected = (elPreviewInteractionState.value || "default").trim();
+        if (selected === "default") return "";
+        return (PREVIEW_STATE_SELECTOR_MAP[selected] && PREVIEW_STATE_SELECTOR_MAP[selected].pseudo) || "";
+      }
+
+      function formatSharedTriggerLabel(value, emptyLabel) {
+        const raw = String(value || "").trim();
+        const fallback = emptyLabel || "Always On";
+        if (!raw) return fallback;
+        if (isSharedTriggerValue(raw)) return animationLabTriggerLabel(raw);
+        return raw + " (custom)";
+      }
+
+      function updateTriggerAlignmentConsole() {
+        if (
+          !elTriggerSyncRuleState ||
+          !elTriggerSyncAnimationState ||
+          !elTriggerSyncPreviewState ||
+          !elTriggerSyncStatus
+        ) {
+          return;
+        }
+        const builderPseudo = getSelectedPseudoSelector();
+        const animationPseudo = (elAnimationLabTrigger.value || "").trim();
+        const previewPseudo = previewInteractionPseudoValue();
+
+        elTriggerSyncRuleState.textContent = formatSharedTriggerLabel(builderPseudo, "Always On");
+        elTriggerSyncAnimationState.textContent = formatSharedTriggerLabel(animationPseudo, "Always On");
+        elTriggerSyncPreviewState.textContent = formatSharedTriggerLabel(previewPseudo, "Always On");
+
+        if (elTriggerAlignBuilder) {
+          elTriggerAlignBuilder.disabled = Boolean(builderPseudo) && !isSharedTriggerValue(builderPseudo);
+        }
+
+        let status = "";
+        if (builderPseudo && !isSharedTriggerValue(builderPseudo)) {
+          status = "Step 2 is using a custom pseudo, so full three-way sync is paused until you switch back to a shared preset state.";
+        } else if (builderPseudo === animationPseudo && builderPseudo === previewPseudo) {
+          status = "All three surfaces are aligned on " + formatSharedTriggerLabel(builderPseudo, "Always On") + ".";
+        } else if (builderPseudo === animationPseudo) {
+          status = "Preview is testing a different state. Align all to Step 2 when you want live validation to match the rule.";
+        } else if (animationPseudo === previewPseudo) {
+          status = "Animation Lab and Preview match, but Step 2 is pointed at a different state.";
+        } else if (builderPseudo === previewPseudo) {
+          status = "Step 2 and Preview match, but Animation Lab is drafting a different trigger.";
+        } else {
+          status = "Each surface is on a different trigger. Use one of the align actions before testing.";
+        }
+
+        if (!elTriggerSyncEnabled.checked && builderPseudo !== animationPseudo && (!builderPseudo || isSharedTriggerValue(builderPseudo))) {
+          status = "Link is off, so Step 2 and Animation Lab can drift. " + status;
+        }
+
+        elTriggerSyncStatus.textContent = status;
+      }
+
       function updateTriggerSyncNote() {
-        if (!elTriggerSyncNote || !elTriggerSyncEnabled) return;
+        if (!elTriggerSyncNote || !elTriggerSyncEnabled) {
+          updateTriggerAlignmentConsole();
+          return;
+        }
+        let note = "";
         if (!elTriggerSyncEnabled.checked) {
-          elTriggerSyncNote.textContent = "Link is off. Step 2 state and Animation Lab trigger can diverge until you turn it back on.";
-          return;
+          note = "Link is off. Step 2 state and Animation Lab trigger can diverge until you turn it back on.";
+        } else {
+          const pseudo = getSelectedPseudoSelector();
+          if (pseudo && !isSharedTriggerValue(pseudo)) {
+            note = "Step 2 is using a custom pseudo. Shared trigger sync resumes when you switch back to a preset interaction state.";
+          } else {
+            const active = animationLabTriggerLabel(elAnimationLabTrigger.value);
+            note = "Link is on. Step 2 and Animation Lab are sharing the " + active + " trigger.";
+          }
         }
-        const pseudo = getSelectedPseudoSelector();
-        if (pseudo && !isSharedTriggerValue(pseudo)) {
-          elTriggerSyncNote.textContent = "Step 2 is using a custom pseudo. Shared trigger sync resumes when you switch back to a preset interaction state.";
-          return;
-        }
-        const active = animationLabTriggerLabel(elAnimationLabTrigger.value);
-        elTriggerSyncNote.textContent = "Link is on. Step 2 and Animation Lab are sharing the " + active + " trigger.";
+        elTriggerSyncNote.textContent = note;
+        updateTriggerAlignmentConsole();
       }
 
       function syncAnimationLabTriggerFromBuilder() {
@@ -3936,6 +4030,28 @@ translateY()	translateY(<length|percentage>)
         syncPseudoControlFromValue(trigger);
         renderBuilder();
         updateLive();
+        updateTriggerSyncNote();
+      }
+
+      function alignAllTriggersToBuilder() {
+        const pseudo = getSelectedPseudoSelector();
+        if (pseudo && !isSharedTriggerValue(pseudo)) {
+          setBuilderStatus("Step 2 is using a custom pseudo. Switch back to a shared state before aligning all surfaces.");
+          updateTriggerSyncNote();
+          return;
+        }
+        elAnimationLabTrigger.value = pseudo;
+        updateAnimationLabOutputs();
+        syncPreviewInteractionStateFromPseudo(pseudo, "Step 2, Animation Lab, and Preview now share the Step 2 trigger.");
+        updateTriggerSyncNote();
+      }
+
+      function alignAllTriggersToAnimationLab() {
+        const trigger = (elAnimationLabTrigger.value || "").trim();
+        syncPseudoControlFromValue(trigger);
+        renderBuilder();
+        updateLive();
+        syncPreviewInteractionStateFromPseudo(trigger, "Step 2, Animation Lab, and Preview now share the Animation Lab trigger.");
         updateTriggerSyncNote();
       }
 
@@ -4233,14 +4349,17 @@ translateY()	translateY(<length|percentage>)
         const selected = (elPreviewInteractionState.value || "default").trim();
         if (selected === "default") {
           elPreviewInteractionHelp.textContent = "Use this when your rule is always on. Real mouse hover, focus, and press on the preview target also work now, even when this stays on Default.";
+          updateTriggerAlignmentConsole();
           return;
         }
         const entry = PREVIEW_STATE_SELECTOR_MAP[selected];
         if (!entry) {
           elPreviewInteractionHelp.textContent = "Choose the same state used by your selector so the preview can simulate it.";
+          updateTriggerAlignmentConsole();
           return;
         }
         elPreviewInteractionHelp.textContent = "Preview is simulating " + entry.label + ". This helps you test rules like " + entry.pseudo + " without guessing.";
+        updateTriggerAlignmentConsole();
       }
 
       function setWorkspaceView(view) {
@@ -7496,6 +7615,8 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabApplyBuilder.addEventListener("click", addAnimationLabToBuilder);
       elAnimationLabMatchPreview.addEventListener("click", syncPreviewInteractionToAnimationLab);
       elAnimationLabRestart.addEventListener("click", restartAnimationLabPreview);
+      elTriggerAlignBuilder.addEventListener("click", alignAllTriggersToBuilder);
+      elTriggerAlignAnimation.addEventListener("click", alignAllTriggersToAnimationLab);
       elPreviewToggleState.addEventListener("click", togglePreviewMode);
       elLibraryApplyPreset.addEventListener("click", applyLibraryPreset);
       elLibrarySearch.addEventListener("input", renderLibraryPresetList);
