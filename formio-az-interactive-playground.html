@@ -518,6 +518,63 @@
       word-break: break-word;
     }
 
+    .selector-sim-stage {
+      border: 1px solid #d3dcee;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #fbfdff, #f2f6ff);
+      padding: 12px;
+      min-height: 260px;
+      overflow: auto;
+    }
+
+    .selector-sim-root {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      min-width: 0;
+    }
+
+    .selector-sim-root .sim-row,
+    .selector-sim-root .sim-field {
+      display: grid;
+      gap: 4px;
+    }
+
+    .selector-sim-root .sim-card,
+    .selector-sim-root .sim-block,
+    .selector-sim-root .sim-note {
+      border: 1px solid #d3dcef;
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.82);
+      color: #31486f;
+    }
+
+    .selector-sim-root .sim-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #35507f;
+    }
+
+    .selector-sim-root .sim-help,
+    .selector-sim-root .sim-meta {
+      font-size: 0.76rem;
+      color: #5b6a8c;
+    }
+
+    .selector-sim-root .sim-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #cad8f2;
+      background: #f4f8ff;
+      font-size: 0.74rem;
+      color: #35507f;
+      width: fit-content;
+    }
+
     .flow-card {
       margin-bottom: 12px;
     }
@@ -753,39 +810,162 @@
       cursor: pointer;
     }
 
+    .workspace-switcher {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .workspace-tab {
+      min-height: 0;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid #c6d6f1;
+      background: #f6f9ff;
+      color: #234273;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .workspace-tab-active {
+      background: linear-gradient(135deg, #214f9b, #376fc8);
+      color: #fff;
+      border-color: #214f9b;
+      box-shadow: 0 8px 18px rgba(33, 79, 155, 0.22);
+    }
+
+    .disclosure {
+      border: 1px solid #d4deef;
+      border-radius: 10px;
+      background: #fbfdff;
+      padding: 0;
+    }
+
+    .disclosure + .disclosure {
+      margin-top: 10px;
+    }
+
+    .disclosure summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #234273;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .disclosure summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .disclosure summary::after {
+      content: "+";
+      font-size: 1rem;
+      line-height: 1;
+      color: #4a6598;
+    }
+
+    .disclosure[open] summary::after {
+      content: "−";
+    }
+
+    .disclosure-body {
+      padding: 0 12px 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .sim-helper-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .input-hint {
+      margin-top: 4px;
+      color: #5a6f95;
+      font-size: 0.76rem;
+      line-height: 1.35;
+    }
+
+    .view-hidden {
+      display: none !important;
+    }
+
     @media (min-width: 1600px) {
-      .layout {
-        grid-template-columns: minmax(760px, 0.92fr) minmax(0, 1.08fr);
+      .left,
+      .right {
+        display: contents;
       }
 
-      .left {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
+      .panel-select { grid-area: select; }
+      .panel-tweak { grid-area: tweak; }
+      .panel-recipes { grid-area: recipes; }
+      .panel-glossary { grid-area: glossary; }
       .panel-syntax { grid-area: syntax; }
       .panel-diff { grid-area: diff; }
+      .panel-sim { grid-area: sim; }
       .panel-builder { grid-area: builder; }
       .panel-preview { grid-area: preview; }
 
-      .right {
-        grid-template-columns: minmax(360px, 0.8fr) minmax(420px, 1fr);
-        grid-template-areas:
-          "syntax preview"
-          "diff preview"
-          "builder builder";
+      body[data-workspace-view="build"] .layout,
+      body[data-workspace-view="learn"] .layout,
+      body[data-workspace-view="advanced"] .layout,
+      body[data-workspace-view="all"] .layout {
+        grid-template-columns:
+          minmax(320px, 0.9fr)
+          minmax(320px, 0.8fr)
+          minmax(640px, 1.35fr)
+          minmax(700px, 1.55fr);
+        gap: 14px;
         align-items: start;
+      }
+
+      body[data-workspace-view="build"] .layout {
+        grid-template-areas:
+          "select syntax builder preview"
+          "tweak syntax builder preview";
+      }
+
+      body[data-workspace-view="learn"] .layout {
+        grid-template-areas:
+          "select syntax builder preview"
+          "tweak syntax builder preview"
+          "recipes syntax builder preview"
+          "glossary syntax builder preview";
+      }
+
+      body[data-workspace-view="advanced"] .layout {
+        grid-template-areas:
+          "select syntax builder preview"
+          "tweak syntax builder preview"
+          "diff syntax builder preview"
+          "sim syntax builder preview";
+      }
+
+      body[data-workspace-view="all"] .layout {
+        grid-template-areas:
+          "select syntax builder preview"
+          "tweak syntax builder preview"
+          "recipes diff builder preview"
+          "glossary sim builder preview";
       }
     }
 
     @media (min-width: 2200px) {
-      .layout {
-        grid-template-columns: minmax(980px, 0.95fr) minmax(0, 1.25fr);
+      body[data-workspace-view="build"] .layout,
+      body[data-workspace-view="learn"] .layout,
+      body[data-workspace-view="advanced"] .layout,
+      body[data-workspace-view="all"] .layout {
+        grid-template-columns:
+          minmax(360px, 0.92fr)
+          minmax(360px, 0.85fr)
+          minmax(780px, 1.38fr)
+          minmax(940px, 1.6fr);
         gap: 16px;
-      }
-
-      .right {
-        grid-template-columns: minmax(460px, 0.92fr) minmax(620px, 1.15fr);
-        gap: 14px;
       }
 
       .preview-grid {
@@ -840,14 +1020,14 @@
     }
   </style>
 </head>
-<body>
+<body data-workspace-view="build">
   <div class="page">
     <section class="hero">
       <h1>Form.io A-Z Interactive Playground</h1>
       <p>Choose an HTML attribute, CSS property, or CSS function from the full A-Z lists. Tweak values and copy live syntax.</p>
     </section>
 
-    <section class="card flow-card">
+    <section class="card flow-card view-core">
       <h2>Workflow Guide</h2>
       <div class="flow-grid">
         <div class="flow-step">
@@ -870,7 +1050,19 @@
       <p id="flow-status" class="tiny"></p>
     </section>
 
-    <section class="card">
+    <section class="card view-core">
+      <h2>Workspace View</h2>
+      <p class="step-hint">Show only the controls you need right now. You can switch views at any time.</p>
+      <div id="workspace-switcher" class="workspace-switcher">
+        <button type="button" class="workspace-tab workspace-tab-active" data-workspace-view-option="build">Build</button>
+        <button type="button" class="workspace-tab" data-workspace-view-option="learn">Learn</button>
+        <button type="button" class="workspace-tab" data-workspace-view-option="advanced">Advanced</button>
+        <button type="button" class="workspace-tab" data-workspace-view-option="all">All</button>
+      </div>
+      <p id="workspace-view-note" class="tiny">Build shows the core workflow only: choose an item, adjust it, build CSS, and preview it.</p>
+    </section>
+
+    <section class="card view-learn">
       <h2>Beginner Mode</h2>
       <p class="step-hint">Enable this to get one numbered “do this now” instruction at a time, with a direct jump to the relevant control.</p>
       <div class="inline">
@@ -904,9 +1096,9 @@
       </div>
     </section>
 
-    <div class="layout">
+      <div class="layout">
       <div class="left">
-        <section class="card">
+        <section class="card view-core panel-select">
           <h2>1) Select Item</h2>
           <p class="step-hint">This chooses the source syntax block you are editing.</p>
           <div class="row">
@@ -935,13 +1127,14 @@
           <p class="tiny">Syntax source: same A-Z entries as your fourth file.</p>
         </section>
 
-        <section class="card">
+        <section class="card view-core panel-tweak">
           <h2>2) Tweak Parameters</h2>
           <p class="step-hint">Edit placeholders/values. Changes apply instantly to Live Output and Preview.</p>
           <div id="function-property-wrap" class="row hidden">
             <label class="label" for="function-property">Function Apply Property</label>
-            <input id="function-property" placeholder="filter" title="The CSS property that receives the function value. Example: transform for rotate(), filter for blur()." />
-            <p class="tiny">This is the CSS property that will receive the function value.</p>
+            <select id="function-property" title="The CSS property that receives the function value. Example: transform for rotate(), filter for blur()."></select>
+            <input id="function-property-custom" class="hidden" placeholder="clip-path" title="Only use this when the preset list is not enough. Example: clip-path, mask-image." />
+            <p class="tiny">Pick the property that will receive the function value. Only use Custom when the preset list does not fit.</p>
             <div class="help-box">
               <div>Function output is only a value like <code>blur(6px)</code>, not a full declaration.</div>
               <div>So this field decides the left side: <code>property: value;</code>.</div>
@@ -963,7 +1156,9 @@
               </div>
               <div class="row">
                 <label class="label" for="style-property-value">Value</label>
+                <select id="style-property-value-select" class="hidden" title="Choose a preset value when this property has a finite set of options."></select>
                 <input id="style-property-value" placeholder="12px" title="Value for selected CSS property. Example: 12px, #1f5fbd, blur(6px)." />
+                <div id="style-property-value-help" class="input-hint">Choose a property first. If it has standard named options, this will switch to a dropdown automatically.</div>
               </div>
             </div>
             <div class="inline">
@@ -996,7 +1191,7 @@
           </div>
         </section>
 
-        <section class="card">
+        <section class="card view-learn panel-recipes">
           <h2>Guided Recipes</h2>
           <p class="step-hint">Load a ready-made lesson, study the result, then use it as a starting point for your own class.</p>
           <div class="row">
@@ -1026,7 +1221,7 @@
           </div>
         </section>
 
-        <section class="card">
+        <section class="card view-learn panel-glossary">
           <h2>Contextual Glossary</h2>
           <p class="step-hint">Search a concept, read it in plain language, then jump to the matching control in the app.</p>
           <div class="preset-bar">
@@ -1060,7 +1255,7 @@
       </div>
 
       <div class="right">
-        <section class="card panel-syntax">
+        <section class="card panel-syntax view-core">
           <h2>3) Syntax</h2>
           <p class="step-hint">Template is the source pattern. Live Output is the resolved syntax from your current values.</p>
           <div class="row">
@@ -1076,7 +1271,7 @@
           </div>
         </section>
 
-        <section class="card panel-diff">
+        <section class="card panel-diff view-advanced">
           <h2>6) Visual Diff Inspector</h2>
           <p class="step-hint">Compares the active preview target before vs after styling and points to the declarations most likely causing the change.</p>
           <div class="info-grid">
@@ -1095,7 +1290,44 @@
           </div>
         </section>
 
-        <section class="card panel-builder">
+        <section class="card panel-sim view-advanced">
+          <h2>7) Advanced Selector Simulator</h2>
+          <p class="step-hint">Use this only when you need selectors that depend on structure, such as child, sibling, or nested rules.</p>
+          <div class="help-box sim-helper-grid">
+            <div><strong>What it does:</strong> It renders a small editable HTML tree and applies the CSS already stacked in the CSS Builder.</div>
+            <div><strong>Important:</strong> Step 2 draft tweaks do not appear here until you add them to the builder. This panel is for testing selector logic, not one-off declarations.</div>
+            <div><strong>Quick test:</strong> Load a template, keep auto-apply on, then add a builder rule that targets a child or sibling such as <code>.my-custom-class .sim-field + .sim-help</code>.</div>
+          </div>
+          <details id="selector-sim-disclosure" class="disclosure">
+            <summary>Open Simulator Controls</summary>
+            <div class="disclosure-body">
+              <div class="preset-bar">
+                <select id="selector-sim-template" title="Choose a starter DOM tree template."></select>
+                <button id="selector-sim-load" type="button">Load Template</button>
+              </div>
+              <div class="inline">
+                <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+                  <input id="selector-sim-auto-class" type="checkbox" checked /> Auto-apply current class to simulator root
+                </label>
+                <button id="selector-sim-render" type="button">Render Simulator</button>
+              </div>
+              <div class="row">
+                <label class="label" for="selector-sim-html">Editable Mini DOM</label>
+                <textarea id="selector-sim-html" rows="10" title="Edit the HTML structure used by the selector simulator. Then click Render Simulator."></textarea>
+              </div>
+              <div class="row">
+                <label class="label">Simulator Root Wrapper</label>
+                <div id="selector-sim-root-info" class="selector-preview"></div>
+              </div>
+              <div class="row">
+                <label class="label">Rendered Selector Sandbox</label>
+                <div id="selector-sim-stage" class="selector-sim-stage"></div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="card panel-builder view-core">
           <h2>4) CSS Builder</h2>
           <p class="step-hint">Use this as your stylesheet workspace: selector targeting, media layers, variables, rule stack, and presets.</p>
           <div class="row">
@@ -1124,8 +1356,22 @@
           </div>
           <div id="builder-legacy-row-2" class="builder-row">
             <div class="row">
-              <label class="label" for="builder-pseudo-selector">Pseudo / State</label>
-              <input id="builder-pseudo-selector" placeholder=":hover or ::before" title="Optional pseudo-class/element appended to selector. Example: :focus, :hover, ::before." />
+              <label class="label" for="builder-pseudo-selector">State / Pseudo</label>
+              <select id="builder-pseudo-selector" title="Choose an interaction state or pseudo-element for this rule. Hover, focus, active, and disabled are the most common beginner cases.">
+                <option value="">Base rule (always on)</option>
+                <option value=":hover">Hover (mouse over)</option>
+                <option value=":focus">Focus (clicked into field)</option>
+                <option value=":focus-visible">Focus Visible (keyboard/tab)</option>
+                <option value=":active">Active / pressed</option>
+                <option value=":disabled">Disabled / off</option>
+                <option value=":checked">Checked / on</option>
+                <option value=":visited">Visited link</option>
+                <option value="::before">Before pseudo-element</option>
+                <option value="::after">After pseudo-element</option>
+                <option value="__custom__">Custom...</option>
+              </select>
+              <input id="builder-pseudo-custom" class="hidden" placeholder=":nth-child(2)" title="Only use this when the preset states are not enough. Example: :nth-child(2), :not(.active), ::marker." />
+              <div id="builder-pseudo-help" class="input-hint">Use Hover for mouse-over styles, Focus for clicked/tabbed fields, and Active for pressed/clicked states.</div>
             </div>
             <div class="row">
               <label class="label" for="builder-selector-override">Full Selector Override (optional)</label>
@@ -1136,69 +1382,79 @@
             <label class="label">Current Target Selector</label>
             <div id="builder-selector-preview" class="selector-preview"></div>
           </div>
-          <div class="row">
-            <label class="label">Selector Graph Editor</label>
-            <div class="inline">
-              <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
-                <input id="selector-graph-enabled" type="checkbox" checked /> Enable graph editor
-              </label>
-              <button id="selector-graph-add" type="button">Add Node</button>
-              <button id="selector-graph-clear" type="button">Reset Graph</button>
-            </div>
-            <div id="selector-graph-list" class="selector-graph-list"></div>
-            <label class="label">Graph Selector Output</label>
-            <div id="selector-graph-output" class="selector-preview"></div>
-            <div class="specificity-wrap">
-              <div class="specificity-head">
-                <span class="label">Specificity</span>
-                <code id="specificity-score">(0,0,0)</code>
+          <details id="selector-tools-disclosure" class="disclosure">
+            <summary>Advanced Selector Tools</summary>
+            <div class="disclosure-body">
+              <div class="row">
+                <label class="label">Selector Graph Editor</label>
+                <div class="inline">
+                  <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+                    <input id="selector-graph-enabled" type="checkbox" /> Enable graph editor
+                  </label>
+                  <button id="selector-graph-add" type="button">Add Node</button>
+                  <button id="selector-graph-clear" type="button">Reset Graph</button>
+                </div>
+                <div id="selector-graph-list" class="selector-graph-list"></div>
+                <label class="label">Graph Selector Output</label>
+                <div id="selector-graph-output" class="selector-preview"></div>
+                <div class="specificity-wrap">
+                  <div class="specificity-head">
+                    <span class="label">Specificity</span>
+                    <code id="specificity-score">(0,0,0)</code>
+                  </div>
+                  <div class="specificity-meter">
+                    <div id="specificity-fill" class="specificity-fill"></div>
+                  </div>
+                  <p id="specificity-note" class="tiny"></p>
+                </div>
               </div>
-              <div class="specificity-meter">
-                <div id="specificity-fill" class="specificity-fill"></div>
-              </div>
-              <p id="specificity-note" class="tiny"></p>
             </div>
-          </div>
+          </details>
 
-          <div class="row">
-            <label class="label" for="builder-variable-scope">Variable Scope Selector</label>
-            <input id="builder-variable-scope" placeholder=".my-custom-class (blank = base selector)" title="Selector block where CSS variables are declared. Leave blank to use base selector." />
-          </div>
-          <div class="builder-row">
-            <div class="row">
-              <label class="label" for="builder-var-name">CSS Variable Name</label>
-              <input id="builder-var-name" placeholder="--fio-primary" title="Must start with --, for example --fio-primary." />
+          <details id="variables-disclosure" class="disclosure">
+            <summary>Variable Tokens</summary>
+            <div class="disclosure-body">
+              <div class="row">
+                <label class="label" for="builder-variable-scope">Variable Scope Selector</label>
+                <input id="builder-variable-scope" placeholder=".my-custom-class (blank = base selector)" title="Selector block where CSS variables are declared. Leave blank to use base selector." />
+              </div>
+              <div class="builder-row">
+                <div class="row">
+                  <label class="label" for="builder-var-name">CSS Variable Name</label>
+                  <input id="builder-var-name" placeholder="--fio-primary" title="Must start with --, for example --fio-primary." />
+                </div>
+                <div class="row">
+                  <label class="label" for="builder-var-value">CSS Variable Value</label>
+                  <input id="builder-var-value" placeholder="#1f5fbd" title="Any CSS value. Example: #1f5fbd, 12px, 1.2rem, rgba(0,0,0,.15), var(--other)." />
+                </div>
+              </div>
+              <div class="builder-row">
+                <div class="row">
+                  <label class="label" for="builder-var-format">Variable Color Format (optional helper)</label>
+                  <select id="builder-var-format" title="Use helper to generate color values in HEX, RGB, or HSL.">
+                    <option value="hex">HEX</option>
+                    <option value="rgb">RGB</option>
+                    <option value="hsl">HSL</option>
+                  </select>
+                </div>
+                <div class="row">
+                  <label class="label" for="builder-var-color">Variable Color Picker</label>
+                  <input id="builder-var-color" type="color" value="#1f5fbd" title="Pick a color and apply it to variable value using selected format." />
+                </div>
+              </div>
+              <div class="row">
+                <label class="label" for="builder-var-alpha">Variable Alpha (optional)</label>
+                <input id="builder-var-alpha" type="number" min="0" max="1" step="0.01" value="1" title="Alpha channel for RGB/HSL helpers. 1 = fully opaque." />
+              </div>
+              <div class="inline">
+                <button id="add-variable" type="button">Add Variable</button>
+              </div>
+              <div class="row">
+                <label class="label">Variables</label>
+                <div id="builder-vars" class="builder-vars"></div>
+              </div>
             </div>
-            <div class="row">
-              <label class="label" for="builder-var-value">CSS Variable Value</label>
-              <input id="builder-var-value" placeholder="#1f5fbd" title="Any CSS value. Example: #1f5fbd, 12px, 1.2rem, rgba(0,0,0,.15), var(--other)." />
-            </div>
-          </div>
-          <div class="builder-row">
-            <div class="row">
-              <label class="label" for="builder-var-format">Variable Color Format (optional helper)</label>
-              <select id="builder-var-format" title="Use helper to generate color values in HEX, RGB, or HSL.">
-                <option value="hex">HEX</option>
-                <option value="rgb">RGB</option>
-                <option value="hsl">HSL</option>
-              </select>
-            </div>
-            <div class="row">
-              <label class="label" for="builder-var-color">Variable Color Picker</label>
-              <input id="builder-var-color" type="color" value="#1f5fbd" title="Pick a color and apply it to variable value using selected format." />
-            </div>
-          </div>
-          <div class="row">
-            <label class="label" for="builder-var-alpha">Variable Alpha (optional)</label>
-            <input id="builder-var-alpha" type="number" min="0" max="1" step="0.01" value="1" title="Alpha channel for RGB/HSL helpers. 1 = fully opaque." />
-          </div>
-          <div class="inline">
-            <button id="add-variable" type="button">Add Variable</button>
-          </div>
-          <div class="row">
-            <label class="label">Variables</label>
-            <div id="builder-vars" class="builder-vars"></div>
-          </div>
+          </details>
 
           <div class="row">
             <label class="label" for="custom-rule">Custom Declaration</label>
@@ -1241,91 +1497,101 @@
             <button id="copy-builder-css" type="button">Copy Builder CSS</button>
             <button id="clear-builder" type="button">Clear Builder</button>
           </div>
-          <div class="row">
-            <label class="label" for="library-preset-select">Built-In Class Library</label>
-            <div class="preset-bar">
-              <select id="library-preset-select" title="Pick a prebuilt class style package to populate the builder."></select>
-              <button id="library-apply-preset" type="button">Apply Class Pack</button>
+          <details id="library-disclosure" class="disclosure">
+            <summary>Class Packs And Presets</summary>
+            <div class="disclosure-body">
+              <div class="row">
+                <label class="label" for="library-preset-select">Built-In Class Library</label>
+                <div class="preset-bar">
+                  <select id="library-preset-select" title="Pick a prebuilt class style package to populate the builder."></select>
+                  <button id="library-apply-preset" type="button">Apply Class Pack</button>
+                </div>
+                <div class="preset-bar">
+                  <input id="library-search" placeholder="Search class packs..." title="Filter class packs by name, description, class id, or category." />
+                  <select id="library-category" title="Filter class packs by category.">
+                    <option value="">All Categories</option>
+                  </select>
+                </div>
+                <div class="inline">
+                  <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+                    <input id="library-favorites-only" type="checkbox" /> Favorites Only
+                  </label>
+                  <button id="library-preview-pack" type="button">Preview Pack Now</button>
+                  <button id="library-cycle-targets" type="button">Cycle All Targets</button>
+                  <button id="library-toggle-favorite" type="button">Favorite Pack</button>
+                  <button id="library-random" type="button">Randomize Pack</button>
+                </div>
+                <p id="library-cycle-status" class="tiny">Cycle off.</p>
+                <p id="library-preset-help" class="tiny"></p>
+              </div>
+              <div class="row">
+                <label class="label">Preset Manager</label>
+                <div class="preset-bar">
+                  <input id="preset-name" placeholder="Preset name" title="Name used when saving preset." />
+                  <select id="preset-select" title="Choose an existing preset to load or delete."></select>
+                </div>
+                <div class="inline">
+                  <button id="save-preset" type="button">Save / Update Preset</button>
+                  <button id="load-preset" type="button">Load Preset</button>
+                  <button id="delete-preset" type="button">Delete Preset</button>
+                </div>
+              </div>
             </div>
-            <div class="preset-bar">
-              <input id="library-search" placeholder="Search class packs..." title="Filter class packs by name, description, class id, or category." />
-              <select id="library-category" title="Filter class packs by category.">
-                <option value="">All Categories</option>
-              </select>
-            </div>
-            <div class="inline">
-              <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
-                <input id="library-favorites-only" type="checkbox" /> Favorites Only
-              </label>
-              <button id="library-preview-pack" type="button">Preview Pack Now</button>
-              <button id="library-cycle-targets" type="button">Cycle All Targets</button>
-              <button id="library-toggle-favorite" type="button">Favorite Pack</button>
-              <button id="library-random" type="button">Randomize Pack</button>
-            </div>
-            <p id="library-cycle-status" class="tiny">Cycle off.</p>
-            <p id="library-preset-help" class="tiny"></p>
-          </div>
-          <div class="row">
-            <label class="label">Preset Manager</label>
-            <div class="preset-bar">
-              <input id="preset-name" placeholder="Preset name" title="Name used when saving preset." />
-              <select id="preset-select" title="Choose an existing preset to load or delete."></select>
-            </div>
-            <div class="inline">
-              <button id="save-preset" type="button">Save / Update Preset</button>
-              <button id="load-preset" type="button">Load Preset</button>
-              <button id="delete-preset" type="button">Delete Preset</button>
-            </div>
-          </div>
+          </details>
           <div class="row">
             <label class="label">Generated Stylesheet</label>
             <pre id="builder-css"></pre>
           </div>
-          <div id="export-wizard" class="help-box export-wizard">
-            <div><strong>Export Wizard</strong></div>
-            <p class="tiny">Turn the current class into something you can paste into Form.io immediately.</p>
-            <div class="builder-row">
-              <div class="row">
-                <label class="label" for="export-format">Export Format</label>
-                <select id="export-format" title="Choose how you want to export the current work.">
-                  <option value="class-css">Reusable Class + CSS</option>
-                  <option value="inline-style">Inline style=""</option>
-                  <option value="html-bundle">Self-Contained HTML Snippet</option>
-                </select>
-              </div>
-              <div class="row">
-                <label class="label" for="export-tag">Example Tag</label>
-                <select id="export-tag" title="Tag used in the example snippet.">
-                  <option value="div">div</option>
-                  <option value="button">button</option>
-                  <option value="input">input</option>
-                  <option value="img">img</option>
-                </select>
+          <details id="export-disclosure" class="disclosure">
+            <summary>Export Wizard</summary>
+            <div class="disclosure-body">
+              <div id="export-wizard" class="help-box export-wizard">
+                <div><strong>Export Wizard</strong></div>
+                <p class="tiny">Turn the current class into something you can paste into Form.io immediately.</p>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="export-format">Export Format</label>
+                    <select id="export-format" title="Choose how you want to export the current work.">
+                      <option value="class-css">Reusable Class + CSS</option>
+                      <option value="inline-style">Inline style=""</option>
+                      <option value="html-bundle">Self-Contained HTML Snippet</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="export-tag">Example Tag</label>
+                    <select id="export-tag" title="Tag used in the example snippet.">
+                      <option value="div">div</option>
+                      <option value="button">button</option>
+                      <option value="input">input</option>
+                      <option value="img">img</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="export-grid">
+                  <div class="info-tile">
+                    <div class="label">Form.io HTML Attributes Value</div>
+                    <pre id="export-attributes"></pre>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">How To Use This Export</div>
+                    <div id="export-notes" class="tiny"></div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="label">Injection / Markup Snippet</label>
+                  <pre id="export-snippet"></pre>
+                </div>
+                <div class="inline">
+                  <button id="copy-export-attributes" type="button">Copy Attributes</button>
+                  <button id="copy-export-snippet" type="button">Copy Export Snippet</button>
+                </div>
               </div>
             </div>
-            <div class="export-grid">
-              <div class="info-tile">
-                <div class="label">Form.io HTML Attributes Value</div>
-                <pre id="export-attributes"></pre>
-              </div>
-              <div class="info-tile">
-                <div class="label">How To Use This Export</div>
-                <div id="export-notes" class="tiny"></div>
-              </div>
-            </div>
-            <div class="row">
-              <label class="label">Injection / Markup Snippet</label>
-              <pre id="export-snippet"></pre>
-            </div>
-            <div class="inline">
-              <button id="copy-export-attributes" type="button">Copy Attributes</button>
-              <button id="copy-export-snippet" type="button">Copy Export Snippet</button>
-            </div>
-          </div>
+          </details>
           <p id="builder-status" class="tiny"></p>
         </section>
 
-        <section class="card panel-preview">
+        <section class="card panel-preview view-core">
           <h2>5) Live Preview</h2>
           <p class="step-hint">Preview target receives current live styles and auto-applied class for fast visual validation.</p>
           <div class="row">
@@ -1339,9 +1605,27 @@
               <option value="sandbox">Sandbox (children/siblings)</option>
             </select>
           </div>
+          <div class="row">
+            <label class="label" for="preview-interaction-state">Preview Interaction State</label>
+            <select id="preview-interaction-state" title="Simulate a common CSS state so you can preview hover, focus, active, disabled, and checked rules without guessing.">
+              <option value="default">Default (no state)</option>
+              <option value="hover">Hover</option>
+              <option value="focus">Focus</option>
+              <option value="focus-visible">Focus Visible</option>
+              <option value="active">Active / pressed</option>
+              <option value="disabled">Disabled / off</option>
+              <option value="checked">Checked / on</option>
+              <option value="visited">Visited</option>
+            </select>
+            <div id="preview-interaction-help" class="input-hint">If your rule uses Hover, Focus, Active, Disabled, or Checked, switch this dropdown to the same state to preview it.</div>
+          </div>
           <div class="inline">
             <button id="preview-toggle-state" type="button">Switch To Before</button>
             <span id="preview-state-text" class="preview-state-pill">Preview: After</span>
+          </div>
+          <div class="inline">
+            <span id="preview-simulated-badge" class="preview-state-pill">Simulator: Default</span>
+            <span id="preview-actual-badge" class="preview-state-pill">Actual: none</span>
           </div>
           <p id="preview-active-help" class="tiny">Active preview target: Card. The highlighted panel receives the current styles.</p>
 
@@ -1572,6 +1856,8 @@ translateY()	translateY(<length|percentage>)
       const elItem = document.getElementById("item");
       const elTarget = document.getElementById("target");
       const elFlowStatus = document.getElementById("flow-status");
+      const elWorkspaceSwitcher = document.getElementById("workspace-switcher");
+      const elWorkspaceViewNote = document.getElementById("workspace-view-note");
       const elBeginnerModeEnabled = document.getElementById("beginner-mode-enabled");
       const elBeginnerPrev = document.getElementById("beginner-prev");
       const elBeginnerNext = document.getElementById("beginner-next");
@@ -1587,6 +1873,14 @@ translateY()	translateY(<length|percentage>)
       const elDiffTargetLabel = document.getElementById("diff-target-label");
       const elDiffChangeCount = document.getElementById("diff-change-count");
       const elDiffList = document.getElementById("diff-list");
+      const elSelectorSimDisclosure = document.getElementById("selector-sim-disclosure");
+      const elSelectorSimTemplate = document.getElementById("selector-sim-template");
+      const elSelectorSimLoad = document.getElementById("selector-sim-load");
+      const elSelectorSimAutoClass = document.getElementById("selector-sim-auto-class");
+      const elSelectorSimRender = document.getElementById("selector-sim-render");
+      const elSelectorSimHTML = document.getElementById("selector-sim-html");
+      const elSelectorSimRootInfo = document.getElementById("selector-sim-root-info");
+      const elSelectorSimStage = document.getElementById("selector-sim-stage");
       const elParams = document.getElementById("params");
       const elSelectionGuideWhat = document.getElementById("selection-guide-what");
       const elSelectionGuideHow = document.getElementById("selection-guide-how");
@@ -1608,12 +1902,15 @@ translateY()	translateY(<length|percentage>)
       const elGlossaryTip = document.getElementById("glossary-tip");
       const elFunctionPropertyWrap = document.getElementById("function-property-wrap");
       const elFunctionProperty = document.getElementById("function-property");
+      const elFunctionPropertyCustom = document.getElementById("function-property-custom");
       const elFunctionHelpSyntax = document.getElementById("function-help-syntax");
       const elAttributeNameWrap = document.getElementById("attribute-name-wrap");
       const elCustomAttrName = document.getElementById("custom-attr-name");
       const elStyleHelperWrap = document.getElementById("style-helper-wrap");
       const elStyleProperty = document.getElementById("style-property");
+      const elStylePropertyValueSelect = document.getElementById("style-property-value-select");
       const elStylePropertyValue = document.getElementById("style-property-value");
+      const elStylePropertyValueHelp = document.getElementById("style-property-value-help");
       const elAddStyleDeclaration = document.getElementById("add-style-declaration");
       const elResetValues = document.getElementById("reset-values");
       const elCopySyntax = document.getElementById("copy-syntax");
@@ -1622,10 +1919,13 @@ translateY()	translateY(<length|percentage>)
       const elBuilderCombinator = document.getElementById("builder-combinator");
       const elBuilderRelativeSelector = document.getElementById("builder-relative-selector");
       const elBuilderPseudoSelector = document.getElementById("builder-pseudo-selector");
+      const elBuilderPseudoCustom = document.getElementById("builder-pseudo-custom");
+      const elBuilderPseudoHelp = document.getElementById("builder-pseudo-help");
       const elBuilderSelectorOverride = document.getElementById("builder-selector-override");
       const elBuilderLegacyRow1 = document.getElementById("builder-legacy-row-1");
       const elBuilderLegacyRow2 = document.getElementById("builder-legacy-row-2");
       const elBuilderSelectorPreview = document.getElementById("builder-selector-preview");
+      const elSelectorToolsDisclosure = document.getElementById("selector-tools-disclosure");
       const elSelectorGraphEnabled = document.getElementById("selector-graph-enabled");
       const elSelectorGraphAdd = document.getElementById("selector-graph-add");
       const elSelectorGraphClear = document.getElementById("selector-graph-clear");
@@ -1680,6 +1980,10 @@ translateY()	translateY(<length|percentage>)
       const elDeletePreset = document.getElementById("delete-preset");
       const elPreviewToggleState = document.getElementById("preview-toggle-state");
       const elPreviewStateText = document.getElementById("preview-state-text");
+      const elPreviewSimulatedBadge = document.getElementById("preview-simulated-badge");
+      const elPreviewActualBadge = document.getElementById("preview-actual-badge");
+      const elPreviewInteractionState = document.getElementById("preview-interaction-state");
+      const elPreviewInteractionHelp = document.getElementById("preview-interaction-help");
       const elPreviewActiveHelp = document.getElementById("preview-active-help");
 
       const previewCard = document.getElementById("preview-card");
@@ -1689,6 +1993,10 @@ translateY()	translateY(<length|percentage>)
       const previewOverlap = document.getElementById("preview-overlap");
       const previewSandbox = document.getElementById("preview-sandbox");
       const previewPanels = Array.from(document.querySelectorAll(".preview-panel"));
+      const workspaceViewButtons = Array.from(document.querySelectorAll("[data-workspace-view-option]"));
+      const workspaceCorePanels = Array.from(document.querySelectorAll(".view-core"));
+      const workspaceLearnPanels = Array.from(document.querySelectorAll(".view-learn"));
+      const workspaceAdvancedPanels = Array.from(document.querySelectorAll(".view-advanced"));
       const previewTargets = {
         card: previewCard,
         input: previewInput,
@@ -1697,11 +2005,26 @@ translateY()	translateY(<length|percentage>)
         overlap: previewOverlap,
         sandbox: previewSandbox
       };
+      const previewActualStates = {};
+      Object.keys(previewTargets).forEach(function (key) {
+        previewActualStates[key] = {
+          hover: false,
+          focus: false,
+          "focus-visible": false,
+          active: false
+        };
+      });
 
       const previewImageDefaultSrc = previewImage.src;
       const builderStyleTag = document.createElement("style");
       builderStyleTag.id = "builder-style";
       document.head.appendChild(builderStyleTag);
+      const previewStateStyleTag = document.createElement("style");
+      previewStateStyleTag.id = "builder-preview-state-style";
+      document.head.appendChild(previewStateStyleTag);
+      const builtInKeyframesStyleTag = document.createElement("style");
+      builtInKeyframesStyleTag.id = "builder-builtin-keyframes-style";
+      document.head.appendChild(builtInKeyframesStyleTag);
       const styleProbeHost = document.createElement("div");
       styleProbeHost.id = "style-probe-host";
       styleProbeHost.setAttribute("aria-hidden", "true");
@@ -2284,9 +2607,104 @@ translateY()	translateY(<length|percentage>)
         return acc;
       }, {});
       let glossaryVisibleTerms = GLOSSARY_TERMS.slice();
+      const BUILTIN_KEYFRAMES = {
+        pulseGlow:
+          "0% { transform: scale(1); box-shadow: 0 0 0 rgba(36,95,230,0.00); opacity: 0.92; }\n" +
+          "50% { transform: scale(1.04); box-shadow: 0 0 0 12px rgba(36,95,230,0.14); opacity: 1; }\n" +
+          "100% { transform: scale(1); box-shadow: 0 0 0 rgba(36,95,230,0.00); opacity: 0.92; }",
+        slideUp:
+          "0% { transform: translateY(18px); opacity: 0; }\n" +
+          "100% { transform: translateY(0); opacity: 1; }",
+        fadeIn:
+          "0% { opacity: 0; }\n" +
+          "100% { opacity: 1; }",
+        spin:
+          "0% { transform: rotate(0deg); }\n" +
+          "100% { transform: rotate(360deg); }"
+      };
+      const DEFAULT_ANIMATION_PREVIEW = {
+        name: "pulseGlow",
+        duration: "1.2s",
+        timingFunction: "ease-in-out",
+        delay: "0s",
+        iterationCount: "infinite",
+        direction: "alternate",
+        fillMode: "both",
+        playState: "running"
+      };
+      const FUNCTION_PROPERTY_OPTIONS = [
+        "filter",
+        "transform",
+        "background-image",
+        "transition-timing-function",
+        "clip-path",
+        "grid-template-columns",
+        "width",
+        "color",
+        "__custom__"
+      ];
+      const ITEM_SPECIFIC_OPTION_MAP = {
+        "align-content::value": ["stretch", "flex-start", "center", "flex-end", "space-between", "space-around", "space-evenly"],
+        "align-items::value": ["stretch", "flex-start", "center", "flex-end", "baseline"],
+        "align-self::value": ["auto", "stretch", "flex-start", "center", "flex-end", "baseline"],
+        "animation::name": ["pulseGlow", "slideUp", "fadeIn", "spin"],
+        "animation-direction::value": ["normal", "reverse", "alternate", "alternate-reverse"],
+        "animation-fill-mode::value": ["none", "forwards", "backwards", "both"],
+        "animation-name::keyframes-name": ["pulseGlow", "slideUp", "fadeIn", "spin"],
+        "cursor::value": ["default", "pointer", "text", "move", "not-allowed", "grab", "zoom-in"],
+        "font-weight::value": ["400", "500", "600", "700", "800"],
+        "justify-content::value": ["flex-start", "center", "flex-end", "space-between", "space-around", "space-evenly"],
+        "transition-property::property-list": ["all", "opacity", "transform", "box-shadow", "background-color", "color", "border-color"]
+      };
       const TOKEN_OPTION_MAP = {
+        direction: ["normal", "reverse", "alternate", "alternate-reverse"],
+        "fill-mode": ["none", "forwards", "backwards", "both"],
         easing: ["ease", "ease-in", "ease-out", "ease-in-out", "linear", "step-start", "step-end"],
-        shape: ["circle", "ellipse"]
+        "timing-function": ["ease", "ease-in", "ease-out", "ease-in-out", "linear", "step-start", "step-end"],
+        shape: ["circle", "ellipse"],
+        "iteration-count": ["1", "2", "3", "infinite"],
+        property: ["all", "opacity", "transform", "box-shadow", "background-color", "color", "border-color"],
+        "property-list": ["all", "opacity, transform", "box-shadow, transform", "background-color, color"],
+        "track-list": ["1fr 1fr", "repeat(2, 1fr)", "200px 1fr", "repeat(3, minmax(0, 1fr))"],
+        "keyframes-name": ["pulseGlow", "slideUp", "fadeIn", "spin"],
+        "family-list": ["Georgia, serif", "\"Trebuchet MS\", sans-serif", "\"Courier New\", monospace", "\"Brush Script MT\", cursive"],
+        "role-name": ["button", "presentation", "dialog", "status", "alert"],
+        "language-tag": ["en", "es", "fr", "pt-BR"],
+        "field-name": ["email", "firstName", "submitAction", "profileNote"],
+        token: ["email", "tel", "name", "custom-token"],
+        value: ["auto", "none", "inherit", "initial", "center"]
+      };
+      const PREVIEW_STATE_SELECTOR_MAP = {
+        hover: { pseudo: ":hover", className: "is-preview-hover", label: "Hover" },
+        focus: { pseudo: ":focus", className: "is-preview-focus", label: "Focus" },
+        "focus-visible": { pseudo: ":focus-visible", className: "is-preview-focus-visible", label: "Focus Visible" },
+        active: { pseudo: ":active", className: "is-preview-active", label: "Active" },
+        disabled: { pseudo: ":disabled", className: "is-preview-disabled", label: "Disabled" },
+        checked: { pseudo: ":checked", className: "is-preview-checked", label: "Checked" },
+        visited: { pseudo: ":visited", className: "is-preview-visited", label: "Visited" }
+      };
+      const WORKSPACE_VIEW_NOTES = {
+        build: "Build shows the core workflow only: choose an item, adjust it, build CSS, and preview it.",
+        learn: "Learn adds Beginner Mode, Guided Recipes, and the Glossary while keeping the main workflow visible.",
+        advanced: "Advanced reveals the diff inspector and selector simulator for deeper debugging and selector work.",
+        all: "All shows every panel at once."
+      };
+      const INPUT_HINT_TEXT = {
+        search: "Example searches: color, blur, aria-label, transition.",
+        "custom-attr-name": "Example: data-section, data-step, data-variant.",
+        "builder-class": "Example: hero-card, onboarding-banner, input-soft-fill.",
+        "builder-base-selector": "Example: .hero-card, #form-a, .my-theme .field.",
+        "builder-relative-selector": "Example: .form-control, .help-text, button.primary.",
+        "builder-selector-override": "Example: .my-class .row + .help-text:hover",
+        "builder-variable-scope": "Leave blank to use the base selector. Example: :root, .my-class, .my-class .child.",
+        "builder-var-name": "Must start with --. Example: --fio-accent, --card-radius.",
+        "builder-var-value": "Examples: #245fe6, 12px, 0.25s, var(--other-token).",
+        "custom-rule": "Example: border-radius: 12px; box-shadow: 0 12px 24px rgba(0,0,0,.15);",
+        "builder-media-custom": "Example: (max-width: 1100px) and (orientation: landscape)",
+        "preset-name": "Example: My Frosted Card, Blue Button Hover.",
+        "selector-sim-html": "Example: <div class=\"sim-card\"><div class=\"sim-help\">Tip</div></div>",
+        "glossary-search": "Example searches: specificity, sibling, media, pseudo.",
+        "library-search": "Example searches: Glass, Button, Gradient, Background."
       };
       const VISUAL_DIFF_PROPERTIES = [
         "display",
@@ -2372,6 +2790,63 @@ translateY()	translateY(<length|percentage>)
       ];
       let beginnerStepIndex = 0;
       let beginnerExportCopied = false;
+      const SELECTOR_SIM_TEMPLATES = [
+        {
+          id: "form-stack",
+          name: "Form Field Stack",
+          html:
+            '<div class="sim-field field-group">\n' +
+            '  <div class="sim-label field-label">Email Address</div>\n' +
+            '  <input class="sim-card field-input" type="text" placeholder="name@example.com" />\n' +
+            '  <div class="sim-help help-text">We will never share your email.</div>\n' +
+            '</div>\n' +
+            '<div class="sim-field field-group">\n' +
+            '  <div class="sim-label field-label">Password</div>\n' +
+            '  <input class="sim-card field-input" type="password" placeholder="••••••••" />\n' +
+            '  <div class="sim-help error-text">Must be at least 12 characters.</div>\n' +
+            '</div>'
+        },
+        {
+          id: "card-actions",
+          name: "Card With Actions",
+          html:
+            '<div class="sim-card card-shell">\n' +
+            '  <div class="sim-label card-title">Plan Summary</div>\n' +
+            '  <div class="sim-meta card-subtitle">Pro Tier - billed monthly</div>\n' +
+            '  <div class="sim-row action-row">\n' +
+            '    <button class="sim-card btn-primary" type="button">Confirm</button>\n' +
+            '    <button class="sim-card btn-secondary" type="button">Cancel</button>\n' +
+            '  </div>\n' +
+            '</div>'
+        },
+        {
+          id: "helper-sequence",
+          name: "Sibling Helper Sequence",
+          html:
+            '<div class="sim-block row help-row">Primary helper text</div>\n' +
+            '<div class="sim-block row help-row">Secondary helper text</div>\n' +
+            '<div class="sim-block row help-row">Tertiary helper text</div>\n' +
+            '<button class="sim-card mini-btn" type="button">Action</button>'
+        },
+        {
+          id: "nested-list",
+          name: "Nested List / Tree",
+          html:
+            '<div class="sim-card list-shell">\n' +
+            '  <div class="sim-row item level-1">\n' +
+            '    <div class="sim-label">Section A</div>\n' +
+            '    <div class="sim-card child-list">\n' +
+            '      <div class="sim-block item level-2">Child A1</div>\n' +
+            '      <div class="sim-block item level-2">Child A2</div>\n' +
+            '    </div>\n' +
+            '  </div>\n' +
+            '  <div class="sim-row item level-1">\n' +
+            '    <div class="sim-label">Section B</div>\n' +
+            '    <div class="sim-chip tag">New</div>\n' +
+            '  </div>\n' +
+            '</div>'
+        }
+      ];
 
       function makeLibraryPreset(name, description, className, target, rules, variables, extras) {
         const base = "." + className;
@@ -2943,17 +3418,452 @@ translateY()	translateY(<length|percentage>)
         return "value";
       }
 
+      function itemSpecificOptions(item, token) {
+        const itemName = String((item && item.name) || "").trim();
+        const rawToken = String(token || "").trim();
+        if (!itemName || !rawToken) return null;
+        const exact = itemName + "::" + rawToken;
+        if (ITEM_SPECIFIC_OPTION_MAP[exact]) return ITEM_SPECIFIC_OPTION_MAP[exact].slice();
+        const valueKey = itemName + "::value";
+        if (rawToken === "value" && ITEM_SPECIFIC_OPTION_MAP[valueKey]) return ITEM_SPECIFIC_OPTION_MAP[valueKey].slice();
+        return null;
+      }
+
+      function labelForToken(token) {
+        const raw = String(token || "").trim();
+        if (!raw) return "value";
+        const compact = raw.replace(/-/g, " ");
+        return compact.replace(/\b\w/g, function (letter) { return letter.toUpperCase(); });
+      }
+
+      function exampleForToken(token, item) {
+        const options = optionsForToken(token, item);
+        if (options && options.length > 0) {
+          return "Choose one of: " + options.slice(0, 4).join(", ") + (options.length > 4 ? ", ..." : "") + ".";
+        }
+        const fallback = defaultValueForToken(token);
+        return "Example: " + fallback + ".";
+      }
+
+      function describeToken(token, item) {
+        const raw = String(token || "").trim();
+        const itemName = String((item && item.name) || "").trim();
+        const lower = raw.toLowerCase();
+        if (lower === "easing") {
+          return "Controls how motion accelerates and slows down over time. Common choices are ease, ease-in, ease-out, and linear.";
+        }
+        if (itemName.indexOf("animation") === 0 && (lower === "name" || lower === "keyframes-name")) {
+          return "Choose a built-in motion path such as pulseGlow, slideUp, fadeIn, or spin. These now have matching @keyframes in the preview and exported builder CSS.";
+        }
+        if (lower.indexOf("color") >= 0) {
+          return "Use the picker for a quick color, or type a CSS color such as #245fe6 or rgba(36,95,230,0.35).";
+        }
+        if (lower.indexOf("time") >= 0 || lower.indexOf("duration") >= 0 || lower.indexOf("delay") >= 0) {
+          return "This is a time value. Use ms for fast UI motion or s for longer transitions.";
+        }
+        if (lower.indexOf("angle") >= 0) {
+          return "Angles are most often used in rotate() and gradients. Degrees are the most beginner-friendly unit.";
+        }
+        if (lower.indexOf("property") >= 0) {
+          return "This chooses which CSS property will be affected. Start with all, transform, opacity, or box-shadow.";
+        }
+        if (itemName === "data-*") {
+          return "This is the custom attribute value. It can be any label you want to store, such as step-2 or billing.";
+        }
+        return exampleForToken(token, item);
+      }
+
+      function getFunctionPropertyValue() {
+        const selected = (elFunctionProperty.value || "").trim();
+        if (selected === "__custom__") {
+          const custom = (elFunctionPropertyCustom.value || "").trim();
+          return custom || "filter";
+        }
+        return selected || "filter";
+      }
+
+      function syncFunctionPropertyControl(itemName, preferredValue) {
+        const existing = getFunctionPropertyValue();
+        elFunctionProperty.innerHTML = "";
+        FUNCTION_PROPERTY_OPTIONS.forEach(function (value) {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = value === "__custom__" ? "Custom..." : value;
+          elFunctionProperty.appendChild(option);
+        });
+        const preferred = preferredValue || existing || functionPropertyDefaults[itemName] || "filter";
+        if (FUNCTION_PROPERTY_OPTIONS.indexOf(preferred) >= 0) {
+          elFunctionProperty.value = preferred;
+          elFunctionPropertyCustom.classList.add("hidden");
+        } else {
+          elFunctionProperty.value = "__custom__";
+          elFunctionPropertyCustom.classList.remove("hidden");
+          elFunctionPropertyCustom.value = preferred;
+        }
+      }
+
+      function getSelectedPseudoSelector() {
+        const selected = (elBuilderPseudoSelector.value || "").trim();
+        if (selected === "__custom__") {
+          return (elBuilderPseudoCustom.value || "").trim();
+        }
+        return selected;
+      }
+
+      function syncPseudoControlFromValue(value) {
+        const raw = String(value || "").trim();
+        const options = Array.from(elBuilderPseudoSelector.options).map(function (option) { return option.value; });
+        if (raw === "__custom__") {
+          elBuilderPseudoSelector.value = "__custom__";
+          elBuilderPseudoCustom.classList.remove("hidden");
+          if (!(elBuilderPseudoCustom.value || "").trim()) {
+            elBuilderPseudoCustom.value = ":nth-child(2)";
+          }
+        } else if (options.indexOf(raw) >= 0) {
+          elBuilderPseudoSelector.value = raw;
+          elBuilderPseudoCustom.classList.add("hidden");
+          elBuilderPseudoCustom.value = "";
+        } else {
+          elBuilderPseudoSelector.value = raw ? "__custom__" : "";
+          elBuilderPseudoCustom.classList.toggle("hidden", !raw);
+          if (raw) elBuilderPseudoCustom.value = raw;
+        }
+        const active = getSelectedPseudoSelector();
+        if (!active) {
+          elBuilderPseudoHelp.textContent = "Base rule means the style is always on. Choose a state when the style should only happen on hover, focus, click, or a similar trigger.";
+        } else {
+          elBuilderPseudoHelp.textContent = "Current state rule: " + active + ". Match Preview Interaction State to this when testing.";
+        }
+      }
+
+      function selectedStyleHelperValue() {
+        if (!elStylePropertyValueSelect.classList.contains("hidden")) {
+          return (elStylePropertyValueSelect.value || "").trim();
+        }
+        return (elStylePropertyValue.value || "").trim();
+      }
+
+      function populateStylePropertyValueControl(item) {
+        let options = null;
+        let helpText = "Enter a CSS value for the selected property.";
+        if (item) {
+          let valueSyntax = item.syntax.split(":").slice(1).join(":").trim();
+          if (valueSyntax.endsWith(";")) valueSyntax = valueSyntax.slice(0, -1).trim();
+          const placeholders = extractPlaceholders(valueSyntax);
+          if (placeholders.length === 1) {
+            options = optionsForToken(placeholders[0], item);
+            helpText = describeToken(placeholders[0], item);
+          } else if (placeholders.length === 0 && valueSyntax.indexOf("|") >= 0) {
+            options = valueSyntax.split("|").map(function (part) { return part.trim(); }).filter(Boolean);
+            helpText = "Choose one of the standard named values for " + item.name + ".";
+          } else if (placeholders.length > 1) {
+            helpText = "This property needs multiple values. The textbox is left open so you can enter the full syntax.";
+          }
+        }
+
+        if (options && options.length > 0) {
+          const previous = (elStylePropertyValueSelect.value || "").trim();
+          elStylePropertyValueSelect.innerHTML = "";
+          options.forEach(function (opt) {
+            const option = document.createElement("option");
+            option.value = opt;
+            option.textContent = opt;
+            elStylePropertyValueSelect.appendChild(option);
+          });
+          if (options.indexOf(previous) >= 0) {
+            elStylePropertyValueSelect.value = previous;
+          } else {
+            elStylePropertyValueSelect.selectedIndex = 0;
+          }
+          elStylePropertyValue.classList.add("hidden");
+          elStylePropertyValueSelect.classList.remove("hidden");
+          elStylePropertyValue.value = elStylePropertyValueSelect.value;
+        } else {
+          elStylePropertyValueSelect.classList.add("hidden");
+          elStylePropertyValue.classList.remove("hidden");
+        }
+        elStylePropertyValueHelp.textContent = helpText;
+      }
+
+      function injectFieldHints() {
+        Object.keys(INPUT_HINT_TEXT).forEach(function (id) {
+          const field = document.getElementById(id);
+          if (!field) return;
+          const host = field.closest(".row") || field.parentElement;
+          if (!host) return;
+          let hint = host.querySelector('[data-input-hint-for="' + id + '"]');
+          if (!hint) {
+            hint = document.createElement("div");
+            hint.className = "input-hint";
+            hint.setAttribute("data-input-hint-for", id);
+            host.appendChild(hint);
+          }
+          hint.textContent = INPUT_HINT_TEXT[id];
+        });
+      }
+
+      function buildPreviewMirrorSelector(selector) {
+        let mirrored = String(selector || "");
+        let changed = false;
+        Object.keys(PREVIEW_STATE_SELECTOR_MAP).forEach(function (key) {
+          const entry = PREVIEW_STATE_SELECTOR_MAP[key];
+          if (mirrored.indexOf(entry.pseudo) >= 0) {
+            mirrored = mirrored.split(entry.pseudo).join("." + entry.className);
+            changed = true;
+          }
+        });
+        return changed ? mirrored : "";
+      }
+
+      function keyframesBlock(name) {
+        const body = BUILTIN_KEYFRAMES[name];
+        if (!body) return "";
+        return "@keyframes " + name + " {\n  " + body.split("\n").join("\n  ") + "\n}";
+      }
+
+      function writeBuiltInKeyframesStyles() {
+        const names = Object.keys(BUILTIN_KEYFRAMES);
+        builtInKeyframesStyleTag.textContent = names.map(keyframesBlock).filter(Boolean).join("\n\n");
+      }
+
+      function extractAnimationNamesFromRuleText(text, prop) {
+        const raw = String(text || "").trim();
+        const lowProp = String(prop || "").trim().toLowerCase();
+        if (!raw) return [];
+        if (lowProp === "animation-name") {
+          return raw.split(",").map(function (part) { return part.trim(); }).filter(Boolean);
+        }
+        if (lowProp !== "animation") return [];
+        return raw.split(",").map(function (chunk) {
+          const parts = chunk.trim().split(/\s+/).filter(Boolean);
+          return parts.length ? parts[0] : "";
+        }).filter(Boolean);
+      }
+
+      function usedBuiltInKeyframeNamesFromRules() {
+        const found = [];
+        builderRules.forEach(function (block) {
+          (block.declarations || []).forEach(function (decl) {
+            const idx = String(decl || "").indexOf(":");
+            if (idx < 0) return;
+            const prop = decl.slice(0, idx).trim().toLowerCase();
+            const value = decl.slice(idx + 1).replace(/;$/, "").trim();
+            extractAnimationNamesFromRuleText(value, prop).forEach(function (name) {
+              if (!BUILTIN_KEYFRAMES[name]) return;
+              if (found.indexOf(name) < 0) found.push(name);
+            });
+          });
+        });
+        return found;
+      }
+
+      function buildPreviewStateStylesheetText() {
+        cleanRuleBlocks();
+        const sections = [];
+        builderRules.forEach(function (block) {
+          const mirrored = buildPreviewMirrorSelector(block.selector);
+          if (!mirrored || !(block.declarations || []).length) return;
+          if (block.media) {
+            sections.push("@media " + block.media + " {\n  " + mirrored + " {\n    " + block.declarations.join("\n    ") + "\n  }\n}");
+          } else {
+            sections.push(mirrored + " {\n  " + block.declarations.join("\n  ") + "\n}");
+          }
+        });
+        return sections.join("\n\n");
+      }
+
+      function detectPreviewStateFromRules(rules) {
+        const list = Array.isArray(rules) ? rules : [];
+        for (let i = 0; i < list.length; i++) {
+          const selector = String((list[i] && list[i].selector) || "");
+          const keys = Object.keys(PREVIEW_STATE_SELECTOR_MAP);
+          for (let j = 0; j < keys.length; j++) {
+            const key = keys[j];
+            if (selector.indexOf(PREVIEW_STATE_SELECTOR_MAP[key].pseudo) >= 0) {
+              return key;
+            }
+          }
+        }
+        return "default";
+      }
+
+      function previewKeyForElement(target) {
+        const keys = Object.keys(previewTargets);
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          if (previewTargets[key] === target) return key;
+        }
+        return "";
+      }
+
+      function actualPreviewStateActive(key, target) {
+        const targetKey = previewKeyForElement(target || targetElement());
+        const state = previewActualStates[targetKey] || {};
+        if (key === "focus-visible") {
+          return Boolean(state["focus-visible"] || state.focus);
+        }
+        return Boolean(state[key]);
+      }
+
+      function setActualPreviewState(target, key, value) {
+        const targetKey = previewKeyForElement(target);
+        if (!targetKey || !previewActualStates[targetKey]) return;
+        previewActualStates[targetKey][key] = Boolean(value);
+        if (key === "focus" && !value) {
+          previewActualStates[targetKey]["focus-visible"] = false;
+        }
+      }
+
+      function actualStateSummaryForTarget(target) {
+        const targetKey = previewKeyForElement(target || targetElement());
+        const state = previewActualStates[targetKey] || {};
+        const labels = [];
+        if (state.hover) labels.push("Hover");
+        if (state.focus) labels.push("Focus");
+        if (state.active) labels.push("Active");
+        if (!labels.length) return "none";
+        return labels.join(" + ");
+      }
+
+      function updatePreviewStateBadges() {
+        const simulated = (elPreviewInteractionState.value || "default").trim();
+        const simulatedText = simulated === "default"
+          ? "Default"
+          : ((PREVIEW_STATE_SELECTOR_MAP[simulated] && PREVIEW_STATE_SELECTOR_MAP[simulated].label) || simulated);
+        if (elPreviewSimulatedBadge) {
+          elPreviewSimulatedBadge.textContent = "Simulator: " + simulatedText;
+        }
+        if (elPreviewActualBadge) {
+          elPreviewActualBadge.textContent = "Actual: " + actualStateSummaryForTarget(targetElement());
+        }
+      }
+
+      function stateKeyForPseudoSelector(pseudo) {
+        const raw = String(pseudo || "").trim();
+        if (!raw) return "";
+        const keys = Object.keys(PREVIEW_STATE_SELECTOR_MAP);
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          if (PREVIEW_STATE_SELECTOR_MAP[key].pseudo === raw) return key;
+        }
+        return "";
+      }
+
+      function shouldApplyCurrentDraftToPreview() {
+        const pseudo = getSelectedPseudoSelector();
+        if (!pseudo) return true;
+        const requiredState = stateKeyForPseudoSelector(pseudo);
+        if (!requiredState) return false;
+        const simulatedState = (elPreviewInteractionState.value || "default").trim() === requiredState;
+        const actualState = actualPreviewStateActive(requiredState, targetElement());
+        return simulatedState || actualState;
+      }
+
+      function applyAnimationPreviewAssist(target, item, resolvedValue) {
+        if (!target || !item) return;
+        const name = String(item.name || "").trim();
+        const value = String(resolvedValue || "").trim();
+        if (!name || name.indexOf("animation") !== 0) return;
+        if (name === "animation") return;
+
+        const effectiveName =
+          name === "animation-name"
+            ? (BUILTIN_KEYFRAMES[value] ? value : DEFAULT_ANIMATION_PREVIEW.name)
+            : DEFAULT_ANIMATION_PREVIEW.name;
+
+        if (name !== "animation") {
+          target.style.setProperty("animation-name", effectiveName);
+        }
+        if (name !== "animation-duration") {
+          target.style.setProperty("animation-duration", DEFAULT_ANIMATION_PREVIEW.duration);
+        }
+        if (name !== "animation-timing-function") {
+          target.style.setProperty("animation-timing-function", DEFAULT_ANIMATION_PREVIEW.timingFunction);
+        }
+        if (name !== "animation-delay") {
+          target.style.setProperty("animation-delay", DEFAULT_ANIMATION_PREVIEW.delay);
+        }
+        if (name !== "animation-iteration-count") {
+          target.style.setProperty("animation-iteration-count", DEFAULT_ANIMATION_PREVIEW.iterationCount);
+        }
+        if (name !== "animation-direction") {
+          target.style.setProperty("animation-direction", DEFAULT_ANIMATION_PREVIEW.direction);
+        }
+        if (name !== "animation-fill-mode") {
+          target.style.setProperty("animation-fill-mode", DEFAULT_ANIMATION_PREVIEW.fillMode);
+        }
+        if (name !== "animation-play-state") {
+          target.style.setProperty("animation-play-state", DEFAULT_ANIMATION_PREVIEW.playState);
+        }
+      }
+
+      function applyPreviewInteractionStateToElement(target) {
+        if (!target) return;
+        const selected = (elPreviewInteractionState.value || "default").trim();
+        Object.keys(PREVIEW_STATE_SELECTOR_MAP).forEach(function (key) {
+          target.classList.remove(PREVIEW_STATE_SELECTOR_MAP[key].className);
+        });
+        if (target.id === "preview-input") target.disabled = false;
+        if (target.id === "preview-button") target.disabled = false;
+        if (selected === "default") {
+          return;
+        }
+        const entry = PREVIEW_STATE_SELECTOR_MAP[selected];
+        if (!entry) return;
+        target.classList.add(entry.className);
+        if (selected === "disabled") {
+          if (target.id === "preview-input" || target.id === "preview-button") {
+            target.disabled = true;
+          }
+        }
+        if ((selected === "focus" || selected === "focus-visible") && typeof target.focus === "function") {
+          try { target.focus({ preventScroll: true }); } catch (err) { target.focus(); }
+        }
+      }
+
+      function updatePreviewInteractionHelp() {
+        const selected = (elPreviewInteractionState.value || "default").trim();
+        if (selected === "default") {
+          elPreviewInteractionHelp.textContent = "Use this when your rule is always on. Real mouse hover, focus, and press on the preview target also work now, even when this stays on Default.";
+          return;
+        }
+        const entry = PREVIEW_STATE_SELECTOR_MAP[selected];
+        if (!entry) {
+          elPreviewInteractionHelp.textContent = "Choose the same state used by your selector so the preview can simulate it.";
+          return;
+        }
+        elPreviewInteractionHelp.textContent = "Preview is simulating " + entry.label + ". This helps you test rules like " + entry.pseudo + " without guessing.";
+      }
+
+      function setWorkspaceView(view) {
+        const next = WORKSPACE_VIEW_NOTES[view] ? view : "build";
+        document.body.setAttribute("data-workspace-view", next);
+        workspaceCorePanels.forEach(function (panel) {
+          panel.classList.toggle("view-hidden", false);
+        });
+        workspaceLearnPanels.forEach(function (panel) {
+          panel.classList.toggle("view-hidden", !(next === "learn" || next === "all"));
+        });
+        workspaceAdvancedPanels.forEach(function (panel) {
+          panel.classList.toggle("view-hidden", !(next === "advanced" || next === "all"));
+        });
+        workspaceViewButtons.forEach(function (btn) {
+          const active = btn.getAttribute("data-workspace-view-option") === next;
+          btn.classList.toggle("workspace-tab-active", active);
+        });
+        elWorkspaceViewNote.textContent = WORKSPACE_VIEW_NOTES[next];
+      }
+
       function optionsForToken(token, item) {
         const raw = String(token || "").trim();
         if (!raw) return null;
         if (raw.indexOf("|") >= 0) {
           return raw.split("|").map(function (part) { return part.trim(); }).filter(Boolean);
         }
+        const byItem = itemSpecificOptions(item, raw);
+        if (byItem && byItem.length > 0) return byItem;
         const t = raw.toLowerCase();
         if (TOKEN_OPTION_MAP[t]) return TOKEN_OPTION_MAP[t].slice();
-        if (t === "property" && item && item.name === "transition-property") {
-          return ["all", "opacity", "transform", "box-shadow", "background-color", "color", "border-color"];
-        }
         if (t === "count" && item && item.name === "repeat()") {
           return ["1", "2", "3", "4", "6", "12"];
         }
@@ -2963,9 +3873,22 @@ translateY()	translateY(<length|percentage>)
       function paramForToken(token, item) {
         const options = optionsForToken(token, item);
         if (options && options.length > 0) {
-          return { key: token, label: token, type: "select", options: options, value: options[0] };
+          return {
+            key: token,
+            label: labelForToken(token),
+            type: "select",
+            options: options,
+            value: options[0],
+            description: describeToken(token, item)
+          };
         }
-        return { key: token, label: token, type: "text", value: defaultValueForToken(token) };
+        return {
+          key: token,
+          label: labelForToken(token),
+          type: "text",
+          value: defaultValueForToken(token),
+          description: describeToken(token, item)
+        };
       }
 
       function supportsCssColor(value) {
@@ -3235,7 +4158,7 @@ translateY()	translateY(<length|percentage>)
       function seedSelectorGraphFromLegacy() {
         const relation = (elBuilderCombinator.value || "self").trim();
         const relative = (elBuilderRelativeSelector.value || "").trim();
-        const pseudo = (elBuilderPseudoSelector.value || "").trim();
+        const pseudo = getSelectedPseudoSelector();
         selectorGraphSegments = [normalizeGraphSegment({
           relation: relation || "self",
           selector: relation === "self" ? (relative || "") : (relative || "*"),
@@ -3370,6 +4293,7 @@ translateY()	translateY(<length|percentage>)
           selectorLabel.textContent = "Selector";
           const selectorInput = document.createElement("input");
           selectorInput.placeholder = ".form-control";
+          selectorInput.title = "Example: .help-text, button.primary, input[type=email]";
           selectorInput.value = seg.selector;
           selectorInput.addEventListener("input", function () {
             selectorGraphSegments[idx].selector = selectorInput.value;
@@ -3383,16 +4307,55 @@ translateY()	translateY(<length|percentage>)
           pseudoWrap.className = "row";
           const pseudoLabel = document.createElement("label");
           pseudoLabel.className = "label";
-          pseudoLabel.textContent = "Pseudo";
+          pseudoLabel.textContent = "State / Pseudo";
+          const pseudoSelect = document.createElement("select");
+          [
+            ["", "Base"],
+            [":hover", "Hover"],
+            [":focus", "Focus"],
+            [":focus-visible", "Focus Visible"],
+            [":active", "Active"],
+            [":disabled", "Disabled"],
+            [":checked", "Checked"],
+            ["::before", "::before"],
+            ["::after", "::after"],
+            ["__custom__", "Custom..."]
+          ].forEach(function (entry) {
+            const option = document.createElement("option");
+            option.value = entry[0];
+            option.textContent = entry[1];
+            pseudoSelect.appendChild(option);
+          });
           const pseudoInput = document.createElement("input");
-          pseudoInput.placeholder = ":hover or ::before";
-          pseudoInput.value = seg.pseudo;
-          pseudoInput.addEventListener("input", function () {
-            selectorGraphSegments[idx].pseudo = pseudoInput.value;
+          pseudoInput.placeholder = ":nth-child(2)";
+          pseudoInput.title = "Only use this when the preset list is not enough.";
+          const hasDirectOption = Array.from(pseudoSelect.options).some(function (option) { return option.value === seg.pseudo; });
+          if (hasDirectOption) {
+            pseudoSelect.value = seg.pseudo;
+            pseudoInput.classList.add("hidden");
+          } else if (seg.pseudo) {
+            pseudoSelect.value = "__custom__";
+            pseudoInput.value = seg.pseudo;
+          } else {
+            pseudoSelect.value = "";
+            pseudoInput.classList.add("hidden");
+          }
+          const syncPseudo = function () {
+            const nextValue = pseudoSelect.value === "__custom__" ? (pseudoInput.value || "").trim() : pseudoSelect.value;
+            pseudoInput.classList.toggle("hidden", pseudoSelect.value !== "__custom__");
+            selectorGraphSegments[idx].pseudo = nextValue;
             updateSelectorPreview();
             updateFlowStatus();
+          };
+          pseudoSelect.addEventListener("change", function () {
+            if (pseudoSelect.value === "__custom__" && !(pseudoInput.value || "").trim()) {
+              pseudoInput.value = ":nth-child(2)";
+            }
+            syncPseudo();
           });
+          pseudoInput.addEventListener("input", syncPseudo);
           pseudoWrap.appendChild(pseudoLabel);
+          pseudoWrap.appendChild(pseudoSelect);
           pseudoWrap.appendChild(pseudoInput);
 
           const removeBtn = document.createElement("button");
@@ -3511,6 +4474,8 @@ translateY()	translateY(<length|percentage>)
         const before = previewMode === "before";
         elPreviewToggleState.textContent = before ? "Switch To After" : "Switch To Before";
         elPreviewStateText.textContent = before ? "Preview: Before" : "Preview: After";
+        builderStyleTag.disabled = before;
+        previewStateStyleTag.disabled = before;
       }
 
       function selectedRecipe() {
@@ -3656,6 +4621,66 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      function selectedSelectorSimulatorTemplate() {
+        const id = (elSelectorSimTemplate.value || "").trim();
+        if (!id) return null;
+        return SELECTOR_SIM_TEMPLATES.find(function (template) { return template.id === id; }) || null;
+      }
+
+      function selectorSimulatorRootClassText() {
+        const classes = ["selector-sim-root"];
+        if (elSelectorSimAutoClass.checked) {
+          classes.push(sanitizeClassName(elBuilderClass.value));
+        }
+        const previewState = PREVIEW_STATE_SELECTOR_MAP[(elPreviewInteractionState.value || "").trim()];
+        if (previewState) {
+          classes.push(previewState.className);
+        }
+        return classes.join(" ");
+      }
+
+      function updateSelectorSimulatorRootClass() {
+        const root = elSelectorSimStage.querySelector(".selector-sim-root");
+        const classText = selectorSimulatorRootClassText();
+        if (root) {
+          root.className = classText;
+        }
+        elSelectorSimRootInfo.textContent = "Root classes: " + classText;
+      }
+
+      function renderSelectorSimulatorTemplateList() {
+        const prev = (elSelectorSimTemplate.value || "").trim();
+        elSelectorSimTemplate.innerHTML = "";
+        SELECTOR_SIM_TEMPLATES.forEach(function (template) {
+          const opt = document.createElement("option");
+          opt.value = template.id;
+          opt.textContent = template.name;
+          elSelectorSimTemplate.appendChild(opt);
+        });
+        if (SELECTOR_SIM_TEMPLATES.some(function (template) { return template.id === prev; })) {
+          elSelectorSimTemplate.value = prev;
+        } else if (SELECTOR_SIM_TEMPLATES.length > 0) {
+          elSelectorSimTemplate.selectedIndex = 0;
+        }
+      }
+
+      function loadSelectorSimulatorTemplate() {
+        const template = selectedSelectorSimulatorTemplate();
+        if (!template) return;
+        elSelectorSimHTML.value = template.html;
+        renderSelectorSimulator();
+      }
+
+      function renderSelectorSimulator() {
+        const markup = (elSelectorSimHTML.value || "").trim();
+        const root = document.createElement("div");
+        root.className = selectorSimulatorRootClassText();
+        root.innerHTML = markup || '<div class="sim-note">Add HTML to the mini DOM textarea, then render it.</div>';
+        elSelectorSimStage.innerHTML = "";
+        elSelectorSimStage.appendChild(root);
+        updateSelectorSimulatorRootClass();
+      }
+
       function composeSelector() {
         const override = (elBuilderSelectorOverride.value || "").trim();
         if (override) return override;
@@ -3667,7 +4692,7 @@ translateY()	translateY(<length|percentage>)
         const base = getBaseSelector();
         const combinator = elBuilderCombinator.value;
         const relative = (elBuilderRelativeSelector.value || "").trim();
-        const pseudo = (elBuilderPseudoSelector.value || "").trim();
+        const pseudo = getSelectedPseudoSelector();
 
         let selector = base;
         if (combinator === "descendant") selector = base + " " + (relative || "*");
@@ -3785,6 +4810,11 @@ translateY()	translateY(<length|percentage>)
       function buildStylesheetText() {
         cleanRuleBlocks();
         const sections = [];
+        const usedKeyframes = usedBuiltInKeyframeNamesFromRules();
+        usedKeyframes.forEach(function (name) {
+          const block = keyframesBlock(name);
+          if (block) sections.push(block);
+        });
         const varsByScope = groupedVariables();
         Object.keys(varsByScope).forEach(function (scope) {
           const lines = varsByScope[scope].map(function (v) { return v.name + ": " + v.value + ";"; });
@@ -3827,7 +4857,7 @@ translateY()	translateY(<length|percentage>)
           baseSelector: elBuilderBaseSelector.value,
           combinator: elBuilderCombinator.value,
           relativeSelector: elBuilderRelativeSelector.value,
-          pseudoSelector: elBuilderPseudoSelector.value,
+          pseudoSelector: getSelectedPseudoSelector(),
           selectorOverride: elBuilderSelectorOverride.value,
           selectorGraphEnabled: elSelectorGraphEnabled.checked,
           selectorGraphSegments: selectorGraphSegments.map(function (seg) {
@@ -3837,6 +4867,7 @@ translateY()	translateY(<length|percentage>)
           mediaLayer: elBuilderMediaLayer.value,
           mediaCustom: elBuilderMediaCustom.value,
           previewMode: previewMode,
+          previewInteractionState: elPreviewInteractionState.value,
           autoApply: elBuilderAutoApply.checked,
           rules: builderRules.map(function (b) {
             return { selector: b.selector, media: b.media || "", declarations: b.declarations.slice() };
@@ -3853,9 +4884,9 @@ translateY()	translateY(<length|percentage>)
         elBuilderBaseSelector.value = state.baseSelector || ("." + sanitizeClassName(elBuilderClass.value));
         elBuilderCombinator.value = state.combinator || "self";
         elBuilderRelativeSelector.value = state.relativeSelector || ".form-control";
-        elBuilderPseudoSelector.value = state.pseudoSelector || "";
+        syncPseudoControlFromValue(state.pseudoSelector || "");
         elBuilderSelectorOverride.value = state.selectorOverride || "";
-        elSelectorGraphEnabled.checked = state.selectorGraphEnabled !== false;
+        elSelectorGraphEnabled.checked = Boolean(state.selectorGraphEnabled);
         selectorGraphSegments = Array.isArray(state.selectorGraphSegments) && state.selectorGraphSegments.length
           ? state.selectorGraphSegments.map(normalizeGraphSegment)
           : [];
@@ -3866,6 +4897,11 @@ translateY()	translateY(<length|percentage>)
         updateBuilderMediaControlVisibility();
         previewMode = state.previewMode === "before" ? "before" : "after";
         updatePreviewModeUI();
+        elPreviewInteractionState.value =
+          state.previewInteractionState === "default" || PREVIEW_STATE_SELECTOR_MAP[state.previewInteractionState]
+            ? (state.previewInteractionState || "default")
+            : detectPreviewStateFromRules(state.rules);
+        updatePreviewInteractionHelp();
         renderSelectorGraph();
         elBuilderAutoApply.checked = state.autoApply !== false;
         builderRules = Array.isArray(state.rules) ? state.rules.map(function (b) {
@@ -4293,7 +5329,7 @@ translateY()	translateY(<length|percentage>)
         if (elCategory.value === "function") {
           const item = selectedItem();
           if (item) {
-            elFunctionProperty.value = functionPropertyDefaults[item.name] || "filter";
+            syncFunctionPropertyControl(item.name, functionPropertyDefaults[item.name] || "filter");
           }
         }
 
@@ -4308,12 +5344,12 @@ translateY()	translateY(<length|percentage>)
 
         if (cat === "attribute") {
           if (item.name === "data-*") {
-            model.push({ key: "value", label: "value", type: "text", value: "sample-value" });
+            model.push({ key: "value", label: "Value", type: "text", value: "sample-value", description: "This is the custom data value stored in the attribute. Example: billing, step-2, primary." });
             return model;
           }
 
           if (item.syntax.indexOf("=") < 0) {
-            model.push({ key: "enabled", label: item.name, type: "checkbox", value: true });
+            model.push({ key: "enabled", label: item.name, type: "checkbox", value: true, description: "Turn this on to include the boolean attribute, or off to omit it." });
             return model;
           }
 
@@ -4330,11 +5366,19 @@ translateY()	translateY(<length|percentage>)
 
           if (valueSyntax.indexOf("|") >= 0) {
             const options = valueSyntax.split("|");
-            model.push({ key: "value", label: "value", type: "select", options: options, value: options[0] });
+            model.push({ key: "value", label: "Value", type: "select", options: options, value: options[0], description: "Choose one of the standard named values for this attribute." });
             return model;
           }
 
-          model.push({ key: "value", label: "value", type: item.name === "style" ? "textarea" : "text", value: valueSyntax });
+          model.push({
+            key: "value",
+            label: "Value",
+            type: item.name === "style" ? "textarea" : "text",
+            value: valueSyntax,
+            description: item.name === "style"
+              ? "Write one or more CSS declarations such as color: #245fe6; padding: 12px;"
+              : "Enter the attribute value exactly as it should appear in HTML."
+          });
           return model;
         }
 
@@ -4352,11 +5396,11 @@ translateY()	translateY(<length|percentage>)
 
           if (valueSyntax.indexOf("|") >= 0) {
             const options = valueSyntax.split("|");
-            model.push({ key: "value", label: "value", type: "select", options: options, value: options[0] });
+            model.push({ key: "value", label: "Value", type: "select", options: options, value: options[0], description: "Choose one of the standard named values for this property." });
             return model;
           }
 
-          model.push({ key: "value", label: "value", type: "text", value: valueSyntax });
+          model.push({ key: "value", label: "Value", type: "text", value: valueSyntax, description: "Enter the CSS value. Example: 12px, #245fe6, auto, 0.3s." });
           return model;
         }
 
@@ -4366,7 +5410,7 @@ translateY()	translateY(<length|percentage>)
             model.push(paramForToken(token, item));
           });
           if (model.length === 0) {
-            model.push({ key: "value", label: "value", type: "text", value: item.syntax });
+            model.push({ key: "value", label: "Value", type: "text", value: item.syntax, description: "Enter the full function call value." });
           }
           return model;
         }
@@ -4421,7 +5465,11 @@ translateY()	translateY(<length|percentage>)
           option.value = "";
           option.textContent = "No properties";
           elStyleProperty.appendChild(option);
+          elStylePropertyValueSelect.innerHTML = "";
+          elStylePropertyValueSelect.classList.add("hidden");
+          elStylePropertyValue.classList.remove("hidden");
           elStylePropertyValue.value = "";
+          elStylePropertyValueHelp.textContent = "No CSS properties are available right now.";
           return;
         }
 
@@ -4436,11 +5484,25 @@ translateY()	translateY(<length|percentage>)
       function syncStylePropertyValueFromSelection() {
         const name = (elStyleProperty.value || "").trim();
         if (!name) {
+          elStylePropertyValueSelect.innerHTML = "";
+          elStylePropertyValueSelect.classList.add("hidden");
+          elStylePropertyValue.classList.remove("hidden");
           elStylePropertyValue.value = "";
+          elStylePropertyValueHelp.textContent = "Choose a property first.";
           return;
         }
         const item = (datasets.property || []).find(function (entry) { return entry.name === name; });
-        elStylePropertyValue.value = samplePropertyValue(item);
+        populateStylePropertyValueControl(item);
+        const sample = samplePropertyValue(item);
+        if (!elStylePropertyValueSelect.classList.contains("hidden")) {
+          const opts = Array.from(elStylePropertyValueSelect.options).map(function (option) { return option.value; });
+          if (opts.indexOf(sample) >= 0) {
+            elStylePropertyValueSelect.value = sample;
+          }
+          elStylePropertyValue.value = elStylePropertyValueSelect.value;
+        } else {
+          elStylePropertyValue.value = sample;
+        }
       }
 
       function appendStyleDeclaration() {
@@ -4448,7 +5510,7 @@ translateY()	translateY(<length|percentage>)
         if (idx < 0) return;
 
         const prop = (elStyleProperty.value || "").trim();
-        const value = (elStylePropertyValue.value || "").trim();
+        const value = selectedStyleHelperValue();
         if (!prop || !value) return;
 
         const declaration = ensureSemicolon(prop + ": " + value);
@@ -4466,6 +5528,154 @@ translateY()	translateY(<length|percentage>)
         const textarea = elParams.querySelector('textarea[data-param-index="' + idx + '"]');
         if (textarea) textarea.value = next;
         updateLive();
+      }
+
+      function setActiveParamValue(index, value) {
+        if (index < 0 || index >= activeParams.length) return;
+        activeParams[index].value = value;
+        updateLive();
+      }
+
+      function parseNumericUnitValue(value, kind, label) {
+        const units = defaultUnitsForKind(kind, label);
+        const fallbackUnit = units[0] || "";
+        const raw = String(value || "").trim();
+        const match = raw.match(/^(-?\d*\.?\d+)([a-z%]*)$/i);
+        if (match) {
+          return {
+            amount: Number(match[1]),
+            unit: match[2] || fallbackUnit
+          };
+        }
+        const parsed = Number(raw);
+        return {
+          amount: Number.isFinite(parsed) ? parsed : 0,
+          unit: fallbackUnit
+        };
+      }
+
+      function renderColorParamControl(wrapper, param, index) {
+        const line = document.createElement("div");
+        line.className = "param-inline";
+
+        const textInput = document.createElement("input");
+        textInput.value = param.value;
+        textInput.placeholder = "#245fe6";
+        textInput.dataset.paramIndex = String(index);
+
+        const picker = document.createElement("input");
+        picker.type = "color";
+        const rgb = parseCssColorToRgb(param.value || "#1f5fbd");
+        picker.value = rgbToHex(rgb.r, rgb.g, rgb.b);
+
+        textInput.addEventListener("input", function () {
+          const value = textInput.value;
+          if (supportsCssColor(value)) {
+            const nextRgb = parseCssColorToRgb(value);
+            picker.value = rgbToHex(nextRgb.r, nextRgb.g, nextRgb.b);
+          }
+          setActiveParamValue(index, value);
+        });
+        textInput.addEventListener("change", function () {
+          const value = textInput.value;
+          if (supportsCssColor(value)) {
+            const nextRgb = parseCssColorToRgb(value);
+            picker.value = rgbToHex(nextRgb.r, nextRgb.g, nextRgb.b);
+          }
+          setActiveParamValue(index, value);
+        });
+        picker.addEventListener("input", function () {
+          textInput.value = picker.value;
+          setActiveParamValue(index, picker.value);
+        });
+
+        line.appendChild(textInput);
+        line.appendChild(picker);
+        wrapper.appendChild(line);
+      }
+
+      function renderNumericParamControl(wrapper, param, index, kind) {
+        const input = document.createElement("input");
+        input.type = "number";
+        input.value = String(param.value || "").trim();
+        input.placeholder = kind === "integer" ? "1" : "0.5";
+        input.step = kind === "integer" ? "1" : "0.1";
+        if (kind === "integer") input.pattern = "-?\\d+";
+        input.dataset.paramIndex = String(index);
+        input.addEventListener("input", handleParamChange);
+        input.addEventListener("change", handleParamChange);
+        wrapper.appendChild(input);
+      }
+
+      function renderUnitParamControl(wrapper, param, index, kind) {
+        const parts = parseNumericUnitValue(param.value, kind, param.label);
+        const line = document.createElement("div");
+        line.className = "param-inline";
+
+        const numberInput = document.createElement("input");
+        numberInput.type = "number";
+        numberInput.value = String(parts.amount);
+        numberInput.placeholder = kind === "time" ? "200" : "12";
+        numberInput.step = kind === "time" ? "0.05" : "0.1";
+
+        const unitSelect = document.createElement("select");
+        defaultUnitsForKind(kind, param.label).forEach(function (unit) {
+          const option = document.createElement("option");
+          option.value = unit;
+          option.textContent = unit;
+          unitSelect.appendChild(option);
+        });
+        unitSelect.value = parts.unit;
+
+        const syncValue = function () {
+          const amount = numberInput.value === "" ? "0" : numberInput.value;
+          const unit = unitSelect.value || "";
+          setActiveParamValue(index, amount + unit);
+        };
+
+        if (kind === "angle") {
+          const slider = document.createElement("input");
+          slider.type = "range";
+          slider.min = "-360";
+          slider.max = "360";
+          slider.step = "1";
+          slider.value = String(Math.max(-360, Math.min(360, Number(parts.amount) || 0)));
+          slider.addEventListener("input", function () {
+            numberInput.value = slider.value;
+            syncValue();
+          });
+          numberInput.addEventListener("input", function () {
+            slider.value = String(Math.max(-360, Math.min(360, Number(numberInput.value) || 0)));
+            syncValue();
+          });
+          line.appendChild(slider);
+        } else if (kind === "time") {
+          const presetSelect = document.createElement("select");
+          ["120ms", "200ms", "300ms", "500ms", "1s", "Custom"].forEach(function (preset) {
+            const option = document.createElement("option");
+            option.value = preset;
+            option.textContent = preset;
+            presetSelect.appendChild(option);
+          });
+          const currentText = String(parts.amount) + parts.unit;
+          presetSelect.value = ["120ms", "200ms", "300ms", "500ms", "1s"].indexOf(currentText) >= 0 ? currentText : "Custom";
+          presetSelect.addEventListener("change", function () {
+            if (presetSelect.value === "Custom") return;
+            const presetParts = parseNumericUnitValue(presetSelect.value, "time", param.label);
+            numberInput.value = String(presetParts.amount);
+            unitSelect.value = presetParts.unit;
+            syncValue();
+          });
+          line.appendChild(presetSelect);
+        }
+
+        numberInput.addEventListener("input", syncValue);
+        numberInput.addEventListener("change", syncValue);
+        unitSelect.addEventListener("change", syncValue);
+
+        line.appendChild(numberInput);
+        line.appendChild(unitSelect);
+        wrapper.appendChild(line);
       }
 
       function renderParamControls() {
@@ -4505,6 +5715,12 @@ translateY()	translateY(<length|percentage>)
             line.appendChild(input);
             line.appendChild(document.createTextNode("enabled"));
             wrapper.appendChild(line);
+            if (param.description) {
+              const note = document.createElement("div");
+              note.className = "input-hint";
+              note.textContent = param.description;
+              wrapper.appendChild(note);
+            }
             input.dataset.paramIndex = String(index);
             input.addEventListener("change", handleParamChange);
             elParams.appendChild(wrapper);
@@ -4513,14 +5729,55 @@ translateY()	translateY(<length|percentage>)
             input = document.createElement("textarea");
             input.value = param.value;
           } else {
+            const kind = inferParamKind(param, item);
+            if (kind === "color") {
+              renderColorParamControl(wrapper, param, index);
+              if (param.description) {
+                const note = document.createElement("div");
+                note.className = "input-hint";
+                note.textContent = param.description;
+                wrapper.appendChild(note);
+              }
+              elParams.appendChild(wrapper);
+              return;
+            }
+            if (kind === "time" || kind === "angle" || kind === "dimension") {
+              renderUnitParamControl(wrapper, param, index, kind);
+              if (param.description) {
+                const note = document.createElement("div");
+                note.className = "input-hint";
+                note.textContent = param.description;
+                wrapper.appendChild(note);
+              }
+              elParams.appendChild(wrapper);
+              return;
+            }
+            if (kind === "number" || kind === "integer") {
+              renderNumericParamControl(wrapper, param, index, kind);
+              if (param.description) {
+                const note = document.createElement("div");
+                note.className = "input-hint";
+                note.textContent = param.description;
+                wrapper.appendChild(note);
+              }
+              elParams.appendChild(wrapper);
+              return;
+            }
             input = document.createElement("input");
             input.value = param.value;
+            input.placeholder = defaultValueForToken(param.key || param.label || "value");
           }
 
           input.dataset.paramIndex = String(index);
           input.addEventListener("input", handleParamChange);
           input.addEventListener("change", handleParamChange);
           wrapper.appendChild(input);
+          if (param.description) {
+            const note = document.createElement("div");
+            note.className = "input-hint";
+            note.textContent = param.description;
+            wrapper.appendChild(note);
+          }
           elParams.appendChild(wrapper);
         });
       }
@@ -4567,14 +5824,19 @@ translateY()	translateY(<length|percentage>)
 
       function updatePreviewFocus() {
         const current = elTarget.value || "card";
+        const interaction = (elPreviewInteractionState.value || "default").trim();
+        const interactionLabel = interaction === "default"
+          ? "Default"
+          : ((PREVIEW_STATE_SELECTOR_MAP[interaction] && PREVIEW_STATE_SELECTOR_MAP[interaction].label) || interaction);
         previewPanels.forEach(function (panel) {
           const active = panel.getAttribute("data-preview-key") === current;
           panel.classList.toggle("preview-panel-active", active);
           panel.classList.toggle("preview-panel-inactive", !active);
         });
+        updatePreviewStateBadges();
         elPreviewActiveHelp.textContent =
           "Active preview target: " + previewTargetLabel(current) +
-          ". The highlighted panel receives the current styles.";
+          ". The highlighted panel receives the current styles. Interaction: " + interactionLabel + ".";
       }
 
       function flashActivePreviewPanel() {
@@ -4635,7 +5897,9 @@ translateY()	translateY(<length|percentage>)
           const base = target.getAttribute("data-base-class") || "";
           target.className = base + " " + resolved;
         } else if (attrName === "style") {
-          target.style.cssText += resolved;
+          if (shouldApplyCurrentDraftToPreview()) {
+            target.style.cssText += resolved;
+          }
         } else {
           target.setAttribute(attrName, resolved);
         }
@@ -4660,7 +5924,10 @@ translateY()	translateY(<length|percentage>)
           resolved = map.value;
         }
 
-        target.style.setProperty(prop, resolved);
+        if (shouldApplyCurrentDraftToPreview()) {
+          target.style.setProperty(prop, resolved);
+          applyAnimationPreviewAssist(target, item, resolved);
+        }
         return prop + ": " + resolved + ";";
       }
 
@@ -4669,8 +5936,10 @@ translateY()	translateY(<length|percentage>)
         if (Object.prototype.hasOwnProperty.call(map, "value") && extractPlaceholders(item.syntax).length === 0) {
           fnCall = map.value;
         }
-        const prop = (elFunctionProperty.value || functionPropertyDefaults[item.name] || "filter").trim();
-        target.style.setProperty(prop, fnCall);
+        const prop = getFunctionPropertyValue();
+        if (shouldApplyCurrentDraftToPreview()) {
+          target.style.setProperty(prop, fnCall);
+        }
         return {
           call: fnCall,
           declaration: prop + ": " + fnCall + ";"
@@ -4682,7 +5951,7 @@ translateY()	translateY(<length|percentage>)
           elFunctionHelpSyntax.textContent = "filter: blur(6px);";
           return;
         }
-        const property = (elFunctionProperty.value || functionPropertyDefaults[item.name] || "filter").trim();
+        const property = getFunctionPropertyValue();
         const call = fnCall || item.syntax;
         elFunctionHelpSyntax.textContent = property + ": " + call + ";";
       }
@@ -4726,7 +5995,7 @@ translateY()	translateY(<length|percentage>)
             ? "The current declaration can be sent to the CSS Builder now. That is usually better than leaving it as inline style."
             : "After the preview looks correct, click Add Current Rule or Send Live Rule To Builder.";
         } else {
-          const property = (elFunctionProperty.value || functionPropertyDefaults[item.name] || "filter").trim();
+          const property = getFunctionPropertyValue();
           elSelectionGuideWhat.textContent = "A CSS function is only a value fragment on the right side, such as blur(6px), rotate(8deg), or linear-gradient(...).";
           elSelectionGuideHow.textContent = "This tool places the function into the " + property + " property so the final result becomes a full declaration.";
           elSelectionGuideNext.textContent = "Common pairings: filter with blur()/brightness(), transform with translate()/rotate()/scale(), and background-image with gradient functions.";
@@ -4920,15 +6189,20 @@ translateY()	translateY(<length|percentage>)
         styleProbeHost.appendChild(afterProbe);
 
         const originalDisabled = builderStyleTag.disabled;
+        const originalPreviewStateDisabled = previewStateStyleTag.disabled;
 
         builderStyleTag.disabled = true;
+        previewStateStyleTag.disabled = true;
         const beforeSnapshot = captureStyleSnapshot(beforeProbe);
 
         applyCurrentVisualStateToTarget(item, map || {}, afterProbe, true);
+        applyPreviewInteractionStateToElement(afterProbe);
         builderStyleTag.disabled = false;
+        previewStateStyleTag.disabled = false;
         const afterSnapshot = captureStyleSnapshot(afterProbe);
 
         builderStyleTag.disabled = originalDisabled;
+        previewStateStyleTag.disabled = originalPreviewStateDisabled;
         styleProbeHost.innerHTML = "";
 
         const changes = [];
@@ -5098,6 +6372,9 @@ translateY()	translateY(<length|percentage>)
         elBuilderCSS.textContent = css;
         builderStyleTag.textContent = css;
         builderStyleTag.disabled = previewMode === "before";
+        previewStateStyleTag.textContent = buildPreviewStateStylesheetText();
+        previewStateStyleTag.disabled = previewMode === "before";
+        updateSelectorSimulatorRootClass();
         updateExportWizard();
 
         elBuilderVars.innerHTML = "";
@@ -5225,6 +6502,9 @@ translateY()	translateY(<length|percentage>)
         if (styleMode) {
           populateStylePropertyList();
         }
+        if (elCategory.value === "function") {
+          syncFunctionPropertyControl(item.name);
+        }
         updateFunctionHelp(item, item.syntax);
 
         renderParamControls();
@@ -5236,6 +6516,7 @@ translateY()	translateY(<length|percentage>)
         const item = selectedItem();
         resetPreview();
         builderStyleTag.disabled = previewMode === "before";
+        previewStateStyleTag.disabled = previewMode === "before";
         const target = targetElement();
         const beforeMode = previewMode === "before";
         latestBuilderCandidate = null;
@@ -5245,6 +6526,7 @@ translateY()	translateY(<length|percentage>)
           updateSelectionGuide(null);
           if (!beforeMode) {
             applyBuilderClassToTarget();
+            applyPreviewInteractionStateToElement(target);
           }
           updateExportWizard();
           updateDiffInspector(null, {});
@@ -5267,6 +6549,7 @@ translateY()	translateY(<length|percentage>)
             resetPreview();
           } else {
             applyBuilderClassToTarget();
+            applyPreviewInteractionStateToElement(target);
           }
           updateSelectionGuide(item);
           updateExportWizard();
@@ -5283,6 +6566,7 @@ translateY()	translateY(<length|percentage>)
             resetPreview();
           } else {
             applyBuilderClassToTarget();
+            applyPreviewInteractionStateToElement(target);
           }
           updateSelectionGuide(item);
           updateExportWizard();
@@ -5295,11 +6579,12 @@ translateY()	translateY(<length|percentage>)
         elLiveSyntax.textContent = fn.call + "\n\n" + ".demo-target {\n  " + fn.declaration + "\n}";
         updateFunctionHelp(item, fn.call);
         latestBuilderCandidate = { kind: "single", rule: fn.declaration };
-        if (beforeMode) {
-          resetPreview();
-        } else {
-          applyBuilderClassToTarget();
-        }
+          if (beforeMode) {
+            resetPreview();
+          } else {
+            applyBuilderClassToTarget();
+            applyPreviewInteractionStateToElement(target);
+          }
         updateSelectionGuide(item);
         updateExportWizard();
         updateDiffInspector(item, map);
@@ -5386,7 +6671,7 @@ translateY()	translateY(<length|percentage>)
         if (elCategory.value === "function") {
           const item = selectedItem();
           if (item) {
-            elFunctionProperty.value = functionPropertyDefaults[item.name] || "filter";
+            syncFunctionPropertyControl(item.name, functionPropertyDefaults[item.name] || "filter");
           }
         }
         renderEverything();
@@ -5395,9 +6680,52 @@ translateY()	translateY(<length|percentage>)
         updateLive();
         updatePreviewCycleUI();
       });
-      elFunctionProperty.addEventListener("input", updateLive);
+      Object.keys(previewTargets).forEach(function (key) {
+        const target = previewTargets[key];
+        if (!target) return;
+
+        target.addEventListener("mouseenter", function () {
+          setActualPreviewState(target, "hover", true);
+          updateLive();
+        });
+        target.addEventListener("mouseleave", function () {
+          setActualPreviewState(target, "hover", false);
+          setActualPreviewState(target, "active", false);
+          updateLive();
+        });
+        target.addEventListener("focus", function () {
+          setActualPreviewState(target, "focus", true);
+          setActualPreviewState(target, "focus-visible", true);
+          updateLive();
+        });
+        target.addEventListener("blur", function () {
+          setActualPreviewState(target, "focus", false);
+          setActualPreviewState(target, "active", false);
+          updateLive();
+        });
+        target.addEventListener("mousedown", function () {
+          setActualPreviewState(target, "active", true);
+          updateLive();
+        });
+        target.addEventListener("mouseup", function () {
+          setActualPreviewState(target, "active", false);
+          updateLive();
+        });
+      });
+      elFunctionProperty.addEventListener("change", function () {
+        const custom = elFunctionProperty.value === "__custom__";
+        elFunctionPropertyCustom.classList.toggle("hidden", !custom);
+        if (custom && !(elFunctionPropertyCustom.value || "").trim()) {
+          elFunctionPropertyCustom.value = "clip-path";
+        }
+        updateLive();
+      });
+      elFunctionPropertyCustom.addEventListener("input", updateLive);
       elCustomAttrName.addEventListener("input", updateLive);
       elStyleProperty.addEventListener("change", syncStylePropertyValueFromSelection);
+      elStylePropertyValueSelect.addEventListener("change", function () {
+        elStylePropertyValue.value = elStylePropertyValueSelect.value;
+      });
       elAddStyleDeclaration.addEventListener("click", appendStyleDeclaration);
       elStylePropertyValue.addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
@@ -5414,6 +6742,16 @@ translateY()	translateY(<length|percentage>)
       elBeginnerPrev.addEventListener("click", function () { moveBeginnerStep(-1); });
       elBeginnerNext.addEventListener("click", function () { moveBeginnerStep(1); });
       elBeginnerJump.addEventListener("click", jumpToCurrentBeginnerStep);
+      elSelectorSimTemplate.addEventListener("change", loadSelectorSimulatorTemplate);
+      elSelectorSimLoad.addEventListener("click", loadSelectorSimulatorTemplate);
+      elSelectorSimAutoClass.addEventListener("change", updateSelectorSimulatorRootClass);
+      elSelectorSimRender.addEventListener("click", renderSelectorSimulator);
+      elSelectorSimHTML.addEventListener("keydown", function (e) {
+        if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+          e.preventDefault();
+          renderSelectorSimulator();
+        }
+      });
       elRecipeSelect.addEventListener("change", updateRecipeDetail);
       elRecipeApply.addEventListener("click", applyGuidedRecipe);
       elGlossarySearch.addEventListener("input", renderGlossaryTermList);
@@ -5464,6 +6802,20 @@ translateY()	translateY(<length|percentage>)
       elLoadPreset.addEventListener("click", loadPreset);
       elDeletePreset.addEventListener("click", deletePreset);
       elBuilderAutoApply.addEventListener("change", updateLive);
+      elBuilderPseudoSelector.addEventListener("change", function () {
+        syncPseudoControlFromValue(elBuilderPseudoSelector.value);
+        renderBuilder();
+        updateLive();
+      });
+      elBuilderPseudoCustom.addEventListener("input", function () {
+        renderBuilder();
+        updateLive();
+      });
+      elPreviewInteractionState.addEventListener("change", function () {
+        updatePreviewInteractionHelp();
+        updateSelectorSimulatorRootClass();
+        updateLive();
+      });
       elBuilderClass.addEventListener("input", function () {
         const oldDefault = "." + lastAutoBaseClass;
         const currentBase = (elBuilderBaseSelector.value || "").trim();
@@ -5475,7 +6827,7 @@ translateY()	translateY(<length|percentage>)
         renderBuilder();
         updateLive();
       });
-      [elBuilderBaseSelector, elBuilderCombinator, elBuilderRelativeSelector, elBuilderPseudoSelector, elBuilderSelectorOverride, elBuilderVariableScope].forEach(function (el) {
+      [elBuilderBaseSelector, elBuilderCombinator, elBuilderRelativeSelector, elBuilderSelectorOverride, elBuilderVariableScope].forEach(function (el) {
         el.addEventListener("input", function () {
           renderBuilder();
           updateLive();
@@ -5532,12 +6884,27 @@ translateY()	translateY(<length|percentage>)
       elPresetSelect.addEventListener("change", function () {
         elPresetName.value = elPresetSelect.value || "";
       });
+      if (elWorkspaceSwitcher) {
+        elWorkspaceSwitcher.addEventListener("click", function (e) {
+          const btn = e.target.closest("[data-workspace-view-option]");
+          if (!btn) return;
+          setWorkspaceView(btn.getAttribute("data-workspace-view-option"));
+        });
+      }
 
+      syncFunctionPropertyControl("");
+      syncPseudoControlFromValue(getSelectedPseudoSelector());
+      injectFieldHints();
+      writeBuiltInKeyframesStyles();
       seedSelectorGraphFromLegacy();
       renderSelectorGraph();
+      setWorkspaceView(document.body.getAttribute("data-workspace-view") || "build");
       updatePreviewModeUI();
+      updatePreviewInteractionHelp();
       updatePreviewCycleUI();
       updateBuilderMediaControlVisibility();
+      renderSelectorSimulatorTemplateList();
+      loadSelectorSimulatorTemplate();
       renderRecipeList();
       renderGlossaryTermList();
       renderLibraryCategoryList();
