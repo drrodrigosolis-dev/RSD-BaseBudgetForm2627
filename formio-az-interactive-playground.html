@@ -1501,6 +1501,11 @@
                     <option value=":disabled">Disabled</option>
                     <option value=":checked">Checked</option>
                   </select>
+                  <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;margin-top:8px;">
+                    <input id="trigger-sync-enabled" type="checkbox" checked />
+                    Link with Step 2 state
+                  </label>
+                  <div id="trigger-sync-note" class="input-hint">When enabled, Step 2 state and Animation Lab trigger stay matched for shared interaction states.</div>
                 </div>
               </div>
               <div class="builder-row">
@@ -2096,6 +2101,8 @@ translateY()	translateY(<length|percentage>)
       const elBuilderVars = document.getElementById("builder-vars");
       const elAnimationLabPreset = document.getElementById("animation-lab-preset");
       const elAnimationLabTrigger = document.getElementById("animation-lab-trigger");
+      const elTriggerSyncEnabled = document.getElementById("trigger-sync-enabled");
+      const elTriggerSyncNote = document.getElementById("trigger-sync-note");
       const elAnimationLabName = document.getElementById("animation-lab-name");
       const elAnimationLabDuration = document.getElementById("animation-lab-duration");
       const elAnimationLabEasing = document.getElementById("animation-lab-easing");
@@ -3882,6 +3889,54 @@ translateY()	translateY(<length|percentage>)
           }),
           elAnimationLabTrigger.value
         );
+        updateTriggerSyncNote();
+      }
+
+      function isSharedTriggerValue(value) {
+        const normalized = String(value || "").trim();
+        return SHARED_TRIGGER_OPTIONS.some(function (optionDef) {
+          return optionDef.value === normalized;
+        });
+      }
+
+      function updateTriggerSyncNote() {
+        if (!elTriggerSyncNote || !elTriggerSyncEnabled) return;
+        if (!elTriggerSyncEnabled.checked) {
+          elTriggerSyncNote.textContent = "Link is off. Step 2 state and Animation Lab trigger can diverge until you turn it back on.";
+          return;
+        }
+        const pseudo = getSelectedPseudoSelector();
+        if (pseudo && !isSharedTriggerValue(pseudo)) {
+          elTriggerSyncNote.textContent = "Step 2 is using a custom pseudo. Shared trigger sync resumes when you switch back to a preset interaction state.";
+          return;
+        }
+        const active = animationLabTriggerLabel(elAnimationLabTrigger.value);
+        elTriggerSyncNote.textContent = "Link is on. Step 2 and Animation Lab are sharing the " + active + " trigger.";
+      }
+
+      function syncAnimationLabTriggerFromBuilder() {
+        updateTriggerSyncNote();
+        if (!elTriggerSyncEnabled || !elTriggerSyncEnabled.checked) return;
+        const pseudo = getSelectedPseudoSelector();
+        if (!isSharedTriggerValue(pseudo)) return;
+        if (elAnimationLabTrigger.value !== pseudo) {
+          elAnimationLabTrigger.value = pseudo;
+        }
+        updateAnimationLabOutputs();
+        updateTriggerSyncNote();
+      }
+
+      function syncBuilderPseudoFromAnimationLab() {
+        updateTriggerSyncNote();
+        if (!elTriggerSyncEnabled || !elTriggerSyncEnabled.checked) return;
+        const currentPseudo = getSelectedPseudoSelector();
+        if (currentPseudo && !isSharedTriggerValue(currentPseudo)) return;
+        const trigger = (elAnimationLabTrigger.value || "").trim();
+        if (!isSharedTriggerValue(trigger)) return;
+        syncPseudoControlFromValue(trigger);
+        renderBuilder();
+        updateLive();
+        updateTriggerSyncNote();
       }
 
       function selectedStyleHelperValue() {
@@ -5045,6 +5100,7 @@ translateY()	translateY(<length|percentage>)
         setSelectValueIfPresent(elAnimationLabDirection, state.direction, fallback.direction);
         setSelectValueIfPresent(elAnimationLabFill, state.fill, fallback.fillMode);
         setSelectValueIfPresent(elAnimationLabPlay, state.play, fallback.playState);
+        syncBuilderPseudoFromAnimationLab();
         updateAnimationLabOutputs();
       }
 
@@ -5104,6 +5160,7 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabDirection.value = preset.direction;
         elAnimationLabFill.value = preset.fill;
         elAnimationLabPlay.value = preset.play;
+        syncBuilderPseudoFromAnimationLab();
         updateAnimationLabOutputs();
       }
 
@@ -7407,6 +7464,14 @@ translateY()	translateY(<length|percentage>)
         updateFlowStatus();
       });
       elAnimationLabPreset.addEventListener("change", applyAnimationLabPreset);
+      elTriggerSyncEnabled.addEventListener("change", function () {
+        if (elTriggerSyncEnabled.checked) {
+          syncBuilderPseudoFromAnimationLab();
+          syncAnimationLabTriggerFromBuilder();
+        } else {
+          updateTriggerSyncNote();
+        }
+      });
       [
         elAnimationLabTrigger,
         elAnimationLabName,
@@ -7418,7 +7483,13 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabFill,
         elAnimationLabPlay
       ].forEach(function (el) {
-        el.addEventListener("change", updateAnimationLabOutputs);
+        el.addEventListener("change", function () {
+          if (el === elAnimationLabTrigger) {
+            syncBuilderPseudoFromAnimationLab();
+          }
+          updateAnimationLabOutputs();
+          updateTriggerSyncNote();
+        });
         el.addEventListener("input", updateAnimationLabOutputs);
       });
       elAnimationLabLoadStep2.addEventListener("click", loadAnimationLabIntoStep2);
@@ -7445,10 +7516,12 @@ translateY()	translateY(<length|percentage>)
       elBuilderAutoApply.addEventListener("change", updateLive);
       elBuilderPseudoSelector.addEventListener("change", function () {
         syncPseudoControlFromValue(elBuilderPseudoSelector.value);
+        syncAnimationLabTriggerFromBuilder();
         renderBuilder();
         updateLive();
       });
       elBuilderPseudoCustom.addEventListener("input", function () {
+        syncAnimationLabTriggerFromBuilder();
         renderBuilder();
         updateLive();
       });
@@ -7542,6 +7615,7 @@ translateY()	translateY(<length|percentage>)
 
       syncFunctionPropertyControl("");
       renderSharedTriggerControls();
+      updateTriggerSyncNote();
       injectFieldHints();
       writeBuiltInKeyframesStyles();
       seedSelectorGraphFromLegacy();
