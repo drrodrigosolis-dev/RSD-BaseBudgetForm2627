@@ -741,6 +741,30 @@
       width: fit-content;
     }
 
+    .preview-pill-neutral {
+      border-color: #c6d6f1;
+      color: #234273;
+      background: #f0f5ff;
+    }
+
+    .preview-pill-sim-active {
+      border-color: #f0c36a;
+      color: #6d4700;
+      background: #fff5df;
+    }
+
+    .preview-pill-actual-active {
+      border-color: #87d4ad;
+      color: #0f5a36;
+      background: #e8f9f0;
+    }
+
+    .preview-pill-muted {
+      border-color: #d8deea;
+      color: #5a6b8a;
+      background: #f6f8fc;
+    }
+
     .builder-row {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3730,11 +3754,16 @@ translateY()	translateY(<length|percentage>)
         const simulatedText = simulated === "default"
           ? "Default"
           : ((PREVIEW_STATE_SELECTOR_MAP[simulated] && PREVIEW_STATE_SELECTOR_MAP[simulated].label) || simulated);
+        const actualText = actualStateSummaryForTarget(targetElement());
         if (elPreviewSimulatedBadge) {
           elPreviewSimulatedBadge.textContent = "Simulator: " + simulatedText;
+          elPreviewSimulatedBadge.classList.remove("preview-pill-neutral", "preview-pill-sim-active", "preview-pill-actual-active", "preview-pill-muted");
+          elPreviewSimulatedBadge.classList.add(simulated === "default" ? "preview-pill-neutral" : "preview-pill-sim-active");
         }
         if (elPreviewActualBadge) {
-          elPreviewActualBadge.textContent = "Actual: " + actualStateSummaryForTarget(targetElement());
+          elPreviewActualBadge.textContent = "Actual: " + actualText;
+          elPreviewActualBadge.classList.remove("preview-pill-neutral", "preview-pill-sim-active", "preview-pill-actual-active", "preview-pill-muted");
+          elPreviewActualBadge.classList.add(actualText === "none" ? "preview-pill-muted" : "preview-pill-actual-active");
         }
       }
 
