@@ -394,6 +394,109 @@
       font-weight: 700;
     }
 
+    .preview-formio-input-group {
+      display: flex;
+      align-items: stretch;
+      width: 100%;
+    }
+
+    .preview-formio-input-group .form-control {
+      flex: 1 1 auto;
+      min-width: 0;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .preview-formio-addon,
+    .preview-formio-input-group .btn {
+      width: auto;
+      min-width: 44px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #c9d5ef;
+      border-left: 0;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      background: #edf3ff;
+      color: #224383;
+      padding: 0 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .preview-formio-input-group .btn {
+      cursor: pointer;
+    }
+
+    .preview-formio-selectboxes {
+      display: grid;
+      gap: 6px;
+    }
+
+    .preview-formio-selectboxes .form-check {
+      margin-bottom: 0;
+    }
+
+    .preview-formio-address {
+      position: relative;
+    }
+
+    .preview-formio-address .address-autocomplete-container {
+      position: relative;
+    }
+
+    .preview-formio-address .address-autocomplete-remove-value-icon {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #edf3ff;
+      color: #224383;
+      font-size: 0.72rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .preview-formio-datagrid {
+      overflow-x: auto;
+    }
+
+    .preview-formio-datagrid .datagrid-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      color: #294069;
+      background: #fff;
+    }
+
+    .preview-formio-datagrid .datagrid-table th,
+    .preview-formio-datagrid .datagrid-table td {
+      border: 2px solid #d7e0f2;
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .preview-formio-datagrid .formio-datagrid-remove {
+      width: auto;
+      min-height: 0;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid #f2c4cf;
+      background: #fdecef;
+      color: #7f1a2e;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
     #preview-card {
       display: flex;
       align-items: center;
@@ -507,6 +610,25 @@
       margin-bottom: 4px;
     }
 
+    .selector-coach-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .selector-coach-block {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid #dbe4f6;
+      border-radius: 8px;
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .selector-coach-block .label {
+      margin-bottom: 4px;
+    }
+
     .beginner-mode-wrap {
       margin-top: 8px;
     }
@@ -584,6 +706,22 @@
 
     .export-wizard {
       margin-top: 10px;
+    }
+
+    .deployment-checklist {
+      display: grid;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .deployment-check {
+      border: 1px solid #dbe4f6;
+      border-radius: 8px;
+      padding: 7px 8px;
+      background: rgba(255, 255, 255, 0.82);
+      font-size: 0.8rem;
+      color: #33466f;
+      line-height: 1.4;
     }
 
     .diff-list {
@@ -1116,6 +1254,7 @@
       }
 
       .selection-guide-grid,
+      .selector-coach-grid,
       .info-grid,
       .glossary-grid,
       .export-grid {
@@ -1454,7 +1593,39 @@
           <p class="step-hint">Use this as your stylesheet workspace: selector targeting, media layers, variables, rule stack, and presets.</p>
           <div class="row">
             <label class="label" for="builder-class">Class Name</label>
-            <input id="builder-class" value="my-custom-class" title="Class token used for convenience and auto-apply. Example: onboarding-theme" />
+            <input id="builder-class" list="formio-native-class-list" value="my-custom-class" title="Class token used for convenience and auto-apply. Example: onboarding-theme" />
+            <datalist id="formio-native-class-list">
+              <option value="form-control"></option>
+              <option value="form-select"></option>
+              <option value="form-check"></option>
+              <option value="form-check-input"></option>
+              <option value="form-check-label"></option>
+              <option value="btn"></option>
+              <option value="btn-primary"></option>
+              <option value="choices__inner"></option>
+              <option value="choices__item"></option>
+              <option value="fileSelector"></option>
+              <option value="formio-component-textfield"></option>
+              <option value="formio-component-password"></option>
+              <option value="formio-component-select"></option>
+              <option value="formio-component-selectboxes"></option>
+              <option value="formio-component-radio"></option>
+              <option value="formio-component-textarea"></option>
+              <option value="formio-component-datetime"></option>
+              <option value="formio-component-tags"></option>
+              <option value="formio-component-address"></option>
+              <option value="formio-component-file"></option>
+              <option value="formio-component-datagrid"></option>
+              <option value="formio-component-submit"></option>
+            </datalist>
+          </div>
+          <div class="row">
+            <label class="label" for="builder-formio-target">Form.io Native Target</label>
+            <div class="preset-bar">
+              <select id="builder-formio-target" title="Pick a real Form.io selector preset to override built-in component styles directly."></select>
+              <button id="builder-apply-formio-target" type="button">Load Native Target</button>
+            </div>
+            <div id="builder-formio-help" class="input-hint">Use this when you want injected CSS to target Form.io's built-in selectors directly instead of a custom wrapper class.</div>
           </div>
           <div class="row">
             <label class="label" for="builder-base-selector">Base Selector</label>
@@ -1499,6 +1670,23 @@
             <div class="row">
               <label class="label" for="builder-selector-override">Full Selector Override (optional)</label>
               <input id="builder-selector-override" placeholder=".my-custom-class .row + .help-text" title="If set, this full selector replaces base + relation + pseudo composition." />
+              <div class="help-box">
+                <div class="selector-coach-grid">
+                  <div class="selector-coach-block">
+                    <div class="label">Editing Mode</div>
+                    <div id="selector-override-mode">Guided composer is active.</div>
+                  </div>
+                  <div class="selector-coach-block">
+                    <div class="label">Selector Coach</div>
+                    <div id="selector-override-coach">Override is off. Use the guided selector controls until you need manual syntax.</div>
+                  </div>
+                </div>
+                <div class="inline">
+                  <button id="selector-override-seed" type="button">Seed From Guided Selector</button>
+                  <button id="selector-override-normalize" type="button">Normalize Override</button>
+                  <button id="selector-override-clear" type="button">Clear Override</button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="row">
@@ -2198,6 +2386,38 @@
               </div>
             </div>
           </details>
+          <details id="deployment-assistant-disclosure" class="disclosure">
+            <summary>Form.io Deployment Assistant</summary>
+            <div class="disclosure-body">
+              <p class="tiny">Turn the current export choice into a concrete Form.io placement plan before you paste anything into production.</p>
+              <div class="info-grid">
+                <div class="info-tile">
+                  <div class="label">Recommended Path</div>
+                  <div id="deployment-path">Choose an export format to see the safest deployment route.</div>
+                </div>
+                <div class="info-tile">
+                  <div class="label">Best Mount Point</div>
+                  <div id="deployment-mount">The best Form.io insertion point will appear here.</div>
+                </div>
+                <div class="info-tile">
+                  <div class="label">Scope Check</div>
+                  <div id="deployment-scope">Selector and wrapper guidance will update from your current builder state.</div>
+                </div>
+                <div class="info-tile">
+                  <div class="label">Risk Watch</div>
+                  <div id="deployment-risk">Unsupported combinations and rollout cautions will be called out here.</div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="label">Suggested Form.io Steps</label>
+                <ol id="deployment-steps" class="recipe-steps"></ol>
+              </div>
+              <div class="row">
+                <label class="label">Ready-To-Paste Checklist</label>
+                <div id="deployment-checklist" class="deployment-checklist"></div>
+              </div>
+            </div>
+          </details>
           <p id="builder-status" class="tiny"></p>
         </section>
 
@@ -2221,6 +2441,11 @@
               <option value="formio-radio">Form.io Radio</option>
               <option value="formio-submit">Form.io Submit Button</option>
               <option value="formio-file">Form.io File Dropzone</option>
+              <option value="formio-datetime">Form.io Date / Time</option>
+              <option value="formio-tags">Form.io Tags</option>
+              <option value="formio-selectboxes">Form.io Selectboxes</option>
+              <option value="formio-address">Form.io Address</option>
+              <option value="formio-datagrid">Form.io Datagrid</option>
             </select>
           </div>
           <div class="row">
@@ -2292,8 +2517,8 @@
                 <div class="preview-title">Form.io Text Field</div>
                 <div
                   id="preview-formio-textfield"
-                  class="preview-target preview-formio-shell"
-                  data-base-class="preview-target preview-formio-shell"
+                  class="preview-target preview-formio-shell formio-component-textfield formio-component-password"
+                  data-base-class="preview-target preview-formio-shell formio-component-textfield formio-component-password"
                   data-preview-proxy=".form-control"
                 >
                   <label class="preview-formio-label" for="preview-formio-textfield-input">Text field</label>
@@ -2311,8 +2536,8 @@
                 <div class="preview-title">Form.io Native Select</div>
                 <div
                   id="preview-formio-select"
-                  class="preview-target preview-formio-shell"
-                  data-base-class="preview-target preview-formio-shell"
+                  class="preview-target preview-formio-shell formio-component-select"
+                  data-base-class="preview-target preview-formio-shell formio-component-select"
                   data-preview-proxy=".form-select"
                 >
                   <label class="preview-formio-label" for="preview-formio-select-input">Dropdown</label>
@@ -2333,8 +2558,8 @@
                 <div class="preview-title">Form.io Enhanced Select</div>
                 <div
                   id="preview-formio-choices"
-                  class="preview-target preview-formio-shell preview-formio-choices"
-                  data-base-class="preview-target preview-formio-shell preview-formio-choices"
+                  class="preview-target preview-formio-shell preview-formio-choices formio-component-select"
+                  data-base-class="preview-target preview-formio-shell preview-formio-choices formio-component-select"
                   data-preview-proxy=".choices__inner"
                 >
                   <div class="preview-formio-label">Choices.js shell</div>
@@ -2359,8 +2584,8 @@
                 <div class="preview-title">Form.io Textarea</div>
                 <div
                   id="preview-formio-textarea"
-                  class="preview-target preview-formio-shell"
-                  data-base-class="preview-target preview-formio-shell"
+                  class="preview-target preview-formio-shell formio-component-textarea"
+                  data-base-class="preview-target preview-formio-shell formio-component-textarea"
                   data-preview-proxy=".form-control"
                 >
                   <label class="preview-formio-label" for="preview-formio-textarea-input">Textarea</label>
@@ -2378,8 +2603,8 @@
                 <div class="preview-title">Form.io Checkbox</div>
                 <div
                   id="preview-formio-checkbox"
-                  class="preview-target preview-formio-shell"
-                  data-base-class="preview-target preview-formio-shell"
+                  class="preview-target preview-formio-shell formio-component-checkbox"
+                  data-base-class="preview-target preview-formio-shell formio-component-checkbox"
                   data-preview-proxy=".form-check-input"
                 >
                   <div class="preview-formio-label">Checkbox group item</div>
@@ -2400,8 +2625,8 @@
                 <div class="preview-title">Form.io Radio</div>
                 <div
                   id="preview-formio-radio"
-                  class="preview-target preview-formio-shell"
-                  data-base-class="preview-target preview-formio-shell"
+                  class="preview-target preview-formio-shell formio-component-radio"
+                  data-base-class="preview-target preview-formio-shell formio-component-radio"
                   data-preview-proxy=".form-check-input"
                 >
                   <div class="preview-formio-label">Radio option</div>
@@ -2422,8 +2647,8 @@
                 <div class="preview-title">Form.io Submit Button</div>
                 <div
                   id="preview-formio-submit"
-                  class="preview-target preview-formio-shell"
-                  data-base-class="preview-target preview-formio-shell"
+                  class="preview-target preview-formio-shell formio-component-submit"
+                  data-base-class="preview-target preview-formio-shell formio-component-submit"
                   data-preview-proxy=".btn"
                 >
                   <div class="preview-formio-label">Submit action</div>
@@ -2441,8 +2666,8 @@
                 <div class="preview-title">Form.io File Dropzone</div>
                 <div
                   id="preview-formio-file"
-                  class="preview-target preview-formio-shell"
-                  data-base-class="preview-target preview-formio-shell"
+                  class="preview-target preview-formio-shell formio-component-file"
+                  data-base-class="preview-target preview-formio-shell formio-component-file"
                   data-preview-proxy=".fileSelector"
                 >
                   <div class="preview-formio-label">File upload</div>
@@ -2450,6 +2675,135 @@
                     <div class="preview-formio-file-copy">Drop files here or <span class="browse">browse</span></div>
                   </div>
                   <div class="preview-formio-meta">Starter for drag-and-drop upload styling and browse affordances.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-datetime">
+                <div class="preview-title">Form.io Date / Time</div>
+                <div
+                  id="preview-formio-datetime"
+                  class="preview-target preview-formio-shell formio-component-datetime"
+                  data-base-class="preview-target preview-formio-shell formio-component-datetime"
+                  data-preview-proxy=".form-control"
+                >
+                  <label class="preview-formio-label" for="preview-formio-datetime-input">Appointment time</label>
+                  <div class="preview-formio-input-group">
+                    <input
+                      id="preview-formio-datetime-input"
+                      type="datetime-local"
+                      class="form-control"
+                      data-base-class="form-control"
+                      data-base-value="2026-02-28T09:30"
+                    />
+                    <span class="input-group-addon preview-formio-addon" data-base-class="input-group-addon preview-formio-addon" tabindex="0">CAL</span>
+                  </div>
+                  <div class="preview-formio-meta">Use this for Form.io date/time inputs and their addon trigger.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-tags">
+                <div class="preview-title">Form.io Tags</div>
+                <div
+                  id="preview-formio-tags"
+                  class="preview-target preview-formio-shell preview-formio-choices formio-component-tags"
+                  data-base-class="preview-target preview-formio-shell preview-formio-choices formio-component-tags"
+                  data-preview-proxy="tags"
+                >
+                  <div class="preview-formio-label">Tagged values</div>
+                  <tags class="preview-formio-tags-node" data-base-class="preview-formio-tags-node" tabindex="0">
+                    <div class="choices is-focused" data-base-class="choices is-focused">
+                      <div class="choices__inner" data-base-class="choices__inner" tabindex="0">
+                        <div class="choices__list choices__list--multiple">
+                          <span class="choices__item">priority</span>
+                          <span class="choices__item">billing</span>
+                        </div>
+                      </div>
+                    </div>
+                  </tags>
+                  <div class="preview-formio-meta">Starter for tag pickers and token chips inside Form.io tags components.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-selectboxes">
+                <div class="preview-title">Form.io Selectboxes</div>
+                <div
+                  id="preview-formio-selectboxes"
+                  class="preview-target preview-formio-shell preview-formio-selectboxes formio-component-selectboxes"
+                  data-base-class="preview-target preview-formio-shell preview-formio-selectboxes formio-component-selectboxes"
+                  data-preview-proxy=".form-check-input"
+                >
+                  <div class="preview-formio-label">Notification channels</div>
+                  <label class="preview-formio-inline-check form-check">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      data-base-class="form-check-input"
+                      data-base-value="checked"
+                    />
+                    <span class="form-check-label">Email</span>
+                  </label>
+                  <label class="preview-formio-inline-check form-check">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      data-base-class="form-check-input"
+                      data-base-value=""
+                    />
+                    <span class="form-check-label">SMS</span>
+                  </label>
+                  <div class="preview-formio-meta">Use this for multi-checkbox selectboxes groups and option labels.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-address">
+                <div class="preview-title">Form.io Address</div>
+                <div
+                  id="preview-formio-address"
+                  class="preview-target preview-formio-shell preview-formio-address formio-component-address"
+                  data-base-class="preview-target preview-formio-shell preview-formio-address formio-component-address"
+                  data-preview-proxy=".form-control"
+                >
+                  <label class="preview-formio-label" for="preview-formio-address-input">Street address</label>
+                  <div class="address-autocomplete-container" data-base-class="address-autocomplete-container">
+                    <input
+                      id="preview-formio-address-input"
+                      class="form-control"
+                      data-base-class="form-control"
+                      data-base-value="123 Main St, Springfield"
+                    />
+                    <span
+                      class="address-autocomplete-remove-value-icon"
+                      data-base-class="address-autocomplete-remove-value-icon"
+                      tabindex="0"
+                    >x</span>
+                  </div>
+                  <div class="preview-formio-meta">Starter for address autocomplete inputs and the built-in clear icon.</div>
+                </div>
+              </div>
+              <div class="preview-panel" data-preview-key="formio-datagrid">
+                <div class="preview-title">Form.io Datagrid</div>
+                <div
+                  id="preview-formio-datagrid"
+                  class="preview-target preview-formio-shell preview-formio-datagrid formio-component-datagrid"
+                  data-base-class="preview-target preview-formio-shell preview-formio-datagrid formio-component-datagrid"
+                  data-preview-proxy=".datagrid-table"
+                >
+                  <div class="preview-formio-label">Line items</div>
+                  <table class="datagrid-table" data-base-class="datagrid-table" tabindex="0">
+                    <thead>
+                      <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Subscription</td>
+                        <td>2</td>
+                        <td>
+                          <button type="button" class="formio-datagrid-remove" data-base-class="formio-datagrid-remove" data-base-value="Remove">Remove</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="preview-formio-meta">Use this for grid borders, cells, hover rows, and remove controls.</div>
                 </div>
               </div>
             </div>
@@ -2697,6 +3051,9 @@ translateY()	translateY(<length|percentage>)
       const elResetValues = document.getElementById("reset-values");
       const elCopySyntax = document.getElementById("copy-syntax");
       const elBuilderClass = document.getElementById("builder-class");
+      const elBuilderFormioTarget = document.getElementById("builder-formio-target");
+      const elBuilderApplyFormioTarget = document.getElementById("builder-apply-formio-target");
+      const elBuilderFormioHelp = document.getElementById("builder-formio-help");
       const elBuilderBaseSelector = document.getElementById("builder-base-selector");
       const elBuilderCombinator = document.getElementById("builder-combinator");
       const elBuilderRelativeSelector = document.getElementById("builder-relative-selector");
@@ -2705,6 +3062,11 @@ translateY()	translateY(<length|percentage>)
       const elBuilderPseudoHelp = document.getElementById("builder-pseudo-help");
       const elBuilderMatchPreview = document.getElementById("builder-match-preview");
       const elBuilderSelectorOverride = document.getElementById("builder-selector-override");
+      const elSelectorOverrideMode = document.getElementById("selector-override-mode");
+      const elSelectorOverrideCoach = document.getElementById("selector-override-coach");
+      const elSelectorOverrideSeed = document.getElementById("selector-override-seed");
+      const elSelectorOverrideNormalize = document.getElementById("selector-override-normalize");
+      const elSelectorOverrideClear = document.getElementById("selector-override-clear");
       const elBuilderLegacyRow1 = document.getElementById("builder-legacy-row-1");
       const elBuilderLegacyRow2 = document.getElementById("builder-legacy-row-2");
       const elBuilderSelectorPreview = document.getElementById("builder-selector-preview");
@@ -2827,6 +3189,12 @@ translateY()	translateY(<length|percentage>)
       const elExportSnippet = document.getElementById("export-snippet");
       const elCopyExportAttributes = document.getElementById("copy-export-attributes");
       const elCopyExportSnippet = document.getElementById("copy-export-snippet");
+      const elDeploymentPath = document.getElementById("deployment-path");
+      const elDeploymentMount = document.getElementById("deployment-mount");
+      const elDeploymentScope = document.getElementById("deployment-scope");
+      const elDeploymentRisk = document.getElementById("deployment-risk");
+      const elDeploymentSteps = document.getElementById("deployment-steps");
+      const elDeploymentChecklist = document.getElementById("deployment-checklist");
       const elCopyBuilderCSS = document.getElementById("copy-builder-css");
       const elClearBuilder = document.getElementById("clear-builder");
       const elBuilderStatus = document.getElementById("builder-status");
@@ -2868,6 +3236,11 @@ translateY()	translateY(<length|percentage>)
       const previewFormioRadio = document.getElementById("preview-formio-radio");
       const previewFormioSubmit = document.getElementById("preview-formio-submit");
       const previewFormioFile = document.getElementById("preview-formio-file");
+      const previewFormioDatetime = document.getElementById("preview-formio-datetime");
+      const previewFormioTags = document.getElementById("preview-formio-tags");
+      const previewFormioSelectboxes = document.getElementById("preview-formio-selectboxes");
+      const previewFormioAddress = document.getElementById("preview-formio-address");
+      const previewFormioDatagrid = document.getElementById("preview-formio-datagrid");
       const previewPanels = Array.from(document.querySelectorAll(".preview-panel"));
       const workspaceViewButtons = Array.from(document.querySelectorAll("[data-workspace-view-option]"));
       const workspaceCorePanels = Array.from(document.querySelectorAll(".view-core"));
@@ -2887,16 +3260,22 @@ translateY()	translateY(<length|percentage>)
         "formio-checkbox": previewFormioCheckbox,
         "formio-radio": previewFormioRadio,
         "formio-submit": previewFormioSubmit,
-        "formio-file": previewFormioFile
+        "formio-file": previewFormioFile,
+        "formio-datetime": previewFormioDatetime,
+        "formio-tags": previewFormioTags,
+        "formio-selectboxes": previewFormioSelectboxes,
+        "formio-address": previewFormioAddress,
+        "formio-datagrid": previewFormioDatagrid
       };
       const previewActualStates = {};
       Object.keys(previewTargets).forEach(function (key) {
+        const interactive = previewInteractiveElement(previewTargets[key]);
         previewActualStates[key] = {
           hover: false,
           focus: false,
           "focus-visible": false,
           active: false,
-          checked: false
+          checked: Boolean(interactive && "checked" in interactive && interactive.checked)
         };
       });
       let triggerSyncLastChangeMessage = "Initial load. Shared trigger state not edited yet.";
@@ -3727,7 +4106,7 @@ translateY()	translateY(<length|percentage>)
       const INPUT_HINT_TEXT = {
         search: "Example searches: color, blur, aria-label, transition.",
         "custom-attr-name": "Example: data-section, data-step, data-variant.",
-        "builder-class": "Example: hero-card, onboarding-banner, input-soft-fill.",
+        "builder-class": "Example: hero-card, onboarding-banner, form-control, formio-component-select.",
         "builder-base-selector": "Example: .hero-card, #form-a, .my-theme .field.",
         "builder-relative-selector": "Example: .form-control, .help-text, button.primary.",
         "builder-selector-override": "Example: .my-class .row + .help-text:hover",
@@ -3825,6 +4204,202 @@ translateY()	translateY(<length|percentage>)
       ];
       let beginnerStepIndex = 0;
       let beginnerExportCopied = false;
+      const FORMIO_NATIVE_SELECTOR_PRESETS = [
+        {
+          id: "native-form-control",
+          name: "Shared input control (.form-control)",
+          description: "Targets the base input class used by text, password, date/time, address, and textarea controls.",
+          className: "form-control",
+          baseSelector: ".form-control",
+          combinator: "self",
+          relativeSelector: "",
+          target: "formio-textfield",
+          autoApply: false
+        },
+        {
+          id: "native-textfield",
+          name: "Text field wrapper (.formio-component-textfield .form-control)",
+          description: "Targets only Form.io textfield wrappers, leaving other .form-control instances alone.",
+          className: "formio-component-textfield",
+          baseSelector: ".formio-component-textfield",
+          combinator: "descendant",
+          relativeSelector: ".form-control",
+          target: "formio-textfield",
+          autoApply: false
+        },
+        {
+          id: "native-password",
+          name: "Password field (.formio-component-password .form-control)",
+          description: "Targets Form.io password inputs specifically.",
+          className: "formio-component-password",
+          baseSelector: ".formio-component-password",
+          combinator: "descendant",
+          relativeSelector: ".form-control",
+          target: "formio-textfield",
+          autoApply: false
+        },
+        {
+          id: "native-select",
+          name: "Native select (.formio-component-select .form-select)",
+          description: "Targets native Form.io dropdowns rendered with .form-select.",
+          className: "formio-component-select",
+          baseSelector: ".formio-component-select",
+          combinator: "descendant",
+          relativeSelector: ".form-select",
+          target: "formio-select",
+          autoApply: false
+        },
+        {
+          id: "native-choices-inner",
+          name: "Enhanced select shell (.formio-component-select .choices__inner)",
+          description: "Targets the visible Choices.js control used by enhanced Form.io selects.",
+          className: "formio-component-select",
+          baseSelector: ".formio-component-select",
+          combinator: "descendant",
+          relativeSelector: ".choices__inner",
+          target: "formio-choices",
+          autoApply: false
+        },
+        {
+          id: "native-textarea",
+          name: "Textarea (.formio-component-textarea .form-control)",
+          description: "Targets Form.io textarea inputs.",
+          className: "formio-component-textarea",
+          baseSelector: ".formio-component-textarea",
+          combinator: "descendant",
+          relativeSelector: ".form-control",
+          target: "formio-textarea",
+          autoApply: false
+        },
+        {
+          id: "native-checkbox",
+          name: "Checkbox input (.formio-component-checkbox .form-check-input)",
+          description: "Targets individual checkbox controls inside Form.io checkbox components.",
+          className: "formio-component-checkbox",
+          baseSelector: ".formio-component-checkbox",
+          combinator: "descendant",
+          relativeSelector: ".form-check-input",
+          target: "formio-checkbox",
+          autoApply: false
+        },
+        {
+          id: "native-radio",
+          name: "Radio input (.formio-component-radio .form-check-input)",
+          description: "Targets radio inputs inside Form.io radio groups.",
+          className: "formio-component-radio",
+          baseSelector: ".formio-component-radio",
+          combinator: "descendant",
+          relativeSelector: ".form-check-input",
+          target: "formio-radio",
+          autoApply: false
+        },
+        {
+          id: "native-selectboxes",
+          name: "Selectboxes (.formio-component-selectboxes .form-check-input)",
+          description: "Targets the checkbox controls used by Form.io selectboxes components.",
+          className: "formio-component-selectboxes",
+          baseSelector: ".formio-component-selectboxes",
+          combinator: "descendant",
+          relativeSelector: ".form-check-input",
+          target: "formio-selectboxes",
+          autoApply: false
+        },
+        {
+          id: "native-datetime",
+          name: "Date / time input (.formio-component-datetime .form-control[type=datetime-local])",
+          description: "Targets the date/time input field inside Form.io datetime components.",
+          className: "formio-component-datetime",
+          baseSelector: ".formio-component-datetime",
+          combinator: "descendant",
+          relativeSelector: ".form-control[type=datetime-local]",
+          target: "formio-datetime",
+          autoApply: false
+        },
+        {
+          id: "native-datetime-addon",
+          name: "Date / time addon (.formio-component-datetime .input-group-addon)",
+          description: "Targets the addon trigger adjacent to Form.io datetime inputs.",
+          className: "formio-component-datetime",
+          selectorOverride: ".formio-component-datetime .form-control[type=datetime-local] ~ .input-group-addon",
+          target: "formio-datetime",
+          autoApply: false
+        },
+        {
+          id: "native-tags",
+          name: "Tags wrapper (.formio-component-tags tags)",
+          description: "Targets the outer tags container used by Form.io tags components.",
+          className: "formio-component-tags",
+          selectorOverride: ".formio-component-tags tags",
+          target: "formio-tags",
+          autoApply: false
+        },
+        {
+          id: "native-address",
+          name: "Address input (.formio-component-address .address-autocomplete-container .form-control)",
+          description: "Targets the address autocomplete input field.",
+          className: "formio-component-address",
+          selectorOverride: ".formio-component-address .address-autocomplete-container .form-control",
+          target: "formio-address",
+          autoApply: false
+        },
+        {
+          id: "native-address-clear",
+          name: "Address clear icon (.formio-component-address .address-autocomplete-remove-value-icon)",
+          description: "Targets the built-in remove/clear icon for address autocomplete.",
+          className: "formio-component-address",
+          selectorOverride: ".formio-component-address .address-autocomplete-container .address-autocomplete-remove-value-icon",
+          target: "formio-address",
+          autoApply: false
+        },
+        {
+          id: "native-file",
+          name: "File dropzone (.formio-component-file .fileSelector)",
+          description: "Targets the upload drop area for Form.io file components.",
+          className: "formio-component-file",
+          baseSelector: ".formio-component-file",
+          combinator: "descendant",
+          relativeSelector: ".fileSelector",
+          target: "formio-file",
+          autoApply: false
+        },
+        {
+          id: "native-datagrid",
+          name: "Datagrid table (.formio-component-datagrid .datagrid-table)",
+          description: "Targets the main table surface inside a Form.io datagrid.",
+          className: "formio-component-datagrid",
+          baseSelector: ".formio-component-datagrid",
+          combinator: "descendant",
+          relativeSelector: ".datagrid-table",
+          target: "formio-datagrid",
+          autoApply: false
+        },
+        {
+          id: "native-datagrid-remove",
+          name: "Datagrid remove button (.formio-component-datagrid .formio-datagrid-remove)",
+          description: "Targets the row remove control inside a Form.io datagrid.",
+          className: "formio-component-datagrid",
+          baseSelector: ".formio-component-datagrid",
+          combinator: "descendant",
+          relativeSelector: ".formio-datagrid-remove",
+          target: "formio-datagrid",
+          autoApply: false
+        },
+        {
+          id: "native-submit",
+          name: "Submit button (.formio-component-submit .btn.btn-primary)",
+          description: "Targets the primary submit button used by Form.io submit components.",
+          className: "formio-component-submit",
+          baseSelector: ".formio-component-submit",
+          combinator: "descendant",
+          relativeSelector: ".btn.btn-primary",
+          target: "formio-submit",
+          autoApply: false
+        }
+      ];
+      const FORMIO_NATIVE_SELECTOR_PRESETS_BY_ID = FORMIO_NATIVE_SELECTOR_PRESETS.reduce(function (acc, preset) {
+        acc[preset.id] = preset;
+        return acc;
+      }, {});
       const SELECTOR_SIM_TEMPLATES = [
         {
           id: "form-stack",
@@ -4786,6 +5361,248 @@ translateY()	translateY(<length|percentage>)
             combinator: "descendant",
             relativeSelector: ".fileSelector"
           }
+        ),
+        makeLibraryPreset(
+          "[Form.io] Date / Time Input Group",
+          "Starter for Form.io datetime inputs and the adjacent addon trigger.",
+          "formio-datetime-pack",
+          "formio-datetime",
+          [
+            {
+              selector: ".formio-datetime-pack .form-control[type=datetime-local]",
+              declarations: [
+                "display: block",
+                "width: 100%",
+                "padding: .375rem .75rem",
+                "font-size: 1rem",
+                "line-height: 1.5",
+                "color: #212529",
+                "background-color: #ffffff",
+                "border: 1px solid #ced4da",
+                "border-radius: .375rem 0 0 .375rem"
+              ]
+            },
+            {
+              selector: ".formio-datetime-pack .input-group-addon",
+              declarations: [
+                "width: auto",
+                "padding: .375rem .75rem",
+                "border: 1px solid #ced4da",
+                "border-left: 0",
+                "border-radius: 0 .375rem .375rem 0",
+                "background-color: #edf3ff",
+                "color: #224383"
+              ]
+            },
+            {
+              selector: ".formio-datetime-pack .form-control[type=datetime-local]:focus",
+              declarations: [
+                "border-color: #86b7fe",
+                "outline: 0",
+                "box-shadow: 0 0 0 .25rem rgba(13,110,253,0.2)"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-datetime-pack",
+            combinator: "descendant",
+            relativeSelector: ".form-control[type=datetime-local]"
+          }
+        ),
+        makeLibraryPreset(
+          "[Form.io] Tags Token Picker",
+          "Starter for Form.io tags components, including the tags wrapper and token chips.",
+          "formio-tags-pack",
+          "formio-tags",
+          [
+            {
+              selector: ".formio-tags-pack tags",
+              declarations: [
+                "display: block",
+                "background-color: #ffffff",
+                "border-radius: .5rem"
+              ]
+            },
+            {
+              selector: ".formio-tags-pack .choices__inner",
+              declarations: [
+                "display: inline-block",
+                "width: 100%",
+                "padding: 7.5px 7.5px 3.75px",
+                "border: 1px solid #dddddd",
+                "border-radius: 2.5px",
+                "min-height: 44px",
+                "background-color: #f9f9f9"
+              ]
+            },
+            {
+              selector: ".formio-tags-pack .choices__list--multiple .choices__item",
+              declarations: [
+                "display: inline-block",
+                "border-radius: 20px",
+                "padding: 4px 10px",
+                "font-size: 12px",
+                "font-weight: 500",
+                "margin-right: 3.75px",
+                "margin-bottom: 3.75px",
+                "background-color: #00bcd4",
+                "border: 1px solid #00a5bb",
+                "color: #ffffff"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-tags-pack",
+            combinator: "descendant",
+            relativeSelector: "tags"
+          }
+        ),
+        makeLibraryPreset(
+          "[Form.io] Selectboxes Group",
+          "Starter for multi-checkbox selectboxes layouts and option styling.",
+          "formio-selectboxes-pack",
+          "formio-selectboxes",
+          [
+            {
+              selector: ".formio-selectboxes-pack .form-check",
+              declarations: [
+                "display: block",
+                "min-height: 1.5rem",
+                "padding-left: 1.5em",
+                "margin-bottom: .35rem"
+              ]
+            },
+            {
+              selector: ".formio-selectboxes-pack .form-check-input",
+              declarations: [
+                "width: 1em",
+                "height: 1em",
+                "margin-top: .25em",
+                "margin-left: -1.5em",
+                "border: 1px solid #ced4da",
+                "border-radius: .25em",
+                "background-color: #ffffff"
+              ]
+            },
+            {
+              selector: ".formio-selectboxes-pack .form-check-input:checked",
+              declarations: [
+                "background-color: #0d6efd",
+                "border-color: #0d6efd"
+              ]
+            },
+            {
+              selector: ".formio-selectboxes-pack .form-check-label",
+              declarations: [
+                "color: #212529",
+                "font-weight: 500"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-selectboxes-pack",
+            combinator: "descendant",
+            relativeSelector: ".form-check-input"
+          }
+        ),
+        makeLibraryPreset(
+          "[Form.io] Address Autocomplete",
+          "Starter for address autocomplete inputs and the clear icon control.",
+          "formio-address-pack",
+          "formio-address",
+          [
+            {
+              selector: ".formio-address-pack .address-autocomplete-container",
+              declarations: [
+                "position: relative"
+              ]
+            },
+            {
+              selector: ".formio-address-pack .address-autocomplete-container .form-control",
+              declarations: [
+                "display: block",
+                "width: 100%",
+                "padding: .375rem 2.2rem .375rem .75rem",
+                "font-size: 1rem",
+                "line-height: 1.5",
+                "border: 1px solid #ced4da",
+                "border-radius: .375rem",
+                "background-color: #ffffff"
+              ]
+            },
+            {
+              selector: ".formio-address-pack .address-autocomplete-container .address-autocomplete-remove-value-icon",
+              declarations: [
+                "cursor: pointer",
+                "position: absolute",
+                "right: 10px",
+                "top: 50%",
+                "transform: translateY(-50%)",
+                "color: #224383"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-address-pack",
+            combinator: "descendant",
+            relativeSelector: ".address-autocomplete-container .form-control"
+          }
+        ),
+        makeLibraryPreset(
+          "[Form.io] Datagrid Table",
+          "Starter for Form.io datagrid tables, cells, and remove buttons.",
+          "formio-datagrid-pack",
+          "formio-datagrid",
+          [
+            {
+              selector: ".formio-datagrid-pack",
+              declarations: [
+                "overflow-x: auto"
+              ]
+            },
+            {
+              selector: ".formio-datagrid-pack .datagrid-table, .formio-datagrid-pack .datagrid-table td, .formio-datagrid-pack .datagrid-table th",
+              declarations: [
+                "border: 3px solid #dddddd",
+                "padding: 10px"
+              ]
+            },
+            {
+              selector: ".formio-datagrid-pack .datagrid-table > tbody > tr > td:last-child",
+              declarations: [
+                "position: relative"
+              ]
+            },
+            {
+              selector: ".formio-datagrid-pack .formio-datagrid-remove",
+              declarations: [
+                "position: absolute",
+                "top: 0",
+                "right: 0",
+                "visibility: hidden",
+                "opacity: 0",
+                "transition: opacity .2s linear, visibility 0s .2s"
+              ]
+            },
+            {
+              selector: ".formio-datagrid-pack .datagrid-table > tbody > tr:hover > td:last-child .formio-datagrid-remove",
+              declarations: [
+                "visibility: visible",
+                "opacity: 1",
+                "transition: visibility 0s, opacity .2s linear"
+              ]
+            }
+          ],
+          [],
+          {
+            baseSelector: ".formio-datagrid-pack",
+            combinator: "descendant",
+            relativeSelector: ".datagrid-table"
+          }
         )
       ];
       const BUILTIN_PRESETS_BY_ID = BUILTIN_PRESETS.reduce(function (acc, preset) {
@@ -4815,7 +5632,12 @@ translateY()	translateY(<length|percentage>)
         "formio-checkbox",
         "formio-radio",
         "formio-submit",
-        "formio-file"
+        "formio-file",
+        "formio-datetime",
+        "formio-tags",
+        "formio-selectboxes",
+        "formio-address",
+        "formio-datagrid"
       ];
       let previewCycleIndex = 0;
       let previewCycleTimer = null;
@@ -5499,6 +6321,78 @@ translateY()	translateY(<length|percentage>)
         });
       }
 
+      function selectedFormioNativeTargetPreset() {
+        const id = (elBuilderFormioTarget && elBuilderFormioTarget.value || "").trim();
+        if (!id) return null;
+        return FORMIO_NATIVE_SELECTOR_PRESETS_BY_ID[id] || null;
+      }
+
+      function renderFormioNativeTargetList() {
+        if (!elBuilderFormioTarget) return;
+        const prev = (elBuilderFormioTarget.value || "").trim();
+        elBuilderFormioTarget.innerHTML = "";
+
+        const empty = document.createElement("option");
+        empty.value = "";
+        empty.textContent = "Keep current selector targeting";
+        elBuilderFormioTarget.appendChild(empty);
+
+        FORMIO_NATIVE_SELECTOR_PRESETS.forEach(function (preset) {
+          const option = document.createElement("option");
+          option.value = preset.id;
+          option.textContent = preset.name;
+          elBuilderFormioTarget.appendChild(option);
+        });
+
+        if (FORMIO_NATIVE_SELECTOR_PRESETS_BY_ID[prev]) {
+          elBuilderFormioTarget.value = prev;
+        } else {
+          elBuilderFormioTarget.value = "";
+        }
+        updateFormioNativeTargetHelp();
+      }
+
+      function updateFormioNativeTargetHelp() {
+        if (!elBuilderFormioHelp) return;
+        const preset = selectedFormioNativeTargetPreset();
+        if (!preset) {
+          elBuilderFormioHelp.textContent = "Use this when you want injected CSS to target Form.io's built-in selectors directly instead of a custom wrapper class.";
+          return;
+        }
+        elBuilderFormioHelp.textContent =
+          preset.description +
+          " Loading a preset updates the selector controls only. Existing rules stay in the stack until you remove them.";
+      }
+
+      function applySelectedFormioNativeTarget() {
+        const preset = selectedFormioNativeTargetPreset();
+        if (!preset) {
+          setBuilderStatus("Pick a Form.io native target first.");
+          return;
+        }
+        const nextClass = preset.className || elBuilderClass.value || "my-custom-class";
+        const defaultBase = "." + sanitizeClassName(nextClass);
+        elBuilderClass.value = nextClass;
+        elBuilderBaseSelector.value = preset.baseSelector || defaultBase;
+        elBuilderCombinator.value = preset.combinator || "self";
+        elBuilderRelativeSelector.value = preset.relativeSelector || "";
+        syncPseudoControlFromValue(preset.pseudoSelector || "");
+        elBuilderSelectorOverride.value = preset.selectorOverride || "";
+        elBuilderVariableScope.value = preset.variableScope || (preset.baseSelector || defaultBase);
+        elBuilderAutoApply.checked = preset.autoApply !== false;
+        if (preset.target && Object.prototype.hasOwnProperty.call(previewTargets, preset.target)) {
+          elTarget.value = preset.target;
+        }
+        lastAutoBaseClass = sanitizeClassName(elBuilderClass.value);
+        seedSelectorGraphFromLegacy();
+        renderSelectorGraph();
+        updateFormioNativeTargetHelp();
+        renderBuilder();
+        updateLive();
+        updatePreviewCycleUI();
+        setBuilderStatus("Loaded Form.io native target: " + preset.name + ".");
+      }
+
       function previewInteractiveElement(target) {
         if (!target || typeof target.getAttribute !== "function") return target || null;
         const selector = (target.getAttribute("data-preview-proxy") || "").trim();
@@ -6127,6 +7021,35 @@ translateY()	translateY(<length|percentage>)
         return composeSelectorFromSegments(base, selectorGraphSegments);
       }
 
+      function composeSelectorFromBuilderInputs() {
+        if (elSelectorGraphEnabled.checked) {
+          return composeSelectorFromGraph(getBaseSelector());
+        }
+
+        const base = getBaseSelector();
+        const combinator = elBuilderCombinator.value;
+        const relative = (elBuilderRelativeSelector.value || "").trim();
+        const pseudo = getSelectedPseudoSelector();
+
+        let selector = base;
+        if (combinator === "descendant") selector = base + " " + (relative || "*");
+        if (combinator === "child") selector = base + " > " + (relative || "*");
+        if (combinator === "adjacent") selector = base + " + " + (relative || "*");
+        if (combinator === "sibling") selector = base + " ~ " + (relative || "*");
+
+        if (pseudo) selector += pseudo;
+        return selector.trim();
+      }
+
+      function normalizeSelectorText(selector) {
+        return String(selector || "")
+          .replace(/[{};]/g, " ")
+          .replace(/\s*,\s*/g, ", ")
+          .replace(/\s*([>+~])\s*/g, " $1 ")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
       function computeSpecificityForSingle(selector) {
         const src = String(selector || "");
         const idCount = (src.match(/#[a-zA-Z0-9_-]+/g) || []).length;
@@ -6357,6 +7280,11 @@ translateY()	translateY(<length|percentage>)
         if (key === "formio-radio") return "Form.io Radio";
         if (key === "formio-submit") return "Form.io Submit Button";
         if (key === "formio-file") return "Form.io File Dropzone";
+        if (key === "formio-datetime") return "Form.io Date / Time";
+        if (key === "formio-tags") return "Form.io Tags";
+        if (key === "formio-selectboxes") return "Form.io Selectboxes";
+        if (key === "formio-address") return "Form.io Address";
+        if (key === "formio-datagrid") return "Form.io Datagrid";
         return key || "Unknown";
       }
 
@@ -7113,24 +8041,41 @@ translateY()	translateY(<length|percentage>)
       function composeSelector() {
         const override = (elBuilderSelectorOverride.value || "").trim();
         if (override) return override;
+        return composeSelectorFromBuilderInputs();
+      }
 
-        if (elSelectorGraphEnabled.checked) {
-          return composeSelectorFromGraph(getBaseSelector());
-        }
+      function updateSelectorOverrideCoach() {
+        if (!elSelectorOverrideMode || !elSelectorOverrideCoach) return;
 
+        const rawOverride = String(elBuilderSelectorOverride.value || "");
+        const override = rawOverride.trim();
+        const normalizedOverride = normalizeSelectorText(rawOverride);
+        const composed = composeSelectorFromBuilderInputs();
         const base = getBaseSelector();
-        const combinator = elBuilderCombinator.value;
-        const relative = (elBuilderRelativeSelector.value || "").trim();
         const pseudo = getSelectedPseudoSelector();
 
-        let selector = base;
-        if (combinator === "descendant") selector = base + " " + (relative || "*");
-        if (combinator === "child") selector = base + " > " + (relative || "*");
-        if (combinator === "adjacent") selector = base + " + " + (relative || "*");
-        if (combinator === "sibling") selector = base + " ~ " + (relative || "*");
+        if (!override) {
+          elSelectorOverrideMode.textContent = "Guided composer is active.";
+          elSelectorOverrideCoach.textContent = "Override is off. Use the guided selector controls until you need manual syntax.";
+          return;
+        }
 
-        if (pseudo) selector += pseudo;
-        return selector.trim();
+        elSelectorOverrideMode.textContent = "Manual override is active.";
+
+        let note = "Override is active. Keep it scoped to the wrapper you intend to ship.";
+        if (rawOverride !== normalizedOverride) {
+          note = "Override includes extra spacing or pasted CSS punctuation. Normalize it before you ship or copy it.";
+        } else if (override === composed) {
+          note = "Override matches the guided selector exactly. Clear it unless you plan to customize it further.";
+        } else if (rawOverride.indexOf(",") >= 0) {
+          note = "Multiple selector groups are active. The specificity meter is showing the strongest selector only.";
+        } else if (base && override.indexOf(base) === -1) {
+          note = "Override does not include the current base selector, so wrapper scoping is bypassed on purpose.";
+        } else if (pseudo && override.indexOf(pseudo) === -1) {
+          note = "Override skips the current Step 2 state. Add that pseudo manually if you still want preview state matching.";
+        }
+
+        elSelectorOverrideCoach.textContent = note;
       }
 
       function updateSelectorPreview() {
@@ -7138,6 +8083,7 @@ translateY()	translateY(<length|percentage>)
         elBuilderSelectorPreview.textContent = selector;
         elSelectorGraphOutput.textContent = selector;
         updateSpecificityMeter(selector);
+        updateSelectorOverrideCoach();
       }
 
       function ensureRuleBlock(selector, media) {
@@ -7283,6 +8229,7 @@ translateY()	translateY(<length|percentage>)
       function snapshotBuilderState() {
         return {
           className: elBuilderClass.value,
+          formioTargetPresetId: elBuilderFormioTarget ? elBuilderFormioTarget.value : "",
           baseSelector: elBuilderBaseSelector.value,
           combinator: elBuilderCombinator.value,
           relativeSelector: elBuilderRelativeSelector.value,
@@ -7300,6 +8247,7 @@ translateY()	translateY(<length|percentage>)
           previewInteractionState: elPreviewInteractionState.value,
           followActualPreview: Boolean(elTriggerFollowActual && elTriggerFollowActual.checked),
           autoApply: elBuilderAutoApply.checked,
+          target: elTarget.value,
           rules: builderRules.map(function (b) {
             return { selector: b.selector, media: b.media || "", declarations: b.declarations.slice() };
           }),
@@ -7311,6 +8259,10 @@ translateY()	translateY(<length|percentage>)
 
       function applyBuilderState(state) {
         if (!state) return;
+        if (elBuilderFormioTarget) {
+          elBuilderFormioTarget.value = FORMIO_NATIVE_SELECTOR_PRESETS_BY_ID[state.formioTargetPresetId] ? state.formioTargetPresetId : "";
+        }
+        updateFormioNativeTargetHelp();
         elBuilderClass.value = state.className || "my-custom-class";
         elBuilderBaseSelector.value = state.baseSelector || ("." + sanitizeClassName(elBuilderClass.value));
         elBuilderCombinator.value = state.combinator || "self";
@@ -8838,6 +9790,101 @@ translateY()	translateY(<length|percentage>)
         elExportAttributes.textContent = attrText;
         elExportSnippet.textContent = snippet;
         elExportNotes.textContent = notes;
+        updateDeploymentAssistant();
+      }
+
+      function updateDeploymentAssistant() {
+        if (!elDeploymentPath || !elDeploymentMount || !elDeploymentScope || !elDeploymentRisk || !elDeploymentSteps || !elDeploymentChecklist) {
+          return;
+        }
+        const format = (elExportFormat.value || "class-css").trim();
+        const className = sanitizeClassName(elBuilderClass.value);
+        const selector = composeSelector();
+        const cssText = (elBuilderCSS.textContent || "").trim();
+        const hasMedia = builderRules.some(function (block) {
+          return Boolean(String(block.media || "").trim());
+        });
+        const hasVariables = builderVariables.length > 0;
+        const hasPseudoState = /:(hover|focus|focus-visible|active|disabled|checked|visited)\b/.test(cssText);
+        const hasStructureDependency = /(^|[\s>+~])(\.|#|\[|[a-z])/.test(selector.replace(/^(\.|#)[^\s>+~]+/, "")) || /[>+~]/.test(selector);
+        const isNativeTarget = /^\.formio-/.test((elBuilderBaseSelector.value || "").trim()) || /^\.form-control/.test((elBuilderBaseSelector.value || "").trim()) || /^\.btn/.test((elBuilderBaseSelector.value || "").trim());
+
+        let path = "";
+        let mount = "";
+        let scope = "";
+        let risk = "";
+        let steps = [];
+        const checks = [];
+
+        if (format === "inline-style") {
+          path = "One-off inline patch for a single component instance.";
+          mount = "Paste the generated value into the component's HTML Attributes style field.";
+          scope = "Only the exact element carrying the style attribute will receive the change.";
+          risk = hasPseudoState || hasMedia
+            ? "Current rules include states or media logic that inline style cannot carry. Switch to Reusable Class + CSS or Self-Contained HTML Snippet before deployment."
+            : "Safe for static styling only. Reuse becomes hard once multiple components need the same look.";
+          steps = [
+            "Copy the Form.io HTML Attributes value from Export Wizard.",
+            "Paste it into the target component's style attribute field.",
+            "Preview the live component and confirm the static state matches the playground."
+          ];
+          checks.push("Inline style stays on one element only. No hover, focus, sibling, or media behavior will travel with it.");
+        } else if (format === "html-bundle") {
+          path = "Portable HTML component bundle with its own style block.";
+          mount = "Paste the export snippet into a Form.io HTML component or another trusted rich HTML slot.";
+          scope = "The bundled class ." + className + " keeps the CSS scoped to the markup shipped with the snippet.";
+          risk = hasStructureDependency
+            ? "This bundle expects the exported wrapper and child structure to remain intact. If Form.io rewrites the markup, selector matches can break."
+            : "Best when you control the markup. Avoid mixing it with platform-generated wrappers unless you re-check selectors.";
+          steps = [
+            "Copy the Injection / Markup Snippet from Export Wizard.",
+            "Paste it into a Form.io HTML component.",
+            "Confirm the rendered wrapper keeps class " + className + " and that child structure still matches the selector plan."
+          ];
+          checks.push("Use this when you need a portable snippet that brings both markup and CSS together.");
+        } else {
+          path = "Reusable class-based deployment for repeatable Form.io styling.";
+          mount = hasMedia || hasVariables
+            ? "Inject the Generated Stylesheet through project or form custom CSS, or a dedicated HTML component <style> block."
+            : "Add the class via HTML Attributes, then inject the Generated Stylesheet in your preferred Form.io CSS entry point.";
+          scope = isNativeTarget
+            ? "You are targeting native Form.io selectors directly, so this can affect every matching component in scope."
+            : "Class ." + className + " keeps the rollout opt-in, as long as the class is attached to each intended component.";
+          risk = isNativeTarget
+            ? "Native selector targeting is powerful but broad. Verify you are not unintentionally restyling sibling forms or shared components."
+            : "Lowest-risk reusable route. The main failure mode is forgetting to attach class " + className + " on the rendered component.";
+          steps = [
+            "Copy the class value into the target component's HTML Attributes.",
+            "Deploy the Generated Stylesheet through Form.io custom CSS or an HTML component style block.",
+            "Open the form and confirm selector " + selector + " matches the live DOM."
+          ];
+          checks.push("Reusable class export is the safest default for repeatable component styling.");
+        }
+
+        if (hasMedia) checks.push("Media rules are present, so deployment must keep a real stylesheet context.");
+        if (hasVariables) checks.push("CSS variables are in use. Make sure the variable scope selector exists around the live component.");
+        if (hasStructureDependency) checks.push("Structural selector logic is active. Confirm Form.io renders the same parent, child, or sibling relationships.");
+        if (hasPseudoState) checks.push("Interactive states are included. Validate hover, focus, active, disabled, or checked behavior in the actual form.");
+
+        elDeploymentPath.textContent = path;
+        elDeploymentMount.textContent = mount;
+        elDeploymentScope.textContent = scope;
+        elDeploymentRisk.textContent = risk;
+
+        elDeploymentSteps.innerHTML = "";
+        steps.forEach(function (text) {
+          const item = document.createElement("li");
+          item.textContent = text;
+          elDeploymentSteps.appendChild(item);
+        });
+
+        elDeploymentChecklist.innerHTML = "";
+        checks.forEach(function (text) {
+          const item = document.createElement("div");
+          item.className = "deployment-check";
+          item.textContent = text;
+          elDeploymentChecklist.appendChild(item);
+        });
       }
 
       function renderBuilder() {
@@ -9564,6 +10611,12 @@ translateY()	translateY(<length|percentage>)
         updateSelectorSimulatorRootClass();
         updateLive();
       });
+      if (elBuilderFormioTarget) {
+        elBuilderFormioTarget.addEventListener("change", updateFormioNativeTargetHelp);
+      }
+      if (elBuilderApplyFormioTarget) {
+        elBuilderApplyFormioTarget.addEventListener("click", applySelectedFormioNativeTarget);
+      }
       elBuilderClass.addEventListener("input", function () {
         const oldDefault = "." + lastAutoBaseClass;
         const currentBase = (elBuilderBaseSelector.value || "").trim();
@@ -9585,6 +10638,43 @@ translateY()	translateY(<length|percentage>)
           updateLive();
         });
       });
+      if (elSelectorOverrideSeed) {
+        elSelectorOverrideSeed.addEventListener("click", function () {
+          elBuilderSelectorOverride.value = composeSelectorFromBuilderInputs();
+          renderBuilder();
+          updateLive();
+          setBuilderStatus("Selector override seeded from the guided selector.");
+        });
+      }
+      if (elSelectorOverrideNormalize) {
+        elSelectorOverrideNormalize.addEventListener("click", function () {
+          const next = normalizeSelectorText(elBuilderSelectorOverride.value || "");
+          if (!next) {
+            setBuilderStatus("No selector override to normalize.");
+            renderBuilder();
+            updateLive();
+            return;
+          }
+          elBuilderSelectorOverride.value = next;
+          renderBuilder();
+          updateLive();
+          setBuilderStatus("Selector override normalized.");
+        });
+      }
+      if (elSelectorOverrideClear) {
+        elSelectorOverrideClear.addEventListener("click", function () {
+          if (!String(elBuilderSelectorOverride.value || "").trim()) {
+            setBuilderStatus("Selector override is already clear.");
+            renderBuilder();
+            updateLive();
+            return;
+          }
+          elBuilderSelectorOverride.value = "";
+          renderBuilder();
+          updateLive();
+          setBuilderStatus("Selector override cleared. Guided selector controls are active again.");
+        });
+      }
       elCustomRule.addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
           e.preventDefault();
@@ -9647,6 +10737,7 @@ translateY()	translateY(<length|percentage>)
       writeBuiltInKeyframesStyles();
       seedSelectorGraphFromLegacy();
       renderSelectorGraph();
+      renderFormioNativeTargetList();
       setWorkspaceView(document.body.getAttribute("data-workspace-view") || "build");
       updatePreviewModeUI();
       updatePreviewInteractionHelp();
