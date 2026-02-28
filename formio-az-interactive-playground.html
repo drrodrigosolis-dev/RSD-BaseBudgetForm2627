@@ -1522,6 +1522,10 @@
                         <div id="trigger-sync-preview-state">Always On</div>
                       </div>
                       <div class="info-tile">
+                        <div class="label">Actual Preview</div>
+                        <div id="trigger-sync-actual-state">Idle / Always On</div>
+                      </div>
+                      <div class="info-tile">
                         <div class="label">Alignment Status</div>
                         <div id="trigger-sync-status">All three surfaces start aligned on Always On.</div>
                       </div>
@@ -1529,6 +1533,7 @@
                     <div class="inline">
                       <button id="trigger-align-builder" type="button">Align All To Step 2</button>
                       <button id="trigger-align-animation" type="button">Align All To Animation Lab</button>
+                      <button id="trigger-align-actual" type="button">Match All To Actual Preview</button>
                     </div>
                   </div>
                 </div>
@@ -2131,9 +2136,11 @@ translateY()	translateY(<length|percentage>)
       const elTriggerSyncRuleState = document.getElementById("trigger-sync-rule-state");
       const elTriggerSyncAnimationState = document.getElementById("trigger-sync-animation-state");
       const elTriggerSyncPreviewState = document.getElementById("trigger-sync-preview-state");
+      const elTriggerSyncActualState = document.getElementById("trigger-sync-actual-state");
       const elTriggerSyncStatus = document.getElementById("trigger-sync-status");
       const elTriggerAlignBuilder = document.getElementById("trigger-align-builder");
       const elTriggerAlignAnimation = document.getElementById("trigger-align-animation");
+      const elTriggerAlignActual = document.getElementById("trigger-align-actual");
       const elAnimationLabName = document.getElementById("animation-lab-name");
       const elAnimationLabDuration = document.getElementById("animation-lab-duration");
       const elAnimationLabEasing = document.getElementById("animation-lab-easing");
@@ -3944,11 +3951,55 @@ translateY()	translateY(<length|percentage>)
         return raw + " (custom)";
       }
 
+      function actualSharedPreviewState(target) {
+        const activeTarget = target || targetElement();
+        const targetKey = previewKeyForElement(activeTarget);
+        const state = previewActualStates[targetKey] || {};
+        const keys = [];
+
+        if (state.active) keys.push("active");
+        if (state["focus-visible"]) {
+          keys.push("focus-visible");
+        } else if (state.focus) {
+          keys.push("focus");
+        }
+        if (state.hover) keys.push("hover");
+
+        if (!keys.length) {
+          return {
+            key: "",
+            pseudo: "",
+            label: "Idle / Always On",
+            mixed: false
+          };
+        }
+
+        if (keys.length === 1) {
+          const only = keys[0];
+          return {
+            key: only,
+            pseudo: (PREVIEW_STATE_SELECTOR_MAP[only] && PREVIEW_STATE_SELECTOR_MAP[only].pseudo) || "",
+            label: (PREVIEW_STATE_SELECTOR_MAP[only] && PREVIEW_STATE_SELECTOR_MAP[only].label) || only,
+            mixed: false
+          };
+        }
+
+        return {
+          key: "",
+          pseudo: "",
+          label: keys.map(function (key) {
+            return (PREVIEW_STATE_SELECTOR_MAP[key] && PREVIEW_STATE_SELECTOR_MAP[key].label) || key;
+          }).join(" + ") + " (mixed)",
+          mixed: true
+        };
+      }
+
       function updateTriggerAlignmentConsole() {
         if (
           !elTriggerSyncRuleState ||
           !elTriggerSyncAnimationState ||
           !elTriggerSyncPreviewState ||
+          !elTriggerSyncActualState ||
           !elTriggerSyncStatus
         ) {
           return;
@@ -3956,13 +4007,18 @@ translateY()	translateY(<length|percentage>)
         const builderPseudo = getSelectedPseudoSelector();
         const animationPseudo = (elAnimationLabTrigger.value || "").trim();
         const previewPseudo = previewInteractionPseudoValue();
+        const actualState = actualSharedPreviewState();
 
         elTriggerSyncRuleState.textContent = formatSharedTriggerLabel(builderPseudo, "Always On");
         elTriggerSyncAnimationState.textContent = formatSharedTriggerLabel(animationPseudo, "Always On");
         elTriggerSyncPreviewState.textContent = formatSharedTriggerLabel(previewPseudo, "Always On");
+        elTriggerSyncActualState.textContent = actualState.label;
 
         if (elTriggerAlignBuilder) {
           elTriggerAlignBuilder.disabled = Boolean(builderPseudo) && !isSharedTriggerValue(builderPseudo);
+        }
+        if (elTriggerAlignActual) {
+          elTriggerAlignActual.disabled = actualState.mixed;
         }
 
         let status = "";
@@ -3982,6 +4038,14 @@ translateY()	translateY(<length|percentage>)
 
         if (!elTriggerSyncEnabled.checked && builderPseudo !== animationPseudo && (!builderPseudo || isSharedTriggerValue(builderPseudo))) {
           status = "Link is off, so Step 2 and Animation Lab can drift. " + status;
+        }
+
+        if (actualState.mixed) {
+          status += " Actual preview is showing multiple live states, so it cannot drive sync until you leave only one active.";
+        } else if (actualState.pseudo === previewPseudo) {
+          status += " Actual preview matches the simulator right now.";
+        } else {
+          status += " Actual preview is currently " + actualState.label + ", so use Match All To Actual Preview when you want the other surfaces to follow it.";
         }
 
         elTriggerSyncStatus.textContent = status;
@@ -4052,6 +4116,24 @@ translateY()	translateY(<length|percentage>)
         renderBuilder();
         updateLive();
         syncPreviewInteractionStateFromPseudo(trigger, "Step 2, Animation Lab, and Preview now share the Animation Lab trigger.");
+        updateTriggerSyncNote();
+      }
+
+      function alignAllTriggersToActualPreview() {
+        const actualState = actualSharedPreviewState();
+        if (actualState.mixed) {
+          setBuilderStatus("Actual preview has multiple live states. Leave only one active before using it as the shared trigger.");
+          updateTriggerSyncNote();
+          return;
+        }
+        elAnimationLabTrigger.value = actualState.pseudo;
+        syncPseudoControlFromValue(actualState.pseudo);
+        renderBuilder();
+        updateAnimationLabOutputs();
+        syncPreviewInteractionStateFromPseudo(
+          actualState.pseudo,
+          "Step 2, Animation Lab, and Preview now match the actual " + actualState.label + " state."
+        );
         updateTriggerSyncNote();
       }
 
@@ -4260,6 +4342,7 @@ translateY()	translateY(<length|percentage>)
           elPreviewActualBadge.classList.remove("preview-pill-neutral", "preview-pill-sim-active", "preview-pill-actual-active", "preview-pill-muted");
           elPreviewActualBadge.classList.add(actualText === "none" ? "preview-pill-muted" : "preview-pill-actual-active");
         }
+        updateTriggerAlignmentConsole();
       }
 
       function stateKeyForPseudoSelector(pseudo) {
@@ -7617,6 +7700,7 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabRestart.addEventListener("click", restartAnimationLabPreview);
       elTriggerAlignBuilder.addEventListener("click", alignAllTriggersToBuilder);
       elTriggerAlignAnimation.addEventListener("click", alignAllTriggersToAnimationLab);
+      elTriggerAlignActual.addEventListener("click", alignAllTriggersToActualPreview);
       elPreviewToggleState.addEventListener("click", togglePreviewMode);
       elLibraryApplyPreset.addEventListener("click", applyLibraryPreset);
       elLibrarySearch.addEventListener("input", renderLibraryPresetList);
