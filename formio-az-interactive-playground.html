@@ -2118,6 +2118,23 @@
                     <input id="custom-rule-helper-spacing-left" type="number" step="1" value="12" title="Left spacing value." />
                   </div>
                 </div>
+                <div id="custom-rule-helper-spacing-coach" class="help-box">
+                  <div><strong>Spacing Shorthand Coach</strong></div>
+                  <div class="info-grid">
+                    <div class="info-tile">
+                      <div class="label">Output Shape</div>
+                      <div id="custom-rule-helper-spacing-pattern">1-value shorthand</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Value Map</div>
+                      <div id="custom-rule-helper-spacing-tokens">12px applies to all sides.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Why This Fits</div>
+                      <div id="custom-rule-helper-spacing-rationale">Matching sides collapse to the shortest readable shorthand.</div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div id="custom-rule-helper-gradient-group" class="hidden">
                 <div class="builder-row">
@@ -3152,6 +3169,10 @@ translateY()	translateY(<length|percentage>)
       const elCustomRuleHelperSpacingRight = document.getElementById("custom-rule-helper-spacing-right");
       const elCustomRuleHelperSpacingBottom = document.getElementById("custom-rule-helper-spacing-bottom");
       const elCustomRuleHelperSpacingLeft = document.getElementById("custom-rule-helper-spacing-left");
+      const elCustomRuleHelperSpacingCoach = document.getElementById("custom-rule-helper-spacing-coach");
+      const elCustomRuleHelperSpacingPattern = document.getElementById("custom-rule-helper-spacing-pattern");
+      const elCustomRuleHelperSpacingTokens = document.getElementById("custom-rule-helper-spacing-tokens");
+      const elCustomRuleHelperSpacingRationale = document.getElementById("custom-rule-helper-spacing-rationale");
       const elCustomRuleHelperGradientGroup = document.getElementById("custom-rule-helper-gradient-group");
       const elCustomRuleHelperGradientProperty = document.getElementById("custom-rule-helper-gradient-property");
       const elCustomRuleHelperGradientAngle = document.getElementById("custom-rule-helper-gradient-angle");
@@ -10281,6 +10302,64 @@ translateY()	translateY(<length|percentage>)
         });
       }
 
+      function formatNumericCssValue(value, unit) {
+        const rounded = Math.round(Number(value || 0) * 100) / 100;
+        const text = String(rounded).replace(/\.0+$/, "").replace(/(\.\d*[1-9])0+$/, "$1");
+        return (text || "0") + unit;
+      }
+
+      function buildSpacingShorthandDraft() {
+        const prop = (elCustomRuleHelperSpacingProperty.value || "padding").trim();
+        const unit = (elCustomRuleHelperSpacingUnit.value || "px").trim();
+        const top = Number(elCustomRuleHelperSpacingTop.value || 0);
+        const right = Number(elCustomRuleHelperSpacingRight.value || 0);
+        const bottom = Number(elCustomRuleHelperSpacingBottom.value || 0);
+        const left = Number(elCustomRuleHelperSpacingLeft.value || 0);
+        const values = [top, right, bottom, left];
+        let shorthand = values.slice();
+        let pattern = "4-value shorthand";
+        let tokens = "Top " + formatNumericCssValue(top, unit) + ", right " + formatNumericCssValue(right, unit) + ", bottom " + formatNumericCssValue(bottom, unit) + ", left " + formatNumericCssValue(left, unit) + ".";
+        let rationale = "All four sides differ, so the full clockwise shorthand is preserved.";
+
+        if (top === bottom && right === left) {
+          if (top === right) {
+            shorthand = [top];
+            pattern = "1-value shorthand";
+            tokens = formatNumericCssValue(top, unit) + " applies to all sides.";
+            rationale = "All four sides match, so the editor collapses to the shortest possible shorthand.";
+          } else {
+            shorthand = [top, right];
+            pattern = "2-value shorthand";
+            tokens = formatNumericCssValue(top, unit) + " applies to top and bottom. " + formatNumericCssValue(right, unit) + " applies to left and right.";
+            rationale = "Opposite sides match, so the editor keeps one value per axis.";
+          }
+        } else if (right === left) {
+          shorthand = [top, right, bottom];
+          pattern = "3-value shorthand";
+          tokens = formatNumericCssValue(top, unit) + " top, " + formatNumericCssValue(right, unit) + " left and right, " + formatNumericCssValue(bottom, unit) + " bottom.";
+          rationale = "The horizontal sides match, so the editor keeps top, horizontal, then bottom.";
+        }
+
+        return {
+          declaration: prop + ": " + shorthand.map(function (value) {
+            return formatNumericCssValue(value, unit);
+          }).join(" ") + ";",
+          pattern: pattern,
+          tokens: tokens,
+          rationale: rationale
+        };
+      }
+
+      function updateSpacingHelperCoach() {
+        if (!elCustomRuleHelperSpacingCoach || !elCustomRuleHelperSpacingPattern || !elCustomRuleHelperSpacingTokens || !elCustomRuleHelperSpacingRationale) {
+          return;
+        }
+        const details = buildSpacingShorthandDraft();
+        elCustomRuleHelperSpacingPattern.textContent = details.pattern;
+        elCustomRuleHelperSpacingTokens.textContent = details.tokens;
+        elCustomRuleHelperSpacingRationale.textContent = details.rationale;
+      }
+
       function customRuleHelperDeclaration() {
         const type = (elCustomRuleHelperType.value || "border-radius").trim();
         if (type === "box-shadow") {
@@ -10295,19 +10374,7 @@ translateY()	translateY(<length|percentage>)
           return "box-shadow: " + prefix + x + "px " + y + "px " + blur + "px " + spread + "px rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + alpha.toFixed(2) + ");";
         }
         if (type === "spacing") {
-          const prop = (elCustomRuleHelperSpacingProperty.value || "padding").trim();
-          const unit = (elCustomRuleHelperSpacingUnit.value || "px").trim();
-          const top = Number(elCustomRuleHelperSpacingTop.value || 0);
-          const right = Number(elCustomRuleHelperSpacingRight.value || 0);
-          const bottom = Number(elCustomRuleHelperSpacingBottom.value || 0);
-          const left = Number(elCustomRuleHelperSpacingLeft.value || 0);
-          const values = [top, right, bottom, left].map(function (value) {
-            return String(value) + unit;
-          });
-          if (top === right && right === bottom && bottom === left) {
-            return prop + ": " + values[0] + ";";
-          }
-          return prop + ": " + values.join(" ") + ";";
+          return buildSpacingShorthandDraft().declaration;
         }
         if (type === "gradient") {
           const prop = (elCustomRuleHelperGradientProperty.value || "background").trim();
@@ -10362,12 +10429,16 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperGradientGroup.classList.toggle("hidden", type !== "gradient");
         elCustomRuleHelperTransitionGroup.classList.toggle("hidden", type !== "transition");
         elCustomRuleHelperFluidGroup.classList.toggle("hidden", type !== "fluid-clamp");
+        if (elCustomRuleHelperSpacingCoach) {
+          elCustomRuleHelperSpacingCoach.classList.toggle("hidden", type !== "spacing");
+        }
         updateSpacingHelperControlState();
+        updateSpacingHelperCoach();
 
         if (type === "box-shadow") {
           elCustomRuleHelperNote.textContent = "Build a reusable shadow with consistent offsets, blur, spread, color, and optional inset behavior.";
         } else if (type === "spacing") {
-          elCustomRuleHelperNote.textContent = "Generate a clean padding or margin shorthand without manually ordering the four sides.";
+          elCustomRuleHelperNote.textContent = "Generate a clean padding or margin shorthand and let the coach explain when it can collapse to 1, 2, or 3 values.";
         } else if (type === "gradient") {
           elCustomRuleHelperNote.textContent = "Build a two-stop gradient with controlled direction and color stops, then load it as a full background declaration.";
         } else if (type === "transition") {
