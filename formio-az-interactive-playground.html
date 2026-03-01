@@ -1824,6 +1824,14 @@
                         <div id="trigger-sync-recommendation">Already aligned. No action needed.</div>
                       </div>
                     </div>
+                    <div class="row" style="margin-top:8px;">
+                      <label class="label" for="trigger-sync-master-state">Shared Trigger Reset</label>
+                      <div class="inline">
+                        <select id="trigger-sync-master-state" title="Choose a shared state to push into Step 2, Animation Lab, and Preview Simulator together."></select>
+                        <button id="trigger-sync-apply-state" type="button">Apply Preset To All</button>
+                      </div>
+                      <div id="trigger-sync-master-note" class="input-hint">Pick a shared state here when you want to reset all three surfaces deliberately instead of aligning to whichever panel is currently correct.</div>
+                    </div>
                     <div class="inline">
                       <button id="trigger-align-builder" type="button">Align All To Step 2</button>
                       <button id="trigger-align-animation" type="button">Align All To Animation Lab</button>
@@ -3234,6 +3242,9 @@ translateY()	translateY(<length|percentage>)
       const elTriggerSyncStatus = document.getElementById("trigger-sync-status");
       const elTriggerSyncLastChange = document.getElementById("trigger-sync-last-change");
       const elTriggerSyncRecommendation = document.getElementById("trigger-sync-recommendation");
+      const elTriggerSyncMasterState = document.getElementById("trigger-sync-master-state");
+      const elTriggerSyncApplyState = document.getElementById("trigger-sync-apply-state");
+      const elTriggerSyncMasterNote = document.getElementById("trigger-sync-master-note");
       const elTriggerAlignBuilder = document.getElementById("trigger-align-builder");
       const elTriggerAlignAnimation = document.getElementById("trigger-align-animation");
       const elTriggerAlignActual = document.getElementById("trigger-align-actual");
@@ -6042,6 +6053,13 @@ translateY()	translateY(<length|percentage>)
           }),
           elAnimationLabTrigger.value
         );
+        replaceSelectOptions(
+          elTriggerSyncMasterState,
+          SHARED_TRIGGER_OPTIONS.map(function (optionDef) {
+            return { value: optionDef.value, label: optionDef.animationLabel };
+          }),
+          elTriggerSyncMasterState ? elTriggerSyncMasterState.value : ""
+        );
         updateTriggerSyncNote();
       }
 
@@ -6132,6 +6150,21 @@ translateY()	translateY(<length|percentage>)
         if (elTriggerSyncLastChange) {
           elTriggerSyncLastChange.textContent = triggerSyncLastChangeMessage;
         }
+      }
+
+      function updateTriggerSyncMasterNote() {
+        if (!elTriggerSyncMasterNote || !elTriggerSyncMasterState || !elTriggerSyncApplyState) return;
+        const builderPseudo = getSelectedPseudoSelector();
+        const chosen = (elTriggerSyncMasterState.value || "").trim();
+        const chosenLabel = formatSharedTriggerLabel(chosen, "Always On");
+
+        if (builderPseudo && !isSharedTriggerValue(builderPseudo)) {
+          elTriggerSyncMasterNote.textContent = "Applying " + chosenLabel + " will replace the current custom Step 2 pseudo and restore shared-state sync.";
+        } else {
+          elTriggerSyncMasterNote.textContent = "Applying " + chosenLabel + " will push the same shared trigger into Step 2, Animation Lab, and Preview Simulator in one step.";
+        }
+
+        elTriggerSyncApplyState.disabled = !isSharedTriggerValue(chosen);
       }
 
       function updateTriggerSyncAuthority(builderPseudo, animationPseudo, previewPseudo, actualState) {
@@ -6252,7 +6285,8 @@ translateY()	translateY(<length|percentage>)
           !elTriggerSyncStatus ||
           !elTriggerSyncLastChange ||
           !elTriggerSyncRecommendation ||
-          !elTriggerAlignRecommended
+          !elTriggerAlignRecommended ||
+          !elTriggerSyncMasterState
         ) {
           return;
         }
@@ -6268,6 +6302,14 @@ translateY()	translateY(<length|percentage>)
         elTriggerSyncActualState.textContent = actualState.label;
         elTriggerSyncRecommendation.textContent = recommendation.label;
         elTriggerAlignRecommended.disabled = !recommendation.action;
+
+        if (builderPseudo && isSharedTriggerValue(builderPseudo)) {
+          elTriggerSyncMasterState.value = builderPseudo;
+        } else if (!builderPseudo && !animationPseudo && !previewPseudo) {
+          elTriggerSyncMasterState.value = "";
+        } else if (builderPseudo === animationPseudo && animationPseudo === previewPseudo && isSharedTriggerValue(builderPseudo)) {
+          elTriggerSyncMasterState.value = builderPseudo;
+        }
 
         if (elTriggerAlignBuilder) {
           elTriggerAlignBuilder.disabled = Boolean(builderPseudo) && !isSharedTriggerValue(builderPseudo);
@@ -6306,6 +6348,7 @@ translateY()	translateY(<length|percentage>)
         status += " " + updateTriggerSyncAuthority(builderPseudo, animationPseudo, previewPseudo, actualState);
         elTriggerSyncStatus.textContent = status;
         elTriggerSyncLastChange.textContent = triggerSyncLastChangeMessage;
+        updateTriggerSyncMasterNote();
         updateTriggerFollowNote();
       }
 
@@ -6339,6 +6382,25 @@ translateY()	translateY(<length|percentage>)
           elAnimationLabTrigger.value = pseudo;
         }
         updateAnimationLabOutputs();
+        updateTriggerSyncNote();
+      }
+
+      function applySharedTriggerPresetToAll() {
+        const trigger = (elTriggerSyncMasterState && elTriggerSyncMasterState.value || "").trim();
+        if (!isSharedTriggerValue(trigger)) {
+          setBuilderStatus("Choose a shared trigger preset before applying it to all surfaces.");
+          updateTriggerSyncNote();
+          return;
+        }
+        setTriggerSyncLastChange("Shared trigger reset applied " + formatSharedTriggerLabel(trigger, "Always On") + " across Step 2, Animation Lab, and Preview.");
+        elAnimationLabTrigger.value = trigger;
+        syncPseudoControlFromValue(trigger);
+        renderBuilder();
+        updateAnimationLabOutputs();
+        syncPreviewInteractionStateFromPseudo(
+          trigger,
+          "Shared trigger preset applied. Step 2, Animation Lab, and Preview now match " + formatSharedTriggerLabel(trigger, "Always On") + "."
+        );
         updateTriggerSyncNote();
       }
 
@@ -11279,6 +11341,8 @@ translateY()	translateY(<length|percentage>)
       elTriggerAlignAnimation.addEventListener("click", alignAllTriggersToAnimationLab);
       elTriggerAlignActual.addEventListener("click", alignAllTriggersToActualPreview);
       elTriggerAlignRecommended.addEventListener("click", applyRecommendedTriggerAlignment);
+      elTriggerSyncMasterState.addEventListener("change", updateTriggerSyncMasterNote);
+      elTriggerSyncApplyState.addEventListener("click", applySharedTriggerPresetToAll);
       elTriggerFollowActual.addEventListener("change", function () {
         setTriggerSyncLastChange(
           elTriggerFollowActual.checked
