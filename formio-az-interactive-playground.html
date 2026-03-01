@@ -5612,6 +5612,7 @@ translateY()	translateY(<length|percentage>)
       let libraryVisiblePresets = BUILTIN_PRESETS.slice();
 
       let activeParams = [];
+      const BOX_QUAD_ORDER = ["top", "right", "bottom", "left"];
       let pendingParamOverrides = null;
       let latestBuilderCandidate = null;
       let builderRules = [];
@@ -9066,10 +9067,113 @@ translateY()	translateY(<length|percentage>)
         wrapper.appendChild(line);
       }
 
+      function boxQuadParamMap() {
+        const map = {};
+        BOX_QUAD_ORDER.forEach(function (key) {
+          map[key] = -1;
+        });
+        activeParams.forEach(function (param, index) {
+          if (!param || typeof param.key !== "string") return;
+          const key = param.key.trim().toLowerCase();
+          if (!Object.prototype.hasOwnProperty.call(map, key)) return;
+          if (inferParamKind(param, selectedItem()) !== "dimension") return;
+          map[key] = index;
+        });
+        const valid = BOX_QUAD_ORDER.every(function (key) {
+          return map[key] >= 0;
+        });
+        return valid ? map : null;
+      }
+
+      function boxQuadSummaryText(map) {
+        if (!map) return "";
+        return BOX_QUAD_ORDER.map(function (key) {
+          return String((activeParams[map[key]] && activeParams[map[key]].value) || "0");
+        }).join(" ");
+      }
+
+      function applyBoxQuadPattern(mode) {
+        const map = boxQuadParamMap();
+        if (!map) return;
+
+        const topValue = String((activeParams[map.top] && activeParams[map.top].value) || "0");
+        const rightValue = String((activeParams[map.right] && activeParams[map.right].value) || topValue);
+        const leftValue = String((activeParams[map.left] && activeParams[map.left].value) || rightValue);
+        const next = {};
+
+        BOX_QUAD_ORDER.forEach(function (key) {
+          next[key] = String((activeParams[map[key]] && activeParams[map[key]].value) || "0");
+        });
+
+        if (mode === "all") {
+          BOX_QUAD_ORDER.forEach(function (key) {
+            next[key] = topValue;
+          });
+        } else if (mode === "vertical") {
+          next.bottom = topValue;
+        } else if (mode === "horizontal") {
+          next.right = leftValue;
+        }
+
+        pendingParamOverrides = next;
+        renderParamControls();
+        updateLive();
+      }
+
+      function renderBoxQuadHelper(map) {
+        const helper = document.createElement("div");
+        helper.className = "help-box";
+
+        const intro = document.createElement("div");
+        intro.innerHTML = "<strong>Shorthand Assistant</strong> Keep opposite sides aligned without retyping every value.";
+        helper.appendChild(intro);
+
+        const controls = document.createElement("div");
+        controls.className = "inline";
+
+        const allButton = document.createElement("button");
+        allButton.type = "button";
+        allButton.textContent = "All = Top";
+        allButton.addEventListener("click", function () {
+          applyBoxQuadPattern("all");
+        });
+        controls.appendChild(allButton);
+
+        const verticalButton = document.createElement("button");
+        verticalButton.type = "button";
+        verticalButton.textContent = "Bottom = Top";
+        verticalButton.addEventListener("click", function () {
+          applyBoxQuadPattern("vertical");
+        });
+        controls.appendChild(verticalButton);
+
+        const horizontalButton = document.createElement("button");
+        horizontalButton.type = "button";
+        horizontalButton.textContent = "Right = Left";
+        horizontalButton.addEventListener("click", function () {
+          applyBoxQuadPattern("horizontal");
+        });
+        controls.appendChild(horizontalButton);
+
+        helper.appendChild(controls);
+
+        const summary = document.createElement("div");
+        summary.className = "input-hint";
+        summary.textContent = "Current shorthand: " + boxQuadSummaryText(map);
+        helper.appendChild(summary);
+
+        elParams.appendChild(helper);
+      }
+
       function renderParamControls() {
         const item = selectedItem();
         activeParams = consumePendingParamOverrides(createParamModel(item));
         elParams.innerHTML = "";
+
+        const boxQuadMap = boxQuadParamMap();
+        if (boxQuadMap) {
+          renderBoxQuadHelper(boxQuadMap);
+        }
 
         activeParams.forEach(function (param, index) {
           const wrapper = document.createElement("div");
