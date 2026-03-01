@@ -2007,6 +2007,26 @@
                   </div>
                 </div>
               </div>
+              <div class="help-box">
+                <div><strong>Release Readiness</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Motion Risk Score</div>
+                    <div id="animation-lab-risk-score">0 / 100 (Low)</div>
+                    <div class="specificity-meter" style="margin-top:8px;">
+                      <div id="animation-lab-risk-fill" class="specificity-fill" style="width:0%;"></div>
+                    </div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Launch Recommendation</div>
+                    <div id="animation-lab-release-note">A shipping recommendation will appear here as you tune the motion package.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Validation Focus</div>
+                    <div id="animation-lab-validation-focus">The lab will call out the riskiest part of the current setup so QA stays targeted.</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </details>
 
@@ -3193,6 +3213,10 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabFirstMovement = document.getElementById("animation-lab-first-movement");
       const elAnimationLabSettleBehavior = document.getElementById("animation-lab-settle-behavior");
       const elAnimationLabQaPrompt = document.getElementById("animation-lab-qa-prompt");
+      const elAnimationLabRiskScore = document.getElementById("animation-lab-risk-score");
+      const elAnimationLabRiskFill = document.getElementById("animation-lab-risk-fill");
+      const elAnimationLabReleaseNote = document.getElementById("animation-lab-release-note");
+      const elAnimationLabValidationFocus = document.getElementById("animation-lab-validation-focus");
       const elSyntaxAddCurrentRule = document.getElementById("syntax-add-current-rule");
       const elCustomRule = document.getElementById("custom-rule");
       const elCustomRuleHelperType = document.getElementById("custom-rule-helper-type");
@@ -7837,6 +7861,95 @@ translateY()	translateY(<length|percentage>)
         return "Exercise the current trigger a few times and confirm the motion reads as feedback, not decoration.";
       }
 
+      function animationLabRiskAssessment(values) {
+        const trigger = String(values && values.trigger || "").trim();
+        const play = String(values && values.play || "running").trim();
+        const durationMs = parseAnimationLabTimeMs(values && values.duration);
+        const delayMs = parseAnimationLabTimeMs(values && values.delay);
+        const cycles = animationLabCycleCount(values || {});
+        const direction = String(values && values.direction || "normal").trim().toLowerCase();
+        const fill = String(values && values.fill || "none").trim().toLowerCase();
+        const name = String(values && values.keyframes || "").trim().toLowerCase();
+        let score = 0;
+        const reasons = [];
+
+        if (play === "paused") {
+          score += 18;
+          reasons.push("The animation is paused, so live behavior still needs to be validated before shipping.");
+        }
+        if (cycles === Infinity) {
+          score += 34;
+          reasons.push("Infinite looping keeps the motion alive until the trigger stops, which raises distraction risk.");
+        } else if (cycles >= 3) {
+          score += 18;
+          reasons.push("Three cycles makes the effect linger longer than most UI feedback needs.");
+        } else if (cycles >= 2) {
+          score += 8;
+        }
+        if (durationMs > 1200) {
+          score += 20;
+          reasons.push("The duration is long enough to feel heavy, so the motion should be justified as deliberate emphasis.");
+        } else if (durationMs > 700) {
+          score += 12;
+          reasons.push("The duration is noticeable. Confirm it still feels responsive in the chosen trigger state.");
+        } else if (durationMs > 400) {
+          score += 6;
+        }
+        if (delayMs > 400) {
+          score += 14;
+          reasons.push("The delayed start is obvious. Verify the motion still feels connected to the user action.");
+        } else if (delayMs > 150) {
+          score += 8;
+        }
+        if (!trigger) {
+          score += 12;
+          reasons.push("Always-on motion touches idle screens, so it needs a stronger reason than interaction feedback.");
+        } else if (trigger === ":disabled") {
+          score += 16;
+          reasons.push("Disabled states should stay calm. Motion here can easily make an inactive control look interactive.");
+        } else if (trigger === ":active" && (delayMs > 80 || durationMs > 400)) {
+          score += 12;
+          reasons.push("Pressed feedback should read almost instantly. The current timing may lag behind the click.");
+        } else if (trigger === ":hover" || trigger === ":focus" || trigger === ":focus-visible") {
+          score += 4;
+        }
+        if (/(bounce|shake|spin|flash|pulse|wiggle)/.test(name)) {
+          score += 12;
+          reasons.push("This keyframe family is attention-seeking, so it benefits from shorter runs and stronger QA.");
+        } else if (/(slide|lift|glide|drift|float)/.test(name)) {
+          score += 5;
+        }
+        if (direction.indexOf("alternate") >= 0) {
+          score += 6;
+        }
+        if (!trigger && (fill === "forwards" || fill === "both")) {
+          score += 6;
+          reasons.push("Persistent fill on an always-on motion can leave a lingering end state that deserves review.");
+        }
+
+        score = Math.max(0, Math.min(100, score));
+
+        let level = "Low";
+        let recommendation = "Ready to test and likely safe to ship after a quick reduced-motion check.";
+        if (score >= 75) {
+          level = "High";
+          recommendation = "High-risk motion. Apply the guardrail or shorten the run before treating this as production-ready.";
+        } else if (score >= 50) {
+          level = "Elevated";
+          recommendation = "Promising, but it needs focused QA on timing and distraction before rollout.";
+        } else if (score >= 25) {
+          level = "Moderate";
+          recommendation = "Usable with targeted validation. Check the main trigger path and reduced-motion fallback before shipping.";
+        }
+
+        return {
+          score: score,
+          level: level,
+          recommendation: recommendation,
+          focus: reasons[0] || "Current settings are restrained. Focus on matching the trigger to the preview target and confirming reduced-motion behavior."
+        };
+      }
+
       function animationLabPresetBrief(values) {
         const preset = selectedAnimationLabPreset();
         if (!preset) {
@@ -7932,6 +8045,7 @@ translateY()	translateY(<length|percentage>)
         const media = currentBuilderMediaQuery();
         const brief = animationLabPresetBrief(values);
         const guardrail = animationLabGuardrailRecommendation(values);
+        const risk = animationLabRiskAssessment(values);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         elAnimationLabPresetIntent.textContent = brief.intent;
         elAnimationLabPresetBestFor.textContent = brief.bestFor;
@@ -7953,6 +8067,17 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabFirstMovement.textContent = animationLabFirstMovementSummary(values);
         elAnimationLabSettleBehavior.textContent = animationLabSettleBehaviorSummary(values);
         elAnimationLabQaPrompt.textContent = animationLabQaPrompt(values);
+        elAnimationLabRiskScore.textContent = risk.score + " / 100 (" + risk.level + ")";
+        elAnimationLabRiskFill.style.width = risk.score + "%";
+        elAnimationLabRiskFill.style.background = risk.score >= 75
+          ? "linear-gradient(90deg, #d44a55, #f18b56)"
+          : risk.score >= 50
+            ? "linear-gradient(90deg, #e28a2d, #f2c14e)"
+            : risk.score >= 25
+              ? "linear-gradient(90deg, #4d8fcb, #83bfd8)"
+              : "linear-gradient(90deg, #2ca66f, #8bbf43)";
+        elAnimationLabReleaseNote.textContent = risk.recommendation;
+        elAnimationLabValidationFocus.textContent = risk.focus;
       }
 
       function applyAnimationLabPreset() {
