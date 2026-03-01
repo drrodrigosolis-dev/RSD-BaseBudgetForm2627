@@ -1835,6 +1835,7 @@
                     <div class="inline">
                       <button id="trigger-align-builder" type="button">Align All To Step 2</button>
                       <button id="trigger-align-animation" type="button">Align All To Animation Lab</button>
+                      <button id="trigger-align-preview" type="button">Align All To Preview</button>
                       <button id="trigger-align-actual" type="button">Match All To Actual Preview</button>
                       <button id="trigger-align-recommended" type="button">Apply Suggested Fix</button>
                     </div>
@@ -3247,6 +3248,7 @@ translateY()	translateY(<length|percentage>)
       const elTriggerSyncMasterNote = document.getElementById("trigger-sync-master-note");
       const elTriggerAlignBuilder = document.getElementById("trigger-align-builder");
       const elTriggerAlignAnimation = document.getElementById("trigger-align-animation");
+      const elTriggerAlignPreview = document.getElementById("trigger-align-preview");
       const elTriggerAlignActual = document.getElementById("trigger-align-actual");
       const elTriggerAlignRecommended = document.getElementById("trigger-align-recommended");
       const elTriggerFollowActual = document.getElementById("trigger-follow-actual");
@@ -6242,6 +6244,19 @@ translateY()	translateY(<length|percentage>)
           };
         }
 
+        if (
+          !actualState.mixed &&
+          actualState.pseudo &&
+          actualState.pseudo === previewPseudo &&
+          previewPseudo !== builderPseudo &&
+          previewPseudo !== animationPseudo
+        ) {
+          return {
+            action: "preview",
+            label: "Preview Simulator already matches the live state. Use it as the shared trigger for Step 2 and Animation Lab."
+          };
+        }
+
         if (builderPseudo === animationPseudo && builderPseudo !== previewPseudo) {
           return {
             action: "builder",
@@ -6419,6 +6434,10 @@ translateY()	translateY(<length|percentage>)
           alignAllTriggersToAnimationLab();
           return;
         }
+        if (recommendation.action === "preview") {
+          alignAllTriggersToPreviewSimulator();
+          return;
+        }
         if (recommendation.action === "actual") {
           alignAllTriggersToActualPreview();
           return;
@@ -6462,6 +6481,18 @@ translateY()	translateY(<length|percentage>)
         renderBuilder();
         updateLive();
         syncPreviewInteractionStateFromPseudo(trigger, "Step 2, Animation Lab, and Preview now share the Animation Lab trigger.");
+        updateTriggerSyncNote();
+      }
+
+      function alignAllTriggersToPreviewSimulator() {
+        const pseudo = previewInteractionPseudoValue();
+        setTriggerSyncLastChange("Align action used Preview Simulator as the shared trigger (" + formatSharedTriggerLabel(pseudo, "Always On") + ").");
+        elAnimationLabTrigger.value = pseudo;
+        syncPseudoControlFromValue(pseudo);
+        renderBuilder();
+        updateAnimationLabOutputs();
+        updateLive();
+        setBuilderStatus("Step 2 and Animation Lab now match the Preview Simulator state.");
         updateTriggerSyncNote();
       }
 
@@ -11339,6 +11370,7 @@ translateY()	translateY(<length|percentage>)
       });
       elTriggerAlignBuilder.addEventListener("click", alignAllTriggersToBuilder);
       elTriggerAlignAnimation.addEventListener("click", alignAllTriggersToAnimationLab);
+      elTriggerAlignPreview.addEventListener("click", alignAllTriggersToPreviewSimulator);
       elTriggerAlignActual.addEventListener("click", alignAllTriggersToActualPreview);
       elTriggerAlignRecommended.addEventListener("click", applyRecommendedTriggerAlignment);
       elTriggerSyncMasterState.addEventListener("change", updateTriggerSyncMasterNote);
