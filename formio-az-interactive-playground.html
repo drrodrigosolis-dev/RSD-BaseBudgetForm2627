@@ -1978,6 +1978,13 @@
                   <label class="label">Reduced-Motion Fallback</label>
                   <pre id="animation-lab-reduce-css"></pre>
                 </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Guardrail Action</label>
+                  <div class="inline">
+                    <button id="animation-lab-apply-guardrail" type="button">Apply Suggested Guardrail</button>
+                    <div id="animation-lab-guardrail-note" class="input-hint">The lab will suggest a safer motion adjustment when the current setup is risky.</div>
+                  </div>
+                </div>
               </div>
               <div class="help-box">
                 <div><strong>Motion Rollout Planner</strong></div>
@@ -3143,6 +3150,8 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabTriggerFit = document.getElementById("animation-lab-trigger-fit");
       const elAnimationLabReduceNote = document.getElementById("animation-lab-reduce-note");
       const elAnimationLabReduceCss = document.getElementById("animation-lab-reduce-css");
+      const elAnimationLabApplyGuardrail = document.getElementById("animation-lab-apply-guardrail");
+      const elAnimationLabGuardrailNote = document.getElementById("animation-lab-guardrail-note");
       const elAnimationLabActiveWindow = document.getElementById("animation-lab-active-window");
       const elAnimationLabFirstMovement = document.getElementById("animation-lab-first-movement");
       const elAnimationLabSettleBehavior = document.getElementById("animation-lab-settle-behavior");
@@ -7638,6 +7647,52 @@ translateY()	translateY(<length|percentage>)
         ].join("\n");
       }
 
+      function animationLabGuardrailRecommendation(values) {
+        const trigger = String(values && values.trigger || "").trim();
+        const play = String(values && values.play || "running").trim();
+        const cycles = animationLabCycleCount(values);
+        const durationMs = parseAnimationLabTimeMs(values && values.duration);
+        const delayMs = parseAnimationLabTimeMs(values && values.delay);
+        const direction = String(values && values.direction || "normal").trim();
+        const patch = {};
+        let message = "Current settings already match the lab's guardrail guidance.";
+
+        if (play === "paused") {
+          return {
+            patch: patch,
+            message: "Play state is paused. Resume it manually when you are ready to validate real motion."
+          };
+        }
+        if (!trigger && cycles === Infinity) {
+          patch.iterations = "2";
+          message = "Always-on motion should not loop forever. Cap it to two cycles before shipping.";
+        } else if ((trigger === ":hover" || trigger === ":focus" || trigger === ":focus-visible") && cycles === Infinity) {
+          patch.iterations = "2";
+          message = "Interaction-triggered motion should stop after a brief cue. Two cycles keeps it responsive.";
+        } else if (trigger === ":disabled" && (cycles === Infinity || cycles > 1 || direction.indexOf("alternate") >= 0)) {
+          patch.iterations = "1";
+          patch.direction = "normal";
+          message = "Disabled states should stay calm. Use a single forward pass instead of a looping or alternating pattern.";
+        } else if (trigger === ":active" && delayMs > 80) {
+          patch.delay = "0s";
+          message = "Pressed states need instant feedback. Remove the delay so motion starts with the click.";
+        } else if (trigger === ":active" && durationMs > 400) {
+          patch.duration = "250ms";
+          message = "Pressed states should resolve quickly. Shorten the motion so it reads during brief clicks.";
+        } else if (!trigger && cycles === 3) {
+          patch.iterations = "2";
+          message = "Idle entry motion reads better when it finishes quickly. Two cycles is usually enough.";
+        } else if (!trigger && durationMs > 1200) {
+          patch.duration = "700ms";
+          message = "Always-on entry motion should finish sooner. Tighten the duration to keep the idle surface calm.";
+        }
+
+        return {
+          patch: patch,
+          message: message
+        };
+      }
+
       function formatAnimationLabDurationMs(value) {
         const ms = Math.max(0, Math.round(Number(value) || 0));
         if (!ms) return "0s";
@@ -7833,6 +7888,7 @@ translateY()	translateY(<length|percentage>)
         const selector = animationLabSelector();
         const media = currentBuilderMediaQuery();
         const brief = animationLabPresetBrief(values);
+        const guardrail = animationLabGuardrailRecommendation(values);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         elAnimationLabPresetIntent.textContent = brief.intent;
         elAnimationLabPresetBestFor.textContent = brief.bestFor;
@@ -7845,6 +7901,11 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabTriggerFit.textContent = animationLabTriggerGuidance(values);
         elAnimationLabReduceNote.textContent = animationLabReducedMotionNote(values);
         elAnimationLabReduceCss.textContent = animationLabReducedMotionCss(selector);
+        elAnimationLabGuardrailNote.textContent = guardrail.message;
+        elAnimationLabApplyGuardrail.disabled = !Object.keys(guardrail.patch).length;
+        elAnimationLabApplyGuardrail.textContent = Object.keys(guardrail.patch).length
+          ? "Apply Suggested Guardrail"
+          : "Guardrail Already Applied";
         elAnimationLabActiveWindow.textContent = animationLabActiveWindowSummary(values);
         elAnimationLabFirstMovement.textContent = animationLabFirstMovementSummary(values);
         elAnimationLabSettleBehavior.textContent = animationLabSettleBehaviorSummary(values);
@@ -7926,6 +7987,23 @@ translateY()	translateY(<length|percentage>)
         updateLive();
         flashActivePreviewPanel();
         setBuilderStatus("Animation preview restarted on " + previewTargetLabel(elTarget.value) + ".");
+      }
+
+      function applyAnimationLabGuardrail() {
+        const values = animationLabPresetValues();
+        const recommendation = animationLabGuardrailRecommendation(values);
+        const patch = recommendation.patch || {};
+        if (!Object.keys(patch).length) {
+          setBuilderStatus("Animation Lab guardrail did not need to change anything.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        setSelectValueIfPresent(elAnimationLabIterations, patch.iterations, elAnimationLabIterations.value);
+        setSelectValueIfPresent(elAnimationLabDirection, patch.direction, elAnimationLabDirection.value);
+        setSelectValueIfPresent(elAnimationLabDelay, patch.delay, elAnimationLabDelay.value);
+        setSelectValueIfPresent(elAnimationLabDuration, patch.duration, elAnimationLabDuration.value);
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab applied its suggested guardrail. " + recommendation.message);
       }
 
       function filteredGlossaryTerms() {
@@ -10718,6 +10796,7 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabApplyBuilder.addEventListener("click", addAnimationLabToBuilder);
       elAnimationLabMatchPreview.addEventListener("click", syncPreviewInteractionToAnimationLab);
       elAnimationLabRestart.addEventListener("click", restartAnimationLabPreview);
+      elAnimationLabApplyGuardrail.addEventListener("click", applyAnimationLabGuardrail);
       elTriggerAlignBuilder.addEventListener("click", alignAllTriggersToBuilder);
       elTriggerAlignAnimation.addEventListener("click", alignAllTriggersToAnimationLab);
       elTriggerAlignActual.addEventListener("click", alignAllTriggersToActualPreview);
