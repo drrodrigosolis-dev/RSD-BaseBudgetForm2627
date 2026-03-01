@@ -2026,6 +2026,7 @@
                   <option value="spacing">Spacing</option>
                   <option value="gradient">Gradient Fill</option>
                   <option value="transition">Transition</option>
+                  <option value="transform-stack">Transform Stack</option>
                   <option value="fluid-clamp">Fluid Clamp</option>
                 </select>
               </div>
@@ -2227,6 +2228,42 @@
                       <option value="150ms">150ms</option>
                       <option value="250ms">250ms</option>
                     </select>
+                  </div>
+                </div>
+              </div>
+              <div id="custom-rule-helper-transform-group" class="hidden">
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-transform-unit">Translate Unit</label>
+                    <select id="custom-rule-helper-transform-unit" title="Unit used by both translate values.">
+                      <option value="px" selected>px</option>
+                      <option value="rem">rem</option>
+                      <option value="%">%</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <div class="label">Transform Intent</div>
+                    <div class="input-hint">Use this to combine motion axes into one readable transform declaration.</div>
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-transform-x">Translate X</label>
+                    <input id="custom-rule-helper-transform-x" type="number" step="1" value="0" title="Horizontal offset for the transform stack." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-transform-y">Translate Y</label>
+                    <input id="custom-rule-helper-transform-y" type="number" step="1" value="-2" title="Vertical offset for the transform stack." />
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-transform-scale">Scale</label>
+                    <input id="custom-rule-helper-transform-scale" type="number" min="0" step="0.01" value="1" title="Scale multiplier applied after translation." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-transform-rotate">Rotate</label>
+                    <input id="custom-rule-helper-transform-rotate" type="number" step="1" value="0" title="Rotation in degrees applied after scaling." />
                   </div>
                 </div>
               </div>
@@ -3194,6 +3231,12 @@ translateY()	translateY(<length|percentage>)
       const elCustomRuleHelperTransitionDuration = document.getElementById("custom-rule-helper-transition-duration");
       const elCustomRuleHelperTransitionEasing = document.getElementById("custom-rule-helper-transition-easing");
       const elCustomRuleHelperTransitionDelay = document.getElementById("custom-rule-helper-transition-delay");
+      const elCustomRuleHelperTransformGroup = document.getElementById("custom-rule-helper-transform-group");
+      const elCustomRuleHelperTransformUnit = document.getElementById("custom-rule-helper-transform-unit");
+      const elCustomRuleHelperTransformX = document.getElementById("custom-rule-helper-transform-x");
+      const elCustomRuleHelperTransformY = document.getElementById("custom-rule-helper-transform-y");
+      const elCustomRuleHelperTransformScale = document.getElementById("custom-rule-helper-transform-scale");
+      const elCustomRuleHelperTransformRotate = document.getElementById("custom-rule-helper-transform-rotate");
       const elCustomRuleHelperFluidGroup = document.getElementById("custom-rule-helper-fluid-group");
       const elCustomRuleHelperFluidProperty = document.getElementById("custom-rule-helper-fluid-property");
       const elCustomRuleHelperFluidUnit = document.getElementById("custom-rule-helper-fluid-unit");
@@ -10471,6 +10514,16 @@ translateY()	translateY(<length|percentage>)
             (elCustomRuleHelperTransitionEasing.value || "ease") + " " +
             (elCustomRuleHelperTransitionDelay.value || "0s") + ";";
         }
+        if (type === "transform-stack") {
+          const unit = (elCustomRuleHelperTransformUnit.value || "px").trim();
+          const translateX = Number(elCustomRuleHelperTransformX.value || 0);
+          const translateY = Number(elCustomRuleHelperTransformY.value || 0);
+          const scaleRaw = Number(elCustomRuleHelperTransformScale.value);
+          const scale = Number.isFinite(scaleRaw) ? Math.max(0, scaleRaw) : 1;
+          const scaleText = String(Math.round(scale * 100) / 100).replace(/\.0+$/, "").replace(/(\.\d*[1-9])0+$/, "$1");
+          const rotate = Number(elCustomRuleHelperTransformRotate.value || 0);
+          return "transform: translate(" + translateX + unit + ", " + translateY + unit + ") scale(" + (scaleText || "1") + ") rotate(" + rotate + "deg);";
+        }
         if (type === "fluid-clamp") {
           const prop = (elCustomRuleHelperFluidProperty.value || "font-size").trim();
           const unit = (elCustomRuleHelperFluidUnit.value || "rem").trim();
@@ -10506,6 +10559,7 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperSpacingGroup.classList.toggle("hidden", type !== "spacing");
         elCustomRuleHelperGradientGroup.classList.toggle("hidden", type !== "gradient");
         elCustomRuleHelperTransitionGroup.classList.toggle("hidden", type !== "transition");
+        elCustomRuleHelperTransformGroup.classList.toggle("hidden", type !== "transform-stack");
         elCustomRuleHelperFluidGroup.classList.toggle("hidden", type !== "fluid-clamp");
         if (elCustomRuleHelperSpacingCoach) {
           elCustomRuleHelperSpacingCoach.classList.toggle("hidden", type !== "spacing");
@@ -10521,6 +10575,8 @@ translateY()	translateY(<length|percentage>)
           elCustomRuleHelperNote.textContent = "Build a two-stop gradient with controlled direction and color stops, then load it as a full background declaration.";
         } else if (type === "transition") {
           elCustomRuleHelperNote.textContent = "Use this for common interactive motion so timing stays explicit and readable.";
+        } else if (type === "transform-stack") {
+          elCustomRuleHelperNote.textContent = "Compose translate, scale, and rotation together so hover lifts and positional tweaks stay in one ordered transform stack.";
         } else if (type === "fluid-clamp") {
           elCustomRuleHelperNote.textContent = "Generate a bounded clamp() value so typography and spacing can scale across breakpoints without hand-tuning every viewport.";
         } else {
@@ -10698,6 +10754,11 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperTransitionDuration,
         elCustomRuleHelperTransitionEasing,
         elCustomRuleHelperTransitionDelay,
+        elCustomRuleHelperTransformUnit,
+        elCustomRuleHelperTransformX,
+        elCustomRuleHelperTransformY,
+        elCustomRuleHelperTransformScale,
+        elCustomRuleHelperTransformRotate,
         elCustomRuleHelperFluidProperty,
         elCustomRuleHelperFluidUnit,
         elCustomRuleHelperFluidMin,
