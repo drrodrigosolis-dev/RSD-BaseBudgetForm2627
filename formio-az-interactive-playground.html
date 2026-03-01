@@ -1979,6 +1979,13 @@
                   <pre id="animation-lab-reduce-css"></pre>
                 </div>
                 <div class="row" style="margin-top:8px;">
+                  <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+                    <input id="animation-lab-reduce-preview" type="checkbox" />
+                    Preview reduced-motion fallback now
+                  </label>
+                  <div id="animation-lab-reduce-preview-note" class="input-hint">Turn this on to force the current preview target into the calmer fallback without editing your saved CSS.</div>
+                </div>
+                <div class="row" style="margin-top:8px;">
                   <label class="label">Guardrail Action</label>
                   <div class="inline">
                     <button id="animation-lab-apply-guardrail" type="button">Apply Suggested Guardrail</button>
@@ -3238,6 +3245,8 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabTriggerFit = document.getElementById("animation-lab-trigger-fit");
       const elAnimationLabReduceNote = document.getElementById("animation-lab-reduce-note");
       const elAnimationLabReduceCss = document.getElementById("animation-lab-reduce-css");
+      const elAnimationLabReducePreview = document.getElementById("animation-lab-reduce-preview");
+      const elAnimationLabReducePreviewNote = document.getElementById("animation-lab-reduce-preview-note");
       const elAnimationLabApplyGuardrail = document.getElementById("animation-lab-apply-guardrail");
       const elAnimationLabGuardrailNote = document.getElementById("animation-lab-guardrail-note");
       const elAnimationLabActiveWindow = document.getElementById("animation-lab-active-window");
@@ -3421,6 +3430,9 @@ translateY()	translateY(<length|percentage>)
       const previewStateStyleTag = document.createElement("style");
       previewStateStyleTag.id = "builder-preview-state-style";
       document.head.appendChild(previewStateStyleTag);
+      const animationLabReducedPreviewStyleTag = document.createElement("style");
+      animationLabReducedPreviewStyleTag.id = "builder-animation-lab-reduced-preview-style";
+      document.head.appendChild(animationLabReducedPreviewStyleTag);
       const builtInKeyframesStyleTag = document.createElement("style");
       builtInKeyframesStyleTag.id = "builder-builtin-keyframes-style";
       document.head.appendChild(builtInKeyframesStyleTag);
@@ -7613,7 +7625,8 @@ translateY()	translateY(<length|percentage>)
           iterations: (elAnimationLabIterations.value || DEFAULT_ANIMATION_PREVIEW.iterationCount).trim(),
           direction: (elAnimationLabDirection.value || DEFAULT_ANIMATION_PREVIEW.direction).trim(),
           fill: (elAnimationLabFill.value || DEFAULT_ANIMATION_PREVIEW.fillMode).trim(),
-          play: (elAnimationLabPlay.value || DEFAULT_ANIMATION_PREVIEW.playState).trim()
+          play: (elAnimationLabPlay.value || DEFAULT_ANIMATION_PREVIEW.playState).trim(),
+          reducedPreviewEnabled: Boolean(elAnimationLabReducePreview && elAnimationLabReducePreview.checked)
         };
       }
 
@@ -7747,6 +7760,15 @@ translateY()	translateY(<length|percentage>)
           "  " + safeSelector + " {",
           "    animation: none;",
           "  }",
+          "}"
+        ].join("\n");
+      }
+
+      function animationLabReducedPreviewCss(selector) {
+        const safeSelector = String(selector || getBaseSelector()).trim() || ".target";
+        return [
+          safeSelector + " {",
+          "  animation: none !important;",
           "}"
         ].join("\n");
       }
@@ -8030,6 +8052,9 @@ translateY()	translateY(<length|percentage>)
 
       function applyAnimationLabState(state) {
         if (!state || typeof state !== "object") {
+          if (elAnimationLabReducePreview) {
+            elAnimationLabReducePreview.checked = false;
+          }
           updateAnimationLabOutputs();
           return;
         }
@@ -8044,6 +8069,9 @@ translateY()	translateY(<length|percentage>)
         setSelectValueIfPresent(elAnimationLabDirection, state.direction, fallback.direction);
         setSelectValueIfPresent(elAnimationLabFill, state.fill, fallback.fillMode);
         setSelectValueIfPresent(elAnimationLabPlay, state.play, fallback.playState);
+        if (elAnimationLabReducePreview) {
+          elAnimationLabReducePreview.checked = Boolean(state.reducedPreviewEnabled);
+        }
         syncBuilderPseudoFromAnimationLab();
         updateAnimationLabOutputs();
       }
@@ -8115,6 +8143,28 @@ translateY()	translateY(<length|percentage>)
               : "linear-gradient(90deg, #2ca66f, #8bbf43)";
         elAnimationLabReleaseNote.textContent = risk.recommendation;
         elAnimationLabValidationFocus.textContent = risk.focus;
+        updateAnimationLabReducedPreviewState(selector);
+      }
+
+      function updateAnimationLabReducedPreviewState(forcedSelector) {
+        const enabled = Boolean(elAnimationLabReducePreview && elAnimationLabReducePreview.checked);
+        const selector = String(forcedSelector || animationLabSelector()).trim();
+        const beforeMode = previewMode === "before";
+        animationLabReducedPreviewStyleTag.textContent = enabled && !beforeMode
+          ? animationLabReducedPreviewCss(selector)
+          : "";
+        animationLabReducedPreviewStyleTag.disabled = beforeMode || !enabled;
+
+        if (!elAnimationLabReducePreviewNote) return;
+        if (!enabled) {
+          elAnimationLabReducePreviewNote.textContent = "Turn this on to force the current preview target into the calmer fallback without editing your saved CSS.";
+          return;
+        }
+        if (beforeMode) {
+          elAnimationLabReducePreviewNote.textContent = "Reduced-motion preview is armed, but Step 1 is in Before mode. Switch to After to test the fallback.";
+          return;
+        }
+        elAnimationLabReducePreviewNote.textContent = "Reduced-motion preview is active. The current selector is temporarily forced to animation: none for live testing.";
       }
 
       function applyAnimationLabPreset() {
@@ -8548,6 +8598,7 @@ translateY()	translateY(<length|percentage>)
           mediaLayer: elBuilderMediaLayer.value,
           mediaCustom: elBuilderMediaCustom.value,
           animationLab: animationLabPresetValues(),
+          animationLabReducePreview: Boolean(elAnimationLabReducePreview && elAnimationLabReducePreview.checked),
           previewMode: previewMode,
           previewInteractionState: elPreviewInteractionState.value,
           followActualPreview: Boolean(elTriggerFollowActual && elTriggerFollowActual.checked),
@@ -8584,6 +8635,9 @@ translateY()	translateY(<length|percentage>)
         elBuilderMediaCustom.value = state.mediaCustom || "";
         updateBuilderMediaControlVisibility();
         applyAnimationLabState(state.animationLab);
+        if (elAnimationLabReducePreview) {
+          elAnimationLabReducePreview.checked = Boolean(state.animationLabReducePreview || (state.animationLab && state.animationLab.reducedPreviewEnabled));
+        }
         previewMode = state.previewMode === "before" ? "before" : "after";
         updatePreviewModeUI();
         elPreviewInteractionState.value =
@@ -10304,6 +10358,7 @@ translateY()	translateY(<length|percentage>)
         builderStyleTag.disabled = previewMode === "before";
         previewStateStyleTag.textContent = buildPreviewStateStylesheetText();
         previewStateStyleTag.disabled = previewMode === "before";
+        updateAnimationLabReducedPreviewState();
         updateSelectorSimulatorRootClass();
         updateExportWizard();
         updateAnimationLabOutputs();
@@ -10452,6 +10507,7 @@ translateY()	translateY(<length|percentage>)
         const beforeMode = previewMode === "before";
         latestBuilderCandidate = null;
         updatePreviewFocus();
+        updateAnimationLabReducedPreviewState();
 
         if (!item) {
           updateSelectionGuide(null);
@@ -11037,6 +11093,14 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabMatchPreview.addEventListener("click", syncPreviewInteractionToAnimationLab);
       elAnimationLabRestart.addEventListener("click", restartAnimationLabPreview);
       elAnimationLabApplyGuardrail.addEventListener("click", applyAnimationLabGuardrail);
+      elAnimationLabReducePreview.addEventListener("change", function () {
+        updateAnimationLabReducedPreviewState();
+        setBuilderStatus(
+          elAnimationLabReducePreview.checked
+            ? "Animation Lab reduced-motion preview is active."
+            : "Animation Lab reduced-motion preview is back to live motion."
+        );
+      });
       elTriggerAlignBuilder.addEventListener("click", alignAllTriggersToBuilder);
       elTriggerAlignAnimation.addEventListener("click", alignAllTriggersToAnimationLab);
       elTriggerAlignActual.addEventListener("click", alignAllTriggersToActualPreview);
