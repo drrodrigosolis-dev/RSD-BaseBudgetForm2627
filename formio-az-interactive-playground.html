@@ -2034,6 +2034,23 @@
                   </div>
                 </div>
               </div>
+              <div class="help-box">
+                <div><strong>Surface Fit Guide</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Current Target Fit</div>
+                    <div id="animation-lab-surface-fit">The lab will score the active preview target after you choose a motion pack.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Best Match</div>
+                    <div id="animation-lab-surface-best">A stronger surface recommendation will appear here when the current target is a weak fit.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Shipping Caution</div>
+                    <div id="animation-lab-surface-caution">The guide will flag when the current motion is too heavy for dense Form.io controls.</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </details>
 
@@ -3257,6 +3274,9 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabRiskFill = document.getElementById("animation-lab-risk-fill");
       const elAnimationLabReleaseNote = document.getElementById("animation-lab-release-note");
       const elAnimationLabValidationFocus = document.getElementById("animation-lab-validation-focus");
+      const elAnimationLabSurfaceFit = document.getElementById("animation-lab-surface-fit");
+      const elAnimationLabSurfaceBest = document.getElementById("animation-lab-surface-best");
+      const elAnimationLabSurfaceCaution = document.getElementById("animation-lab-surface-caution");
       const elSyntaxAddCurrentRule = document.getElementById("syntax-add-current-rule");
       const elCustomRule = document.getElementById("custom-rule");
       const elCustomRuleHelperType = document.getElementById("custom-rule-helper-type");
@@ -8009,6 +8029,155 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function animationLabSurfaceMeta(key) {
+        if (key === "button" || key === "formio-submit") {
+          return { family: "action", label: "action controls", pointer: true, dense: false };
+        }
+        if (
+          key === "input" ||
+          key === "formio-textfield" ||
+          key === "formio-select" ||
+          key === "formio-choices" ||
+          key === "formio-textarea" ||
+          key === "formio-datetime" ||
+          key === "formio-tags" ||
+          key === "formio-address"
+        ) {
+          return { family: "field", label: "form fields", pointer: false, dense: true };
+        }
+        if (key === "formio-checkbox" || key === "formio-radio" || key === "formio-selectboxes") {
+          return { family: "toggle", label: "toggle controls", pointer: true, dense: true };
+        }
+        if (key === "formio-file" || key === "formio-datagrid" || key === "sandbox") {
+          return { family: "complex", label: "complex containers", pointer: true, dense: true };
+        }
+        if (key === "image") {
+          return { family: "decorative", label: "decorative surfaces", pointer: false, dense: false };
+        }
+        if (key === "card" || key === "overlap") {
+          return { family: "surface", label: "content surfaces", pointer: true, dense: false };
+        }
+        return { family: "surface", label: "general surfaces", pointer: true, dense: false };
+      }
+
+      function animationLabBestSurfaceHint(values) {
+        if (values.trigger === ":focus" || values.trigger === ":focus-visible") {
+          return "Best on inputs and keyboard-focused controls where the motion supports, not replaces, the focus ring.";
+        }
+        if (values.trigger === ":active") {
+          return "Best on buttons, submit actions, and compact toggles that need immediate press feedback.";
+        }
+        if (values.trigger === ":hover") {
+          return "Best on cards, buttons, and pointer-first affordances where hover already signals intent.";
+        }
+        if (values.keyframes === "spin") {
+          return "Best on temporary loading affordances or progress indicators, not idle form controls.";
+        }
+        if (values.keyframes === "shimmer") {
+          return "Best on decorative hero accents or loading-adjacent placeholders with a short lifetime.";
+        }
+        return "Best on larger surfaces or short-lived helper content where motion reads as polish instead of noise.";
+      }
+
+      function animationLabSurfaceAssessment(values) {
+        const currentKey = (elTarget.value || "card").trim();
+        const meta = animationLabSurfaceMeta(currentKey);
+        let score = 62;
+        const notes = [];
+
+        if (values.trigger === ":focus" || values.trigger === ":focus-visible") {
+          if (meta.family === "field" || meta.family === "toggle") {
+            score += 24;
+            notes.push("Focus-triggered motion matches an interactive control.");
+          } else {
+            score -= 18;
+            notes.push("Focus-triggered motion is weaker on non-input surfaces.");
+          }
+        } else if (values.trigger === ":active") {
+          if (meta.family === "action" || meta.family === "toggle") {
+            score += 22;
+            notes.push("Pressed-state motion fits activation-heavy controls.");
+          } else {
+            score -= 12;
+            notes.push("Pressed-state motion is harder to read on passive surfaces.");
+          }
+        } else if (values.trigger === ":hover") {
+          if (meta.pointer) {
+            score += 14;
+            notes.push("Hover motion suits pointer-friendly targets.");
+          } else {
+            score -= 14;
+            notes.push("Hover is less reliable for keyboard-first field workflows.");
+          }
+        } else if (meta.family === "surface" || meta.family === "decorative") {
+          score += 8;
+          notes.push("Always-on motion is safer on larger, less dense surfaces.");
+        } else {
+          score -= 8;
+          notes.push("Always-on motion can feel noisy on dense controls.");
+        }
+
+        if (values.iterations === "infinite") {
+          if (meta.family === "action" || meta.family === "field" || meta.family === "toggle" || meta.family === "complex") {
+            score -= 16;
+            notes.push("Infinite loops on dense UI elements can feel distracting.");
+          } else {
+            score += 4;
+          }
+        }
+
+        if (values.keyframes === "spin") {
+          if (meta.family === "action" || meta.family === "field" || meta.family === "toggle") {
+            score -= 24;
+            notes.push("Continuous spin reads like loading, which can imply a broken control when idle.");
+          } else {
+            score += 8;
+          }
+        }
+
+        if (values.keyframes === "shimmer") {
+          if (meta.family === "decorative" || meta.family === "surface") {
+            score += 12;
+          } else {
+            score -= 10;
+            notes.push("Shimmer competes with dense labels, helpers, and inputs.");
+          }
+        }
+
+        if ((values.keyframes === "bounce" || values.keyframes === "wiggle") && meta.family === "complex") {
+          score -= 10;
+          notes.push("High-character motion is harder to control inside complex containers.");
+        }
+
+        const durationMs = parseAnimationLabTimeMs(values.duration);
+        const delayMs = parseAnimationLabTimeMs(values.delay);
+        if (meta.dense && durationMs + delayMs > 1200) {
+          score -= 10;
+          notes.push("Long motion windows slow down dense data-entry workflows.");
+        }
+
+        score = Math.max(0, Math.min(100, score));
+
+        let verdict = "Strong fit";
+        if (score < 80) verdict = "Usable with review";
+        if (score < 60) verdict = "Conditional fit";
+        if (score < 40) verdict = "Poor fit";
+
+        return {
+          score: score,
+          verdict: verdict,
+          fit: verdict + " for " + previewTargetLabel(currentKey) + " (" + score + "/100). " + (notes[0] || "No strong conflict detected."),
+          best: animationLabBestSurfaceHint(values),
+          caution: score < 40
+            ? "Move this motion to a lighter-weight surface or shorten the cycle before shipping."
+            : score < 60
+              ? "Ship only if the surrounding form stays easy to scan and the motion has a clear job."
+              : meta.dense && values.iterations === "infinite"
+                ? "Usable, but consider a one-shot loop before production so the form does not feel restless."
+                : "Current surface is reasonable. Validate it against real form density before rollout."
+        };
+      }
+
       function animationLabPresetBrief(values) {
         const preset = selectedAnimationLabPreset();
         if (!preset) {
@@ -8111,6 +8280,7 @@ translateY()	translateY(<length|percentage>)
         const brief = animationLabPresetBrief(values);
         const guardrail = animationLabGuardrailRecommendation(values);
         const risk = animationLabRiskAssessment(values);
+        const surface = animationLabSurfaceAssessment(values);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         elAnimationLabPresetIntent.textContent = brief.intent;
         elAnimationLabPresetBestFor.textContent = brief.bestFor;
@@ -8143,6 +8313,9 @@ translateY()	translateY(<length|percentage>)
               : "linear-gradient(90deg, #2ca66f, #8bbf43)";
         elAnimationLabReleaseNote.textContent = risk.recommendation;
         elAnimationLabValidationFocus.textContent = risk.focus;
+        elAnimationLabSurfaceFit.textContent = surface.fit;
+        elAnimationLabSurfaceBest.textContent = surface.best;
+        elAnimationLabSurfaceCaution.textContent = surface.caution;
         updateAnimationLabReducedPreviewState(selector);
       }
 
@@ -10871,6 +11044,7 @@ translateY()	translateY(<length|percentage>)
       elTarget.addEventListener("change", function () {
         syncPreviewSimulatorToActualIfEnabled(targetElement());
         updateLive();
+        updateAnimationLabOutputs();
         updatePreviewCycleUI();
       });
       Object.keys(previewTargets).forEach(function (key) {
