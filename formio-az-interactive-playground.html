@@ -2043,6 +2043,7 @@
                 <select id="custom-rule-helper-type" title="Choose a structured declaration pattern to generate.">
                   <option value="border-radius">Border Radius</option>
                   <option value="box-shadow">Box Shadow</option>
+                  <option value="focus-ring">Focus Ring</option>
                   <option value="spacing">Spacing</option>
                   <option value="gradient">Gradient Fill</option>
                   <option value="transition">Transition</option>
@@ -2100,6 +2101,36 @@
                     <input id="custom-rule-helper-shadow-inset" type="checkbox" />
                     Use inset shadow
                   </label>
+                </div>
+              </div>
+              <div id="custom-rule-helper-focus-group" class="hidden">
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-focus-width">Ring Width</label>
+                    <input id="custom-rule-helper-focus-width" type="number" min="1" step="1" value="3" title="Outline thickness for the focus ring." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-focus-style">Line Style</label>
+                    <select id="custom-rule-helper-focus-style" title="Outline style used by the focus ring.">
+                      <option value="solid">solid</option>
+                      <option value="dashed">dashed</option>
+                      <option value="dotted">dotted</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-focus-color">Ring Color</label>
+                    <input id="custom-rule-helper-focus-color" type="color" value="#245fe6" title="Base color used for the focus ring." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-focus-alpha">Ring Alpha</label>
+                    <input id="custom-rule-helper-focus-alpha" type="number" min="0" max="1" step="0.01" value="0.9" title="Opacity for the ring color." />
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="label" for="custom-rule-helper-focus-offset">Outline Offset</label>
+                  <input id="custom-rule-helper-focus-offset" type="number" step="1" value="2" title="Positive values push the ring away from the element edge." />
                 </div>
               </div>
               <div id="custom-rule-helper-spacing-group" class="hidden">
@@ -3231,6 +3262,12 @@ translateY()	translateY(<length|percentage>)
       const elCustomRuleHelperShadowColor = document.getElementById("custom-rule-helper-shadow-color");
       const elCustomRuleHelperShadowAlpha = document.getElementById("custom-rule-helper-shadow-alpha");
       const elCustomRuleHelperShadowInset = document.getElementById("custom-rule-helper-shadow-inset");
+      const elCustomRuleHelperFocusGroup = document.getElementById("custom-rule-helper-focus-group");
+      const elCustomRuleHelperFocusWidth = document.getElementById("custom-rule-helper-focus-width");
+      const elCustomRuleHelperFocusStyle = document.getElementById("custom-rule-helper-focus-style");
+      const elCustomRuleHelperFocusColor = document.getElementById("custom-rule-helper-focus-color");
+      const elCustomRuleHelperFocusAlpha = document.getElementById("custom-rule-helper-focus-alpha");
+      const elCustomRuleHelperFocusOffset = document.getElementById("custom-rule-helper-focus-offset");
       const elCustomRuleHelperSpacingGroup = document.getElementById("custom-rule-helper-spacing-group");
       const elCustomRuleHelperSpacingProperty = document.getElementById("custom-rule-helper-spacing-property");
       const elCustomRuleHelperSpacingUnit = document.getElementById("custom-rule-helper-spacing-unit");
@@ -10619,6 +10656,15 @@ translateY()	translateY(<length|percentage>)
           const prefix = elCustomRuleHelperShadowInset.checked ? "inset " : "";
           return "box-shadow: " + prefix + x + "px " + y + "px " + blur + "px " + spread + "px rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + alpha.toFixed(2) + ");";
         }
+        if (type === "focus-ring") {
+          const width = Math.max(1, Number(elCustomRuleHelperFocusWidth.value || 1));
+          const style = (elCustomRuleHelperFocusStyle.value || "solid").trim() || "solid";
+          const rgb = parseCssColorToRgb(elCustomRuleHelperFocusColor.value || "#245fe6");
+          const alphaRaw = Number(elCustomRuleHelperFocusAlpha.value);
+          const alpha = Number.isFinite(alphaRaw) ? Math.max(0, Math.min(1, alphaRaw)) : 0.9;
+          const offset = Number(elCustomRuleHelperFocusOffset.value || 0);
+          return "outline: " + width + "px " + style + " rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + alpha.toFixed(2) + "); outline-offset: " + offset + "px;";
+        }
         if (type === "spacing") {
           return buildSpacingShorthandDraft().declaration;
         }
@@ -10681,6 +10727,7 @@ translateY()	translateY(<length|percentage>)
         const type = (elCustomRuleHelperType.value || "border-radius").trim();
         elCustomRuleHelperRadiusGroup.classList.toggle("hidden", type !== "border-radius");
         elCustomRuleHelperShadowGroup.classList.toggle("hidden", type !== "box-shadow");
+        elCustomRuleHelperFocusGroup.classList.toggle("hidden", type !== "focus-ring");
         elCustomRuleHelperSpacingGroup.classList.toggle("hidden", type !== "spacing");
         elCustomRuleHelperGradientGroup.classList.toggle("hidden", type !== "gradient");
         elCustomRuleHelperTransitionGroup.classList.toggle("hidden", type !== "transition");
@@ -10694,6 +10741,8 @@ translateY()	translateY(<length|percentage>)
 
         if (type === "box-shadow") {
           elCustomRuleHelperNote.textContent = "Build a reusable shadow with consistent offsets, blur, spread, color, and optional inset behavior.";
+        } else if (type === "focus-ring") {
+          elCustomRuleHelperNote.textContent = "Generate an explicit focus ring as outline + outline-offset so interactive states stay visible without hand-typing both declarations.";
         } else if (type === "spacing") {
           elCustomRuleHelperNote.textContent = "Generate a clean padding or margin shorthand and let the coach explain when it can collapse to 1, 2, or 3 values.";
         } else if (type === "gradient") {
@@ -10867,6 +10916,11 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperShadowSpread,
         elCustomRuleHelperShadowColor,
         elCustomRuleHelperShadowAlpha,
+        elCustomRuleHelperFocusWidth,
+        elCustomRuleHelperFocusStyle,
+        elCustomRuleHelperFocusColor,
+        elCustomRuleHelperFocusAlpha,
+        elCustomRuleHelperFocusOffset,
         elCustomRuleHelperSpacingProperty,
         elCustomRuleHelperSpacingUnit,
         elCustomRuleHelperGradientProperty,
