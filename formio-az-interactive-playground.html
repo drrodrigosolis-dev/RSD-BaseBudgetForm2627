@@ -2991,6 +2991,14 @@
                     <div class="label">Selector Pressure</div>
                     <div id="quality-audit-selector">Selector complexity guidance will appear here.</div>
                   </div>
+                  <div class="info-tile">
+                    <div class="label">Contrast Check</div>
+                    <div id="quality-audit-contrast">Live preview contrast guidance will appear here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">State Coverage</div>
+                    <div id="quality-audit-state">Form-state QA guidance will appear here.</div>
+                  </div>
                 </div>
               </div>
               <div class="row">
@@ -3000,6 +3008,14 @@
               <div class="row">
                 <label class="label">Audit Snapshot</label>
                 <pre id="quality-audit-summary"></pre>
+              </div>
+              <div class="row">
+                <label class="label">Contrast Detail</label>
+                <pre id="quality-audit-contrast-summary"></pre>
+              </div>
+              <div class="row">
+                <label class="label">State QA Detail</label>
+                <pre id="quality-audit-state-summary"></pre>
               </div>
               <div class="quality-audit-actions">
                 <button id="quality-audit-refresh" type="button">Refresh Audit</button>
@@ -3942,8 +3958,12 @@ translateY()	translateY(<length|percentage>)
       const elQualityAuditMotion = document.getElementById("quality-audit-motion");
       const elQualityAuditDeploy = document.getElementById("quality-audit-deploy");
       const elQualityAuditSelector = document.getElementById("quality-audit-selector");
+      const elQualityAuditContrast = document.getElementById("quality-audit-contrast");
+      const elQualityAuditState = document.getElementById("quality-audit-state");
       const elQualityAuditFixes = document.getElementById("quality-audit-fixes");
       const elQualityAuditSummary = document.getElementById("quality-audit-summary");
+      const elQualityAuditContrastSummary = document.getElementById("quality-audit-contrast-summary");
+      const elQualityAuditStateSummary = document.getElementById("quality-audit-state-summary");
       const elQualityAuditRefresh = document.getElementById("quality-audit-refresh");
       const elQualityAuditAddFocus = document.getElementById("quality-audit-add-focus");
       const elQualityAuditAddReduce = document.getElementById("quality-audit-add-reduce");
@@ -12477,6 +12497,220 @@ translateY()	translateY(<length|percentage>)
         return "Scoped and restrained. This selector should stay manageable if the wrapper remains stable.";
       }
 
+      function blendColorOverBackground(foreground, background) {
+        const fg = foreground || { r: 0, g: 0, b: 0, a: 1 };
+        const bg = background || { r: 255, g: 255, b: 255, a: 1 };
+        const alpha = typeof fg.a === "number" ? clampNumber(fg.a, 0, 1) : 1;
+        return {
+          r: Math.round(fg.r * alpha + bg.r * (1 - alpha)),
+          g: Math.round(fg.g * alpha + bg.g * (1 - alpha)),
+          b: Math.round(fg.b * alpha + bg.b * (1 - alpha)),
+          a: 1
+        };
+      }
+
+      function relativeLuminance(color) {
+        const convert = function (channel) {
+          const normalized = clampNumber(Number(channel) || 0, 0, 255) / 255;
+          return normalized <= 0.03928
+            ? normalized / 12.92
+            : Math.pow((normalized + 0.055) / 1.055, 2.4);
+        };
+        const rgb = color || { r: 0, g: 0, b: 0 };
+        const r = convert(rgb.r);
+        const g = convert(rgb.g);
+        const b = convert(rgb.b);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      }
+
+      function contrastRatioBetweenColors(a, b) {
+        const first = relativeLuminance(a);
+        const second = relativeLuminance(b);
+        const lighter = Math.max(first, second);
+        const darker = Math.min(first, second);
+        return (lighter + 0.05) / (darker + 0.05);
+      }
+
+      function rgbText(color) {
+        const source = color || { r: 0, g: 0, b: 0 };
+        return "rgb(" + Math.round(source.r) + ", " + Math.round(source.g) + ", " + Math.round(source.b) + ")";
+      }
+
+      function previewBackdropColor(target) {
+        const fallback = { r: 255, g: 255, b: 255, a: 1 };
+        const node = previewInteractiveElement(target) || target || document.body;
+        const layers = [];
+        let current = node;
+        let sawImageLayer = false;
+        while (current && current.nodeType === 1) {
+          const computed = getComputedStyle(current);
+          const bg = parseCssColorToRgb(computed.backgroundColor || "transparent");
+          const backgroundImage = String(computed.backgroundImage || "").trim();
+          if (backgroundImage && backgroundImage !== "none") {
+            sawImageLayer = true;
+          }
+          if (bg.a > 0) {
+            layers.push(bg);
+            if (bg.a >= 0.99) break;
+          }
+          current = current.parentElement;
+        }
+        let composite = fallback;
+        for (let i = layers.length - 1; i >= 0; i--) {
+          composite = blendColorOverBackground(layers[i], composite);
+        }
+        return {
+          color: composite,
+          approximate: sawImageLayer
+        };
+      }
+
+      function previewContrastAudit(target) {
+        const host = target || targetElement();
+        const node = previewInteractiveElement(host) || host;
+        const computed = getComputedStyle(node);
+        const rawForeground = parseCssColorToRgb(computed.color || "rgb(31, 39, 62)");
+        const backdrop = previewBackdropColor(host);
+        const effectiveBackground = backdrop.color;
+        const effectiveForeground = blendColorOverBackground(rawForeground, effectiveBackground);
+        const fontSize = parseFloat(computed.fontSize || "16") || 16;
+        const fontWeight = parseInt(computed.fontWeight, 10) || 400;
+        const isLargeText = fontSize >= 24 || (fontSize >= 18.66 && fontWeight >= 700);
+        const minimum = isLargeText ? 3 : 4.5;
+        const ratio = contrastRatioBetweenColors(effectiveForeground, effectiveBackground);
+        let level = "AAA";
+        let penalty = 0;
+        let summary = "Strong contrast in the live preview.";
+        let fix = "";
+
+        if (ratio < minimum) {
+          level = "Fail";
+          penalty = ratio < 3 ? 18 : 12;
+          summary = "Live preview text is below the recommended " + minimum.toFixed(1) + ":1 contrast target.";
+          fix = "Raise foreground/background contrast on " + previewTargetLabel(previewKeyForElement(host) || (elTarget.value || "card")) + " until the live preview clears " + minimum.toFixed(1) + ":1.";
+        } else if (ratio < 7) {
+          level = "AA";
+          if (!isLargeText && ratio < 5) {
+            penalty = 4;
+          }
+          summary = "Contrast passes AA, but it is not yet at a strong AAA cushion.";
+        }
+
+        return {
+          ratio: ratio,
+          roundedRatio: Math.round(ratio * 100) / 100,
+          minimum: minimum,
+          minimumText: minimum.toFixed(1) + ":1",
+          level: level,
+          penalty: penalty,
+          summary: summary,
+          fix: fix,
+          detail: [
+            "Target: " + previewTargetLabel(previewKeyForElement(host) || (elTarget.value || "card")),
+            "Measured ratio: " + (Math.round(ratio * 100) / 100).toFixed(2) + ":1 (" + level + ")",
+            "Required minimum: " + minimum.toFixed(1) + ":1" + (isLargeText ? " (large/bold text)" : " (standard text)"),
+            "Foreground: " + rgbText(effectiveForeground),
+            "Backdrop: " + rgbText(effectiveBackground) + (backdrop.approximate ? " (approximate due to gradient/image layers)" : ""),
+            "Reading: " + summary
+          ].join("\n")
+        };
+      }
+
+      function qualityAuditStateUsesCoverage(stateKey, target) {
+        const selected = String(elPreviewInteractionState && elPreviewInteractionState.value || "default").trim();
+        if (selected === stateKey) return true;
+        if (stateKey === "focus-visible" && selected === "focus") return true;
+        return actualPreviewStateActive(stateKey, target || targetElement());
+      }
+
+      function previewFormStateAudit(target, hasPseudoState, motionValues) {
+        const host = target || targetElement();
+        const targetKey = previewKeyForElement(host) || String(elTarget && elTarget.value || "card").trim();
+        const targetLabel = previewTargetLabel(targetKey);
+        const simulated = String(elPreviewInteractionState && elPreviewInteractionState.value || "default").trim();
+        const actual = actualStateSummaryForTarget(host);
+        const formTarget = targetKey.indexOf("formio-") === 0;
+        const recommended = [];
+        const required = [];
+        const uncovered = [];
+        let penalty = 0;
+        let summary = "";
+        let fix = "";
+
+        if (targetKey === "formio-checkbox" || targetKey === "formio-radio" || targetKey === "formio-selectboxes") {
+          recommended.push("checked", "focus-visible", "disabled");
+        } else if (
+          targetKey === "formio-textfield" ||
+          targetKey === "formio-select" ||
+          targetKey === "formio-choices" ||
+          targetKey === "formio-textarea" ||
+          targetKey === "formio-file" ||
+          targetKey === "formio-datetime" ||
+          targetKey === "formio-tags" ||
+          targetKey === "formio-address"
+        ) {
+          recommended.push("focus-visible", "disabled");
+        } else if (targetKey === "formio-submit" || targetKey === "button") {
+          recommended.push("hover", "focus-visible", "active", "disabled");
+        } else if (targetKey === "formio-datagrid") {
+          recommended.push("hover", "focus-visible");
+        }
+
+        const builderState = stateKeyForPseudoSelector(getSelectedPseudoSelector());
+        const animationState = stateKeyForPseudoSelector(motionValues && motionValues.trigger);
+        [builderState, animationState].forEach(function (state) {
+          if (state && required.indexOf(state) < 0) required.push(state);
+        });
+
+        required.forEach(function (state) {
+          if (!qualityAuditStateUsesCoverage(state, host)) {
+            uncovered.push(state);
+          }
+        });
+
+        if (uncovered.length) {
+          penalty += Math.min(12, uncovered.length * 6);
+          summary = targetLabel + " is not currently previewing " + uncovered.map(function (state) {
+            return PREVIEW_STATE_SELECTOR_MAP[state] ? PREVIEW_STATE_SELECTOR_MAP[state].label : state;
+          }).join(", ") + ", so the active selector or motion trigger is not fully verified.";
+          fix = "Switch Preview Interaction State to " + ((PREVIEW_STATE_SELECTOR_MAP[uncovered[0]] && PREVIEW_STATE_SELECTOR_MAP[uncovered[0]].label) || uncovered[0]) + " and re-check " + targetLabel + ".";
+        } else if (formTarget && recommended.length && simulated === "default" && !required.length) {
+          penalty += hasPseudoState ? 8 : 4;
+          summary = targetLabel + " is on Default. Run at least one state-specific pass before release.";
+          fix = "Run a focused QA pass on " + targetLabel + " using " + ((PREVIEW_STATE_SELECTOR_MAP[recommended[0]] && PREVIEW_STATE_SELECTOR_MAP[recommended[0]].label) || recommended[0]) + ".";
+        } else if (formTarget) {
+          summary = targetLabel + " is covering the most relevant state path for the current build.";
+        } else {
+          summary = "State-specific QA is light on " + targetLabel + "; move to a Form.io target before final release if this CSS will ship there.";
+        }
+
+        return {
+          penalty: penalty,
+          summary: summary,
+          fix: fix,
+          detail: [
+            "Preview target: " + targetLabel,
+            "Simulator state: " + (simulated === "default" ? "Default" : ((PREVIEW_STATE_SELECTOR_MAP[simulated] && PREVIEW_STATE_SELECTOR_MAP[simulated].label) || simulated)),
+            "Actual live state: " + actual,
+            "Required verification states: " + (required.length
+              ? required.map(function (state) {
+                return PREVIEW_STATE_SELECTOR_MAP[state] ? PREVIEW_STATE_SELECTOR_MAP[state].label : state;
+              }).join(", ")
+              : "No required state from the current builder selector or Animation Lab trigger."),
+            "Recommended pass: " + (recommended.length
+              ? recommended.map(function (state) {
+                return PREVIEW_STATE_SELECTOR_MAP[state] ? PREVIEW_STATE_SELECTOR_MAP[state].label : state;
+              }).join(" -> ")
+              : "No special state sequence needed for this target."),
+            "Coverage: " + (uncovered.length
+              ? "Missing " + uncovered.map(function (state) {
+                return PREVIEW_STATE_SELECTOR_MAP[state] ? PREVIEW_STATE_SELECTOR_MAP[state].label : state;
+              }).join(", ")
+              : "Current preview already covers the required state path.")
+          ].join("\n")
+        };
+      }
+
       function buildQualityAuditSnapshot() {
         const selector = String(composeSelector() || "").trim() || getBaseSelector();
         const cssText = String(elBuilderCSS && elBuilderCSS.textContent || "").trim();
@@ -12494,6 +12728,8 @@ translateY()	translateY(<length|percentage>)
         const hasReducedMotion = hasBuilderReducedMotionRule(cssText);
         const focusSelector = focusAuditSelector();
         const selectorNote = selectorComplexityNote(selector);
+        const contrast = previewContrastAudit(targetElement());
+        const stateAudit = previewFormStateAudit(targetElement(), hasPseudoState, motionValues);
         let score = 100;
         const fixes = [];
 
@@ -12509,12 +12745,20 @@ translateY()	translateY(<length|percentage>)
           score -= 20;
           fixes.push("Add a prefers-reduced-motion fallback before shipping animation-heavy states.");
         }
+        if (contrast.penalty > 0) {
+          score -= contrast.penalty;
+          if (contrast.fix) fixes.push(contrast.fix);
+        }
         if (format === "inline-style" && (hasPseudoState || hasMedia)) {
           score -= 18;
           fixes.push("Switch export away from inline style because inline attributes cannot carry states or media logic.");
         } else if (format === "html-bundle" && /[>+~]/.test(selector)) {
           score -= 10;
           fixes.push("Re-check the exported wrapper structure because complex selectors depend on markup staying intact.");
+        }
+        if (stateAudit.penalty > 0) {
+          score -= stateAudit.penalty;
+          if (stateAudit.fix) fixes.push(stateAudit.fix);
         }
         if (motionRisk.score >= 75) {
           score -= 16;
@@ -12550,6 +12794,8 @@ translateY()	translateY(<length|percentage>)
               ? "HTML bundle is portable, but wrapper structure must stay stable after Form.io renders it."
               : "Reusable class export is the safest deployment path for this build.",
           selector: selectorNote,
+          contrast: contrast.summary,
+          state: stateAudit.summary,
           fixes: fixes,
           summary: [
             "Accessibility Readiness: " + score + "/100",
@@ -12557,10 +12803,14 @@ translateY()	translateY(<length|percentage>)
             "Selector: " + selector,
             "Focus Rule: " + (hasFocus ? "Present" : "Missing"),
             "Reduced Motion: " + (hasReducedMotion ? "Present" : "Missing"),
+            "Preview Contrast: " + contrast.roundedRatio.toFixed(2) + ":1 (" + contrast.level + ", target " + contrast.minimumText + ")",
+            "State Coverage: " + stateAudit.summary,
             "Export Route: " + format,
             "Animation Risk: " + motionRisk.score + "/100 (" + motionRisk.level + ")",
             "Top Fix: " + (fixes[0] || "No urgent blockers. Run a final live Form.io verification.")
           ].join("\n"),
+          contrastSummary: contrast.detail,
+          stateSummary: stateAudit.detail,
           canAddFocus: !hasFocus,
           canAddReducedMotion: !hasReducedMotion
         };
@@ -12585,7 +12835,11 @@ translateY()	translateY(<length|percentage>)
         elQualityAuditMotion.textContent = audit.motion;
         elQualityAuditDeploy.textContent = audit.deploy;
         elQualityAuditSelector.textContent = audit.selector;
+        if (elQualityAuditContrast) elQualityAuditContrast.textContent = audit.contrast;
+        if (elQualityAuditState) elQualityAuditState.textContent = audit.state;
         elQualityAuditSummary.textContent = audit.summary;
+        if (elQualityAuditContrastSummary) elQualityAuditContrastSummary.textContent = audit.contrastSummary;
+        if (elQualityAuditStateSummary) elQualityAuditStateSummary.textContent = audit.stateSummary;
 
         elQualityAuditFixes.innerHTML = "";
         if (!audit.fixes.length) {
@@ -12656,7 +12910,12 @@ translateY()	translateY(<length|percentage>)
 
       async function copyQualityAuditSnapshot() {
         try {
-          await navigator.clipboard.writeText(elQualityAuditSummary.textContent);
+          const sections = [
+            elQualityAuditSummary ? elQualityAuditSummary.textContent : "",
+            elQualityAuditContrastSummary ? "Contrast Detail\n" + elQualityAuditContrastSummary.textContent : "",
+            elQualityAuditStateSummary ? "State QA Detail\n" + elQualityAuditStateSummary.textContent : ""
+          ].filter(Boolean);
+          await navigator.clipboard.writeText(sections.join("\n\n"));
           elQualityAuditCopy.textContent = "Copied";
           setTimeout(function () { elQualityAuditCopy.textContent = "Copy Audit Snapshot"; }, 1200);
         } catch (err) {
