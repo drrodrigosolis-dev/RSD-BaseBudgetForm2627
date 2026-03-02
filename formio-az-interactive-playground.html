@@ -2399,6 +2399,23 @@
                     <div class="input-hint">Use this when a property should flex across screen sizes without overshooting its safe range.</div>
                   </div>
                 </div>
+                <div id="custom-rule-helper-fluid-coach" class="help-box">
+                  <div><strong>Fluid Clamp Coach</strong></div>
+                  <div class="info-grid">
+                    <div class="info-tile">
+                      <div class="label">Range</div>
+                      <div id="custom-rule-helper-fluid-range">1rem to 2rem</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Viewport Pull</div>
+                      <div id="custom-rule-helper-fluid-mid">2.5vw adds a moderate scaling curve.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Why This Fits</div>
+                      <div id="custom-rule-helper-fluid-rationale">Balanced fluid growth keeps the property flexible without overshooting the final cap too early.</div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="row">
                 <label class="label">Generated Declaration</label>
@@ -3357,6 +3374,10 @@ translateY()	translateY(<length|percentage>)
       const elCustomRuleHelperFluidMin = document.getElementById("custom-rule-helper-fluid-min");
       const elCustomRuleHelperFluidMax = document.getElementById("custom-rule-helper-fluid-max");
       const elCustomRuleHelperFluidVw = document.getElementById("custom-rule-helper-fluid-vw");
+      const elCustomRuleHelperFluidCoach = document.getElementById("custom-rule-helper-fluid-coach");
+      const elCustomRuleHelperFluidRange = document.getElementById("custom-rule-helper-fluid-range");
+      const elCustomRuleHelperFluidMid = document.getElementById("custom-rule-helper-fluid-mid");
+      const elCustomRuleHelperFluidRationale = document.getElementById("custom-rule-helper-fluid-rationale");
       const elCustomRuleHelperOutput = document.getElementById("custom-rule-helper-output");
       const elCustomRuleHelperNote = document.getElementById("custom-rule-helper-note");
       const elCustomRuleHelperLoad = document.getElementById("custom-rule-helper-load");
@@ -11133,6 +11154,57 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperSpacingRationale.textContent = details.rationale;
       }
 
+      function formatCompactNumber(value) {
+        const rounded = Math.round(Number(value || 0) * 100) / 100;
+        return String(rounded).replace(/\.0+$/, "").replace(/(\.\d*[1-9])0+$/, "$1") || "0";
+      }
+
+      function updateFluidClampCoach() {
+        if (!elCustomRuleHelperFluidCoach || !elCustomRuleHelperFluidRange || !elCustomRuleHelperFluidMid || !elCustomRuleHelperFluidRationale) {
+          return;
+        }
+
+        const unit = (elCustomRuleHelperFluidUnit.value || "rem").trim();
+        const min = Math.max(0, Number(elCustomRuleHelperFluidMin.value || 0));
+        const rawMax = Number(elCustomRuleHelperFluidMax.value || min);
+        const max = Math.max(min, rawMax);
+        const vw = Math.max(0, Number(elCustomRuleHelperFluidVw.value || 0));
+        const spread = Math.max(0, max - min);
+        const ratio = min > 0 ? (max / min) : (max > 0 ? Infinity : 1);
+
+        elCustomRuleHelperFluidRange.textContent =
+          formatCompactNumber(min) + unit + " to " + formatCompactNumber(max) + unit +
+          " (" + formatCompactNumber(spread) + unit + " spread).";
+
+        if (vw === 0) {
+          elCustomRuleHelperFluidMid.textContent = "0vw removes the fluid middle, so the clamp behaves like a fixed minimum until the max cap takes over.";
+        } else if (vw < 1.2) {
+          elCustomRuleHelperFluidMid.textContent = formatCompactNumber(vw) + "vw is very restrained and may barely move across normal breakpoints.";
+        } else if (vw > 4.5) {
+          elCustomRuleHelperFluidMid.textContent = formatCompactNumber(vw) + "vw is aggressive and can hit the max cap early on wide screens.";
+        } else {
+          elCustomRuleHelperFluidMid.textContent = formatCompactNumber(vw) + "vw adds a moderate scaling curve between the clamp bounds.";
+        }
+
+        let rationale = "Balanced fluid growth keeps the property flexible without overshooting the final cap too early.";
+        if (rawMax < min) {
+          rationale = "Maximum was below minimum, so the editor pins the upper bound to the minimum. Raise the max value to restore real fluid growth.";
+        } else if (spread === 0) {
+          rationale = "Minimum and maximum match, so clamp() is effectively fixed. Increase the max if you want responsive scaling instead of a locked value.";
+        } else if (!Number.isFinite(ratio) || ratio > 3) {
+          rationale = "This range expands quickly. Re-check large-screen readability so the property does not grow beyond the layout's safe rhythm.";
+        } else if (ratio < 1.2) {
+          rationale = "The min and max stay close together, which is good for subtle polish but may be too subtle to notice across breakpoints.";
+        } else if (vw === 0) {
+          rationale = "The bounds are valid, but a zero viewport rate removes the responsive middle. Use at least 1vw when you want visible fluid scaling.";
+        } else if (vw > 4.5) {
+          rationale = "The viewport rate is strong relative to the clamp range. Confirm the value does not slam into the maximum too early on laptop widths.";
+        } else if (vw < 1.2) {
+          rationale = "The viewport rate is cautious. This is useful when you want small movement without letting the property drift too far.";
+        }
+        elCustomRuleHelperFluidRationale.textContent = rationale;
+      }
+
       function currentCustomRuleHelperPresets() {
         const type = (elCustomRuleHelperType.value || "border-radius").trim();
         return CUSTOM_RULE_HELPER_PRESETS[type] || [];
@@ -11300,8 +11372,12 @@ translateY()	translateY(<length|percentage>)
         if (elCustomRuleHelperSpacingCoach) {
           elCustomRuleHelperSpacingCoach.classList.toggle("hidden", type !== "spacing");
         }
+        if (elCustomRuleHelperFluidCoach) {
+          elCustomRuleHelperFluidCoach.classList.toggle("hidden", type !== "fluid-clamp");
+        }
         updateSpacingHelperControlState();
         updateSpacingHelperCoach();
+        updateFluidClampCoach();
 
         if (type === "box-shadow") {
           elCustomRuleHelperNote.textContent = "Build a reusable shadow with consistent offsets, blur, spread, color, and optional inset behavior.";
