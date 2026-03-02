@@ -1391,6 +1391,102 @@
       margin: 0;
     }
 
+    .animation-lab-sequence-board {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .animation-lab-sequence-empty {
+      border: 1px dashed #cad7ef;
+      border-radius: 10px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.66);
+      font-size: 0.76rem;
+      color: #5a6b8e;
+      line-height: 1.45;
+    }
+
+    .animation-lab-sequence-lane {
+      display: grid;
+      gap: 6px;
+      padding: 10px;
+      border: 1px solid #d7e1f3;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .animation-lab-sequence-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .animation-lab-sequence-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #284674;
+    }
+
+    .animation-lab-sequence-badge {
+      font-size: 0.72rem;
+      color: #557099;
+    }
+
+    .animation-lab-sequence-track {
+      position: relative;
+      min-height: 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(137, 164, 214, 0.38);
+      background:
+        linear-gradient(90deg, rgba(66, 103, 173, 0.08), rgba(66, 103, 173, 0.04)),
+        rgba(224, 233, 248, 0.7);
+      overflow: hidden;
+    }
+
+    .animation-lab-sequence-track::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.06) 12px,
+          transparent 12px,
+          transparent 24px
+        );
+      pointer-events: none;
+    }
+
+    .animation-lab-sequence-offset,
+    .animation-lab-sequence-active {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      border-radius: 999px;
+    }
+
+    .animation-lab-sequence-offset {
+      left: 0;
+      background: linear-gradient(90deg, rgba(78, 118, 198, 0.14), rgba(78, 118, 198, 0.28));
+    }
+
+    .animation-lab-sequence-active {
+      min-width: 12px;
+      background: linear-gradient(90deg, rgba(41, 166, 111, 0.88), rgba(91, 196, 141, 0.92));
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    }
+
+    .animation-lab-sequence-meta {
+      font-size: 0.74rem;
+      color: #566b92;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
     .recipe-steps {
       margin: 0;
       padding-left: 18px;
@@ -2413,6 +2509,28 @@
 
     body[data-theme-mode="dark"] .animation-lab-stage-guide-copy {
       color: #b9c9e8;
+    }
+
+    body[data-theme-mode="dark"] .animation-lab-sequence-empty,
+    body[data-theme-mode="dark"] .animation-lab-sequence-lane {
+      border-color: #31415f;
+      background: rgba(18, 29, 52, 0.74);
+    }
+
+    body[data-theme-mode="dark"] .animation-lab-sequence-title {
+      color: #e3edff;
+    }
+
+    body[data-theme-mode="dark"] .animation-lab-sequence-badge,
+    body[data-theme-mode="dark"] .animation-lab-sequence-meta {
+      color: #b9c9e8;
+    }
+
+    body[data-theme-mode="dark"] .animation-lab-sequence-track {
+      border-color: rgba(116, 148, 212, 0.35);
+      background:
+        linear-gradient(90deg, rgba(82, 124, 206, 0.12), rgba(82, 124, 206, 0.05)),
+        rgba(30, 44, 74, 0.78);
     }
 
     body[data-theme-mode="dark"] select,
@@ -3967,6 +4085,24 @@
                     <div id="animation-lab-sequence-guardrail">Sequence guardrails will call out when repeated motion drifts too far from the original user action.</div>
                   </div>
                 </div>
+                <div class="info-grid" style="margin-top:8px;">
+                  <div class="info-tile">
+                    <div class="label">Sequence Health</div>
+                    <div id="animation-lab-sequence-health">Health scoring will explain how tightly the stagger stays coupled to the original trigger.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Cadence Ratio</div>
+                    <div id="animation-lab-sequence-cadence-score">Cadence ratio compares the stagger gap to the base motion duration.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Sequence Storyboard</label>
+                  <div id="animation-lab-sequence-storyboard" class="animation-lab-sequence-board"></div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Selector Map</label>
+                  <pre id="animation-lab-sequence-selector-map"></pre>
+                </div>
                 <div class="row" style="margin-top:8px;">
                   <label class="label">Sequence CSS</label>
                   <pre id="animation-lab-sequence-css"></pre>
@@ -5511,6 +5647,10 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabSequenceFocus = document.getElementById("animation-lab-sequence-focus");
       const elAnimationLabSequenceCoach = document.getElementById("animation-lab-sequence-coach");
       const elAnimationLabSequenceGuardrail = document.getElementById("animation-lab-sequence-guardrail");
+      const elAnimationLabSequenceHealth = document.getElementById("animation-lab-sequence-health");
+      const elAnimationLabSequenceCadenceScore = document.getElementById("animation-lab-sequence-cadence-score");
+      const elAnimationLabSequenceStoryboard = document.getElementById("animation-lab-sequence-storyboard");
+      const elAnimationLabSequenceSelectorMap = document.getElementById("animation-lab-sequence-selector-map");
       const elAnimationLabSequenceCss = document.getElementById("animation-lab-sequence-css");
       const elAnimationLabSequenceApplyRecommendation = document.getElementById("animation-lab-sequence-apply-recommendation");
       const elAnimationLabApplySequence = document.getElementById("animation-lab-apply-sequence");
@@ -13296,6 +13436,154 @@ translateY()	translateY(<length|percentage>)
         return "The last child begins at " + formatAnimationLabDurationMs(lastDelayMs) + " and the full sequence settles by " + formatAnimationLabDurationMs(settleMs) + ".";
       }
 
+      function animationLabSequenceEntryBoardEndMs(values, entry) {
+        const motion = cloneAnimationLabValueState(values);
+        const source = entry && typeof entry === "object" ? entry : {};
+        return Math.max(0, parseAnimationLabTimeMs(motion.duration)) + Math.max(0, Number(source.delayMs) || 0);
+      }
+
+      function animationLabSequenceEntryOutcomeText(values, entry) {
+        const motion = cloneAnimationLabValueState(values);
+        const source = entry && typeof entry === "object" ? entry : {};
+        const delayMs = Math.max(0, Number(source.delayMs) || 0);
+        const durationMs = Math.max(0, parseAnimationLabTimeMs(motion.duration));
+        const cycles = animationLabCycleCount(motion);
+        if (cycles === Infinity) {
+          return "loop checkpoint " + formatAnimationLabDurationMs(delayMs + durationMs);
+        }
+        return "settles " + formatAnimationLabDurationMs(delayMs + (durationMs * cycles));
+      }
+
+      function animationLabSequenceDiagnostics(values, sequence, entries) {
+        const motion = cloneAnimationLabValueState(values);
+        const plan = normalizeAnimationLabSequenceValueState(sequence);
+        const list = Array.isArray(entries) ? entries : [];
+        if (!list.length) {
+          return {
+            health: "Configure a sequence to score how tightly the stagger stays tied to the original trigger.",
+            cadence: "Cadence ratio appears once the planner has at least one sequence step.",
+            selectorMap: "No sequence selectors are mapped yet."
+          };
+        }
+
+        const durationMs = Math.max(0, parseAnimationLabTimeMs(motion.duration));
+        const incrementMs = animationLabSequenceIncrementMs(plan);
+        const lastDelayMs = list[list.length - 1].delayMs;
+        const boardEndMs = animationLabSequenceEntryBoardEndMs(motion, list[list.length - 1]);
+        let score = 100;
+
+        if (plan.mode !== "single") {
+          if (lastDelayMs >= 480) score -= 26;
+          else if (lastDelayMs >= 300) score -= 14;
+          if (list.length >= 4 && incrementMs >= 180) score -= 18;
+          if ((motion.trigger === ":active" || motion.trigger === ":focus" || motion.trigger === ":focus-visible") && boardEndMs >= 900) score -= 22;
+          if (animationLabCycleCount(motion) === Infinity) score -= 18;
+          if (!motion.trigger && list.length >= 4) score -= 10;
+        }
+
+        score = Math.max(18, Math.min(100, score));
+        const tier = score >= 85
+          ? "Tight"
+          : score >= 65
+            ? "Balanced"
+            : score >= 40
+              ? "Stretching"
+              : "Loose";
+        const health = plan.mode === "single"
+          ? "Tight (100/100). Single lead mode preserves one anchor and avoids stagger drift entirely."
+          : tier + " (" + score + "/100). " + (
+            score >= 85
+              ? "The stagger still reads like one response."
+              : score >= 65
+                ? "The spread is noticeable but should remain connected to the source action."
+                : score >= 40
+                  ? "Later steps may start to feel detached, so validate the full chain in context."
+                  : "The stagger is so wide that later siblings may read like separate events."
+          );
+        const ratio = durationMs > 0 ? Math.round((incrementMs / durationMs) * 100) : 0;
+        const cadence = plan.mode === "single"
+          ? "Single lead only. No added gap is layered onto the base motion."
+          : ratio <= 20
+            ? ratio + "% of one cycle. Heavy overlap keeps the sequence compressed."
+            : ratio <= 40
+              ? ratio + "% of one cycle. Balanced spacing usually reads as one coordinated wave."
+              : ratio <= 65
+                ? ratio + "% of one cycle. Wide spacing can work, but validate that the last child still feels related."
+                : ratio + "% of one cycle. The stagger is very spread out and may feel disconnected on dense UI.";
+        const selectorMap = list.map(function (entry) {
+          return entry.sequenceIndex + ". child " + entry.childIndex + " | starts " + entry.delayText + " | " + animationLabSequenceEntryOutcomeText(motion, entry) + " | " + entry.selector;
+        }).join("\n");
+
+        return {
+          health: health,
+          cadence: cadence,
+          selectorMap: selectorMap
+        };
+      }
+
+      function renderAnimationLabSequenceStoryboard(values, sequence, entries) {
+        if (!elAnimationLabSequenceStoryboard) return;
+        const motion = cloneAnimationLabValueState(values);
+        const list = Array.isArray(entries) ? entries : [];
+        elAnimationLabSequenceStoryboard.innerHTML = "";
+
+        if (!list.length) {
+          const empty = document.createElement("div");
+          empty.className = "animation-lab-sequence-empty";
+          empty.textContent = "Configure the sequence planner to see a step-by-step storyboard of start offsets and active motion windows.";
+          elAnimationLabSequenceStoryboard.appendChild(empty);
+          return;
+        }
+
+        const durationMs = Math.max(1, parseAnimationLabTimeMs(motion.duration) || 1);
+        const maxEndMs = Math.max(durationMs, list.reduce(function (max, entry) {
+          return Math.max(max, animationLabSequenceEntryBoardEndMs(motion, entry));
+        }, 0));
+
+        list.forEach(function (entry) {
+          const lane = document.createElement("div");
+          lane.className = "animation-lab-sequence-lane";
+
+          const head = document.createElement("div");
+          head.className = "animation-lab-sequence-head";
+
+          const title = document.createElement("div");
+          title.className = "animation-lab-sequence-title";
+          title.textContent = "Step " + entry.sequenceIndex + " -> Child " + entry.childIndex;
+
+          const badge = document.createElement("div");
+          badge.className = "animation-lab-sequence-badge";
+          badge.textContent = "Starts " + entry.delayText;
+
+          head.appendChild(title);
+          head.appendChild(badge);
+
+          const track = document.createElement("div");
+          track.className = "animation-lab-sequence-track";
+
+          const offset = document.createElement("div");
+          offset.className = "animation-lab-sequence-offset";
+          offset.style.width = Math.round((entry.delayMs / maxEndMs) * 100) + "%";
+
+          const active = document.createElement("div");
+          active.className = "animation-lab-sequence-active";
+          active.style.left = Math.round((entry.delayMs / maxEndMs) * 100) + "%";
+          active.style.width = Math.max(8, Math.round((durationMs / maxEndMs) * 100)) + "%";
+
+          track.appendChild(offset);
+          track.appendChild(active);
+
+          const meta = document.createElement("div");
+          meta.className = "animation-lab-sequence-meta";
+          meta.textContent = animationLabSequenceEntryOutcomeText(motion, entry) + " | " + entry.selector;
+
+          lane.appendChild(head);
+          lane.appendChild(track);
+          lane.appendChild(meta);
+          elAnimationLabSequenceStoryboard.appendChild(lane);
+        });
+      }
+
       function animationLabSequenceFocus(values, sequence, entries) {
         const motion = cloneAnimationLabValueState(values);
         const plan = normalizeAnimationLabSequenceValueState(sequence);
@@ -13503,6 +13791,7 @@ translateY()	translateY(<length|percentage>)
         const forge = animationLabVariantForge(values);
         const sequencePreset = matchingAnimationLabSequencePreset(sequence);
         const sequenceRecommendation = animationLabSequenceRecommendation(values, sequence, sequenceEntries);
+        const sequenceDiagnostics = animationLabSequenceDiagnostics(values, sequence, sequenceEntries);
         const reviewEntries = animationLabTriggerReviewEntries(values);
         const bestReview = animationLabBestReviewEntry(reviewEntries);
         const anatomy = animationLabKeyframeAnatomy(values);
@@ -13639,6 +13928,16 @@ translateY()	translateY(<length|percentage>)
         }
         if (elAnimationLabSequenceGuardrail) {
           elAnimationLabSequenceGuardrail.textContent = sequenceRecommendation.guardrail;
+        }
+        if (elAnimationLabSequenceHealth) {
+          elAnimationLabSequenceHealth.textContent = sequenceDiagnostics.health;
+        }
+        if (elAnimationLabSequenceCadenceScore) {
+          elAnimationLabSequenceCadenceScore.textContent = sequenceDiagnostics.cadence;
+        }
+        renderAnimationLabSequenceStoryboard(values, sequence, sequenceEntries);
+        if (elAnimationLabSequenceSelectorMap) {
+          elAnimationLabSequenceSelectorMap.textContent = sequenceDiagnostics.selectorMap;
         }
         elAnimationLabSequenceCss.textContent = sequenceCss;
         if (elAnimationLabSequenceApplyRecommendation) {
