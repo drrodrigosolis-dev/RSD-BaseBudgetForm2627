@@ -2003,6 +2003,34 @@
                 </div>
               </div>
               <div class="help-box">
+                <div><strong>Motion Intent Coach</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Recommended Lane</div>
+                    <div id="animation-lab-intent-lane">The lab will map this motion to a rollout lane once timing and trigger are set.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Target Cadence</div>
+                    <div id="animation-lab-intent-cadence">Choose a trigger and timing to see the recommended motion budget.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Why This Lane</div>
+                    <div id="animation-lab-intent-why">The coach will explain what user moment your current settings resemble.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Suggested Adjustment</div>
+                    <div id="animation-lab-intent-adjustment">A one-click tuning recommendation will appear here when the current motion drifts outside its intended job.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Lane Tuning</label>
+                  <div class="inline">
+                    <button id="animation-lab-apply-intent" type="button">Tune To Recommended Lane</button>
+                    <div id="animation-lab-intent-note" class="input-hint">Use this when you want the lab to rebalance timing, loops, and delay for the current motion lane.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="help-box">
                 <div><strong>Motion Rollout Planner</strong></div>
                 <div class="info-grid">
                   <div class="info-tile">
@@ -3393,6 +3421,12 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabSurfaceFit = document.getElementById("animation-lab-surface-fit");
       const elAnimationLabSurfaceBest = document.getElementById("animation-lab-surface-best");
       const elAnimationLabSurfaceCaution = document.getElementById("animation-lab-surface-caution");
+      const elAnimationLabIntentLane = document.getElementById("animation-lab-intent-lane");
+      const elAnimationLabIntentCadence = document.getElementById("animation-lab-intent-cadence");
+      const elAnimationLabIntentWhy = document.getElementById("animation-lab-intent-why");
+      const elAnimationLabIntentAdjustment = document.getElementById("animation-lab-intent-adjustment");
+      const elAnimationLabApplyIntent = document.getElementById("animation-lab-apply-intent");
+      const elAnimationLabIntentNote = document.getElementById("animation-lab-intent-note");
       const elSyntaxAddCurrentRule = document.getElementById("syntax-add-current-rule");
       const elCustomRule = document.getElementById("custom-rule");
       const elCustomRuleHelperType = document.getElementById("custom-rule-helper-type");
@@ -8594,6 +8628,79 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function animationLabIntentPlan(values) {
+        const durationMs = parseAnimationLabTimeMs(values.duration);
+        const delayMs = parseAnimationLabTimeMs(values.delay);
+        const loopCount = animationLabCycleCount(values || {});
+        const currentKey = (elTarget.value || "card").trim();
+        const meta = animationLabSurfaceMeta(currentKey);
+        let lane = "Ambient accent";
+        let cadence = "Aim for 700-1200ms with 1-2 loops so the motion reads as polish, not a background distraction.";
+        let why = "Always-on or decorative motion works best when it stays soft and self-limiting.";
+        const patch = {};
+
+        function setIfChanged(key, nextValue) {
+          if (typeof nextValue === "undefined" || nextValue === null) return;
+          if (String(values[key] || "").trim() === String(nextValue).trim()) return;
+          patch[key] = nextValue;
+        }
+
+        if (values.keyframes === "spin") {
+          lane = "Loading cue";
+          cadence = "Keep loops continuous only when the component truly represents loading or progress.";
+          why = "Spin strongly implies work-in-progress, so the safest tuning is to make that intent explicit.";
+          if (values.iterations !== "infinite") setIfChanged("iterations", "infinite");
+          if (durationMs < 700) setIfChanged("duration", "700ms");
+          if (delayMs !== 0) setIfChanged("delay", "0s");
+          if (values.direction !== "normal") setIfChanged("direction", "normal");
+        } else if (values.trigger === ":active") {
+          lane = "Press feedback";
+          cadence = "Target 150-300ms, no delay, one loop. Pressed states need immediate acknowledgement.";
+          why = "Pressed interactions should feel instant and should finish before the control returns to rest.";
+          if (durationMs > 300) setIfChanged("duration", "250ms");
+          if (delayMs !== 0) setIfChanged("delay", "0s");
+          if (loopCount > 1) setIfChanged("iterations", "1");
+          if (values.direction !== "normal") setIfChanged("direction", "normal");
+        } else if (values.trigger === ":focus" || values.trigger === ":focus-visible") {
+          lane = "Focus assist";
+          cadence = "Target 200-400ms, no delay, one loop so keyboard movement stays clear and calm.";
+          why = "Focus motion should reinforce the focus ring, not compete with it or linger across tab stops.";
+          if (durationMs < 200 || durationMs > 400) setIfChanged("duration", "250ms");
+          if (delayMs !== 0) setIfChanged("delay", "0s");
+          if (loopCount > 1) setIfChanged("iterations", "1");
+        } else if (values.trigger === ":hover") {
+          lane = "Hover affordance";
+          cadence = "Target 180-350ms, 0-80ms delay, one loop so the hover hint feels responsive.";
+          why = "Hover motion should confirm intent quickly and then get out of the way.";
+          if (durationMs < 180 || durationMs > 350) setIfChanged("duration", "250ms");
+          if (delayMs > 80) setIfChanged("delay", "80ms");
+          if (loopCount > 1) setIfChanged("iterations", "1");
+        } else if (meta.family === "action" || meta.family === "toggle" || meta.family === "field") {
+          lane = "Contextual emphasis";
+          cadence = "Target 250-500ms with one loop. Dense controls should not keep moving after the user notices them.";
+          why = "Interactive controls can handle a single emphasized cue, but repeated motion increases scanning cost.";
+          if (durationMs < 250 || durationMs > 500) setIfChanged("duration", "300ms");
+          if (loopCount > 1) setIfChanged("iterations", "1");
+          if (delayMs > 150) setIfChanged("delay", "80ms");
+        } else {
+          if (durationMs < 700 || durationMs > 1200) setIfChanged("duration", "900ms");
+          if (!Number.isFinite(loopCount) || loopCount > 2) setIfChanged("iterations", "2");
+          if (delayMs > 250) setIfChanged("delay", "150ms");
+        }
+
+        const adjustment = Object.keys(patch).length
+          ? "Current motion drifts outside the " + lane.toLowerCase() + " budget. Use lane tuning to rebalance timing and loops."
+          : "Current motion already fits the " + lane.toLowerCase() + " budget.";
+
+        return {
+          lane: lane,
+          cadence: cadence,
+          why: why,
+          adjustment: adjustment,
+          patch: patch
+        };
+      }
+
       function setSelectValueIfPresent(selectEl, value, fallbackValue) {
         if (!selectEl) return;
         const next = String(value || "").trim();
@@ -8674,6 +8781,7 @@ translateY()	translateY(<length|percentage>)
         const guardrail = animationLabGuardrailRecommendation(values);
         const risk = animationLabRiskAssessment(values);
         const surface = animationLabSurfaceAssessment(values);
+        const intent = animationLabIntentPlan(values);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         elAnimationLabPresetIntent.textContent = brief.intent;
         elAnimationLabPresetBestFor.textContent = brief.bestFor;
@@ -8709,6 +8817,17 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabSurfaceFit.textContent = surface.fit;
         elAnimationLabSurfaceBest.textContent = surface.best;
         elAnimationLabSurfaceCaution.textContent = surface.caution;
+        elAnimationLabIntentLane.textContent = intent.lane;
+        elAnimationLabIntentCadence.textContent = intent.cadence;
+        elAnimationLabIntentWhy.textContent = intent.why;
+        elAnimationLabIntentAdjustment.textContent = intent.adjustment;
+        elAnimationLabApplyIntent.disabled = !Object.keys(intent.patch).length;
+        elAnimationLabApplyIntent.textContent = Object.keys(intent.patch).length
+          ? "Tune To Recommended Lane"
+          : "Already Tuned";
+        elAnimationLabIntentNote.textContent = Object.keys(intent.patch).length
+          ? "Use this when you want the lab to rebalance timing, loops, and delay for the current motion lane."
+          : "This motion already matches the recommended lane budget for its current trigger and target.";
         updateAnimationLabReducedPreviewState(selector);
       }
 
@@ -8825,6 +8944,23 @@ translateY()	translateY(<length|percentage>)
         setSelectValueIfPresent(elAnimationLabDuration, patch.duration, elAnimationLabDuration.value);
         updateAnimationLabOutputs();
         setBuilderStatus("Animation Lab applied its suggested guardrail. " + recommendation.message);
+      }
+
+      function applyAnimationLabIntentPlan() {
+        const values = animationLabPresetValues();
+        const plan = animationLabIntentPlan(values);
+        const patch = plan.patch || {};
+        if (!Object.keys(patch).length) {
+          setBuilderStatus("Animation Lab intent coach did not need to change anything.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        setSelectValueIfPresent(elAnimationLabIterations, patch.iterations, elAnimationLabIterations.value);
+        setSelectValueIfPresent(elAnimationLabDirection, patch.direction, elAnimationLabDirection.value);
+        setSelectValueIfPresent(elAnimationLabDelay, patch.delay, elAnimationLabDelay.value);
+        setSelectValueIfPresent(elAnimationLabDuration, patch.duration, elAnimationLabDuration.value);
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab tuned the motion for the " + plan.lane.toLowerCase() + " lane.");
       }
 
       function filteredGlossaryTerms() {
@@ -11912,6 +12048,7 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabMatchPreview.addEventListener("click", syncPreviewInteractionToAnimationLab);
       elAnimationLabRestart.addEventListener("click", restartAnimationLabPreview);
       elAnimationLabApplyGuardrail.addEventListener("click", applyAnimationLabGuardrail);
+      elAnimationLabApplyIntent.addEventListener("click", applyAnimationLabIntentPlan);
       elAnimationLabReducePreview.addEventListener("change", function () {
         updateAnimationLabReducedPreviewState();
         setBuilderStatus(
