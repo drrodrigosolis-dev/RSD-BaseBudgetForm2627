@@ -2117,7 +2117,32 @@
                   <label class="label">Compare Report</label>
                   <pre id="animation-lab-compare-report"></pre>
                 </div>
+                <div class="info-grid" style="margin-top:10px;">
+                  <div class="info-tile">
+                    <div class="label">Protected Anchor</div>
+                    <div id="animation-lab-compare-anchor-status">No dedicated baseline anchor is locked yet.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Release Candidate</div>
+                    <div id="animation-lab-compare-handoff-candidate">The bench will nominate a keeper once you capture a motion package.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Promotion Plan</div>
+                    <div id="animation-lab-compare-handoff-promotion">Save at least one slot, then promote the best keeper when you are ready to protect it.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Export Focus</div>
+                    <div id="animation-lab-compare-handoff-focus">The handoff panel will call out whether the live controls already match the best saved package.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Release Handoff Package</label>
+                  <pre id="animation-lab-compare-handoff-package"></pre>
+                </div>
                 <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-load-winner" type="button">Load Recommended Keeper</button>
+                  <button id="animation-lab-promote-winner" type="button">Promote Winner To Baseline</button>
+                  <button id="animation-lab-copy-winner" type="button">Copy Winner Package</button>
                   <button id="animation-lab-copy-compare" type="button">Copy Compare Report</button>
                 </div>
                 <div id="animation-lab-compare-note" class="input-hint">Capture a baseline, a likely keeper, and a stress-test variant so motion decisions stay deliberate instead of living only in the current form fields.</div>
@@ -3750,6 +3775,14 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabCompareDelta = document.getElementById("animation-lab-compare-delta");
       const elAnimationLabCompareNext = document.getElementById("animation-lab-compare-next");
       const elAnimationLabCompareReport = document.getElementById("animation-lab-compare-report");
+      const elAnimationLabCompareAnchorStatus = document.getElementById("animation-lab-compare-anchor-status");
+      const elAnimationLabCompareHandoffCandidate = document.getElementById("animation-lab-compare-handoff-candidate");
+      const elAnimationLabCompareHandoffPromotion = document.getElementById("animation-lab-compare-handoff-promotion");
+      const elAnimationLabCompareHandoffFocus = document.getElementById("animation-lab-compare-handoff-focus");
+      const elAnimationLabCompareHandoffPackage = document.getElementById("animation-lab-compare-handoff-package");
+      const elAnimationLabLoadWinner = document.getElementById("animation-lab-load-winner");
+      const elAnimationLabPromoteWinner = document.getElementById("animation-lab-promote-winner");
+      const elAnimationLabCopyWinner = document.getElementById("animation-lab-copy-winner");
       const elAnimationLabCopyCompare = document.getElementById("animation-lab-copy-compare");
       const elAnimationLabCompareNote = document.getElementById("animation-lab-compare-note");
       const elAnimationLabSelectorNote = document.getElementById("animation-lab-selector-note");
@@ -9818,6 +9851,19 @@ translateY()	translateY(<length|percentage>)
         }).filter(Boolean);
       }
 
+      function sortAnimationLabCompareEntries(entries) {
+        return entries.slice().sort(function (a, b) {
+          if (b.releaseScore !== a.releaseScore) return b.releaseScore - a.releaseScore;
+          if (a.slotKey === "baseline" && b.slotKey !== "baseline") return -1;
+          if (b.slotKey === "baseline" && a.slotKey !== "baseline") return 1;
+          return a.slotTitle.localeCompare(b.slotTitle);
+        });
+      }
+
+      function animationLabBestCompareEntry(entries) {
+        return sortAnimationLabCompareEntries(entries)[0] || null;
+      }
+
       function animationLabCompareFieldValue(label, key, values) {
         const next = values && Object.prototype.hasOwnProperty.call(values, key) ? values[key] : "";
         if (key === "trigger") return animationLabTriggerLabel(next);
@@ -9851,19 +9897,106 @@ translateY()	translateY(<length|percentage>)
         }).filter(Boolean);
       }
 
+      function animationLabCompareWinnerPackageText(entry, selector, currentTarget, anchorEntry) {
+        if (!entry) return "No compare winner selected yet.";
+        const lines = [
+          "Release keeper: " + entry.slotTitle + " (" + entry.presetLabel + ")",
+          "Selector: " + selector,
+          "Target: " + currentTarget,
+          "Trigger: " + entry.triggerLabel,
+          "Release score: " + entry.releaseScore + "/100",
+          "Risk: " + entry.risk.level + " " + entry.risk.score + "/100",
+          "Surface fit: " + entry.surface.score + "/100 on " + currentTarget
+        ];
+        if (anchorEntry && anchorEntry.slotKey !== entry.slotKey) {
+          const releaseDelta = entry.releaseScore - anchorEntry.releaseScore;
+          const riskDelta = entry.risk.score - anchorEntry.risk.score;
+          const surfaceDelta = entry.surface.score - anchorEntry.surface.score;
+          lines.push("Delta vs " + anchorEntry.slotTitle + ": release " + (releaseDelta > 0 ? "+" : "") + releaseDelta + ", risk " + (riskDelta > 0 ? "+" : "") + riskDelta + ", surface " + (surfaceDelta > 0 ? "+" : "") + surfaceDelta + ".");
+        } else if (anchorEntry) {
+          lines.push("Baseline anchor and current keeper are the same slot.");
+        } else {
+          lines.push("No protected baseline anchor yet. Promote this package if you want a stable release checkpoint.");
+        }
+        lines.push("");
+        lines.push(animationLabPackageCss(selector, entry.values));
+        return lines.join("\n");
+      }
+
+      function renderAnimationLabCompareReleaseHandoff(entries, anchorEntry, winner, currentTarget) {
+        if (!elAnimationLabCompareHandoffPackage) return;
+
+        const selector = animationLabSelector();
+        const liveValues = animationLabPresetValues();
+        const liveDiff = winner ? animationLabCompareDiffLines(winner.values, liveValues) : [];
+        const winnerLoaded = Boolean(winner) && liveDiff.length === 0;
+        const hasBaseline = Boolean(anchorEntry && anchorEntry.slotKey === "baseline");
+        const canPromote = Boolean(winner) && winner.slotKey !== "baseline";
+
+        if (!entries.length || !winner) {
+          elAnimationLabCompareAnchorStatus.textContent = "No dedicated baseline anchor is locked yet.";
+          elAnimationLabCompareHandoffCandidate.textContent = "The bench will nominate a keeper once you capture a motion package.";
+          elAnimationLabCompareHandoffPromotion.textContent = "Save at least one slot, then promote the best keeper when you are ready to protect it.";
+          elAnimationLabCompareHandoffFocus.textContent = "The handoff panel will call out whether the live controls already match the best saved package.";
+          elAnimationLabCompareHandoffPackage.textContent = "No compare winner selected yet.";
+          if (elAnimationLabLoadWinner) {
+            elAnimationLabLoadWinner.disabled = true;
+            elAnimationLabLoadWinner.textContent = "Load Recommended Keeper";
+          }
+          if (elAnimationLabPromoteWinner) {
+            elAnimationLabPromoteWinner.disabled = true;
+            elAnimationLabPromoteWinner.textContent = "Promote Winner To Baseline";
+          }
+          if (elAnimationLabCopyWinner) {
+            elAnimationLabCopyWinner.disabled = true;
+            elAnimationLabCopyWinner.textContent = "Copy Winner Package";
+          }
+          return;
+        }
+
+        elAnimationLabCompareAnchorStatus.textContent = hasBaseline
+          ? "Baseline Anchor is protected and can be used as the release reference."
+          : "No dedicated baseline anchor is stored yet. Promote the current keeper to lock one in.";
+        elAnimationLabCompareHandoffCandidate.textContent =
+          winner.slotTitle + " leads on " + currentTarget + " with a release score of " + winner.releaseScore + "/100.";
+        if (canPromote) {
+          elAnimationLabCompareHandoffPromotion.textContent = hasBaseline
+            ? "Promote " + winner.slotTitle + " when you are ready to replace the current baseline reference."
+            : "Promote " + winner.slotTitle + " now to create the first protected baseline anchor.";
+        } else {
+          elAnimationLabCompareHandoffPromotion.textContent = "Baseline Anchor is still the strongest keeper, so your protected release checkpoint already matches the winner.";
+        }
+        if (winnerLoaded) {
+          elAnimationLabCompareHandoffFocus.textContent = "Live controls already match the saved keeper. Export or apply it directly when you are ready.";
+        } else {
+          elAnimationLabCompareHandoffFocus.textContent =
+            "Live controls differ from " + winner.slotTitle + ". Biggest drift: " + (liveDiff[0] || "capture a fresh slot before exporting.");
+        }
+        elAnimationLabCompareHandoffPackage.textContent = animationLabCompareWinnerPackageText(winner, selector, currentTarget, anchorEntry);
+
+        if (elAnimationLabLoadWinner) {
+          elAnimationLabLoadWinner.disabled = winnerLoaded;
+          elAnimationLabLoadWinner.textContent = winnerLoaded ? "Keeper Already Loaded" : "Load Recommended Keeper";
+        }
+        if (elAnimationLabPromoteWinner) {
+          elAnimationLabPromoteWinner.disabled = !canPromote;
+          elAnimationLabPromoteWinner.textContent = canPromote ? "Promote Winner To Baseline" : "Winner Already Baseline";
+        }
+        if (elAnimationLabCopyWinner) {
+          elAnimationLabCopyWinner.disabled = false;
+          elAnimationLabCopyWinner.textContent = "Copy Winner Package";
+        }
+      }
+
       function renderAnimationLabCompareBench() {
         if (!elAnimationLabCompareBench) return;
 
         const entries = animationLabCompareEntries();
         const currentTarget = previewTargetLabel((elTarget.value || "card").trim());
         const anchorEntry = entries.find(function (entry) { return entry.slotKey === "baseline"; }) || entries[0] || null;
-        const sorted = entries.slice().sort(function (a, b) {
-          if (b.releaseScore !== a.releaseScore) return b.releaseScore - a.releaseScore;
-          if (a.slotKey === "baseline" && b.slotKey !== "baseline") return -1;
-          if (b.slotKey === "baseline" && a.slotKey !== "baseline") return 1;
-          return a.slotTitle.localeCompare(b.slotTitle);
-        });
-        const winner = sorted[0] || null;
+        const winner = animationLabBestCompareEntry(entries);
+
+        renderAnimationLabCompareReleaseHandoff(entries, anchorEntry, winner, currentTarget);
 
         ANIMATION_LAB_COMPARE_SLOT_ORDER.forEach(function (slotKey) {
           const card = elAnimationLabCompareBench.querySelector('[data-compare-slot="' + slotKey + '"]');
@@ -10031,6 +10164,43 @@ translateY()	translateY(<length|percentage>)
         animationLabCompareSlots[slotKey] = null;
         updateAnimationLabOutputs();
         setBuilderStatus("Animation Lab cleared " + animationLabCompareSlotTitle(slotKey) + ".");
+      }
+
+      function loadAnimationLabCompareWinner() {
+        const winner = animationLabBestCompareEntry(animationLabCompareEntries());
+        if (!winner) {
+          setBuilderStatus("Animation Lab needs at least one saved compare slot before it can load a keeper.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        const liveDiff = animationLabCompareDiffLines(winner.values, animationLabPresetValues());
+        if (!liveDiff.length) {
+          setBuilderStatus("Animation Lab is already showing the recommended keeper.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        applyAnimationLabState(winner.values);
+        setBuilderStatus("Animation Lab loaded the recommended keeper from " + winner.slotTitle + ".");
+      }
+
+      function promoteAnimationLabCompareWinner() {
+        const entries = animationLabCompareEntries();
+        const winner = animationLabBestCompareEntry(entries);
+        if (!winner) {
+          setBuilderStatus("Animation Lab needs a saved compare winner before it can promote one.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        if (winner.slotKey === "baseline") {
+          setBuilderStatus("Baseline Anchor is already the current compare winner.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        animationLabCompareSlots.baseline = {
+          values: cloneAnimationLabValueState(winner.values)
+        };
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab promoted " + winner.slotTitle + " into Baseline Anchor.");
       }
 
       function animationLabSelector() {
@@ -13416,6 +13586,17 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      async function copyAnimationLabCompareWinnerPackage() {
+        try {
+          await navigator.clipboard.writeText(elAnimationLabCompareHandoffPackage.textContent);
+          elAnimationLabCopyWinner.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopyWinner.textContent = "Copy Winner Package"; }, 1200);
+        } catch (err) {
+          elAnimationLabCopyWinner.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopyWinner.textContent = "Copy Winner Package"; }, 1200);
+        }
+      }
+
       async function copyAnimationLabAnatomyBrief() {
         try {
           await navigator.clipboard.writeText(
@@ -14189,6 +14370,15 @@ translateY()	translateY(<length|percentage>)
       }
       if (elAnimationLabCopyCompare) {
         elAnimationLabCopyCompare.addEventListener("click", copyAnimationLabCompareReport);
+      }
+      if (elAnimationLabLoadWinner) {
+        elAnimationLabLoadWinner.addEventListener("click", loadAnimationLabCompareWinner);
+      }
+      if (elAnimationLabPromoteWinner) {
+        elAnimationLabPromoteWinner.addEventListener("click", promoteAnimationLabCompareWinner);
+      }
+      if (elAnimationLabCopyWinner) {
+        elAnimationLabCopyWinner.addEventListener("click", copyAnimationLabCompareWinnerPackage);
       }
       elAnimationLabReducePreview.addEventListener("change", function () {
         updateAnimationLabReducedPreviewState();
