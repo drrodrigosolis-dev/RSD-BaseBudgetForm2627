@@ -1444,10 +1444,28 @@
           <div class="row">
             <label class="label" for="category">Category</label>
             <select id="category">
-              <option value="attribute">HTML Attribute</option>
-              <option value="property">CSS Property</option>
-              <option value="function">CSS Function</option>
+              <option value="attribute">HTML Attribute (markup)</option>
+              <option value="property">CSS Property (full rule)</option>
+              <option value="function">CSS Function (value only)</option>
             </select>
+          </div>
+
+          <div class="help-box selection-guide">
+            <div><strong>Why These Are Separate</strong></div>
+            <div class="selection-guide-grid">
+              <div class="selection-guide-block">
+                <div class="label">Scope</div>
+                <div id="category-guide-scope">HTML attributes change the markup on the element itself.</div>
+              </div>
+              <div class="selection-guide-block">
+                <div class="label">Output Shape</div>
+                <div id="category-guide-output">Attributes produce HTML syntax like class="..." or disabled.</div>
+              </div>
+              <div class="selection-guide-block">
+                <div class="label">Best Use</div>
+                <div id="category-guide-best">Use attributes for markup hooks, semantics, and one-off inline values.</div>
+              </div>
+            </div>
           </div>
 
           <div class="row">
@@ -2165,6 +2183,39 @@
                   <button id="animation-lab-session-clear" type="button">Clear Saved Session</button>
                 </div>
                 <div id="animation-lab-session-note" class="input-hint">The lab auto-saves the current motion draft, sequence planner, and compare bench so you can leave and resume without rebuilding the same experiment.</div>
+              </div>
+              <div class="help-box">
+                <div><strong>Motion Variant Forge</strong></div>
+                <p class="tiny">Spin the current draft into calmer, launch-ready, or showcase-weight variants without manually retuning every timing control.</p>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Quiet QA</div>
+                    <div id="animation-lab-variant-calm">A low-risk testing variant will appear here once the lab has a motion draft.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Launch Default</div>
+                    <div id="animation-lab-variant-balanced">The ship-ready tuned variant will appear here once the lab has a motion draft.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Showcase Push</div>
+                    <div id="animation-lab-variant-bold">A more expressive comparison variant will appear here once the lab has a motion draft.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Forge Recommendation</div>
+                    <div id="animation-lab-variant-recommendation">The forge will recommend which variant to test next after it compares risk and target fit.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Variant Report</label>
+                  <pre id="animation-lab-variant-report"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button data-animation-variant-load="calm" type="button">Load Quiet QA</button>
+                  <button data-animation-variant-load="balanced" type="button">Load Launch Default</button>
+                  <button data-animation-variant-load="bold" type="button">Load Showcase Push</button>
+                  <button id="animation-lab-copy-variants" type="button">Copy Variant Report</button>
+                </div>
+                <div id="animation-lab-variant-note" class="input-hint">Use the forge to jump between a safer QA draft, a tuned default, and a higher-drama comparison pass before you overwrite compare slots.</div>
               </div>
               <div class="row">
                 <label class="label">Effective Selector</label>
@@ -3711,6 +3762,9 @@ translateY()	translateY(<length|percentage>)
     (function () {
       try {
       const elCategory = document.getElementById("category");
+      const elCategoryGuideScope = document.getElementById("category-guide-scope");
+      const elCategoryGuideOutput = document.getElementById("category-guide-output");
+      const elCategoryGuideBest = document.getElementById("category-guide-best");
       const elSearch = document.getElementById("search");
       const elItem = document.getElementById("item");
       const elTarget = document.getElementById("target");
@@ -3876,6 +3930,14 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabSessionRestore = document.getElementById("animation-lab-session-restore");
       const elAnimationLabSessionClear = document.getElementById("animation-lab-session-clear");
       const elAnimationLabSessionNote = document.getElementById("animation-lab-session-note");
+      const elAnimationLabVariantCalm = document.getElementById("animation-lab-variant-calm");
+      const elAnimationLabVariantBalanced = document.getElementById("animation-lab-variant-balanced");
+      const elAnimationLabVariantBold = document.getElementById("animation-lab-variant-bold");
+      const elAnimationLabVariantRecommendation = document.getElementById("animation-lab-variant-recommendation");
+      const elAnimationLabVariantReport = document.getElementById("animation-lab-variant-report");
+      const elAnimationLabCopyVariants = document.getElementById("animation-lab-copy-variants");
+      const elAnimationLabVariantNote = document.getElementById("animation-lab-variant-note");
+      const animationLabVariantLoadButtons = Array.from(document.querySelectorAll("[data-animation-variant-load]"));
       const elAnimationLabSelectorNote = document.getElementById("animation-lab-selector-note");
       const elAnimationLabOutput = document.getElementById("animation-lab-output");
       const elAnimationLabKeyframes = document.getElementById("animation-lab-keyframes");
@@ -5121,6 +5183,100 @@ translateY()	translateY(<length|percentage>)
         "justify-content::value": ["flex-start", "center", "flex-end", "space-between", "space-around", "space-evenly"],
         "transition-property::property-list": ["all", "opacity", "transform", "box-shadow", "background-color", "color", "border-color"]
       };
+      const ITEM_SPECIFIC_PARAM_META = {
+        "background::shorthand": {
+          label: "Background Shorthand",
+          defaultValue: "center / cover no-repeat",
+          description: "Background shorthand can combine position, size, repeat, and other pieces in one line. Start from the sample, then swap the parts you need.",
+          inputKind: "text"
+        },
+        "box-shadow::blur": {
+          defaultValue: "18px",
+          description: "Blur radius for the shadow. Larger values create a softer, wider shadow.",
+          inputKind: "dimension"
+        },
+        "box-shadow::spread": {
+          defaultValue: "0px",
+          description: "Spread grows or shrinks the shadow before blur is applied. Positive values make the shadow larger.",
+          inputKind: "dimension"
+        },
+        "brightness()::factor": {
+          defaultValue: "1.1",
+          description: "Use 1 for the original brightness. Values below 1 darken the element; values above 1 brighten it.",
+          inputKind: "number"
+        },
+        "clamp()::min": {
+          label: "Minimum",
+          defaultValue: "14px",
+          description: "The smallest value clamp() can return. Use a stable floor such as 14px or 1rem.",
+          inputKind: "text"
+        },
+        "clamp()::preferred": {
+          label: "Preferred Value",
+          defaultValue: "2vw",
+          description: "This is the fluid middle value. It is often a viewport value like 2vw or a calc(...) expression.",
+          inputKind: "text"
+        },
+        "clamp()::max": {
+          label: "Maximum",
+          defaultValue: "20px",
+          description: "The largest value clamp() can return. Use a safe ceiling such as 20px or 1.25rem.",
+          inputKind: "text"
+        },
+        "contrast()::factor": {
+          defaultValue: "1.15",
+          description: "Use 1 for the original contrast. Values below 1 flatten contrast; values above 1 increase it.",
+          inputKind: "number"
+        },
+        "matrix()::tx": {
+          label: "Translate X",
+          defaultValue: "10",
+          description: "Horizontal translation inside the matrix. This function expects a unitless number here.",
+          inputKind: "number"
+        },
+        "matrix()::ty": {
+          label: "Translate Y",
+          defaultValue: "10",
+          description: "Vertical translation inside the matrix. This function expects a unitless number here.",
+          inputKind: "number"
+        },
+        "minmax()::min": {
+          label: "Minimum Track",
+          defaultValue: "140px",
+          description: "Smallest size the grid track can shrink to before it stops collapsing.",
+          inputKind: "text"
+        },
+        "minmax()::max": {
+          label: "Maximum Track",
+          defaultValue: "1fr",
+          description: "Largest size the grid track can grow to. 1fr is the most common flexible maximum.",
+          inputKind: "text"
+        },
+        "saturate()::factor|percent": {
+          label: "Saturation",
+          defaultValue: "120%",
+          description: "Use 1 for neutral, below 1 to mute color, or percentages like 120% to increase saturation.",
+          inputKind: "text"
+        },
+        "transform-origin::x": {
+          label: "Origin X",
+          defaultValue: "50%",
+          description: "Horizontal origin point. Common values are 0%, 50%, 100%, left, center, or right.",
+          inputKind: "text"
+        },
+        "transform-origin::y": {
+          label: "Origin Y",
+          defaultValue: "50%",
+          description: "Vertical origin point. Common values are 0%, 50%, 100%, top, center, or bottom.",
+          inputKind: "text"
+        },
+        "transform::transform-list": {
+          label: "Transform Functions",
+          defaultValue: "translateY(-4px) scale(1.02)",
+          description: "Enter one or more transform functions separated by spaces. Example: translateY(-4px) scale(1.02).",
+          inputKind: "text"
+        }
+      };
       const TOKEN_OPTION_MAP = {
         direction: ["normal", "reverse", "alternate", "alternate-reverse"],
         "fill-mode": ["none", "forwards", "backwards", "both"],
@@ -5136,8 +5292,227 @@ translateY()	translateY(<length|percentage>)
         "role-name": ["button", "presentation", "dialog", "status", "alert"],
         "language-tag": ["en", "es", "fr", "pt-BR"],
         "field-name": ["email", "firstName", "submitAction", "profileNote"],
-        token: ["email", "tel", "name", "custom-token"],
-        value: ["auto", "none", "inherit", "initial", "center"]
+        token: ["email", "tel", "name", "custom-token"]
+      };
+      const TOKEN_PARAM_META = {
+        "basis": {
+          label: "Flex Basis",
+          defaultValue: "200px",
+          description: "The starting flex size before grow and shrink are applied. Use a size such as 200px, 12rem, or type auto.",
+          inputKind: "text"
+        },
+        "blur": {
+          label: "Blur Radius",
+          defaultValue: "18px",
+          description: "Blur radius. Use a length such as 8px, 0.5rem, or 12px.",
+          inputKind: "dimension"
+        },
+        "bottom": {
+          defaultValue: "12px",
+          description: "Bottom side value. Use a size such as 12px or a percentage such as 5%.",
+          inputKind: "dimension"
+        },
+        "column-gap": {
+          label: "Column Gap",
+          defaultValue: "16px",
+          description: "Space between columns. Use a size such as 16px or 1rem.",
+          inputKind: "dimension"
+        },
+        "end": {
+          label: "End Line",
+          defaultValue: "3",
+          description: "Grid line where the item should end. Use a line number such as 3, span 2, or a named line.",
+          inputKind: "text"
+        },
+        "factor": {
+          label: "Factor",
+          defaultValue: "1.1",
+          description: "Use 1 for the original intensity. Values below 1 reduce the effect; values above 1 increase it.",
+          inputKind: "number"
+        },
+        "factor|percent": {
+          label: "Factor or Percent",
+          defaultValue: "120%",
+          description: "Use a multiplier like 1.2 or a percentage like 120%. 100% (or 1) keeps the original intensity.",
+          inputKind: "text"
+        },
+        "family-list": {
+          label: "Font Stack",
+          defaultValue: "\"Trebuchet MS\", sans-serif",
+          description: "List font families in fallback order, separated by commas. The first available font is used.",
+          inputKind: "text"
+        },
+        "g": {
+          label: "Green",
+          defaultValue: "130",
+          description: "Green channel from 0 to 255.",
+          inputKind: "integer"
+        },
+        "grow": {
+          label: "Flex Grow",
+          defaultValue: "1",
+          description: "How much the flex item can grow compared with its siblings. 1 is the normal starting point.",
+          inputKind: "number"
+        },
+        "h": {
+          label: "Hue",
+          defaultValue: "220",
+          description: "Hue on the color wheel. 0 is red, 120 is green, and 240 is blue.",
+          inputKind: "number"
+        },
+        "image": {
+          label: "Image or Gradient",
+          defaultValue: "linear-gradient(120deg, #eef4ff, #d9e7ff)",
+          description: "Use a CSS image value such as a gradient or url(...).",
+          inputKind: "text"
+        },
+        "integer|auto": {
+          label: "Integer or Auto",
+          defaultValue: "1",
+          description: "Use a whole number for stacking order, or type auto to let the browser use the default layer.",
+          inputKind: "text"
+        },
+        "l": {
+          label: "Lightness",
+          defaultValue: "56%",
+          description: "Brightness of the color. Use a percentage such as 40% or 56%.",
+          inputKind: "text"
+        },
+        "left": {
+          defaultValue: "12px",
+          description: "Left side value. Use a size such as 12px or a percentage such as 5%.",
+          inputKind: "dimension"
+        },
+        "length|none": {
+          label: "Length or None",
+          defaultValue: "800px",
+          description: "Use a length such as 800px, or type none to disable the effect.",
+          inputKind: "text"
+        },
+        "length|percentage": {
+          label: "Length or Percentage",
+          defaultValue: "50%",
+          description: "Use a size such as 12px or a percentage such as 50%.",
+          inputKind: "dimension"
+        },
+        "length|percentage|auto": {
+          label: "Length, Percentage, or Auto",
+          defaultValue: "50%",
+          description: "Use a size like 12px or 50%, or type auto when the browser should decide.",
+          inputKind: "text"
+        },
+        "length|percentage|none": {
+          label: "Length, Percentage, or None",
+          defaultValue: "50%",
+          description: "Use a size like 12px or 50%, or type none to remove the limit.",
+          inputKind: "text"
+        },
+        "number|infinite": {
+          label: "Number or Infinite",
+          defaultValue: "1",
+          description: "Use a number such as 1, 2, or 3, or type infinite for a looping animation.",
+          inputKind: "text"
+        },
+        "number|length|percentage": {
+          label: "Number, Length, or Percentage",
+          defaultValue: "1.4",
+          description: "Use a unitless number like 1.4, a length like 20px, or a percentage like 140%.",
+          inputKind: "text"
+        },
+        "preferred": {
+          label: "Preferred Value",
+          defaultValue: "2vw",
+          description: "This is the flexible middle value. It is often a viewport value like 2vw or a calc(...) expression.",
+          inputKind: "text"
+        },
+        "property-list": {
+          label: "Property List",
+          defaultValue: "opacity, transform",
+          description: "List one or more CSS property names, separated by commas, in the order you want to target them.",
+          inputKind: "text"
+        },
+        "r": {
+          label: "Red",
+          defaultValue: "59",
+          description: "Red channel from 0 to 255.",
+          inputKind: "integer"
+        },
+        "right": {
+          defaultValue: "12px",
+          description: "Right side value. Use a size such as 12px or a percentage such as 5%.",
+          inputKind: "dimension"
+        },
+        "row-gap": {
+          label: "Row Gap",
+          defaultValue: "12px",
+          description: "Space between rows. Use a size such as 12px or 1rem.",
+          inputKind: "dimension"
+        },
+        "s": {
+          label: "Saturation",
+          defaultValue: "85%",
+          description: "Color intensity. Use a percentage such as 60% or 85%.",
+          inputKind: "text"
+        },
+        "shorthand": {
+          label: "Shorthand Value",
+          defaultValue: "center / cover no-repeat",
+          description: "Shorthand combines several sub-values in one line. Use the sample as a pattern, then replace the parts you need.",
+          inputKind: "text"
+        },
+        "shrink": {
+          label: "Flex Shrink",
+          defaultValue: "1",
+          description: "How much the flex item can shrink when space is tight. 1 is the normal starting point.",
+          inputKind: "number"
+        },
+        "spread": {
+          label: "Spread",
+          defaultValue: "0px",
+          description: "Spread grows or shrinks the shadow before blur is applied.",
+          inputKind: "dimension"
+        },
+        "start": {
+          label: "Start Line",
+          defaultValue: "1",
+          description: "Grid line where the item should start. Use a line number such as 1 or a named line.",
+          inputKind: "text"
+        },
+        "top": {
+          defaultValue: "12px",
+          description: "Top side value. Use a size such as 12px or a percentage such as 5%.",
+          inputKind: "dimension"
+        },
+        "track-list": {
+          label: "Grid Tracks",
+          defaultValue: "1fr 1fr",
+          description: "Enter one or more track sizes separated by spaces. Example: 200px 1fr or repeat(3, 1fr).",
+          inputKind: "text"
+        },
+        "transform-list": {
+          label: "Transform Functions",
+          defaultValue: "translateY(-4px) scale(1.02)",
+          description: "Enter one or more transform functions separated by spaces. Example: translateY(-4px) scale(1.02).",
+          inputKind: "text"
+        },
+        "value": {
+          label: "Value",
+          defaultValue: "value",
+          description: "This field accepts a free-form CSS value. Use the syntax example above as your guide.",
+          inputKind: "text"
+        },
+        "x y": {
+          label: "X / Y Position",
+          defaultValue: "50% 50%",
+          description: "Enter two positions separated by a space, such as 50% 50% or left top.",
+          inputKind: "text"
+        },
+        "z": {
+          label: "Z Offset",
+          defaultValue: "0px",
+          description: "Optional third value for 3D transform origin. Use a length such as 0px or 20px.",
+          inputKind: "dimension"
+        }
       };
       const PREVIEW_STATE_SELECTOR_MAP = {
         hover: { pseudo: ":hover", className: "is-preview-hover", label: "Hover" },
@@ -6760,7 +7135,11 @@ translateY()	translateY(<length|percentage>)
         return out;
       }
 
-      function defaultValueForToken(token) {
+      function defaultValueForToken(token, item) {
+        const meta = paramMetaForToken(token, item);
+        if (meta && Object.prototype.hasOwnProperty.call(meta, "defaultValue")) {
+          return meta.defaultValue;
+        }
         const t = token.toLowerCase();
         if (t.indexOf("color") >= 0) return "#1f5fbd";
         if (t.indexOf("time") >= 0 || t.indexOf("duration") >= 0 || t.indexOf("delay") >= 0) return "200ms";
@@ -6770,6 +7149,9 @@ translateY()	translateY(<length|percentage>)
         if (t.indexOf("percentage") >= 0) return "50%";
         if (t === "x" || t === "y") return "1";
         if (t === "x1" || t === "y1" || t === "x2" || t === "y2") return "0.25";
+        if (t === "r" || t === "g" || t === "b") return "128";
+        if (t === "h") return "220";
+        if (t === "s" || t === "l") return "60%";
         if (t.indexOf("number") >= 0 || t === "a" || t === "b" || t === "c" || t === "d") return "1";
         if (t.indexOf("tx") >= 0 || t.indexOf("ty") >= 0) return "10px";
         if (t.indexOf("id-list") >= 0) return "helperText";
@@ -6804,10 +7186,31 @@ translateY()	translateY(<length|percentage>)
         return null;
       }
 
-      function labelForToken(token) {
+      function itemSpecificParamMeta(item, token) {
+        const itemName = String((item && item.name) || "").trim();
+        const rawToken = String(token || "").trim();
+        if (!itemName || !rawToken) return null;
+        const exact = itemName + "::" + rawToken;
+        if (ITEM_SPECIFIC_PARAM_META[exact]) return ITEM_SPECIFIC_PARAM_META[exact];
+        const valueKey = itemName + "::value";
+        if (rawToken === "value" && ITEM_SPECIFIC_PARAM_META[valueKey]) return ITEM_SPECIFIC_PARAM_META[valueKey];
+        return null;
+      }
+
+      function paramMetaForToken(token, item) {
         const raw = String(token || "").trim();
-        if (!raw) return "value";
-        const compact = raw.replace(/-/g, " ");
+        const tokenMeta = raw && TOKEN_PARAM_META[raw] ? TOKEN_PARAM_META[raw] : null;
+        const itemMeta = itemSpecificParamMeta(item, raw);
+        if (!tokenMeta && !itemMeta) return null;
+        return Object.assign({}, tokenMeta || {}, itemMeta || {});
+      }
+
+      function labelForToken(token, item) {
+        const meta = paramMetaForToken(token, item);
+        if (meta && meta.label) return meta.label;
+        const raw = String(token || "").trim();
+        if (!raw) return "Value";
+        const compact = raw.replace(/\|/g, " or ").replace(/-/g, " ");
         return compact.replace(/\b\w/g, function (letter) { return letter.toUpperCase(); });
       }
 
@@ -6816,11 +7219,13 @@ translateY()	translateY(<length|percentage>)
         if (options && options.length > 0) {
           return "Choose one of: " + options.slice(0, 4).join(", ") + (options.length > 4 ? ", ..." : "") + ".";
         }
-        const fallback = defaultValueForToken(token);
+        const fallback = defaultValueForToken(token, item);
         return "Example: " + fallback + ".";
       }
 
       function describeToken(token, item) {
+        const meta = paramMetaForToken(token, item);
+        if (meta && meta.description) return meta.description;
         const raw = String(token || "").trim();
         const itemName = String((item && item.name) || "").trim();
         const lower = raw.toLowerCase();
@@ -7944,8 +8349,9 @@ translateY()	translateY(<length|percentage>)
       function optionsForToken(token, item) {
         const raw = String(token || "").trim();
         if (!raw) return null;
-        if (raw.indexOf("|") >= 0) {
-          return raw.split("|").map(function (part) { return part.trim(); }).filter(Boolean);
+        const meta = paramMetaForToken(raw, item);
+        if (meta && Array.isArray(meta.options) && meta.options.length > 0) {
+          return meta.options.slice();
         }
         const byItem = itemSpecificOptions(item, raw);
         if (byItem && byItem.length > 0) return byItem;
@@ -7958,23 +8364,26 @@ translateY()	translateY(<length|percentage>)
       }
 
       function paramForToken(token, item) {
+        const meta = paramMetaForToken(token, item) || {};
         const options = optionsForToken(token, item);
         if (options && options.length > 0) {
           return {
             key: token,
-            label: labelForToken(token),
+            label: labelForToken(token, item),
             type: "select",
             options: options,
             value: options[0],
-            description: describeToken(token, item)
+            description: describeToken(token, item),
+            inputKind: meta.inputKind || ""
           };
         }
         return {
           key: token,
-          label: labelForToken(token),
+          label: labelForToken(token, item),
           type: "text",
-          value: defaultValueForToken(token),
-          description: describeToken(token, item)
+          value: defaultValueForToken(token, item),
+          description: describeToken(token, item),
+          inputKind: meta.inputKind || ""
         };
       }
 
@@ -8107,6 +8516,7 @@ translateY()	translateY(<length|percentage>)
       }
 
       function inferParamKind(param, item) {
+        if (param && param.inputKind) return param.inputKind;
         const label = String(param.label || "").toLowerCase();
         const value = String(param.value || "").toLowerCase();
         const itemName = String((item && item.name) || "").toLowerCase();
@@ -10837,6 +11247,149 @@ translateY()	translateY(<length|percentage>)
         setBuilderStatus("Animation Lab added a " + entries.length + "-step sequence across " + entries.length + " selector" + (entries.length === 1 ? "" : "s") + ".");
       }
 
+      function closestAnimationLabTimeValue(options, targetMs, fallback) {
+        const list = Array.isArray(options) && options.length ? options : [String(fallback || "0s").trim()];
+        let best = list[0];
+        let bestDiff = Math.abs(parseAnimationLabTimeMs(best) - targetMs);
+        list.forEach(function (option) {
+          const diff = Math.abs(parseAnimationLabTimeMs(option) - targetMs);
+          if (diff < bestDiff) {
+            best = option;
+            bestDiff = diff;
+          }
+        });
+        return best;
+      }
+
+      function animationLabVariantState(values, variantKey) {
+        const next = cloneAnimationLabValueState(values);
+        const durationOptions = ["150ms", "250ms", "300ms", "400ms", "700ms", "900ms", "1.2s", "1.6s", "2s"];
+        const delayOptions = ["0s", "80ms", "150ms", "250ms", "400ms", "700ms"];
+        const durationMs = parseAnimationLabTimeMs(next.duration);
+        const delayMs = parseAnimationLabTimeMs(next.delay);
+        const interactiveTrigger = [":hover", ":focus", ":focus-visible", ":active"].indexOf(next.trigger) >= 0;
+        const guardrail = animationLabGuardrailRecommendation(next);
+        const intent = animationLabIntentPlan(next);
+
+        if (variantKey === "calm") {
+          next.duration = closestAnimationLabTimeValue(
+            durationOptions,
+            interactiveTrigger ? Math.max(durationMs, 250) : Math.max(durationMs, 400),
+            next.duration
+          );
+          next.delay = closestAnimationLabTimeValue(delayOptions, interactiveTrigger ? 0 : Math.min(delayMs, 150), next.delay);
+          next.easing = next.keyframes === "spin" ? "linear" : "ease-out";
+          next.iterations = next.keyframes === "spin" ? "1" : "1";
+          next.direction = "normal";
+          next.fill = "both";
+          return next;
+        }
+
+        if (variantKey === "balanced") {
+          Object.keys(guardrail.patch || {}).forEach(function (key) {
+            next[key] = guardrail.patch[key];
+          });
+          Object.keys(intent.patch || {}).forEach(function (key) {
+            next[key] = intent.patch[key];
+          });
+          return next;
+        }
+
+        if (variantKey === "bold") {
+          next.duration = closestAnimationLabTimeValue(
+            durationOptions,
+            interactiveTrigger ? Math.max(Math.min(durationMs || 300, 400), 300) : Math.max(durationMs, 700),
+            next.duration
+          );
+          next.delay = closestAnimationLabTimeValue(
+            delayOptions,
+            interactiveTrigger ? Math.min(delayMs, 80) : Math.max(Math.min(delayMs || 80, 250), 80),
+            next.delay
+          );
+          next.easing = next.keyframes === "spin" ? "linear" : "ease-in-out";
+          if (next.keyframes === "spin") {
+            next.iterations = "infinite";
+            next.direction = "normal";
+          } else if (next.trigger === ":active" || next.trigger === ":focus" || next.trigger === ":focus-visible") {
+            next.iterations = "1";
+            next.direction = "normal";
+          } else {
+            next.iterations = interactiveTrigger ? "2" : "2";
+            next.direction = "alternate";
+          }
+          next.fill = "both";
+          return next;
+        }
+
+        return next;
+      }
+
+      function animationLabVariantForge(values) {
+        const currentTarget = (elTarget.value || "card").trim() || "card";
+        const variantDefs = [
+          { key: "calm", label: "Quiet QA" },
+          { key: "balanced", label: "Launch Default" },
+          { key: "bold", label: "Showcase Push" }
+        ];
+        const entries = variantDefs.map(function (variant) {
+          const variantValues = animationLabVariantState(values, variant.key);
+          const risk = animationLabRiskAssessment(variantValues);
+          const surface = animationLabSurfaceAssessmentForTarget(variantValues, currentTarget);
+          const diffLines = animationLabCompareDiffLines({ values: values }, { values: variantValues });
+          const diffSummary = diffLines.length ? diffLines.slice(0, 2).join(" | ") : "Already matches the live controls.";
+          return {
+            key: variant.key,
+            label: variant.label,
+            values: variantValues,
+            risk: risk,
+            surface: surface,
+            diffLines: diffLines,
+            tile: risk.score + "/100 " + risk.level + ". " + animationLabShorthand(variantValues) + " on " + surface.targetLabel + " (" + surface.score + "/100).",
+            summary: diffSummary
+          };
+        });
+        const byKey = entries.reduce(function (map, entry) {
+          map[entry.key] = entry;
+          return map;
+        }, {});
+
+        let recommendedKey = "balanced";
+        let recommendation = "Launch Default is the safest default handoff because it merges the current guardrail and intent tuning.";
+        const currentRisk = animationLabRiskAssessment(values);
+        if (currentRisk.score >= 60) {
+          recommendedKey = "calm";
+          recommendation = "Current draft is running hot. Quiet QA trims loops and timing first so the next pass is easier to validate.";
+        } else if (
+          !values.trigger &&
+          currentRisk.score <= 25 &&
+          ["card", "image", "overlap", "sandbox"].indexOf(currentTarget) >= 0
+        ) {
+          recommendedKey = "bold";
+          recommendation = "This target can absorb more personality. Showcase Push is the highest-value comparison pass before you freeze a keeper.";
+        }
+
+        const recommendedEntry = byKey[recommendedKey] || byKey.balanced;
+        if (recommendedEntry && animationLabValuesMatchPreset(values, recommendedEntry.values)) {
+          recommendation = recommendedEntry.label + " already matches the live controls. Capture it in the compare bench or branch into another forge option.";
+        }
+
+        const report = entries.map(function (entry, index) {
+          const header = (index + 1) + ". " + entry.label;
+          const outline = "   " + entry.risk.score + "/100 (" + entry.risk.level + ") | " + entry.surface.targetLabel + " fit " + entry.surface.score + "/100";
+          const motion = "   " + animationLabShorthand(entry.values);
+          const changes = "   " + entry.summary;
+          return [header, outline, motion, changes].join("\n");
+        }).join("\n\n");
+
+        return {
+          entries: entries,
+          byKey: byKey,
+          recommendedKey: recommendedKey,
+          recommendation: recommendation,
+          report: report
+        };
+      }
+
       function updateAnimationLabOutputs() {
         const values = animationLabPresetValues();
         const sequence = animationLabSequenceValues();
@@ -10853,6 +11406,7 @@ translateY()	translateY(<length|percentage>)
         const risk = animationLabRiskAssessment(values);
         const surface = animationLabSurfaceAssessment(values);
         const intent = animationLabIntentPlan(values);
+        const forge = animationLabVariantForge(values);
         const reviewEntries = animationLabTriggerReviewEntries(values);
         const bestReview = animationLabBestReviewEntry(reviewEntries);
         const anatomy = animationLabKeyframeAnatomy(values);
@@ -10967,6 +11521,14 @@ translateY()	translateY(<length|percentage>)
             surface.shortlist[0].targetLabel +
             " for a stronger validation pass before shipping.";
         }
+        elAnimationLabVariantCalm.textContent = forge.byKey.calm ? forge.byKey.calm.tile : "Quiet QA is unavailable right now.";
+        elAnimationLabVariantBalanced.textContent = forge.byKey.balanced ? forge.byKey.balanced.tile : "Launch Default is unavailable right now.";
+        elAnimationLabVariantBold.textContent = forge.byKey.bold ? forge.byKey.bold.tile : "Showcase Push is unavailable right now.";
+        elAnimationLabVariantRecommendation.textContent = forge.recommendation;
+        elAnimationLabVariantReport.textContent = forge.report;
+        elAnimationLabVariantNote.textContent = forge.byKey[forge.recommendedKey] && animationLabValuesMatchPreset(values, forge.byKey[forge.recommendedKey].values)
+          ? "The recommended forge variant already matches the live controls. Capture it in the compare bench, or load another variant to create a deliberate branch."
+          : "Use the forge to branch the live motion into a QA-safe option, a launch default, or a showcase-weight comparison before promoting a winner.";
         elAnimationLabSequenceSummary.textContent = animationLabSequenceSummary(sequence, sequenceEntries);
         elAnimationLabSequenceWindow.textContent = animationLabSequenceWindowSummary(values, sequenceEntries);
         elAnimationLabSequenceFocus.textContent = animationLabSequenceFocus(values, sequence, sequenceEntries);
@@ -11127,6 +11689,24 @@ translateY()	translateY(<length|percentage>)
         setSelectValueIfPresent(elAnimationLabDuration, patch.duration, elAnimationLabDuration.value);
         updateAnimationLabOutputs();
         setBuilderStatus("Animation Lab tuned the motion for the " + plan.lane.toLowerCase() + " lane.");
+      }
+
+      function loadAnimationLabVariant(variantKey) {
+        const forge = animationLabVariantForge(animationLabPresetValues());
+        const entry = forge.byKey[String(variantKey || "").trim()] || null;
+        if (!entry) {
+          setBuilderStatus("Animation Lab could not find that forge variant.");
+          return;
+        }
+        if (animationLabValuesMatchPreset(animationLabPresetValues(), entry.values)) {
+          setBuilderStatus("Animation Lab already matches the " + entry.label + " forge variant.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        applyAnimationLabState(entry.values);
+        syncPreviewInteractionStateFromPseudo(entry.values.trigger);
+        flashActivePreviewPanel();
+        setBuilderStatus("Animation Lab loaded the " + entry.label + " forge variant.");
       }
 
       function applyAnimationLabBestSurfaceTarget() {
@@ -12103,7 +12683,7 @@ translateY()	translateY(<length|percentage>)
           const map = {};
           placeholders.forEach(function (token) {
             const options = optionsForToken(token, item);
-            map[token] = options && options.length > 0 ? options[0] : defaultValueForToken(token);
+            map[token] = options && options.length > 0 ? options[0] : defaultValueForToken(token, item);
           });
           return replacePlaceholders(valueSyntax, map);
         }
@@ -12535,7 +13115,7 @@ translateY()	translateY(<length|percentage>)
             }
             input = document.createElement("input");
             input.value = param.value;
-            input.placeholder = defaultValueForToken(param.key || param.label || "value");
+            input.placeholder = defaultValueForToken(param.key || param.label || "value", item);
           }
 
           input.dataset.paramIndex = String(index);
@@ -12726,12 +13306,56 @@ translateY()	translateY(<length|percentage>)
         elFunctionHelpSyntax.textContent = property + ": " + call + ";";
       }
 
+      function currentCategoryGuideMeta() {
+        if (elCategory.value === "attribute") {
+          return {
+            scope: "HTML attributes change the markup on one element. They can control behavior, semantics, accessibility, metadata, or inline hooks.",
+            output: "This path produces HTML syntax such as class=\"promo-card\", aria-label=\"Search\", style=\"color: #245fe6;\", or boolean attributes like disabled.",
+            best: "Use attributes when you need to change the element itself: add classes, set accessibility labels, toggle built-in browser states, or apply a quick one-off inline value.",
+            selectionWhat: "You are in markup mode. Attributes edit the element itself before CSS rules even apply.",
+            selectionHow: "Pick an attribute when the goal is semantics, behavior, a class hook, or a direct inline value on one element.",
+            selectionNext: "Choose the specific attribute you want to change, then decide whether it should stay inline or become a reusable class-driven pattern.",
+            example: "<button class=\"cta-button\" aria-label=\"Save changes\" disabled>...</button>"
+          };
+        }
+
+        if (elCategory.value === "property") {
+          return {
+            scope: "CSS properties are full declarations. Each one controls one visual behavior such as color, spacing, border, layout, animation, or effects.",
+            output: "This path produces a complete rule fragment like color: #245fe6; or padding: 12px 16px; that can go directly into a stylesheet or style attribute.",
+            best: "Use properties when you already know which CSS rule you want to set and you want a complete reusable declaration, not just a partial value fragment.",
+            selectionWhat: "You are in declaration mode. Properties generate complete CSS rules that can be previewed and sent straight to the builder.",
+            selectionHow: "Pick a property when you want one full left-to-right rule: property plus value.",
+            selectionNext: "Choose the property, tune the value, then send the finished declaration into the CSS Builder for reuse.",
+            example: ".promo-card {\n  border-radius: 14px;\n}"
+          };
+        }
+
+        return {
+          scope: "CSS functions are value fragments, not complete rules. They usually live on the right side of a property such as transform, filter, background-image, or grid-template-columns.",
+          output: "This path produces a function call like blur(6px), rotate(8deg), clamp(14px, 2vw, 20px), or linear-gradient(...), then wraps it inside a property you choose.",
+          best: "Use functions when the reusable part is the value logic itself and the property that receives it may vary.",
+          selectionWhat: "You are in value-fragment mode. Functions need a receiving property before they become valid CSS.",
+          selectionHow: "Pick a function when the important part is the computed value shape, then pair it with the correct property in Step 2.",
+          selectionNext: "Choose the function first, confirm the receiving property is correct, then tune the arguments and preview the finished declaration.",
+          example: "filter: blur(6px);"
+        };
+      }
+
+      function updateCategoryGuide() {
+        const meta = currentCategoryGuideMeta();
+        if (elCategoryGuideScope) elCategoryGuideScope.textContent = meta.scope;
+        if (elCategoryGuideOutput) elCategoryGuideOutput.textContent = meta.output;
+        if (elCategoryGuideBest) elCategoryGuideBest.textContent = meta.best;
+      }
+
       function updateSelectionGuide(item) {
         if (!item) {
-          elSelectionGuideWhat.textContent = "Choose an item to see a plain-language explanation.";
-          elSelectionGuideHow.textContent = "Start in Step 1, then use Step 2 to change values. The guide updates as you work.";
-          elSelectionGuideNext.textContent = "Pick an item, confirm which preview target is highlighted, then compare the Live Output with the visual result.";
-          elSelectionGuideExample.textContent = "No item selected yet.";
+          const meta = currentCategoryGuideMeta();
+          elSelectionGuideWhat.textContent = meta.selectionWhat;
+          elSelectionGuideHow.textContent = meta.selectionHow;
+          elSelectionGuideNext.textContent = meta.selectionNext;
+          elSelectionGuideExample.textContent = meta.example;
           return;
         }
 
@@ -14011,6 +14635,7 @@ translateY()	translateY(<length|percentage>)
 
       function renderEverything() {
         const item = selectedItem();
+        updateCategoryGuide();
         if (!item) {
           elTemplateSyntax.textContent = "";
           elLiveSyntax.textContent = "No item selected.";
@@ -14246,6 +14871,17 @@ translateY()	translateY(<length|percentage>)
         } catch (err) {
           elAnimationLabCopySequence.textContent = "Copy Failed";
           setTimeout(function () { elAnimationLabCopySequence.textContent = "Copy Sequence CSS"; }, 1200);
+        }
+      }
+
+      async function copyAnimationLabVariantReport() {
+        try {
+          await navigator.clipboard.writeText(elAnimationLabVariantReport.textContent);
+          elAnimationLabCopyVariants.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopyVariants.textContent = "Copy Variant Report"; }, 1200);
+        } catch (err) {
+          elAnimationLabCopyVariants.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopyVariants.textContent = "Copy Variant Report"; }, 1200);
         }
       }
 
@@ -14999,6 +15635,14 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabCopyReview.addEventListener("click", copyAnimationLabReviewSnapshot);
       elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
       elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
+      if (elAnimationLabCopyVariants) {
+        elAnimationLabCopyVariants.addEventListener("click", copyAnimationLabVariantReport);
+      }
+      animationLabVariantLoadButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          loadAnimationLabVariant(button.getAttribute("data-animation-variant-load"));
+        });
+      });
       if (elAnimationLabCompareBench) {
         elAnimationLabCompareBench.addEventListener("click", function (event) {
           const button = event.target.closest("[data-compare-action]");
