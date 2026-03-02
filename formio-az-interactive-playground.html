@@ -3999,6 +3999,35 @@
                 <div id="animation-lab-review-note" class="input-hint">Use this review to compare the live path, reduced-motion fallback, and alternate trigger states before you export.</div>
               </div>
               <div class="help-box">
+                <div><strong>Release Handoff Brief</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Keeper Status</div>
+                    <div id="animation-lab-handoff-keeper">Capture a compare slot to lock a recommended keeper before you export a handoff brief.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Trigger Decision</div>
+                    <div id="animation-lab-handoff-trigger">The review matrix will translate the strongest trigger state into a release recommendation here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Surface Plan</div>
+                    <div id="animation-lab-handoff-surface">Surface-fit guidance will be condensed into a one-line release plan here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Export Next Step</div>
+                    <div id="animation-lab-handoff-next">Once the lab has a keeper, this panel will call out the final action before you export.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Portable Release Brief</label>
+                  <pre id="animation-lab-handoff-brief"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-copy-handoff" type="button">Copy Release Brief</button>
+                </div>
+                <div id="animation-lab-handoff-note" class="input-hint">This brief combines the compare keeper, review matrix, and surface-fit guidance into one reusable export block.</div>
+              </div>
+              <div class="help-box">
                 <div><strong>Surface Fit Guide</strong></div>
                 <div class="info-grid">
                   <div class="info-tile">
@@ -5704,6 +5733,13 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabReviewLoadBest = document.getElementById("animation-lab-review-load-best");
       const elAnimationLabCopyReview = document.getElementById("animation-lab-copy-review");
       const elAnimationLabReviewNote = document.getElementById("animation-lab-review-note");
+      const elAnimationLabHandoffKeeper = document.getElementById("animation-lab-handoff-keeper");
+      const elAnimationLabHandoffTrigger = document.getElementById("animation-lab-handoff-trigger");
+      const elAnimationLabHandoffSurface = document.getElementById("animation-lab-handoff-surface");
+      const elAnimationLabHandoffNext = document.getElementById("animation-lab-handoff-next");
+      const elAnimationLabHandoffBrief = document.getElementById("animation-lab-handoff-brief");
+      const elAnimationLabCopyHandoff = document.getElementById("animation-lab-copy-handoff");
+      const elAnimationLabHandoffNote = document.getElementById("animation-lab-handoff-note");
       const elAnimationLabSurfaceFit = document.getElementById("animation-lab-surface-fit");
       const elAnimationLabSurfaceBest = document.getElementById("animation-lab-surface-best");
       const elAnimationLabSurfaceCaution = document.getElementById("animation-lab-surface-caution");
@@ -13145,6 +13181,82 @@ translateY()	translateY(<length|percentage>)
         return lines.join("\n");
       }
 
+      function animationLabReleaseHandoffData(anchorEntry, winner, values, risk, surface, bestReview, currentTarget, selector) {
+        const liveDiff = winner ? animationLabCompareDiffLines(winner, currentAnimationLabCompareSnapshot()) : [];
+        const reviewAction = animationLabReviewActionPlan(values, risk, bestReview);
+        const shortlist = Array.isArray(surface.shortlist) && surface.shortlist.length
+          ? surface.shortlist.map(function (entry) {
+            return entry.targetLabel + " " + entry.score + "/100";
+          }).join(" | ")
+          : "No ranked surfaces yet.";
+        let keeper = "";
+        let trigger = "";
+        let surfacePlan = "";
+        let next = "";
+        const lines = [
+          "Animation Lab Release Brief",
+          "Target: " + currentTarget,
+          "Selector: " + selector,
+          "Live motion: " + animationLabShorthand(values),
+          "Risk: " + risk.level + " " + risk.score + "/100. " + risk.recommendation
+        ];
+
+        if (winner) {
+          const releaseDelta = anchorEntry ? winner.releaseScore - anchorEntry.releaseScore : 0;
+          keeper = winner.slotTitle + " leads with a " + winner.releaseScore + "/100 release score on " + currentTarget + ".";
+          if (anchorEntry && anchorEntry.slotKey !== winner.slotKey) {
+            keeper += " Baseline delta is " + (releaseDelta >= 0 ? "+" : "") + releaseDelta + " release points.";
+          } else if (anchorEntry && anchorEntry.slotKey === winner.slotKey) {
+            keeper += " The protected baseline already matches the current keeper.";
+          } else {
+            keeper += " No protected baseline is locked yet.";
+          }
+          lines.push("Compare keeper: " + keeper);
+          lines.push("Live drift vs keeper: " + (liveDiff[0] || "Live controls already match the saved keeper."));
+        } else {
+          keeper = "No saved keeper yet. Exporting now would rely on the live controls only.";
+          lines.push("Compare keeper: " + keeper);
+          lines.push("Live drift vs keeper: Capture a compare slot before treating this draft as a handoff baseline.");
+        }
+
+        if (bestReview) {
+          trigger = bestReview.label + " is the strongest review state (" + bestReview.score + "/100" + (bestReview.current ? ", already live" : ", alternate") + "). " + reviewAction.summary;
+        } else {
+          trigger = "Review matrix is incomplete. Change the trigger or target to generate a fresh recommendation.";
+        }
+        surfacePlan = surface.best + " Shortlist: " + shortlist + ".";
+
+        if (winner && liveDiff.length) {
+          next = "Load the saved keeper, then run one final review pass before exporting the package.";
+        } else if (bestReview && !bestReview.current && reviewAction.canLoad) {
+          next = "Test " + bestReview.label + " as the shipping trigger before exporting the final package.";
+        } else if (!winner) {
+          next = "Capture a baseline or candidate slot first so the handoff has a saved keeper.";
+        } else {
+          next = "Keeper, review state, and current live draft are aligned enough to export the package.";
+        }
+
+        lines.push("Review trigger: " + trigger);
+        lines.push("Surface plan: " + surfacePlan);
+        lines.push("Export next: " + next);
+        lines.push("");
+        if (winner) {
+          lines.push("Keeper package snapshot:");
+          lines.push(animationLabCompareWinnerPackageText(winner, selector, currentTarget, anchorEntry));
+        } else {
+          lines.push("Current live package snapshot:");
+          lines.push(animationLabPackageCss(selector, values));
+        }
+
+        return {
+          keeper: keeper,
+          trigger: trigger,
+          surface: surfacePlan,
+          next: next,
+          brief: lines.join("\n")
+        };
+      }
+
       function renderAnimationLabCompareReleaseHandoff(entries, anchorEntry, winner, currentTarget) {
         if (!elAnimationLabCompareHandoffPackage) return;
 
@@ -13932,8 +14044,13 @@ translateY()	translateY(<length|percentage>)
         const sequenceDiagnostics = animationLabSequenceDiagnostics(values, sequence, sequenceEntries);
         const reviewEntries = animationLabTriggerReviewEntries(values);
         const bestReview = animationLabBestReviewEntry(reviewEntries);
+        const compareEntries = animationLabCompareEntries();
+        const compareAnchor = compareEntries.find(function (entry) { return entry.slotKey === "baseline"; }) || compareEntries[0] || null;
+        const compareWinner = animationLabBestCompareEntry(compareEntries);
         const anatomy = animationLabKeyframeAnatomy(values);
         const packageCss = animationLabPackageCss(selector, values);
+        const currentTarget = previewTargetLabel((elTarget.value || "card").trim());
+        const handoff = animationLabReleaseHandoffData(compareAnchor, compareWinner, values, risk, surface, bestReview, currentTarget, selector);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         updateAnimationLabStage(values, risk, surface);
         elAnimationLabPresetIntent.textContent = brief.intent;
@@ -14039,6 +14156,14 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabReviewNote.textContent = values.reducedPreviewEnabled
           ? "Reduced-motion preview is active. Compare the live path against the matrix notes, then turn the preview off before exporting the main package."
           : "Use this review to compare the live path, reduced-motion fallback, and alternate trigger states before you export.";
+        elAnimationLabHandoffKeeper.textContent = handoff.keeper;
+        elAnimationLabHandoffTrigger.textContent = handoff.trigger;
+        elAnimationLabHandoffSurface.textContent = handoff.surface;
+        elAnimationLabHandoffNext.textContent = handoff.next;
+        elAnimationLabHandoffBrief.textContent = handoff.brief;
+        elAnimationLabHandoffNote.textContent = compareWinner
+          ? "This brief now packages the saved keeper, review recommendation, and surface shortlist into one export block."
+          : "Capture at least one compare slot to turn this live-only summary into a keeper-backed handoff brief.";
         elAnimationLabSurfaceFit.textContent = surface.fit;
         elAnimationLabSurfaceBest.textContent = surface.best;
         elAnimationLabSurfaceCaution.textContent = surface.caution;
@@ -19737,6 +19862,18 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      async function copyAnimationLabReleaseHandoff() {
+        try {
+          await navigator.clipboard.writeText(elAnimationLabHandoffBrief.textContent);
+          elAnimationLabCopyHandoff.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopyHandoff.textContent = "Copy Release Brief"; }, 1200);
+          setBuilderStatus("Animation Lab release brief copied.");
+        } catch (err) {
+          elAnimationLabCopyHandoff.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopyHandoff.textContent = "Copy Release Brief"; }, 1200);
+        }
+      }
+
       function applyAnimationLabBestReviewToPreview() {
         const values = animationLabPresetValues();
         const bestReview = animationLabBestReviewEntry(animationLabTriggerReviewEntries(values));
@@ -20648,6 +20785,7 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabReviewMatchBest.addEventListener("click", applyAnimationLabBestReviewToPreview);
       elAnimationLabReviewLoadBest.addEventListener("click", applyAnimationLabBestReviewTrigger);
       elAnimationLabCopyReview.addEventListener("click", copyAnimationLabReviewSnapshot);
+      elAnimationLabCopyHandoff.addEventListener("click", copyAnimationLabReleaseHandoff);
       elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
       elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
       if (elAnimationLabCopyVariants) {
