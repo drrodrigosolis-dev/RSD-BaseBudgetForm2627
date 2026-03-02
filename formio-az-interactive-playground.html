@@ -683,6 +683,53 @@
       margin-bottom: 4px;
     }
 
+    .animation-compare-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+      margin-bottom: 8px;
+    }
+
+    .animation-compare-slot {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid #dbe4f6;
+      border-radius: 8px;
+      padding: 8px;
+      min-width: 0;
+    }
+
+    .animation-compare-slot-active {
+      border-color: #b8caf0;
+      box-shadow: inset 0 0 0 1px rgba(53, 96, 179, 0.12);
+    }
+
+    .animation-compare-status {
+      font-weight: 600;
+      color: #294676;
+    }
+
+    .animation-compare-meta {
+      margin-top: 4px;
+      font-size: 0.76rem;
+      color: #5a6987;
+      line-height: 1.4;
+    }
+
+    .animation-compare-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .animation-compare-actions button {
+      min-width: 0;
+      width: 100%;
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
     .recipe-steps {
       margin: 0;
       padding-left: 18px;
@@ -1255,6 +1302,7 @@
 
       .selection-guide-grid,
       .selector-coach-grid,
+      .animation-compare-grid,
       .info-grid,
       .glossary-grid,
       .export-grid {
@@ -1271,7 +1319,8 @@
       .flow-grid,
       .style-helper-grid,
       .builder-row,
-      .preset-bar {
+      .preset-bar,
+      .animation-compare-actions {
         grid-template-columns: 1fr;
       }
     }
@@ -1985,6 +2034,63 @@
                   <button id="animation-lab-restore-behavior" type="button">Restore Trigger + Behavior</button>
                 </div>
                 <div id="animation-lab-drift-note" class="input-hint">The tracker compares the current controls to the selected motion pack so you can reset intentionally instead of reloading the whole lab by accident.</div>
+              </div>
+              <div class="help-box">
+                <div><strong>Motion Compare Bench</strong></div>
+                <div class="animation-compare-grid" id="animation-lab-compare-bench">
+                  <div class="animation-compare-slot" data-compare-slot="baseline">
+                    <div class="label">Baseline Anchor</div>
+                    <div class="animation-compare-status" data-compare-status>Empty. Capture the version you want to protect.</div>
+                    <div class="animation-compare-meta" data-compare-meta>Use this slot as the release anchor so later variants are measured against one stable motion package.</div>
+                    <div class="animation-compare-actions">
+                      <button data-compare-action="capture" data-compare-slot-key="baseline" type="button">Capture Current</button>
+                      <button data-compare-action="apply" data-compare-slot-key="baseline" type="button">Load Slot</button>
+                      <button data-compare-action="clear" data-compare-slot-key="baseline" type="button">Clear</button>
+                    </div>
+                  </div>
+                  <div class="animation-compare-slot" data-compare-slot="candidate">
+                    <div class="label">Candidate Shelf</div>
+                    <div class="animation-compare-status" data-compare-status>Empty. Save the most promising alternate.</div>
+                    <div class="animation-compare-meta" data-compare-meta>Use this to hold the best-looking refinement while you keep testing risk, trigger fit, and surface behavior.</div>
+                    <div class="animation-compare-actions">
+                      <button data-compare-action="capture" data-compare-slot-key="candidate" type="button">Capture Current</button>
+                      <button data-compare-action="apply" data-compare-slot-key="candidate" type="button">Load Slot</button>
+                      <button data-compare-action="clear" data-compare-slot-key="candidate" type="button">Clear</button>
+                    </div>
+                  </div>
+                  <div class="animation-compare-slot" data-compare-slot="stress">
+                    <div class="label">Stress Test</div>
+                    <div class="animation-compare-status" data-compare-status>Empty. Use this slot for a riskier option.</div>
+                    <div class="animation-compare-meta" data-compare-meta>Capture the heaviest or most experimental version here so you can compare ambition against launch safety.</div>
+                    <div class="animation-compare-actions">
+                      <button data-compare-action="capture" data-compare-slot-key="stress" type="button">Capture Current</button>
+                      <button data-compare-action="apply" data-compare-slot-key="stress" type="button">Load Slot</button>
+                      <button data-compare-action="clear" data-compare-slot-key="stress" type="button">Clear</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Recommended Keeper</div>
+                    <div id="animation-lab-compare-winner">Capture at least one slot to start ranking motion candidates.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Baseline Delta</div>
+                    <div id="animation-lab-compare-delta">Once you have a baseline and another slot, the bench will summarize the strongest change and release impact.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Next Compare Move</div>
+                    <div id="animation-lab-compare-next">Use the slots to preserve alternatives before you overwrite the live controls.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Compare Report</label>
+                  <pre id="animation-lab-compare-report"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-copy-compare" type="button">Copy Compare Report</button>
+                </div>
+                <div id="animation-lab-compare-note" class="input-hint">Capture a baseline, a likely keeper, and a stress-test variant so motion decisions stay deliberate instead of living only in the current form fields.</div>
               </div>
               <div class="row">
                 <label class="label">Effective Selector</label>
@@ -3504,6 +3610,13 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabRestoreTiming = document.getElementById("animation-lab-restore-timing");
       const elAnimationLabRestoreBehavior = document.getElementById("animation-lab-restore-behavior");
       const elAnimationLabDriftNote = document.getElementById("animation-lab-drift-note");
+      const elAnimationLabCompareBench = document.getElementById("animation-lab-compare-bench");
+      const elAnimationLabCompareWinner = document.getElementById("animation-lab-compare-winner");
+      const elAnimationLabCompareDelta = document.getElementById("animation-lab-compare-delta");
+      const elAnimationLabCompareNext = document.getElementById("animation-lab-compare-next");
+      const elAnimationLabCompareReport = document.getElementById("animation-lab-compare-report");
+      const elAnimationLabCopyCompare = document.getElementById("animation-lab-copy-compare");
+      const elAnimationLabCompareNote = document.getElementById("animation-lab-compare-note");
       const elAnimationLabSelectorNote = document.getElementById("animation-lab-selector-note");
       const elAnimationLabOutput = document.getElementById("animation-lab-output");
       const elAnimationLabKeyframes = document.getElementById("animation-lab-keyframes");
@@ -6290,6 +6403,8 @@ translateY()	translateY(<length|percentage>)
       ];
       let previewCycleIndex = 0;
       let previewCycleTimer = null;
+      const ANIMATION_LAB_COMPARE_SLOT_ORDER = ["baseline", "candidate", "stress"];
+      let animationLabCompareSlots = createEmptyAnimationLabCompareSlots();
       const builderMediaLayerMap = {
         all: "",
         "sm-down": "(max-width: 640px)",
@@ -9323,6 +9438,331 @@ translateY()	translateY(<length|percentage>)
         updateAnimationLabOutputs();
       }
 
+      function cloneAnimationLabValueState(values) {
+        const source = values && typeof values === "object" ? values : {};
+        return {
+          presetId: String(source.presetId || "").trim(),
+          trigger: String(source.trigger || "").trim(),
+          keyframes: String(source.keyframes || DEFAULT_ANIMATION_PREVIEW.name).trim(),
+          duration: String(source.duration || DEFAULT_ANIMATION_PREVIEW.duration).trim(),
+          easing: String(source.easing || DEFAULT_ANIMATION_PREVIEW.timingFunction).trim(),
+          delay: String(source.delay || DEFAULT_ANIMATION_PREVIEW.delay).trim(),
+          iterations: String(source.iterations || DEFAULT_ANIMATION_PREVIEW.iterationCount).trim(),
+          direction: String(source.direction || DEFAULT_ANIMATION_PREVIEW.direction).trim(),
+          fill: String(source.fill || DEFAULT_ANIMATION_PREVIEW.fillMode).trim(),
+          play: String(source.play || DEFAULT_ANIMATION_PREVIEW.playState).trim(),
+          reducedPreviewEnabled: Boolean(source.reducedPreviewEnabled)
+        };
+      }
+
+      function createEmptyAnimationLabCompareSlots() {
+        return {
+          baseline: null,
+          candidate: null,
+          stress: null
+        };
+      }
+
+      function normalizeAnimationLabCompareSlot(slot) {
+        if (!slot || typeof slot !== "object") return null;
+        const source = slot.values && typeof slot.values === "object" ? slot.values : slot;
+        const hasStoredValue = [
+          "presetId",
+          "trigger",
+          "keyframes",
+          "duration",
+          "easing",
+          "delay",
+          "iterations",
+          "direction",
+          "fill",
+          "play"
+        ].some(function (key) {
+          return Object.prototype.hasOwnProperty.call(source, key);
+        });
+        if (!hasStoredValue) return null;
+        const values = cloneAnimationLabValueState(source);
+        return { values: values };
+      }
+
+      function normalizeAnimationLabCompareSlots(slots) {
+        const next = createEmptyAnimationLabCompareSlots();
+        const source = slots && typeof slots === "object" ? slots : {};
+        ANIMATION_LAB_COMPARE_SLOT_ORDER.forEach(function (slotKey) {
+          next[slotKey] = normalizeAnimationLabCompareSlot(source[slotKey]);
+        });
+        return next;
+      }
+
+      function serializeAnimationLabCompareSlots() {
+        const data = {};
+        ANIMATION_LAB_COMPARE_SLOT_ORDER.forEach(function (slotKey) {
+          if (animationLabCompareSlots[slotKey] && animationLabCompareSlots[slotKey].values) {
+            data[slotKey] = {
+              values: cloneAnimationLabValueState(animationLabCompareSlots[slotKey].values)
+            };
+          }
+        });
+        return data;
+      }
+
+      function animationLabCompareSlotTitle(slotKey) {
+        if (slotKey === "baseline") return "Baseline Anchor";
+        if (slotKey === "candidate") return "Candidate Shelf";
+        if (slotKey === "stress") return "Stress Test";
+        return "Slot";
+      }
+
+      function animationLabCompareSlotEmptyHint(slotKey) {
+        if (slotKey === "baseline") return "Use this slot as the release anchor so later variants are measured against one stable motion package.";
+        if (slotKey === "candidate") return "Use this to hold the best-looking refinement while you keep testing risk, trigger fit, and surface behavior.";
+        if (slotKey === "stress") return "Capture the heaviest or most experimental version here so you can compare ambition against launch safety.";
+        return "Capture the current motion package when you need a stable checkpoint.";
+      }
+
+      function animationLabCompareEntry(slotKey, values) {
+        const snapshot = cloneAnimationLabValueState(values);
+        const risk = animationLabRiskAssessment(snapshot);
+        const currentTarget = (elTarget.value || "card").trim() || "card";
+        const surface = animationLabSurfaceAssessmentForTarget(snapshot, currentTarget);
+        const releaseScore = Math.max(0, Math.min(100, Math.round(((100 - risk.score) * 0.62) + (surface.score * 0.38))));
+        const preset = ANIMATION_LAB_PRESETS_BY_ID[snapshot.presetId] || null;
+        const triggerLabel = animationLabTriggerLabel(snapshot.trigger);
+        return {
+          slotKey: slotKey,
+          slotTitle: animationLabCompareSlotTitle(slotKey),
+          values: snapshot,
+          risk: risk,
+          surface: surface,
+          releaseScore: releaseScore,
+          presetLabel: preset ? preset.name : "Custom",
+          triggerLabel: triggerLabel
+        };
+      }
+
+      function animationLabCompareEntries() {
+        return ANIMATION_LAB_COMPARE_SLOT_ORDER.map(function (slotKey) {
+          const slot = animationLabCompareSlots[slotKey];
+          if (!slot || !slot.values) return null;
+          return animationLabCompareEntry(slotKey, slot.values);
+        }).filter(Boolean);
+      }
+
+      function animationLabCompareFieldValue(label, key, values) {
+        const next = values && Object.prototype.hasOwnProperty.call(values, key) ? values[key] : "";
+        if (key === "trigger") return animationLabTriggerLabel(next);
+        if (key === "presetId") {
+          const preset = ANIMATION_LAB_PRESETS_BY_ID[String(next || "").trim()];
+          return preset ? preset.name : "Custom";
+        }
+        return String(next || "").trim() || label;
+      }
+
+      function animationLabCompareDiffLines(fromValues, toValues) {
+        const base = cloneAnimationLabValueState(fromValues);
+        const next = cloneAnimationLabValueState(toValues);
+        const fields = [
+          { key: "presetId", label: "Preset" },
+          { key: "trigger", label: "Trigger" },
+          { key: "keyframes", label: "Keyframes" },
+          { key: "duration", label: "Duration" },
+          { key: "easing", label: "Easing" },
+          { key: "delay", label: "Delay" },
+          { key: "iterations", label: "Iterations" },
+          { key: "direction", label: "Direction" },
+          { key: "fill", label: "Fill" },
+          { key: "play", label: "Play" }
+        ];
+        return fields.map(function (field) {
+          const before = animationLabCompareFieldValue(field.label, field.key, base);
+          const after = animationLabCompareFieldValue(field.label, field.key, next);
+          if (before === after) return "";
+          return field.label + ": " + before + " -> " + after;
+        }).filter(Boolean);
+      }
+
+      function renderAnimationLabCompareBench() {
+        if (!elAnimationLabCompareBench) return;
+
+        const entries = animationLabCompareEntries();
+        const currentTarget = previewTargetLabel((elTarget.value || "card").trim());
+        const anchorEntry = entries.find(function (entry) { return entry.slotKey === "baseline"; }) || entries[0] || null;
+        const sorted = entries.slice().sort(function (a, b) {
+          if (b.releaseScore !== a.releaseScore) return b.releaseScore - a.releaseScore;
+          if (a.slotKey === "baseline" && b.slotKey !== "baseline") return -1;
+          if (b.slotKey === "baseline" && a.slotKey !== "baseline") return 1;
+          return a.slotTitle.localeCompare(b.slotTitle);
+        });
+        const winner = sorted[0] || null;
+
+        ANIMATION_LAB_COMPARE_SLOT_ORDER.forEach(function (slotKey) {
+          const card = elAnimationLabCompareBench.querySelector('[data-compare-slot="' + slotKey + '"]');
+          if (!card) return;
+          const slot = animationLabCompareSlots[slotKey];
+          const status = card.querySelector("[data-compare-status]");
+          const meta = card.querySelector("[data-compare-meta]");
+          const applyBtn = card.querySelector('[data-compare-action="apply"]');
+          const clearBtn = card.querySelector('[data-compare-action="clear"]');
+          const captureBtn = card.querySelector('[data-compare-action="capture"]');
+
+          card.classList.toggle("animation-compare-slot-active", Boolean(slot && slot.values));
+
+          if (!slot || !slot.values) {
+            if (status) status.textContent = "Empty. " + (slotKey === "baseline" ? "Capture the version you want to protect." : slotKey === "candidate" ? "Save the most promising alternate." : "Use this slot for a riskier option.");
+            if (meta) meta.textContent = animationLabCompareSlotEmptyHint(slotKey);
+            if (applyBtn) applyBtn.disabled = true;
+            if (clearBtn) clearBtn.disabled = true;
+            if (captureBtn) captureBtn.textContent = "Capture Current";
+            return;
+          }
+
+          const entry = animationLabCompareEntry(slotKey, slot.values);
+          const riskText = entry.risk.level + " risk " + entry.risk.score + "/100";
+          const surfaceText = entry.surface.score + "/100 on " + currentTarget;
+          if (status) {
+            status.textContent = entry.presetLabel + " | " + entry.triggerLabel + " | " + entry.values.keyframes;
+          }
+          if (meta) {
+            meta.textContent = "Release " + entry.releaseScore + "/100. " + riskText + ". Surface fit " + surfaceText + ".";
+          }
+          if (applyBtn) applyBtn.disabled = false;
+          if (clearBtn) clearBtn.disabled = false;
+          if (captureBtn) captureBtn.textContent = "Recapture";
+        });
+
+        if (!entries.length) {
+          elAnimationLabCompareWinner.textContent = "Capture at least one slot to start ranking motion candidates.";
+          elAnimationLabCompareDelta.textContent = "Once you have a baseline and another slot, the bench will summarize the strongest change and release impact.";
+          elAnimationLabCompareNext.textContent = "Start by saving a baseline anchor before you make a larger timing or trigger change.";
+          elAnimationLabCompareReport.textContent = "No compare slots saved yet.";
+          if (elAnimationLabCopyCompare) elAnimationLabCopyCompare.disabled = true;
+          elAnimationLabCompareNote.textContent = "Capture a baseline, a likely keeper, and a stress-test variant so motion decisions stay deliberate instead of living only in the current form fields.";
+          return;
+        }
+
+        const lines = entries.map(function (entry) {
+          return (
+            entry.slotTitle +
+            ": Release " +
+            entry.releaseScore +
+            "/100 | " +
+            entry.presetLabel +
+            " | " +
+            entry.values.keyframes +
+            " | " +
+            entry.triggerLabel +
+            " | Risk " +
+            entry.risk.level +
+            " " +
+            entry.risk.score +
+            "/100 | Surface " +
+            entry.surface.score +
+            "/100"
+          );
+        });
+
+        if (winner) {
+          elAnimationLabCompareWinner.textContent =
+            winner.slotTitle +
+            " leads on " +
+            currentTarget +
+            " with a release score of " +
+            winner.releaseScore +
+            "/100.";
+        }
+
+        if (!anchorEntry || entries.length < 2) {
+          elAnimationLabCompareDelta.textContent = "Save another slot to compare against " + (anchorEntry ? anchorEntry.slotTitle.toLowerCase() : "the current bench") + ".";
+          elAnimationLabCompareNext.textContent = anchorEntry && winner && winner.slotKey === anchorEntry.slotKey
+            ? "Capture a more ambitious alternate next so the bench can measure tradeoffs, not just one safe version."
+            : "Add one more slot so the bench can show concrete drift from your anchor.";
+          elAnimationLabCompareReport.textContent = lines.join("\n");
+          if (elAnimationLabCopyCompare) elAnimationLabCopyCompare.disabled = false;
+          elAnimationLabCompareNote.textContent = "One slot is stored. Add another variant before you overwrite the live controls so the compare bench can show what changed.";
+          return;
+        }
+
+        const comparisonEntry = winner && winner.slotKey !== anchorEntry.slotKey
+          ? winner
+          : entries.find(function (entry) { return entry.slotKey !== anchorEntry.slotKey; }) || anchorEntry;
+        const diffLines = animationLabCompareDiffLines(anchorEntry.values, comparisonEntry.values);
+        const releaseDelta = comparisonEntry.releaseScore - anchorEntry.releaseScore;
+        const riskDelta = anchorEntry.risk.score - comparisonEntry.risk.score;
+        const surfaceDelta = comparisonEntry.surface.score - anchorEntry.surface.score;
+        const releaseVerb = releaseDelta > 0 ? "improves" : releaseDelta < 0 ? "drops" : "holds";
+        const biggestDiff = diffLines[0] || "No control changes detected beyond the captured slot labels.";
+
+        elAnimationLabCompareDelta.textContent =
+          comparisonEntry.slotTitle +
+          " " +
+          releaseVerb +
+          " release score by " +
+          Math.abs(releaseDelta) +
+          " vs " +
+          anchorEntry.slotTitle.toLowerCase() +
+          ". Biggest drift: " +
+          biggestDiff;
+        elAnimationLabCompareNext.textContent =
+          comparisonEntry.risk.score > anchorEntry.risk.score
+            ? "The alternate is riskier. Keep the idea, then shorten timing or loops before treating it as the new keeper."
+            : comparisonEntry.surface.score < anchorEntry.surface.score
+              ? "The alternate is safer but weaker on the current target. Re-run it on a stronger-fit surface before you promote it."
+              : "The alternate is safer or stronger on the current target. Load it, validate reduced-motion once more, then consider promoting it to baseline.";
+
+        lines.push("");
+        lines.push("Anchor: " + anchorEntry.slotTitle + " on " + currentTarget + ".");
+        lines.push("Comparison focus: " + comparisonEntry.slotTitle + ".");
+        lines.push("Release delta vs anchor: " + (releaseDelta > 0 ? "+" : "") + releaseDelta + " (" + comparisonEntry.slotTitle + ").");
+        lines.push("Risk delta vs anchor: " + (riskDelta > 0 ? "-" : riskDelta < 0 ? "+" : "") + Math.abs(riskDelta) + " risk points.");
+        lines.push("Surface delta vs anchor: " + (surfaceDelta > 0 ? "+" : "") + surfaceDelta + " surface points.");
+        lines.push("Strongest drift: " + biggestDiff);
+        if (diffLines.length > 1) {
+          lines.push("Additional drift:");
+          diffLines.slice(1, 4).forEach(function (line) {
+            lines.push("- " + line);
+          });
+        }
+        lines.push("Recommendation: " + (winner ? winner.slotTitle : anchorEntry.slotTitle) + " is the strongest current keeper.");
+
+        elAnimationLabCompareReport.textContent = lines.join("\n");
+        if (elAnimationLabCopyCompare) elAnimationLabCopyCompare.disabled = false;
+        elAnimationLabCompareNote.textContent =
+          "The compare bench scores saved variants against the current preview target so you can keep one stable anchor while testing more ambitious motion.";
+      }
+
+      function captureAnimationLabCompareSlot(slotKey) {
+        if (ANIMATION_LAB_COMPARE_SLOT_ORDER.indexOf(slotKey) === -1) return;
+        animationLabCompareSlots[slotKey] = {
+          values: cloneAnimationLabValueState(animationLabPresetValues())
+        };
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab captured the current motion package into " + animationLabCompareSlotTitle(slotKey) + ".");
+      }
+
+      function loadAnimationLabCompareSlot(slotKey) {
+        if (ANIMATION_LAB_COMPARE_SLOT_ORDER.indexOf(slotKey) === -1) return;
+        const slot = animationLabCompareSlots[slotKey];
+        if (!slot || !slot.values) {
+          setBuilderStatus(animationLabCompareSlotTitle(slotKey) + " is empty.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        applyAnimationLabState(slot.values);
+        setBuilderStatus("Animation Lab loaded " + animationLabCompareSlotTitle(slotKey) + " into the live controls.");
+      }
+
+      function clearAnimationLabCompareSlot(slotKey) {
+        if (ANIMATION_LAB_COMPARE_SLOT_ORDER.indexOf(slotKey) === -1) return;
+        if (!animationLabCompareSlots[slotKey]) {
+          setBuilderStatus(animationLabCompareSlotTitle(slotKey) + " is already empty.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        animationLabCompareSlots[slotKey] = null;
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab cleared " + animationLabCompareSlotTitle(slotKey) + ".");
+      }
+
       function animationLabSelector() {
         const trigger = (elAnimationLabTrigger.value || "").trim();
         const override = (elBuilderSelectorOverride.value || "").trim();
@@ -9391,6 +9831,7 @@ translateY()	translateY(<length|percentage>)
             ? "The tracker is comparing the current controls against " + preset.name + ". Use the targeted restore buttons when you want to pull this variant back toward its baseline."
             : preset.name + " is still fully intact. Start tuning any control and the tracker will call out exactly what drifted.")
           : "The tracker compares the current controls to the selected motion pack so you can reset intentionally instead of reloading the whole lab by accident.";
+        renderAnimationLabCompareBench();
         elAnimationLabSelectorNote.textContent =
           selector + " | Trigger: " + trigger + " | Applies" + scopeText + ".";
         elAnimationLabOutput.textContent = declarations.join("\n");
@@ -9996,6 +10437,7 @@ translateY()	translateY(<length|percentage>)
           mediaLayer: elBuilderMediaLayer.value,
           mediaCustom: elBuilderMediaCustom.value,
           animationLab: animationLabPresetValues(),
+          animationLabCompareSlots: serializeAnimationLabCompareSlots(),
           animationLabReducePreview: Boolean(elAnimationLabReducePreview && elAnimationLabReducePreview.checked),
           previewMode: previewMode,
           previewInteractionState: elPreviewInteractionState.value,
@@ -10032,6 +10474,7 @@ translateY()	translateY(<length|percentage>)
         elBuilderMediaLayer.value = state.mediaLayer || "all";
         elBuilderMediaCustom.value = state.mediaCustom || "";
         updateBuilderMediaControlVisibility();
+        animationLabCompareSlots = normalizeAnimationLabCompareSlots(state.animationLabCompareSlots);
         applyAnimationLabState(state.animationLab);
         if (elAnimationLabReducePreview) {
           elAnimationLabReducePreview.checked = Boolean(state.animationLabReducePreview || (state.animationLab && state.animationLab.reducedPreviewEnabled));
@@ -12059,6 +12502,17 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      async function copyAnimationLabCompareReport() {
+        try {
+          await navigator.clipboard.writeText(elAnimationLabCompareReport.textContent);
+          elAnimationLabCopyCompare.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopyCompare.textContent = "Copy Compare Report"; }, 1200);
+        } catch (err) {
+          elAnimationLabCopyCompare.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopyCompare.textContent = "Copy Compare Report"; }, 1200);
+        }
+      }
+
       function updateSpacingHelperControlState(sourceInput) {
         if (!elCustomRuleHelperSpacingLinked.checked) {
           [elCustomRuleHelperSpacingRight, elCustomRuleHelperSpacingBottom, elCustomRuleHelperSpacingLeft].forEach(function (input) {
@@ -12788,6 +13242,28 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabCopyPackage.addEventListener("click", copyAnimationLabPackage);
       elAnimationLabCopyReduce.addEventListener("click", copyAnimationLabReducedFallback);
       elAnimationLabCopyReview.addEventListener("click", copyAnimationLabReviewSnapshot);
+      if (elAnimationLabCompareBench) {
+        elAnimationLabCompareBench.addEventListener("click", function (event) {
+          const button = event.target.closest("[data-compare-action]");
+          if (!button) return;
+          const action = button.getAttribute("data-compare-action");
+          const slotKey = button.getAttribute("data-compare-slot-key");
+          if (action === "capture") {
+            captureAnimationLabCompareSlot(slotKey);
+            return;
+          }
+          if (action === "apply") {
+            loadAnimationLabCompareSlot(slotKey);
+            return;
+          }
+          if (action === "clear") {
+            clearAnimationLabCompareSlot(slotKey);
+          }
+        });
+      }
+      if (elAnimationLabCopyCompare) {
+        elAnimationLabCopyCompare.addEventListener("click", copyAnimationLabCompareReport);
+      }
       elAnimationLabReducePreview.addEventListener("change", function () {
         updateAnimationLabReducedPreviewState();
         setBuilderStatus(
