@@ -2076,6 +2076,7 @@
                 <select id="custom-rule-helper-type" title="Choose a structured declaration pattern to generate.">
                   <option value="border-radius">Border Radius</option>
                   <option value="box-shadow">Box Shadow</option>
+                  <option value="border-stroke">Border Stroke</option>
                   <option value="focus-ring">Focus Ring</option>
                   <option value="spacing">Spacing</option>
                   <option value="gradient">Gradient Fill</option>
@@ -2142,6 +2143,66 @@
                     <input id="custom-rule-helper-shadow-inset" type="checkbox" />
                     Use inset shadow
                   </label>
+                </div>
+              </div>
+              <div id="custom-rule-helper-border-group" class="hidden">
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-border-property">Property</label>
+                    <select id="custom-rule-helper-border-property" title="Choose whether this writes a full border or a single edge accent.">
+                      <option value="border" selected>border</option>
+                      <option value="border-top">border-top</option>
+                      <option value="border-right">border-right</option>
+                      <option value="border-bottom">border-bottom</option>
+                      <option value="border-left">border-left</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-border-width">Width</label>
+                    <input id="custom-rule-helper-border-width" type="number" min="0" step="1" value="1" title="Stroke width in pixels." />
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-border-style">Style</label>
+                    <select id="custom-rule-helper-border-style" title="Line style used by the stroke.">
+                      <option value="solid" selected>solid</option>
+                      <option value="dashed">dashed</option>
+                      <option value="dotted">dotted</option>
+                      <option value="double">double</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-border-color">Color</label>
+                    <input id="custom-rule-helper-border-color" type="color" value="#c9d8f7" title="Base color used by the border stroke." />
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-border-alpha">Alpha</label>
+                    <input id="custom-rule-helper-border-alpha" type="number" min="0" max="1" step="0.01" value="0.9" title="Opacity for the border color." />
+                  </div>
+                  <div class="row">
+                    <div class="label">Border Intent</div>
+                    <div class="input-hint">Use a single edge for dividers and a full border for chips, cards, and inputs that need clearer containment.</div>
+                  </div>
+                </div>
+                <div id="custom-rule-helper-border-coach" class="help-box">
+                  <div><strong>Border Stroke Coach</strong></div>
+                  <div class="info-grid">
+                    <div class="info-tile">
+                      <div class="label">Coverage</div>
+                      <div id="custom-rule-helper-border-coverage">Full perimeter border for clear containment.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Weight</div>
+                      <div id="custom-rule-helper-border-weight">1px reads as a restrained default.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Guardrail</div>
+                      <div id="custom-rule-helper-border-rationale">Keep form field borders subtle enough that focus styles can still take visual priority.</div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div id="custom-rule-helper-focus-group" class="hidden">
@@ -3349,6 +3410,16 @@ translateY()	translateY(<length|percentage>)
       const elCustomRuleHelperShadowColor = document.getElementById("custom-rule-helper-shadow-color");
       const elCustomRuleHelperShadowAlpha = document.getElementById("custom-rule-helper-shadow-alpha");
       const elCustomRuleHelperShadowInset = document.getElementById("custom-rule-helper-shadow-inset");
+      const elCustomRuleHelperBorderGroup = document.getElementById("custom-rule-helper-border-group");
+      const elCustomRuleHelperBorderProperty = document.getElementById("custom-rule-helper-border-property");
+      const elCustomRuleHelperBorderWidth = document.getElementById("custom-rule-helper-border-width");
+      const elCustomRuleHelperBorderStyle = document.getElementById("custom-rule-helper-border-style");
+      const elCustomRuleHelperBorderColor = document.getElementById("custom-rule-helper-border-color");
+      const elCustomRuleHelperBorderAlpha = document.getElementById("custom-rule-helper-border-alpha");
+      const elCustomRuleHelperBorderCoach = document.getElementById("custom-rule-helper-border-coach");
+      const elCustomRuleHelperBorderCoverage = document.getElementById("custom-rule-helper-border-coverage");
+      const elCustomRuleHelperBorderWeight = document.getElementById("custom-rule-helper-border-weight");
+      const elCustomRuleHelperBorderRationale = document.getElementById("custom-rule-helper-border-rationale");
       const elCustomRuleHelperFocusGroup = document.getElementById("custom-rule-helper-focus-group");
       const elCustomRuleHelperFocusWidth = document.getElementById("custom-rule-helper-focus-width");
       const elCustomRuleHelperFocusStyle = document.getElementById("custom-rule-helper-focus-style");
@@ -3413,6 +3484,11 @@ translateY()	translateY(<length|percentage>)
         shadowColor: elCustomRuleHelperShadowColor,
         shadowAlpha: elCustomRuleHelperShadowAlpha,
         shadowInset: elCustomRuleHelperShadowInset,
+        borderProperty: elCustomRuleHelperBorderProperty,
+        borderWidth: elCustomRuleHelperBorderWidth,
+        borderStyle: elCustomRuleHelperBorderStyle,
+        borderColor: elCustomRuleHelperBorderColor,
+        borderAlpha: elCustomRuleHelperBorderAlpha,
         focusWidth: elCustomRuleHelperFocusWidth,
         focusStyle: elCustomRuleHelperFocusStyle,
         focusColor: elCustomRuleHelperFocusColor,
@@ -3605,6 +3681,20 @@ translateY()	translateY(<length|percentage>)
             label: "Input Inset",
             note: "A subtle inset treatment that reads well on fields and embedded controls.",
             fields: { shadowX: 0, shadowY: 1, shadowBlur: 3, shadowSpread: 0, shadowColor: "#0f2f66", shadowAlpha: 0.14, shadowInset: true }
+          }
+        ],
+        "border-stroke": [
+          {
+            value: "field-subtle",
+            label: "Field Subtle",
+            note: "A calm full border for inputs, chips, and cards that need light containment.",
+            fields: { borderProperty: "border", borderWidth: 1, borderStyle: "solid", borderColor: "#c9d8f7", borderAlpha: 0.9 }
+          },
+          {
+            value: "section-divider",
+            label: "Section Divider",
+            note: "A single-edge divider that separates stacked content without boxing it in.",
+            fields: { borderProperty: "border-bottom", borderWidth: 2, borderStyle: "solid", borderColor: "#9fb8ea", borderAlpha: 0.75 }
           }
         ],
         "focus-ring": [
@@ -11272,6 +11362,49 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperTransitionRationale.textContent = rationale;
       }
 
+      function updateBorderHelperCoach() {
+        if (!elCustomRuleHelperBorderCoach || !elCustomRuleHelperBorderCoverage || !elCustomRuleHelperBorderWeight || !elCustomRuleHelperBorderRationale) {
+          return;
+        }
+
+        const prop = String(elCustomRuleHelperBorderProperty.value || "border").trim();
+        const width = Math.max(0, Number(elCustomRuleHelperBorderWidth.value || 0));
+        const style = String(elCustomRuleHelperBorderStyle.value || "solid").trim();
+        const alphaRaw = Number(elCustomRuleHelperBorderAlpha.value);
+        const alpha = Number.isFinite(alphaRaw) ? Math.max(0, Math.min(1, alphaRaw)) : 0.9;
+        const isFullBorder = prop === "border";
+
+        if (isFullBorder) {
+          elCustomRuleHelperBorderCoverage.textContent = "Full perimeter border for clear containment around the whole component.";
+        } else {
+          elCustomRuleHelperBorderCoverage.textContent = prop + " creates a directional divider, which is better for sections and inline separators than boxed controls.";
+        }
+
+        if (width <= 1) {
+          elCustomRuleHelperBorderWeight.textContent = width + "px reads as a restrained default that stays out of the focus ring's way.";
+        } else if (width <= 2) {
+          elCustomRuleHelperBorderWeight.textContent = width + "px adds noticeable emphasis without turning into a heavy frame.";
+        } else {
+          elCustomRuleHelperBorderWeight.textContent = width + "px is visually strong and should be reserved for deliberate accents or section dividers.";
+        }
+
+        let rationale = "Keep resting borders quieter than focus and validation states so interactive feedback still wins.";
+        if (width === 0 || alpha === 0) {
+          rationale = "The stroke is effectively invisible. Increase width or alpha if this rule is meant to communicate structure.";
+        } else if (style === "double" && width < 3) {
+          rationale = "Double borders need more thickness to read cleanly. Use at least 3px or switch back to solid.";
+        } else if (style === "dashed" || style === "dotted") {
+          rationale = "Dashed and dotted borders read as decorative or status-oriented. Use them sparingly on dense Form.io controls.";
+        } else if (!isFullBorder && width > 3) {
+          rationale = "A thick single-edge border can overpower nearby labels. Re-check the rhythm if this sits between compact inputs.";
+        } else if (isFullBorder && width > 2) {
+          rationale = "Heavy full borders can compete with focus styling. This is safer for cards and pills than active text inputs.";
+        } else if (alpha < 0.45) {
+          rationale = "Low-opacity borders are useful for soft surfaces, but they can disappear against tinted backgrounds.";
+        }
+        elCustomRuleHelperBorderRationale.textContent = rationale;
+      }
+
       function currentCustomRuleHelperPresets() {
         const type = (elCustomRuleHelperType.value || "border-radius").trim();
         return CUSTOM_RULE_HELPER_PRESETS[type] || [];
@@ -11359,6 +11492,15 @@ translateY()	translateY(<length|percentage>)
           const prefix = elCustomRuleHelperShadowInset.checked ? "inset " : "";
           return "box-shadow: " + prefix + x + "px " + y + "px " + blur + "px " + spread + "px rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + alpha.toFixed(2) + ");";
         }
+        if (type === "border-stroke") {
+          const prop = (elCustomRuleHelperBorderProperty.value || "border").trim();
+          const width = Math.max(0, Number(elCustomRuleHelperBorderWidth.value || 0));
+          const style = (elCustomRuleHelperBorderStyle.value || "solid").trim() || "solid";
+          const rgb = parseCssColorToRgb(elCustomRuleHelperBorderColor.value || "#c9d8f7");
+          const alphaRaw = Number(elCustomRuleHelperBorderAlpha.value);
+          const alpha = Number.isFinite(alphaRaw) ? Math.max(0, Math.min(1, alphaRaw)) : 0.9;
+          return prop + ": " + width + "px " + style + " rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + alpha.toFixed(2) + ");";
+        }
         if (type === "focus-ring") {
           const width = Math.max(1, Number(elCustomRuleHelperFocusWidth.value || 1));
           const style = (elCustomRuleHelperFocusStyle.value || "solid").trim() || "solid";
@@ -11430,6 +11572,7 @@ translateY()	translateY(<length|percentage>)
         const type = (elCustomRuleHelperType.value || "border-radius").trim();
         elCustomRuleHelperRadiusGroup.classList.toggle("hidden", type !== "border-radius");
         elCustomRuleHelperShadowGroup.classList.toggle("hidden", type !== "box-shadow");
+        elCustomRuleHelperBorderGroup.classList.toggle("hidden", type !== "border-stroke");
         elCustomRuleHelperFocusGroup.classList.toggle("hidden", type !== "focus-ring");
         elCustomRuleHelperSpacingGroup.classList.toggle("hidden", type !== "spacing");
         elCustomRuleHelperGradientGroup.classList.toggle("hidden", type !== "gradient");
@@ -11442,16 +11585,22 @@ translateY()	translateY(<length|percentage>)
         if (elCustomRuleHelperTransitionCoach) {
           elCustomRuleHelperTransitionCoach.classList.toggle("hidden", type !== "transition");
         }
+        if (elCustomRuleHelperBorderCoach) {
+          elCustomRuleHelperBorderCoach.classList.toggle("hidden", type !== "border-stroke");
+        }
         if (elCustomRuleHelperFluidCoach) {
           elCustomRuleHelperFluidCoach.classList.toggle("hidden", type !== "fluid-clamp");
         }
         updateSpacingHelperControlState();
         updateSpacingHelperCoach();
         updateTransitionHelperCoach();
+        updateBorderHelperCoach();
         updateFluidClampCoach();
 
         if (type === "box-shadow") {
           elCustomRuleHelperNote.textContent = "Build a reusable shadow with consistent offsets, blur, spread, color, and optional inset behavior.";
+        } else if (type === "border-stroke") {
+          elCustomRuleHelperNote.textContent = "Generate a constrained border stroke so dividers and field outlines stay deliberate without hand-typing color alpha each time.";
         } else if (type === "focus-ring") {
           elCustomRuleHelperNote.textContent = "Generate an explicit focus ring as outline + outline-offset so interactive states stay visible without hand-typing both declarations.";
         } else if (type === "spacing") {
@@ -11637,6 +11786,11 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperShadowSpread,
         elCustomRuleHelperShadowColor,
         elCustomRuleHelperShadowAlpha,
+        elCustomRuleHelperBorderProperty,
+        elCustomRuleHelperBorderWidth,
+        elCustomRuleHelperBorderStyle,
+        elCustomRuleHelperBorderColor,
+        elCustomRuleHelperBorderAlpha,
         elCustomRuleHelperFocusWidth,
         elCustomRuleHelperFocusStyle,
         elCustomRuleHelperFocusColor,
