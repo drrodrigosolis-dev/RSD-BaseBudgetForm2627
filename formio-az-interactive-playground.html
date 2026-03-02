@@ -2322,6 +2322,23 @@
                     </select>
                   </div>
                 </div>
+                <div id="custom-rule-helper-transition-coach" class="help-box">
+                  <div><strong>Transition Coach</strong></div>
+                  <div class="info-grid">
+                    <div class="info-tile">
+                      <div class="label">Scope Fit</div>
+                      <div id="custom-rule-helper-transition-scope">Choose a property to see how targeted or broad this transition is.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Tempo</div>
+                      <div id="custom-rule-helper-transition-tempo">Pick duration and delay values to estimate how quickly the change will settle.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Guardrail</div>
+                      <div id="custom-rule-helper-transition-rationale">A rollout caution will appear here when the timing or property scope gets risky.</div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div id="custom-rule-helper-transform-group" class="hidden">
                 <div class="builder-row">
@@ -3362,6 +3379,10 @@ translateY()	translateY(<length|percentage>)
       const elCustomRuleHelperTransitionDuration = document.getElementById("custom-rule-helper-transition-duration");
       const elCustomRuleHelperTransitionEasing = document.getElementById("custom-rule-helper-transition-easing");
       const elCustomRuleHelperTransitionDelay = document.getElementById("custom-rule-helper-transition-delay");
+      const elCustomRuleHelperTransitionCoach = document.getElementById("custom-rule-helper-transition-coach");
+      const elCustomRuleHelperTransitionScope = document.getElementById("custom-rule-helper-transition-scope");
+      const elCustomRuleHelperTransitionTempo = document.getElementById("custom-rule-helper-transition-tempo");
+      const elCustomRuleHelperTransitionRationale = document.getElementById("custom-rule-helper-transition-rationale");
       const elCustomRuleHelperTransformGroup = document.getElementById("custom-rule-helper-transform-group");
       const elCustomRuleHelperTransformUnit = document.getElementById("custom-rule-helper-transform-unit");
       const elCustomRuleHelperTransformX = document.getElementById("custom-rule-helper-transform-x");
@@ -11205,6 +11226,52 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperFluidRationale.textContent = rationale;
       }
 
+      function updateTransitionHelperCoach() {
+        if (!elCustomRuleHelperTransitionCoach || !elCustomRuleHelperTransitionScope || !elCustomRuleHelperTransitionTempo || !elCustomRuleHelperTransitionRationale) {
+          return;
+        }
+
+        const prop = String(elCustomRuleHelperTransitionProperty.value || "all").trim();
+        const durationMs = Math.max(0, parseAnimationLabTimeMs(elCustomRuleHelperTransitionDuration.value));
+        const delayMs = Math.max(0, parseAnimationLabTimeMs(elCustomRuleHelperTransitionDelay.value));
+        const totalMs = durationMs + delayMs;
+        const easing = String(elCustomRuleHelperTransitionEasing.value || "ease").trim();
+
+        if (prop === "all") {
+          elCustomRuleHelperTransitionScope.textContent = "\"all\" will animate every changing property on the target, which is flexible but easy to over-ship.";
+        } else if (prop === "transform" || prop === "opacity") {
+          elCustomRuleHelperTransitionScope.textContent = prop + " keeps the scope focused on motion or visibility changes, which is usually the safest interactive target.";
+        } else if (prop === "box-shadow") {
+          elCustomRuleHelperTransitionScope.textContent = "box-shadow is visually rich but more paint-heavy than transform or opacity, so it works best for subtle depth shifts.";
+        } else {
+          elCustomRuleHelperTransitionScope.textContent = prop + " limits the transition to direct visual styling feedback instead of every property on the component.";
+        }
+
+        if (totalMs <= 180 && delayMs === 0) {
+          elCustomRuleHelperTransitionTempo.textContent = "Fast response. The change starts immediately and settles in about " + formatAnimationLabDurationMs(totalMs) + ".";
+        } else if (totalMs <= 320) {
+          elCustomRuleHelperTransitionTempo.textContent = "Balanced response. Users will feel the change within " + formatAnimationLabDurationMs(totalMs) + " total.";
+        } else if (delayMs > 0) {
+          elCustomRuleHelperTransitionTempo.textContent = "Delayed response. The change waits " + formatAnimationLabDurationMs(delayMs) + " before settling in about " + formatAnimationLabDurationMs(totalMs) + ".";
+        } else {
+          elCustomRuleHelperTransitionTempo.textContent = "Relaxed response. The change takes about " + formatAnimationLabDurationMs(totalMs) + " to finish, which reads better for decorative polish than core feedback.";
+        }
+
+        let rationale = "This timing is production-safe for most hover and focus polish.";
+        if (prop === "all") {
+          rationale = "Use \"all\" while exploring, then narrow it to one property before shipping so unrelated layout or color changes do not animate unexpectedly.";
+        } else if (delayMs > 80) {
+          rationale = "The delay is noticeable. Keep delays very short on interactive controls so hover and focus feedback does not feel late.";
+        } else if (durationMs > 350) {
+          rationale = "The duration is on the slow side. Longer transitions work better for decorative surfaces than dense inputs or quick tap targets.";
+        } else if (prop === "box-shadow" && easing === "linear") {
+          rationale = "A linear shadow transition can feel mechanical. Ease or ease-out usually looks more natural for depth changes.";
+        } else if ((prop === "transform" || prop === "opacity") && durationMs <= 200 && delayMs === 0) {
+          rationale = "This is a strong interaction default: focused property, quick response, and no startup lag.";
+        }
+        elCustomRuleHelperTransitionRationale.textContent = rationale;
+      }
+
       function currentCustomRuleHelperPresets() {
         const type = (elCustomRuleHelperType.value || "border-radius").trim();
         return CUSTOM_RULE_HELPER_PRESETS[type] || [];
@@ -11372,11 +11439,15 @@ translateY()	translateY(<length|percentage>)
         if (elCustomRuleHelperSpacingCoach) {
           elCustomRuleHelperSpacingCoach.classList.toggle("hidden", type !== "spacing");
         }
+        if (elCustomRuleHelperTransitionCoach) {
+          elCustomRuleHelperTransitionCoach.classList.toggle("hidden", type !== "transition");
+        }
         if (elCustomRuleHelperFluidCoach) {
           elCustomRuleHelperFluidCoach.classList.toggle("hidden", type !== "fluid-clamp");
         }
         updateSpacingHelperControlState();
         updateSpacingHelperCoach();
+        updateTransitionHelperCoach();
         updateFluidClampCoach();
 
         if (type === "box-shadow") {
