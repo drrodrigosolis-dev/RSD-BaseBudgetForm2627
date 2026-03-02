@@ -2052,6 +2052,32 @@
                 </div>
               </div>
               <div class="help-box">
+                <div><strong>Motion Execution Map</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Sequence Markers</div>
+                    <div id="animation-lab-timeline">The lab will map the motion from trigger to settle once timing is configured.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Operator Checklist</div>
+                    <div id="animation-lab-checklist">A concise review pass will appear here so the motion can be tested consistently.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Exit Condition</div>
+                    <div id="animation-lab-exit">The lab will explain what the user should see after the motion finishes.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Deployable Motion Package</label>
+                  <pre id="animation-lab-package"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-copy-package" type="button">Copy Motion Package</button>
+                  <button id="animation-lab-copy-reduce" type="button">Copy Reduced Fallback</button>
+                </div>
+                <div id="animation-lab-package-note" class="input-hint">The exported package combines keyframes, the active selector rule, and the reduced-motion fallback.</div>
+              </div>
+              <div class="help-box">
                 <div><strong>Release Readiness</strong></div>
                 <div class="info-grid">
                   <div class="info-tile">
@@ -3420,6 +3446,13 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabFirstMovement = document.getElementById("animation-lab-first-movement");
       const elAnimationLabSettleBehavior = document.getElementById("animation-lab-settle-behavior");
       const elAnimationLabQaPrompt = document.getElementById("animation-lab-qa-prompt");
+      const elAnimationLabTimeline = document.getElementById("animation-lab-timeline");
+      const elAnimationLabChecklist = document.getElementById("animation-lab-checklist");
+      const elAnimationLabExit = document.getElementById("animation-lab-exit");
+      const elAnimationLabPackage = document.getElementById("animation-lab-package");
+      const elAnimationLabCopyPackage = document.getElementById("animation-lab-copy-package");
+      const elAnimationLabCopyReduce = document.getElementById("animation-lab-copy-reduce");
+      const elAnimationLabPackageNote = document.getElementById("animation-lab-package-note");
       const elAnimationLabRiskScore = document.getElementById("animation-lab-risk-score");
       const elAnimationLabRiskFill = document.getElementById("animation-lab-risk-fill");
       const elAnimationLabReleaseNote = document.getElementById("animation-lab-release-note");
@@ -8230,6 +8263,39 @@ translateY()	translateY(<length|percentage>)
         ].join("\n");
       }
 
+      function animationLabRuleBlock(selector, declarations) {
+        const safeSelector = String(selector || getBaseSelector()).trim() || ".target";
+        const lines = [safeSelector + " {"];
+        (declarations || []).forEach(function (declaration) {
+          lines.push("  " + declaration);
+        });
+        lines.push("}");
+        return lines.join("\n");
+      }
+
+      function animationLabPackageCss(selector, values) {
+        const declarations = animationLabDeclarations(values);
+        const media = currentBuilderMediaQuery();
+        const ruleBlock = animationLabRuleBlock(selector, declarations);
+        const sections = [];
+        const keyframes = keyframesBlock(values.keyframes);
+
+        if (keyframes) {
+          sections.push(keyframes);
+        }
+        if (media) {
+          sections.push([
+            media + " {",
+            ruleBlock.split("\n").map(function (line) { return "  " + line; }).join("\n"),
+            "}"
+          ].join("\n"));
+        } else {
+          sections.push(ruleBlock);
+        }
+        sections.push(animationLabReducedMotionCss(selector));
+        return sections.join("\n\n");
+      }
+
       function animationLabGuardrailRecommendation(values) {
         const trigger = String(values && values.trigger || "").trim();
         const play = String(values && values.play || "running").trim();
@@ -8375,6 +8441,66 @@ translateY()	translateY(<length|percentage>)
           return "Toggle the checked state on and off to confirm the motion reinforces the state change instead of delaying it.";
         }
         return "Exercise the current trigger a few times and confirm the motion reads as feedback, not decoration.";
+      }
+
+      function animationLabTimelineSummary(values) {
+        const play = String(values.play || "running").trim();
+        const trigger = animationLabTriggerLabel(values.trigger);
+        const delayMs = parseAnimationLabTimeMs(values.delay);
+        const durationMs = parseAnimationLabTimeMs(values.duration);
+        const cycles = animationLabCycleCount(values);
+
+        if (play === "paused") {
+          return "Trigger ready: " + trigger + ". The package is armed but paused, so no first frame appears until play resumes.";
+        }
+        if (!durationMs) {
+          return "Trigger ready: " + trigger + ". Choose a duration so the lab can estimate first frame, peak motion, and settle timing.";
+        }
+
+        const firstFrame = delayMs;
+        const firstCycleEnd = delayMs + durationMs;
+        if (cycles === Infinity) {
+          return "Trigger ready: " + trigger + ". First frame at " + formatAnimationLabDurationMs(firstFrame) + ", first loop completes at " + formatAnimationLabDurationMs(firstCycleEnd) + ", then the motion keeps repeating until the trigger stops.";
+        }
+        const settleMs = delayMs + durationMs * cycles;
+        return "Trigger ready: " + trigger + ". First frame at " + formatAnimationLabDurationMs(firstFrame) + ", first loop completes at " + formatAnimationLabDurationMs(firstCycleEnd) + ", final settle at " + formatAnimationLabDurationMs(settleMs) + ".";
+      }
+
+      function animationLabChecklist(values, risk, surface) {
+        const steps = [];
+        steps.push("1. Exercise " + animationLabTriggerLabel(values.trigger).toLowerCase() + " on " + previewTargetLabel((elTarget.value || "card").trim()) + ".");
+        if (risk.score >= 50) {
+          steps.push("2. Re-run with shorter timing or the guardrail patch because risk is " + risk.level.toLowerCase() + ".");
+        } else {
+          steps.push("2. Confirm the live timing still feels connected to the user action.");
+        }
+        if (surface.score < 60) {
+          steps.push("3. Compare the best-fit surface before rollout because the current target is only a " + surface.verdict.toLowerCase() + ".");
+        } else {
+          steps.push("3. Keep the current surface and verify surrounding form density stays easy to scan.");
+        }
+        steps.push("4. Run the reduced-motion fallback once before export.");
+        return steps.join(" ");
+      }
+
+      function animationLabExitSummary(values) {
+        const play = String(values.play || "running").trim();
+        const cycles = animationLabCycleCount(values);
+        const fill = String(values.fill || "none").trim();
+
+        if (play === "paused") {
+          return "The current frame stays frozen until play resumes, so the final resting state is not yet observable.";
+        }
+        if (cycles === Infinity) {
+          return "There is no automatic exit. The motion only stops when the trigger ends or the CSS is changed.";
+        }
+        if (fill === "forwards" || fill === "both") {
+          return "The animated end state remains visible after the last cycle, so validate that the final frame still looks intentional.";
+        }
+        if (fill === "backwards") {
+          return "The starting keyframe can appear during delay, but the element returns to its base styling after the motion ends.";
+        }
+        return "The element snaps back to its base styling after the last cycle, so the motion behaves like a temporary cue.";
       }
 
       function animationLabRiskAssessment(values) {
@@ -8829,6 +8955,7 @@ translateY()	translateY(<length|percentage>)
         const risk = animationLabRiskAssessment(values);
         const surface = animationLabSurfaceAssessment(values);
         const intent = animationLabIntentPlan(values);
+        const packageCss = animationLabPackageCss(selector, values);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         elAnimationLabPresetIntent.textContent = brief.intent;
         elAnimationLabPresetBestFor.textContent = brief.bestFor;
@@ -8850,6 +8977,13 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabFirstMovement.textContent = animationLabFirstMovementSummary(values);
         elAnimationLabSettleBehavior.textContent = animationLabSettleBehaviorSummary(values);
         elAnimationLabQaPrompt.textContent = animationLabQaPrompt(values);
+        elAnimationLabTimeline.textContent = animationLabTimelineSummary(values);
+        elAnimationLabChecklist.textContent = animationLabChecklist(values, risk, surface);
+        elAnimationLabExit.textContent = animationLabExitSummary(values);
+        elAnimationLabPackage.textContent = packageCss;
+        elAnimationLabPackageNote.textContent = media
+          ? "The exported package includes the current builder media wrapper, the active selector rule, and the reduced-motion fallback."
+          : "The exported package combines keyframes, the active selector rule, and the reduced-motion fallback.";
         elAnimationLabRiskScore.textContent = risk.score + " / 100 (" + risk.level + ")";
         elAnimationLabRiskFill.style.width = risk.score + "%";
         elAnimationLabRiskFill.style.background = risk.score >= 75
@@ -11448,6 +11582,28 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      async function copyAnimationLabPackage() {
+        try {
+          await navigator.clipboard.writeText(elAnimationLabPackage.textContent);
+          elAnimationLabCopyPackage.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopyPackage.textContent = "Copy Motion Package"; }, 1200);
+        } catch (err) {
+          elAnimationLabCopyPackage.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopyPackage.textContent = "Copy Motion Package"; }, 1200);
+        }
+      }
+
+      async function copyAnimationLabReducedFallback() {
+        try {
+          await navigator.clipboard.writeText(elAnimationLabReduceCss.textContent);
+          elAnimationLabCopyReduce.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopyReduce.textContent = "Copy Reduced Fallback"; }, 1200);
+        } catch (err) {
+          elAnimationLabCopyReduce.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopyReduce.textContent = "Copy Reduced Fallback"; }, 1200);
+        }
+      }
+
       function updateSpacingHelperControlState(sourceInput) {
         if (!elCustomRuleHelperSpacingLinked.checked) {
           [elCustomRuleHelperSpacingRight, elCustomRuleHelperSpacingBottom, elCustomRuleHelperSpacingLeft].forEach(function (input) {
@@ -12171,6 +12327,8 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabApplyIntent.addEventListener("click", applyAnimationLabIntentPlan);
       elAnimationLabSurfaceBestTarget.addEventListener("click", applyAnimationLabBestSurfaceTarget);
       elAnimationLabSurfaceCycleTop.addEventListener("click", cycleAnimationLabTopSurfaces);
+      elAnimationLabCopyPackage.addEventListener("click", copyAnimationLabPackage);
+      elAnimationLabCopyReduce.addEventListener("click", copyAnimationLabReducedFallback);
       elAnimationLabReducePreview.addEventListener("change", function () {
         updateAnimationLabReducedPreviewState();
         setBuilderStatus(
