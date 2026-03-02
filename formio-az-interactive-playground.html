@@ -1955,6 +1955,37 @@
                   </div>
                 </div>
               </div>
+              <div class="help-box">
+                <div><strong>Preset Drift Tracker</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Baseline Status</div>
+                    <div id="animation-lab-drift-status">The selected motion pack is currently unchanged.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Drift Score</div>
+                    <div id="animation-lab-drift-score">0 / 100 (Locked)</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Biggest Drift</div>
+                    <div id="animation-lab-drift-focus">Any differences from the motion pack will be called out here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Reset Plan</div>
+                    <div id="animation-lab-drift-plan">Use the targeted restore actions to bring the package back toward its preset baseline.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Changed Settings</label>
+                  <pre id="animation-lab-drift-list"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-restore-preset" type="button">Restore Full Preset</button>
+                  <button id="animation-lab-restore-timing" type="button">Restore Timing Only</button>
+                  <button id="animation-lab-restore-behavior" type="button">Restore Trigger + Behavior</button>
+                </div>
+                <div id="animation-lab-drift-note" class="input-hint">The tracker compares the current controls to the selected motion pack so you can reset intentionally instead of reloading the whole lab by accident.</div>
+              </div>
               <div class="row">
                 <label class="label">Effective Selector</label>
                 <div id="animation-lab-selector-note" class="selector-preview">The lab will target your current builder selector.</div>
@@ -3464,6 +3495,15 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabPresetIntent = document.getElementById("animation-lab-preset-intent");
       const elAnimationLabPresetBestFor = document.getElementById("animation-lab-preset-best-for");
       const elAnimationLabPresetGuardrail = document.getElementById("animation-lab-preset-guardrail");
+      const elAnimationLabDriftStatus = document.getElementById("animation-lab-drift-status");
+      const elAnimationLabDriftScore = document.getElementById("animation-lab-drift-score");
+      const elAnimationLabDriftFocus = document.getElementById("animation-lab-drift-focus");
+      const elAnimationLabDriftPlan = document.getElementById("animation-lab-drift-plan");
+      const elAnimationLabDriftList = document.getElementById("animation-lab-drift-list");
+      const elAnimationLabRestorePreset = document.getElementById("animation-lab-restore-preset");
+      const elAnimationLabRestoreTiming = document.getElementById("animation-lab-restore-timing");
+      const elAnimationLabRestoreBehavior = document.getElementById("animation-lab-restore-behavior");
+      const elAnimationLabDriftNote = document.getElementById("animation-lab-drift-note");
       const elAnimationLabSelectorNote = document.getElementById("animation-lab-selector-note");
       const elAnimationLabOutput = document.getElementById("animation-lab-output");
       const elAnimationLabKeyframes = document.getElementById("animation-lab-keyframes");
@@ -4628,6 +4668,17 @@ translateY()	translateY(<length|percentage>)
         acc[preset.id] = preset;
         return acc;
       }, {});
+      const ANIMATION_LAB_PRESET_FIELDS = [
+        { key: "trigger", label: "Trigger", group: "behavior" },
+        { key: "keyframes", label: "Keyframes", group: "behavior" },
+        { key: "duration", label: "Duration", group: "timing" },
+        { key: "easing", label: "Easing", group: "timing" },
+        { key: "delay", label: "Delay", group: "timing" },
+        { key: "iterations", label: "Iterations", group: "behavior" },
+        { key: "direction", label: "Direction", group: "behavior" },
+        { key: "fill", label: "Fill Mode", group: "behavior" },
+        { key: "play", label: "Play State", group: "behavior" }
+      ];
       const FUNCTION_PROPERTY_OPTIONS = [
         "filter",
         "transform",
@@ -8220,6 +8271,193 @@ translateY()	translateY(<length|percentage>)
         );
       }
 
+      function animationLabPresetFieldLabel(field, value) {
+        const key = field && field.key || "";
+        const text = String(value || "").trim();
+        if (key === "trigger") return animationLabTriggerLabel(text);
+        return text || "None";
+      }
+
+      function animationLabPresetDiff(values, preset) {
+        if (!preset) {
+          return {
+            score: 0,
+            level: "Unavailable",
+            summary: "Choose a motion pack before comparing drift.",
+            focus: "Preset drift tracking is waiting for a selected motion pack.",
+            plan: "Pick a motion pack first, then tune the controls and compare changes here.",
+            listText: "No motion pack selected.",
+            fullPatch: {},
+            timingPatch: {},
+            behaviorPatch: {},
+            changedCount: 0
+          };
+        }
+
+        const changes = ANIMATION_LAB_PRESET_FIELDS.reduce(function (list, field) {
+          const currentValue = String(values && values[field.key] || "").trim();
+          const presetValue = String(preset && preset[field.key] || "").trim();
+          if (currentValue === presetValue) return list;
+          list.push({
+            key: field.key,
+            label: field.label,
+            group: field.group,
+            current: currentValue,
+            preset: presetValue
+          });
+          return list;
+        }, []);
+
+        const fullPatch = {};
+        const timingPatch = {};
+        const behaviorPatch = {};
+        changes.forEach(function (change) {
+          fullPatch[change.key] = change.preset;
+          if (change.group === "timing") {
+            timingPatch[change.key] = change.preset;
+          } else {
+            behaviorPatch[change.key] = change.preset;
+          }
+        });
+
+        const score = Math.round((changes.length / ANIMATION_LAB_PRESET_FIELDS.length) * 100);
+        let level = "Locked";
+        let summary = preset.name + " is intact. Current controls still match the selected motion pack.";
+        if (changes.length >= 5) {
+          level = "Forked";
+          summary = "This motion has diverged heavily from " + preset.name + " and now behaves like a custom variant.";
+        } else if (changes.length >= 3) {
+          level = "Tuned";
+          summary = "This motion is meaningfully tuned away from " + preset.name + " but still keeps some of its original shape.";
+        } else if (changes.length > 0) {
+          level = "Adjusted";
+          summary = "Only a few controls drift from " + preset.name + ", so the pack is still easy to restore.";
+        }
+
+        const primaryChange = changes[0] || null;
+        const focus = primaryChange
+          ? primaryChange.label + " changed from " + animationLabPresetFieldLabel(primaryChange, primaryChange.preset) + " to " + animationLabPresetFieldLabel(primaryChange, primaryChange.current) + "."
+          : "No drift detected. The selected pack is still acting as the baseline.";
+        let plan = "No reset is needed unless you want to experiment with a different motion pack.";
+        if (changes.length > 0) {
+          const planParts = [];
+          if (Object.keys(timingPatch).length) planParts.push("restore timing");
+          if (Object.keys(behaviorPatch).length) planParts.push("restore trigger + behavior");
+          plan = "Use " + planParts.join(" and ") + " for a targeted reset, or restore the full preset to lock everything back to " + preset.name + ".";
+        }
+
+        const listText = changes.length
+          ? changes.map(function (change, index) {
+            const groupLabel = change.group === "timing" ? "timing" : "behavior";
+            return (index + 1) + ". " + change.label + " [" + groupLabel + "]: " +
+              animationLabPresetFieldLabel(change, change.current) + " -> " + animationLabPresetFieldLabel(change, change.preset);
+          }).join("\n")
+          : "No changed settings. The selected pack is fully intact.";
+
+        return {
+          score: score,
+          level: level,
+          summary: summary,
+          focus: focus,
+          plan: plan,
+          listText: listText,
+          fullPatch: fullPatch,
+          timingPatch: timingPatch,
+          behaviorPatch: behaviorPatch,
+          changedCount: changes.length
+        };
+      }
+
+      function applyAnimationLabPresetPatch(patch, statusMessage, noChangeMessage) {
+        const changes = patch && typeof patch === "object" ? patch : {};
+        if (!Object.keys(changes).length) {
+          setBuilderStatus(noChangeMessage);
+          updateAnimationLabOutputs();
+          return false;
+        }
+        if (Object.prototype.hasOwnProperty.call(changes, "trigger")) {
+          setSelectValueIfPresent(elAnimationLabTrigger, changes.trigger, elAnimationLabTrigger.value);
+        }
+        if (Object.prototype.hasOwnProperty.call(changes, "keyframes")) {
+          setSelectValueIfPresent(elAnimationLabName, changes.keyframes, elAnimationLabName.value);
+        }
+        if (Object.prototype.hasOwnProperty.call(changes, "duration")) {
+          setSelectValueIfPresent(elAnimationLabDuration, changes.duration, elAnimationLabDuration.value);
+        }
+        if (Object.prototype.hasOwnProperty.call(changes, "easing")) {
+          setSelectValueIfPresent(elAnimationLabEasing, changes.easing, elAnimationLabEasing.value);
+        }
+        if (Object.prototype.hasOwnProperty.call(changes, "delay")) {
+          setSelectValueIfPresent(elAnimationLabDelay, changes.delay, elAnimationLabDelay.value);
+        }
+        if (Object.prototype.hasOwnProperty.call(changes, "iterations")) {
+          setSelectValueIfPresent(elAnimationLabIterations, changes.iterations, elAnimationLabIterations.value);
+        }
+        if (Object.prototype.hasOwnProperty.call(changes, "direction")) {
+          setSelectValueIfPresent(elAnimationLabDirection, changes.direction, elAnimationLabDirection.value);
+        }
+        if (Object.prototype.hasOwnProperty.call(changes, "fill")) {
+          setSelectValueIfPresent(elAnimationLabFill, changes.fill, elAnimationLabFill.value);
+        }
+        if (Object.prototype.hasOwnProperty.call(changes, "play")) {
+          setSelectValueIfPresent(elAnimationLabPlay, changes.play, elAnimationLabPlay.value);
+        }
+        if (Object.prototype.hasOwnProperty.call(changes, "trigger")) {
+          setTriggerSyncLastChange(
+            "Animation Lab preset drift reset the shared trigger to " + formatSharedTriggerLabel((elAnimationLabTrigger.value || "").trim(), "Always On") + "."
+          );
+          syncBuilderPseudoFromAnimationLab();
+        }
+        updateAnimationLabOutputs();
+        setBuilderStatus(statusMessage);
+        return true;
+      }
+
+      function restoreAnimationLabFullPreset() {
+        const preset = selectedAnimationLabPreset();
+        if (!preset) {
+          setBuilderStatus("Choose a motion pack before restoring a preset baseline.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        const diff = animationLabPresetDiff(animationLabPresetValues(), preset);
+        applyAnimationLabPresetPatch(
+          diff.fullPatch,
+          "Animation Lab restored the full " + preset.name + " preset baseline.",
+          "Animation Lab already matches the full " + preset.name + " preset baseline."
+        );
+      }
+
+      function restoreAnimationLabPresetTiming() {
+        const preset = selectedAnimationLabPreset();
+        if (!preset) {
+          setBuilderStatus("Choose a motion pack before restoring timing.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        const diff = animationLabPresetDiff(animationLabPresetValues(), preset);
+        applyAnimationLabPresetPatch(
+          diff.timingPatch,
+          "Animation Lab restored the preset timing controls from " + preset.name + ".",
+          "Animation Lab timing already matches " + preset.name + "."
+        );
+      }
+
+      function restoreAnimationLabPresetBehavior() {
+        const preset = selectedAnimationLabPreset();
+        if (!preset) {
+          setBuilderStatus("Choose a motion pack before restoring trigger and behavior.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        const diff = animationLabPresetDiff(animationLabPresetValues(), preset);
+        applyAnimationLabPresetPatch(
+          diff.behaviorPatch,
+          "Animation Lab restored the preset trigger and behavior controls from " + preset.name + ".",
+          "Animation Lab trigger and behavior already match " + preset.name + "."
+        );
+      }
+
       function parseAnimationLabTimeMs(value) {
         const raw = String(value || "").trim().toLowerCase();
         if (!raw) return 0;
@@ -9113,11 +9351,13 @@ translateY()	translateY(<length|percentage>)
 
       function updateAnimationLabOutputs() {
         const values = animationLabPresetValues();
+        const preset = selectedAnimationLabPreset();
         const trigger = animationLabTriggerLabel(values.trigger);
         const declarations = animationLabDeclarations(values);
         const selector = animationLabSelector();
         const media = currentBuilderMediaQuery();
         const brief = animationLabPresetBrief(values);
+        const drift = animationLabPresetDiff(values, preset);
         const guardrail = animationLabGuardrailRecommendation(values);
         const risk = animationLabRiskAssessment(values);
         const surface = animationLabSurfaceAssessment(values);
@@ -9129,6 +9369,28 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabPresetIntent.textContent = brief.intent;
         elAnimationLabPresetBestFor.textContent = brief.bestFor;
         elAnimationLabPresetGuardrail.textContent = brief.guardrail;
+        elAnimationLabDriftStatus.textContent = drift.summary;
+        elAnimationLabDriftScore.textContent = drift.score + " / 100 (" + drift.level + ")";
+        elAnimationLabDriftFocus.textContent = drift.focus;
+        elAnimationLabDriftPlan.textContent = drift.plan;
+        elAnimationLabDriftList.textContent = drift.listText;
+        elAnimationLabRestorePreset.disabled = !Object.keys(drift.fullPatch).length;
+        elAnimationLabRestorePreset.textContent = elAnimationLabRestorePreset.disabled
+          ? "Preset Already Restored"
+          : "Restore Full Preset";
+        elAnimationLabRestoreTiming.disabled = !Object.keys(drift.timingPatch).length;
+        elAnimationLabRestoreTiming.textContent = elAnimationLabRestoreTiming.disabled
+          ? "Timing Already Restored"
+          : "Restore Timing Only";
+        elAnimationLabRestoreBehavior.disabled = !Object.keys(drift.behaviorPatch).length;
+        elAnimationLabRestoreBehavior.textContent = elAnimationLabRestoreBehavior.disabled
+          ? "Behavior Already Restored"
+          : "Restore Trigger + Behavior";
+        elAnimationLabDriftNote.textContent = preset
+          ? (drift.changedCount
+            ? "The tracker is comparing the current controls against " + preset.name + ". Use the targeted restore buttons when you want to pull this variant back toward its baseline."
+            : preset.name + " is still fully intact. Start tuning any control and the tracker will call out exactly what drifted.")
+          : "The tracker compares the current controls to the selected motion pack so you can reset intentionally instead of reloading the whole lab by accident.";
         elAnimationLabSelectorNote.textContent =
           selector + " | Trigger: " + trigger + " | Applies" + scopeText + ".";
         elAnimationLabOutput.textContent = declarations.join("\n");
@@ -12516,6 +12778,9 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabApplyBuilder.addEventListener("click", addAnimationLabToBuilder);
       elAnimationLabMatchPreview.addEventListener("click", syncPreviewInteractionToAnimationLab);
       elAnimationLabRestart.addEventListener("click", restartAnimationLabPreview);
+      elAnimationLabRestorePreset.addEventListener("click", restoreAnimationLabFullPreset);
+      elAnimationLabRestoreTiming.addEventListener("click", restoreAnimationLabPresetTiming);
+      elAnimationLabRestoreBehavior.addEventListener("click", restoreAnimationLabPresetBehavior);
       elAnimationLabApplyGuardrail.addEventListener("click", applyAnimationLabGuardrail);
       elAnimationLabApplyIntent.addEventListener("click", applyAnimationLabIntentPlan);
       elAnimationLabSurfaceBestTarget.addEventListener("click", applyAnimationLabBestSurfaceTarget);
