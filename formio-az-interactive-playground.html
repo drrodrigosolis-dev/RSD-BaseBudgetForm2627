@@ -6,12 +6,16 @@
   <title>Form.io A-Z Interactive Playground</title>
   <style>
     :root {
-      --bg: #f3f6fc;
-      --card: #ffffff;
+      --bg: #eef4fb;
+      --card: rgba(255, 255, 255, 0.94);
       --line: #d4ddef;
-      --ink: #1f273e;
+      --line-strong: #c7d5ec;
+      --ink: #1b2340;
       --muted: #566182;
       --accent: #165fc7;
+      --accent-2: #ff7a59;
+      --accent-3: #21a67a;
+      --shadow: 0 18px 42px rgba(33, 57, 108, 0.1);
       --code-bg: #0f1631;
       --code-ink: #eef3ff;
     }
@@ -20,8 +24,12 @@
 
     body {
       margin: 0;
-      font-family: "Segoe UI", "Noto Sans", Arial, sans-serif;
-      background: radial-gradient(circle at top right, #e8efff, var(--bg) 52%);
+      font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 14% 14%, rgba(255, 122, 89, 0.16), transparent 30%),
+        radial-gradient(circle at 84% 10%, rgba(22, 95, 199, 0.18), transparent 34%),
+        radial-gradient(circle at 68% 76%, rgba(33, 166, 122, 0.12), transparent 28%),
+        linear-gradient(180deg, #f6f9ff 0%, var(--bg) 54%, #f9fbff 100%);
       color: var(--ink);
       line-height: 1.4;
     }
@@ -34,10 +42,11 @@
 
     .hero,
     .card {
-      background: var(--card);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), var(--card));
       border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 14px;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
     }
 
     .hero {
@@ -46,22 +55,88 @@
 
     .card {
       margin-bottom: 0;
+      position: relative;
     }
 
     .hero {
-      background: linear-gradient(130deg, #fbfdff, #edf3ff);
-      border-color: #cddaf4;
+      background: linear-gradient(135deg, #13396f, #216bc3 46%, #ff8a67 115%);
+      border-color: rgba(146, 184, 244, 0.4);
+      color: #f5f8ff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -6% -30% auto;
+      width: 240px;
+      height: 240px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2) 52%, var(--accent-3));
+      border-radius: 16px 16px 0 0;
     }
 
     .hero h1 {
       margin: 0 0 7px;
       font-size: 1.45rem;
+      color: #ffffff;
+      position: relative;
+      z-index: 1;
     }
 
     .hero p {
       margin: 0;
-      color: #2e3c61;
+      color: rgba(244, 249, 255, 0.9);
       font-size: 0.95rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .top-toolbar {
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      border: 1px solid #d7e1f2;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(239, 245, 255, 0.92));
+      box-shadow: 0 12px 28px rgba(24, 44, 92, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .top-toolbar-controls {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .top-toolbar-field {
+      min-width: 220px;
+    }
+
+    .top-toolbar-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #223d70;
+      margin-bottom: 2px;
+    }
+
+    .top-toolbar-note {
+      font-size: 0.78rem;
+      color: #52698f;
+      line-height: 1.4;
     }
 
     .layout {
@@ -72,7 +147,10 @@
     }
 
     .left,
-    .right {
+    .right,
+    .right-stack,
+    .right-builder-column,
+    .right-preview-column {
       display: grid;
       gap: 12px;
       align-content: start;
@@ -82,9 +160,17 @@
       grid-template-columns: 1fr;
     }
 
+    .right-stack,
+    .right-builder-column,
+    .right-preview-column {
+      min-width: 0;
+    }
+
     h2 {
       margin: 0 0 8px;
       font-size: 1.08rem;
+      color: #223968;
+      letter-spacing: 0.01em;
     }
 
     .row {
@@ -105,12 +191,14 @@
     button {
       width: 100%;
       min-height: 34px;
-      border: 1px solid #c6d3ee;
+      border: 1px solid #c9d7f0;
       border-radius: 8px;
       padding: 7px 9px;
       font: inherit;
       color: var(--ink);
-      background: #fff;
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 1px 2px rgba(18, 40, 86, 0.04);
+      transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease, background 160ms ease;
     }
 
     input[type="checkbox"],
@@ -125,15 +213,29 @@
       resize: vertical;
     }
 
+    select:focus,
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: rgba(22, 95, 199, 0.58);
+      box-shadow: 0 0 0 4px rgba(22, 95, 199, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.92);
+    }
+
     button {
       cursor: pointer;
-      background: #edf3ff;
+      background: linear-gradient(135deg, rgba(22, 95, 199, 0.12), rgba(255, 122, 89, 0.12));
       color: #214382;
-      font-weight: 600;
+      font-weight: 700;
+      border-color: rgba(132, 161, 221, 0.5);
     }
 
     button:hover {
-      background: #e4edff;
+      background: linear-gradient(135deg, rgba(22, 95, 199, 0.18), rgba(255, 122, 89, 0.18));
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
     }
 
     .tiny {
@@ -227,11 +329,101 @@
       min-width: 90px;
     }
 
+    .number-boost-wrap {
+      display: flex;
+      align-items: stretch;
+      gap: 4px;
+      max-width: 100%;
+      min-width: 0;
+      flex: 1 1 140px;
+    }
+
+    .number-boost-wrap > input[type="number"] {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .number-boost-controls {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 0 0 auto;
+    }
+
+    .number-boost-btn {
+      width: 42px;
+      min-width: 42px;
+      min-height: 16px;
+      padding: 2px 4px;
+      font-size: 0.68rem;
+      line-height: 1.1;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .param-choice-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .param-chip {
+      padding: 5px 8px;
+      border-radius: 999px;
+      border: 1px solid #cdd9f0;
+      background: #ffffff;
+      color: #2d4a7e;
+      font-size: 0.75rem;
+      line-height: 1.2;
+      min-height: 0;
+    }
+
+    .param-chip:hover {
+      border-color: #7ea2e6;
+      background: #eef4ff;
+      color: #1f4588;
+    }
+
+    .param-chip-active {
+      border-color: #245fe6;
+      background: #245fe6;
+      color: #ffffff;
+    }
+
+    .param-builder-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .param-builder-slot {
+      border: 1px solid #dbe4f6;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.82);
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .param-builder-output {
+      border: 1px dashed #cfd9ed;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 8px;
+      color: #29406a;
+      font-size: 0.78rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
     .preview-wrap {
       border: 1px solid #d3dcee;
       border-radius: 10px;
-      background: linear-gradient(180deg, #fbfdff, #f2f6ff);
+      background: linear-gradient(140deg, rgba(251, 253, 255, 0.98), rgba(242, 246, 255, 0.95));
       padding: 12px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
     }
 
     .preview-grid {
@@ -251,12 +443,25 @@
     }
 
     .preview-panel-active {
-      background: rgba(82, 129, 219, 0.08);
+      background: linear-gradient(135deg, rgba(82, 129, 219, 0.1), rgba(33, 166, 122, 0.08));
       box-shadow: inset 0 0 0 1px rgba(82, 129, 219, 0.2);
+    }
+
+    .preview-panel-support {
+      background: linear-gradient(135deg, rgba(132, 168, 242, 0.09), rgba(98, 194, 168, 0.06));
+      box-shadow: inset 0 0 0 1px rgba(132, 168, 242, 0.16);
+    }
+
+    .preview-panel-support.preview-panel-inactive {
+      opacity: 0.92;
     }
 
     .preview-panel-active .preview-title {
       color: #244b91;
+    }
+
+    .preview-panel-support .preview-title {
+      color: #355f9f;
     }
 
     .preview-panel-flash {
@@ -281,7 +486,7 @@
     .preview-target {
       border: 1px solid #c8d4ef;
       border-radius: 9px;
-      background: #fff;
+      background: linear-gradient(180deg, #ffffff, #fbfdff);
       padding: 10px;
       min-height: 66px;
       color: #2b3d67;
@@ -498,10 +703,70 @@
     }
 
     #preview-card {
+      font-size: 0.88rem;
+    }
+
+    .preview-card-stage {
+      position: relative;
+      min-height: 160px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #cdd9f1;
+      background: linear-gradient(135deg, #dce7ff, #f2f6ff);
+      padding: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.88rem;
+      isolation: isolate;
+    }
+
+    .preview-card-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--preview-scene-image, linear-gradient(135deg, #dce7ff, #f2f6ff));
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.06);
+      filter: saturate(114%) contrast(104%);
+    }
+
+    .preview-card-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(11, 31, 70, 0.14), rgba(255, 255, 255, 0.04)),
+        radial-gradient(circle at 20% 22%, rgba(255, 255, 255, 0.24), transparent 28%);
+    }
+
+    .preview-glass-card {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 230px);
+      min-height: 102px;
+      display: grid;
+      gap: 6px;
+      align-content: center;
+      justify-items: start;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.52);
+      box-shadow: 0 18px 34px rgba(18, 32, 61, 0.16);
+      color: #17325a;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .preview-glass-card strong {
+      font-size: 0.9rem;
+      line-height: 1.2;
+    }
+
+    .preview-card-meta {
+      font-size: 0.76rem;
+      line-height: 1.35;
+      color: #31507f;
     }
 
     #preview-input {
@@ -512,6 +777,30 @@
       border-radius: 8px;
       background: #fff;
       color: #21345e;
+    }
+
+    .preview-input-caret-proxy {
+      margin-top: 6px;
+      font-size: 0.74rem;
+      color: #5a6f95;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .preview-input-caret-proxy::after {
+      content: "";
+      width: 2px;
+      height: 14px;
+      border-radius: 999px;
+      background: var(--preview-caret-color, #245fe6);
+      animation: preview-caret-blink 1s step-end infinite;
+    }
+
+    @keyframes preview-caret-blink {
+      0%, 48% { opacity: 1; }
+      50%, 100% { opacity: 0.18; }
     }
 
     #preview-button {
@@ -526,7 +815,7 @@
 
     .preview-image {
       width: 100%;
-      height: 120px;
+      height: 148px;
       object-fit: cover;
       object-position: center;
       display: block;
@@ -579,11 +868,12 @@
     .help-box {
       border: 1px solid #d5def0;
       border-radius: 8px;
-      background: #f8fbff;
+      background: linear-gradient(135deg, rgba(248, 251, 255, 0.98), rgba(255, 247, 241, 0.9));
       padding: 8px;
       margin-top: 6px;
       font-size: 0.8rem;
       color: #33466f;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
     }
 
     .selection-guide {
@@ -599,11 +889,105 @@
     }
 
     .selection-guide-block {
-      background: rgba(255, 255, 255, 0.78);
+      background: rgba(255, 255, 255, 0.84);
       border: 1px solid #dbe4f6;
       border-radius: 8px;
       padding: 8px;
       min-width: 0;
+    }
+
+    .item-brief {
+      margin-top: 10px;
+      background: linear-gradient(135deg, rgba(238, 245, 255, 0.98), rgba(255, 244, 236, 0.92));
+      border-color: #d6e2f6;
+    }
+
+    .item-brief-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .item-brief-kicker {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #5d6f90;
+    }
+
+    .item-brief-title {
+      display: block;
+      margin-top: 2px;
+      font-size: 0.94rem;
+      color: #203562;
+    }
+
+    .item-brief-badge {
+      border: 1px solid rgba(22, 95, 199, 0.16);
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: rgba(255, 255, 255, 0.7);
+      color: #214382;
+      font-size: 0.72rem;
+      font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .item-brief-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .item-brief-block {
+      border: 1px solid #dbe4f6;
+      border-radius: 8px;
+      padding: 8px;
+      min-width: 0;
+      line-height: 1.4;
+    }
+
+    .item-brief-block:nth-child(1) {
+      background: rgba(255, 255, 255, 0.82);
+      border-color: rgba(22, 95, 199, 0.18);
+    }
+
+    .item-brief-block:nth-child(2) {
+      background: rgba(255, 247, 242, 0.84);
+      border-color: rgba(255, 122, 89, 0.22);
+    }
+
+    .item-brief-block:nth-child(3) {
+      background: rgba(244, 253, 249, 0.84);
+      border-color: rgba(33, 166, 122, 0.22);
+    }
+
+    .item-brief-block:nth-child(4) {
+      background: rgba(255, 250, 238, 0.88);
+      border-color: rgba(211, 151, 48, 0.24);
+    }
+
+    .item-brief-example {
+      display: grid;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .item-brief-syntax {
+      border: 1px dashed rgba(40, 73, 129, 0.18);
+      border-radius: 8px;
+      padding: 8px;
+      background: rgba(15, 22, 49, 0.03);
+      color: #213864;
+      font-family: Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.78rem;
+      line-height: 1.4;
+      word-break: break-word;
     }
 
     .selection-guide-block .label {
@@ -921,6 +1305,8 @@
       margin: 0 0 8px;
       font-size: 0.8rem;
       color: #4a5e87;
+      padding-left: 10px;
+      border-left: 3px solid rgba(22, 95, 199, 0.22);
     }
 
     .style-helper-grid {
@@ -1226,77 +1612,653 @@
       line-height: 1.35;
     }
 
+    body[data-theme="sunset-light"] {
+      background:
+        radial-gradient(circle at 14% 14%, rgba(242, 126, 94, 0.18), transparent 30%),
+        radial-gradient(circle at 84% 10%, rgba(255, 180, 74, 0.16), transparent 34%),
+        radial-gradient(circle at 68% 76%, rgba(55, 166, 148, 0.1), transparent 28%),
+        linear-gradient(180deg, #fff8f4 0%, #fff3ec 54%, #fffaf5 100%);
+    }
+
+    body[data-theme="sunset-light"] .top-toolbar {
+      background: linear-gradient(135deg, rgba(255, 252, 249, 0.98), rgba(255, 241, 232, 0.94));
+      border-color: #edd8ce;
+      box-shadow: 0 12px 28px rgba(121, 58, 52, 0.08);
+    }
+
+    body[data-theme="sunset-light"] .top-toolbar-title {
+      color: #6b3040;
+    }
+
+    body[data-theme="sunset-light"] .top-toolbar-note {
+      color: #7f5663;
+    }
+
+    body[data-theme="sunset-light"] .hero {
+      background: linear-gradient(135deg, #6f2940, #c85b61 44%, #f3a247 112%);
+      border-color: rgba(236, 187, 164, 0.45);
+    }
+
+    body[data-theme="sunset-light"] .card::before {
+      background: linear-gradient(90deg, #cc5b62, #f29c4c 46%, #2e9b8a);
+    }
+
+    body[data-theme="sunset-light"] button {
+      background: linear-gradient(135deg, rgba(204, 91, 98, 0.14), rgba(242, 156, 76, 0.16));
+      border-color: rgba(213, 140, 109, 0.42);
+      color: #6e3040;
+    }
+
+    body[data-theme="sunset-light"] button:hover {
+      background: linear-gradient(135deg, rgba(204, 91, 98, 0.2), rgba(242, 156, 76, 0.22));
+    }
+
+    body[data-theme="sunset-light"] .help-box {
+      background: linear-gradient(135deg, rgba(255, 249, 245, 0.98), rgba(255, 240, 231, 0.92));
+      border-color: #edd8ce;
+    }
+
+    body[data-theme="sunset-light"] .item-brief {
+      background: linear-gradient(135deg, rgba(255, 246, 241, 0.98), rgba(255, 236, 227, 0.94));
+      border-color: #ead5ca;
+    }
+
+    body[data-theme="forest-light"] {
+      background:
+        radial-gradient(circle at 14% 14%, rgba(91, 155, 112, 0.16), transparent 30%),
+        radial-gradient(circle at 84% 10%, rgba(146, 201, 94, 0.12), transparent 34%),
+        radial-gradient(circle at 68% 76%, rgba(31, 122, 140, 0.08), transparent 28%),
+        linear-gradient(180deg, #f5fbf6 0%, #eef7f0 54%, #f8fcf8 100%);
+    }
+
+    body[data-theme="forest-light"] .top-toolbar {
+      background: linear-gradient(135deg, rgba(252, 255, 252, 0.98), rgba(239, 248, 241, 0.94));
+      border-color: #d5e7d8;
+      box-shadow: 0 12px 28px rgba(47, 92, 59, 0.08);
+    }
+
+    body[data-theme="forest-light"] .top-toolbar-title {
+      color: #24533a;
+    }
+
+    body[data-theme="forest-light"] .top-toolbar-note {
+      color: #557964;
+    }
+
+    body[data-theme="forest-light"] .hero {
+      background: linear-gradient(135deg, #214f39, #2f7f61 48%, #8ebd4d 112%);
+      border-color: rgba(166, 211, 173, 0.44);
+    }
+
+    body[data-theme="forest-light"] .card::before {
+      background: linear-gradient(90deg, #2b8c61, #83b944 48%, #2f7a99);
+    }
+
+    body[data-theme="forest-light"] button {
+      background: linear-gradient(135deg, rgba(43, 140, 97, 0.14), rgba(131, 185, 68, 0.14));
+      border-color: rgba(99, 154, 92, 0.36);
+      color: #234a36;
+    }
+
+    body[data-theme="forest-light"] button:hover {
+      background: linear-gradient(135deg, rgba(43, 140, 97, 0.2), rgba(131, 185, 68, 0.2));
+    }
+
+    body[data-theme="forest-light"] .help-box {
+      background: linear-gradient(135deg, rgba(247, 252, 247, 0.98), rgba(238, 247, 239, 0.92));
+      border-color: #d5e6d8;
+    }
+
+    body[data-theme="forest-light"] .item-brief {
+      background: linear-gradient(135deg, rgba(245, 252, 246, 0.98), rgba(235, 247, 238, 0.94));
+      border-color: #d1e2d5;
+    }
+
+    body[data-theme="lavender-paper"] {
+      background:
+        radial-gradient(circle at 14% 14%, rgba(173, 135, 234, 0.16), transparent 30%),
+        radial-gradient(circle at 84% 10%, rgba(123, 148, 255, 0.12), transparent 34%),
+        radial-gradient(circle at 68% 76%, rgba(255, 166, 204, 0.1), transparent 28%),
+        linear-gradient(180deg, #faf8ff 0%, #f3f0ff 54%, #fcfbff 100%);
+    }
+
+    body[data-theme="lavender-paper"] .top-toolbar {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(245, 240, 255, 0.94));
+      border-color: #e2daf5;
+      box-shadow: 0 12px 28px rgba(86, 64, 132, 0.08);
+    }
+
+    body[data-theme="lavender-paper"] .top-toolbar-title {
+      color: #503b7b;
+    }
+
+    body[data-theme="lavender-paper"] .top-toolbar-note {
+      color: #77659f;
+    }
+
+    body[data-theme="lavender-paper"] .hero {
+      background: linear-gradient(135deg, #48336f, #6f58b7 48%, #e28bc8 112%);
+      border-color: rgba(205, 190, 241, 0.45);
+    }
+
+    body[data-theme="lavender-paper"] .card::before {
+      background: linear-gradient(90deg, #7f63cf, #d780bc 50%, #6e8ded);
+    }
+
+    body[data-theme="lavender-paper"] button {
+      background: linear-gradient(135deg, rgba(127, 99, 207, 0.14), rgba(215, 128, 188, 0.14));
+      border-color: rgba(154, 129, 214, 0.38);
+      color: #4a366f;
+    }
+
+    body[data-theme="lavender-paper"] button:hover {
+      background: linear-gradient(135deg, rgba(127, 99, 207, 0.22), rgba(215, 128, 188, 0.2));
+    }
+
+    body[data-theme="lavender-paper"] .help-box {
+      background: linear-gradient(135deg, rgba(251, 249, 255, 0.98), rgba(244, 239, 255, 0.92));
+      border-color: #e1d8f4;
+    }
+
+    body[data-theme="lavender-paper"] .item-brief {
+      background: linear-gradient(135deg, rgba(248, 244, 255, 0.98), rgba(242, 235, 255, 0.94));
+      border-color: #ddd2f2;
+    }
+
+    body[data-theme="mint-frost"] {
+      background:
+        radial-gradient(circle at 14% 14%, rgba(82, 208, 179, 0.14), transparent 30%),
+        radial-gradient(circle at 84% 10%, rgba(106, 186, 255, 0.14), transparent 34%),
+        radial-gradient(circle at 68% 76%, rgba(188, 236, 228, 0.18), transparent 28%),
+        linear-gradient(180deg, #f3fffd 0%, #ecfbf7 54%, #f7fffd 100%);
+    }
+
+    body[data-theme="mint-frost"] .top-toolbar {
+      background: linear-gradient(135deg, rgba(252, 255, 255, 0.98), rgba(236, 250, 247, 0.94));
+      border-color: #d4ece6;
+      box-shadow: 0 12px 28px rgba(45, 113, 102, 0.08);
+    }
+
+    body[data-theme="mint-frost"] .top-toolbar-title {
+      color: #1f5860;
+    }
+
+    body[data-theme="mint-frost"] .top-toolbar-note {
+      color: #567d84;
+    }
+
+    body[data-theme="mint-frost"] .hero {
+      background: linear-gradient(135deg, #16616f, #2e94a8 48%, #65c8aa 112%);
+      border-color: rgba(167, 225, 217, 0.46);
+    }
+
+    body[data-theme="mint-frost"] .card::before {
+      background: linear-gradient(90deg, #2e94a8, #61c5a4 50%, #6baeff);
+    }
+
+    body[data-theme="mint-frost"] button {
+      background: linear-gradient(135deg, rgba(46, 148, 168, 0.14), rgba(97, 197, 164, 0.14));
+      border-color: rgba(92, 172, 164, 0.36);
+      color: #20565c;
+    }
+
+    body[data-theme="mint-frost"] button:hover {
+      background: linear-gradient(135deg, rgba(46, 148, 168, 0.22), rgba(97, 197, 164, 0.2));
+    }
+
+    body[data-theme="mint-frost"] .help-box {
+      background: linear-gradient(135deg, rgba(246, 255, 253, 0.98), rgba(236, 249, 245, 0.92));
+      border-color: #d3e9e4;
+    }
+
+    body[data-theme="mint-frost"] .item-brief {
+      background: linear-gradient(135deg, rgba(243, 255, 251, 0.98), rgba(232, 248, 242, 0.94));
+      border-color: #cfe5df;
+    }
+
+    body[data-theme="aurora-dawn"] {
+      background:
+        radial-gradient(circle at 14% 14%, rgba(112, 134, 255, 0.16), transparent 30%),
+        radial-gradient(circle at 84% 10%, rgba(255, 134, 149, 0.14), transparent 34%),
+        radial-gradient(circle at 68% 76%, rgba(112, 211, 188, 0.1), transparent 28%),
+        linear-gradient(180deg, #f7f8ff 0%, #eff2ff 54%, #fbfcff 100%);
+    }
+
+    body[data-theme="aurora-dawn"] .top-toolbar {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(242, 246, 255, 0.94));
+      border-color: #d8e0f5;
+      box-shadow: 0 12px 28px rgba(56, 73, 129, 0.08);
+    }
+
+    body[data-theme="aurora-dawn"] .top-toolbar-title {
+      color: #324671;
+    }
+
+    body[data-theme="aurora-dawn"] .top-toolbar-note {
+      color: #6476a3;
+    }
+
+    body[data-theme="aurora-dawn"] .hero {
+      background: linear-gradient(135deg, #293b74, #5c63c8 48%, #ff8d8f 112%);
+      border-color: rgba(183, 194, 244, 0.45);
+    }
+
+    body[data-theme="aurora-dawn"] .card::before {
+      background: linear-gradient(90deg, #5967d6, #ff8a8f 50%, #52c6a9);
+    }
+
+    body[data-theme="aurora-dawn"] button {
+      background: linear-gradient(135deg, rgba(89, 103, 214, 0.14), rgba(255, 138, 143, 0.14));
+      border-color: rgba(128, 142, 223, 0.36);
+      color: #324571;
+    }
+
+    body[data-theme="aurora-dawn"] button:hover {
+      background: linear-gradient(135deg, rgba(89, 103, 214, 0.22), rgba(255, 138, 143, 0.22));
+    }
+
+    body[data-theme="aurora-dawn"] .help-box {
+      background: linear-gradient(135deg, rgba(249, 250, 255, 0.98), rgba(241, 244, 255, 0.92));
+      border-color: #d9e1f4;
+    }
+
+    body[data-theme="aurora-dawn"] .item-brief {
+      background: linear-gradient(135deg, rgba(247, 248, 255, 0.98), rgba(238, 241, 255, 0.94));
+      border-color: #d3dbf0;
+    }
+
+    body[data-theme="citrus-pop"] {
+      background:
+        radial-gradient(circle at 14% 14%, rgba(255, 193, 77, 0.18), transparent 30%),
+        radial-gradient(circle at 84% 10%, rgba(255, 122, 89, 0.14), transparent 34%),
+        radial-gradient(circle at 68% 76%, rgba(127, 197, 82, 0.12), transparent 28%),
+        linear-gradient(180deg, #fffdf4 0%, #fff8df 54%, #fffef7 100%);
+    }
+
+    body[data-theme="citrus-pop"] .top-toolbar {
+      background: linear-gradient(135deg, rgba(255, 255, 250, 0.98), rgba(255, 248, 223, 0.94));
+      border-color: #efe2b8;
+      box-shadow: 0 12px 28px rgba(132, 101, 30, 0.08);
+    }
+
+    body[data-theme="citrus-pop"] .top-toolbar-title {
+      color: #745414;
+    }
+
+    body[data-theme="citrus-pop"] .top-toolbar-note {
+      color: #8b7242;
+    }
+
+    body[data-theme="citrus-pop"] .hero {
+      background: linear-gradient(135deg, #8a4d15, #d88d24 46%, #7cbc43 112%);
+      border-color: rgba(235, 211, 145, 0.46);
+    }
+
+    body[data-theme="citrus-pop"] .card::before {
+      background: linear-gradient(90deg, #d98a18, #f0c33f 50%, #79b84b);
+    }
+
+    body[data-theme="citrus-pop"] button {
+      background: linear-gradient(135deg, rgba(217, 138, 24, 0.14), rgba(121, 184, 75, 0.14));
+      border-color: rgba(191, 158, 73, 0.36);
+      color: #6f4a18;
+    }
+
+    body[data-theme="citrus-pop"] button:hover {
+      background: linear-gradient(135deg, rgba(217, 138, 24, 0.22), rgba(121, 184, 75, 0.2));
+    }
+
+    body[data-theme="citrus-pop"] .help-box {
+      background: linear-gradient(135deg, rgba(255, 254, 247, 0.98), rgba(255, 247, 220, 0.92));
+      border-color: #eddfce;
+    }
+
+    body[data-theme="citrus-pop"] .item-brief {
+      background: linear-gradient(135deg, rgba(255, 251, 238, 0.98), rgba(255, 244, 212, 0.94));
+      border-color: #ead9a9;
+    }
+
+    body[data-theme="slate-dark"] {
+      background:
+        radial-gradient(circle at 14% 14%, rgba(78, 115, 199, 0.22), transparent 30%),
+        radial-gradient(circle at 84% 10%, rgba(45, 170, 153, 0.14), transparent 34%),
+        radial-gradient(circle at 68% 76%, rgba(240, 154, 88, 0.08), transparent 28%),
+        linear-gradient(180deg, #0b1220 0%, #11192c 54%, #0d1627 100%);
+      color: #e8efff;
+    }
+
+    body[data-theme="midnight-teal"] {
+      background:
+        radial-gradient(circle at 14% 14%, rgba(59, 177, 188, 0.2), transparent 30%),
+        radial-gradient(circle at 84% 10%, rgba(74, 118, 220, 0.16), transparent 34%),
+        radial-gradient(circle at 68% 76%, rgba(111, 227, 212, 0.08), transparent 28%),
+        linear-gradient(180deg, #08131d 0%, #0d1f29 54%, #091822 100%);
+      color: #e8efff;
+    }
+
+    body[data-theme="rose-noir"] {
+      background:
+        radial-gradient(circle at 14% 14%, rgba(183, 76, 121, 0.2), transparent 30%),
+        radial-gradient(circle at 84% 10%, rgba(244, 113, 160, 0.12), transparent 34%),
+        radial-gradient(circle at 68% 76%, rgba(124, 78, 255, 0.08), transparent 28%),
+        linear-gradient(180deg, #130d17 0%, #1a1120 54%, #140e19 100%);
+      color: #e8efff;
+    }
+
+    body[data-theme="ember-dark"] {
+      background:
+        radial-gradient(circle at 14% 14%, rgba(232, 132, 76, 0.2), transparent 30%),
+        radial-gradient(circle at 84% 10%, rgba(255, 179, 71, 0.12), transparent 34%),
+        radial-gradient(circle at 68% 76%, rgba(186, 92, 51, 0.08), transparent 28%),
+        linear-gradient(180deg, #16100d 0%, #221712 54%, #17110e 100%);
+      color: #e8efff;
+    }
+
+    body[data-theme="midnight-teal"] .hero {
+      background: linear-gradient(135deg, #0a2430, #11566a 46%, #24a0a8 112%);
+      border-color: rgba(108, 174, 185, 0.42);
+    }
+
+    body[data-theme="midnight-teal"] .card::before {
+      background: linear-gradient(90deg, #2fb9c3, #4c74dd 46%, #79d7c6);
+    }
+
+    body[data-theme="midnight-teal"] button {
+      background: linear-gradient(135deg, rgba(47, 185, 195, 0.22), rgba(76, 116, 221, 0.18));
+      border-color: #3e6f8f;
+      color: #f4fbff;
+    }
+
+    body[data-theme="midnight-teal"] button:hover {
+      background: linear-gradient(135deg, rgba(47, 185, 195, 0.3), rgba(76, 116, 221, 0.24));
+    }
+
+    body[data-theme="rose-noir"] .hero {
+      background: linear-gradient(135deg, #281220, #5d1f4d 46%, #c95e86 112%);
+      border-color: rgba(144, 89, 130, 0.42);
+    }
+
+    body[data-theme="rose-noir"] .card::before {
+      background: linear-gradient(90deg, #d2558d, #f48aa7 46%, #8e62ff);
+    }
+
+    body[data-theme="rose-noir"] button {
+      background: linear-gradient(135deg, rgba(210, 85, 141, 0.22), rgba(142, 98, 255, 0.18));
+      border-color: #6e4d8d;
+      color: #fff6fb;
+    }
+
+    body[data-theme="rose-noir"] button:hover {
+      background: linear-gradient(135deg, rgba(210, 85, 141, 0.3), rgba(142, 98, 255, 0.24));
+    }
+
+    body[data-theme="ember-dark"] .hero {
+      background: linear-gradient(135deg, #27150f, #6a2f19 46%, #d27b2c 112%);
+      border-color: rgba(153, 98, 66, 0.42);
+    }
+
+    body[data-theme="ember-dark"] .card::before {
+      background: linear-gradient(90deg, #d27b2c, #f0b24f 46%, #d85b41);
+    }
+
+    body[data-theme="ember-dark"] button {
+      background: linear-gradient(135deg, rgba(210, 123, 44, 0.22), rgba(216, 91, 65, 0.18));
+      border-color: #865844;
+      color: #fff7ef;
+    }
+
+    body[data-theme="ember-dark"] button:hover {
+      background: linear-gradient(135deg, rgba(210, 123, 44, 0.3), rgba(216, 91, 65, 0.24));
+    }
+
+    body[data-theme-mode="dark"] .top-toolbar,
+    body[data-theme-mode="dark"] .card,
+    body[data-theme-mode="dark"] .flow-step,
+    body[data-theme-mode="dark"] .help-box,
+    body[data-theme-mode="dark"] .selection-guide-block,
+    body[data-theme-mode="dark"] .item-brief,
+    body[data-theme-mode="dark"] .item-brief-block,
+    body[data-theme-mode="dark"] .selector-coach-block,
+    body[data-theme-mode="dark"] .info-tile,
+    body[data-theme-mode="dark"] .animation-compare-slot,
+    body[data-theme-mode="dark"] .param-item,
+    body[data-theme-mode="dark"] .builder-list,
+    body[data-theme-mode="dark"] .builder-item,
+    body[data-theme-mode="dark"] .builder-vars,
+    body[data-theme-mode="dark"] .builder-var-item,
+    body[data-theme-mode="dark"] .selector-preview,
+    body[data-theme-mode="dark"] .selector-graph-list,
+    body[data-theme-mode="dark"] .selector-graph-item,
+    body[data-theme-mode="dark"] .specificity-wrap,
+    body[data-theme-mode="dark"] .disclosure,
+    body[data-theme-mode="dark"] .preview-wrap,
+    body[data-theme-mode="dark"] .preview-target,
+    body[data-theme-mode="dark"] .preview-sandbox .box,
+    body[data-theme-mode="dark"] .param-builder-slot,
+    body[data-theme-mode="dark"] .param-builder-output {
+      background: linear-gradient(180deg, rgba(17, 25, 45, 0.96), rgba(20, 30, 55, 0.94));
+      border-color: #31415f;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 18px rgba(5, 10, 22, 0.14);
+      color: #e8efff;
+    }
+
+    body[data-theme="slate-dark"] .hero {
+      background: linear-gradient(135deg, #0f1d37, #153460 46%, #1d6c83 112%);
+      border-color: rgba(78, 121, 168, 0.48);
+      color: #f5f8ff;
+    }
+
+    body[data-theme="slate-dark"] .hero::after {
+      background: radial-gradient(circle, rgba(161, 204, 255, 0.22), rgba(255, 255, 255, 0));
+    }
+
+    body[data-theme="slate-dark"] .card::before {
+      background: linear-gradient(90deg, #5ca8ff, #49d2b6 48%, #f8a26a);
+    }
+
+    body[data-theme-mode="dark"] h2,
+    body[data-theme-mode="dark"] .label,
+    body[data-theme-mode="dark"] .param-title,
+    body[data-theme-mode="dark"] .animation-compare-status,
+    body[data-theme-mode="dark"] .top-toolbar-title,
+    body[data-theme-mode="dark"] .flow-step strong,
+    body[data-theme-mode="dark"] .preview-title,
+    body[data-theme-mode="dark"] .disclosure summary {
+      color: #edf3ff;
+    }
+
+    body[data-theme-mode="dark"] .tiny,
+    body[data-theme-mode="dark"] .step-hint,
+    body[data-theme-mode="dark"] .top-toolbar-note,
+    body[data-theme-mode="dark"] .flow-step p,
+    body[data-theme-mode="dark"] .input-hint,
+    body[data-theme-mode="dark"] .preview-formio-meta,
+    body[data-theme-mode="dark"] .preview-formio-label,
+    body[data-theme-mode="dark"] .preview-formio-inline-check .form-check-label,
+    body[data-theme-mode="dark"] .param-help {
+      color: #b9c9e8;
+    }
+
+    body[data-theme-mode="dark"] select,
+    body[data-theme-mode="dark"] input,
+    body[data-theme-mode="dark"] textarea,
+    body[data-theme-mode="dark"] button {
+      background: linear-gradient(180deg, rgba(17, 26, 47, 0.98), rgba(13, 22, 39, 0.96));
+      border-color: #364867;
+      color: #eef4ff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(2, 8, 20, 0.22);
+    }
+
+    body[data-theme-mode="dark"] select:focus,
+    body[data-theme-mode="dark"] input:focus,
+    body[data-theme-mode="dark"] textarea:focus {
+      border-color: rgba(92, 168, 255, 0.74);
+      box-shadow: 0 0 0 4px rgba(92, 168, 255, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    body[data-theme="slate-dark"] button {
+      background: linear-gradient(135deg, rgba(92, 168, 255, 0.2), rgba(73, 210, 182, 0.18));
+      border-color: #48729a;
+      color: #f7fbff;
+    }
+
+    body[data-theme="slate-dark"] button:hover {
+      background: linear-gradient(135deg, rgba(92, 168, 255, 0.28), rgba(73, 210, 182, 0.24));
+    }
+
+    body[data-theme-mode="dark"] .workspace-tab {
+      background: rgba(17, 27, 48, 0.92);
+      border-color: #40577a;
+      color: #dce7fb;
+    }
+
+    body[data-theme-mode="dark"] .workspace-tab-active {
+      background: linear-gradient(135deg, #2c5ea9, #3ca2bf);
+      border-color: #2c5ea9;
+      color: #ffffff;
+      box-shadow: 0 10px 22px rgba(7, 18, 36, 0.42);
+    }
+
+    body[data-theme-mode="dark"] .disclosure summary::after {
+      color: #9fc1ff;
+    }
+
+    body[data-theme-mode="dark"] .preview-panel-active {
+      background: linear-gradient(135deg, rgba(92, 168, 255, 0.12), rgba(73, 210, 182, 0.1));
+      box-shadow: inset 0 0 0 1px rgba(92, 168, 255, 0.24);
+    }
+
+    body[data-theme-mode="dark"] .preview-panel-support {
+      background: linear-gradient(135deg, rgba(92, 168, 255, 0.09), rgba(73, 210, 182, 0.06));
+      box-shadow: inset 0 0 0 1px rgba(92, 168, 255, 0.16);
+    }
+
+    body[data-theme-mode="dark"] .preview-formio-choices .choices__inner,
+    body[data-theme-mode="dark"] .preview-formio-choices .choices__list--dropdown,
+    body[data-theme-mode="dark"] .preview-formio-datagrid .datagrid-table,
+    body[data-theme-mode="dark"] .preview-formio-addon,
+    body[data-theme-mode="dark"] .preview-formio-input-group .btn,
+    body[data-theme-mode="dark"] .preview-card-stage,
+    body[data-theme-mode="dark"] #preview-input,
+    body[data-theme-mode="dark"] #preview-button {
+      background: linear-gradient(180deg, rgba(18, 28, 49, 0.98), rgba(14, 22, 38, 0.96));
+      border-color: #3a4d70;
+      color: #edf3ff;
+    }
+
+    body[data-theme-mode="dark"] .preview-formio-choices .choices__item,
+    body[data-theme-mode="dark"] .preview-formio-file-copy,
+    body[data-theme-mode="dark"] .preview-formio-datagrid .datagrid-table,
+    body[data-theme-mode="dark"] .preview-formio-datagrid .datagrid-table th,
+    body[data-theme-mode="dark"] .preview-formio-datagrid .datagrid-table td {
+      color: #dfe8fb;
+    }
+
+    body[data-theme-mode="dark"] .preview-formio-datagrid .datagrid-table th,
+    body[data-theme-mode="dark"] .preview-formio-datagrid .datagrid-table td {
+      border-color: #334666;
+    }
+
+    body[data-theme-mode="dark"] .preview-overlap {
+      background: linear-gradient(140deg, rgba(18, 29, 50, 0.96), rgba(22, 36, 63, 0.94));
+    }
+
+    body[data-theme-mode="dark"] .preview-card-stage::after {
+      background:
+        linear-gradient(135deg, rgba(4, 10, 22, 0.26), rgba(14, 26, 45, 0.08)),
+        radial-gradient(circle at 20% 22%, rgba(185, 212, 255, 0.16), transparent 28%);
+    }
+
+    body[data-theme-mode="dark"] .preview-glass-card {
+      background: rgba(15, 24, 42, 0.42);
+      border-color: rgba(214, 231, 255, 0.2);
+      color: #eef4ff;
+      box-shadow: 0 18px 34px rgba(2, 8, 20, 0.34);
+    }
+
+    body[data-theme-mode="dark"] .preview-card-meta {
+      color: #bdd0ef;
+    }
+
+    body[data-theme-mode="dark"] .preview-input-caret-proxy {
+      color: #b9c9e8;
+    }
+
+    body[data-theme-mode="dark"] .specificity-meter {
+      background: #22324d;
+    }
+
+    body[data-theme-mode="dark"] .item-brief-syntax,
+    body[data-theme-mode="dark"] pre {
+      background: #0a1224;
+      border-color: #314664;
+      color: #e6eeff;
+    }
+
+    body[data-theme-mode="dark"] code {
+      background: rgba(92, 168, 255, 0.14);
+      color: #dceaff;
+    }
+
+    body[data-theme="midnight-teal"] button {
+      background: linear-gradient(135deg, rgba(47, 185, 195, 0.22), rgba(76, 116, 221, 0.18));
+      border-color: #3e6f8f;
+      color: #f4fbff;
+    }
+
+    body[data-theme="midnight-teal"] button:hover {
+      background: linear-gradient(135deg, rgba(47, 185, 195, 0.3), rgba(76, 116, 221, 0.24));
+    }
+
+    body[data-theme="rose-noir"] button {
+      background: linear-gradient(135deg, rgba(210, 85, 141, 0.22), rgba(142, 98, 255, 0.18));
+      border-color: #6e4d8d;
+      color: #fff6fb;
+    }
+
+    body[data-theme="rose-noir"] button:hover {
+      background: linear-gradient(135deg, rgba(210, 85, 141, 0.3), rgba(142, 98, 255, 0.24));
+    }
+
+    body[data-theme="ember-dark"] button {
+      background: linear-gradient(135deg, rgba(210, 123, 44, 0.22), rgba(216, 91, 65, 0.18));
+      border-color: #865844;
+      color: #fff7ef;
+    }
+
+    body[data-theme="ember-dark"] button:hover {
+      background: linear-gradient(135deg, rgba(210, 123, 44, 0.3), rgba(216, 91, 65, 0.24));
+    }
+
     .view-hidden {
       display: none !important;
     }
 
     @media (min-width: 1600px) {
-      .left,
-      .right {
-        display: contents;
+      .layout {
+        grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
+        gap: 14px;
+        align-items: start;
       }
 
-      .panel-select { grid-area: select; }
-      .panel-tweak { grid-area: tweak; }
-      .panel-recipes { grid-area: recipes; }
-      .panel-glossary { grid-area: glossary; }
-      .panel-syntax { grid-area: syntax; }
-      .panel-diff { grid-area: diff; }
-      .panel-sim { grid-area: sim; }
-      .panel-builder { grid-area: builder; }
-      .panel-preview { grid-area: preview; }
-
-      body[data-workspace-view="build"] .layout,
-      body[data-workspace-view="learn"] .layout,
-      body[data-workspace-view="advanced"] .layout,
-      body[data-workspace-view="all"] .layout {
+      .right {
         grid-template-columns:
-          minmax(320px, 0.9fr)
           minmax(320px, 0.8fr)
           minmax(640px, 1.35fr)
           minmax(700px, 1.55fr);
         gap: 14px;
         align-items: start;
       }
-
-      body[data-workspace-view="build"] .layout {
-        grid-template-areas:
-          "select syntax builder preview"
-          "tweak syntax builder preview";
-      }
-
-      body[data-workspace-view="learn"] .layout {
-        grid-template-areas:
-          "select syntax builder preview"
-          "tweak syntax builder preview"
-          "recipes syntax builder preview"
-          "glossary syntax builder preview";
-      }
-
-      body[data-workspace-view="advanced"] .layout {
-        grid-template-areas:
-          "select syntax builder preview"
-          "tweak syntax builder preview"
-          "diff syntax builder preview"
-          "sim syntax builder preview";
-      }
-
-      body[data-workspace-view="all"] .layout {
-        grid-template-areas:
-          "select syntax builder preview"
-          "tweak syntax builder preview"
-          "recipes diff builder preview"
-          "glossary sim builder preview";
-      }
     }
 
     @media (min-width: 2200px) {
-      body[data-workspace-view="build"] .layout,
-      body[data-workspace-view="learn"] .layout,
-      body[data-workspace-view="advanced"] .layout,
-      body[data-workspace-view="all"] .layout {
+      .layout {
+        grid-template-columns: minmax(360px, 460px) minmax(0, 1fr);
+        gap: 16px;
+      }
+
+      .right {
         grid-template-columns:
-          minmax(360px, 0.92fr)
           minmax(360px, 0.85fr)
           minmax(780px, 1.38fr)
           minmax(940px, 1.6fr);
@@ -1317,10 +2279,6 @@
       .right {
         grid-template-columns: 1fr;
       }
-
-      .right {
-        grid-template-areas: none;
-      }
     }
 
     @media (max-width: 900px) {
@@ -1329,6 +2287,7 @@
       }
 
       .selection-guide-grid,
+      .item-brief-grid,
       .selector-coach-grid,
       .animation-compare-grid,
       .quality-audit-grid,
@@ -1342,6 +2301,15 @@
     @media (max-width: 700px) {
       .page {
         padding: 12px;
+      }
+
+      .top-toolbar,
+      .top-toolbar-controls {
+        display: grid;
+      }
+
+      .top-toolbar-field {
+        min-width: 0;
       }
 
       .selector-graph-item,
@@ -1360,8 +2328,33 @@
     }
   </style>
 </head>
-<body data-workspace-view="build">
+<body data-workspace-view="build" data-theme="ocean-light" data-theme-mode="light">
   <div class="page">
+    <section class="top-toolbar">
+      <div>
+        <div class="top-toolbar-title">Page Theme</div>
+        <div id="theme-status" class="top-toolbar-note">Ocean Light keeps the airy blue studio look.</div>
+      </div>
+      <div class="top-toolbar-controls">
+        <div class="row top-toolbar-field">
+          <label class="label" for="theme-select">Theme</label>
+          <select id="theme-select" title="Switch the workspace look. Your selection is remembered in this browser.">
+            <option value="ocean-light">Ocean Light</option>
+            <option value="forest-light">Forest Light</option>
+            <option value="lavender-paper">Lavender Paper</option>
+            <option value="mint-frost">Mint Frost</option>
+            <option value="sunset-light">Sunset Light</option>
+            <option value="aurora-dawn">Aurora Dawn</option>
+            <option value="citrus-pop">Citrus Pop</option>
+            <option value="slate-dark">Slate Dark</option>
+            <option value="midnight-teal">Midnight Teal</option>
+            <option value="rose-noir">Rose Noir</option>
+            <option value="ember-dark">Ember Dark</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
     <section class="hero">
       <h1>Form.io A-Z Interactive Playground</h1>
       <p>Choose an HTML attribute, CSS property, or CSS function from the full A-Z lists. Tweak values and copy live syntax.</p>
@@ -1476,6 +2469,38 @@
           <div class="row">
             <label class="label" for="item">Item</label>
             <select id="item" title="Choose one attribute/property/function to edit."></select>
+          </div>
+
+          <div id="item-brief" class="help-box item-brief">
+            <div class="item-brief-header">
+              <div>
+                <div class="item-brief-kicker">Quick Item Brief</div>
+                <strong id="item-brief-title" class="item-brief-title">Choose an item to inspect it.</strong>
+              </div>
+              <div id="item-brief-badge" class="item-brief-badge">Waiting</div>
+            </div>
+            <div class="item-brief-grid">
+              <div class="item-brief-block">
+                <div class="label">What It Does</div>
+                <div id="item-brief-summary">Pick any item to see what it changes.</div>
+              </div>
+              <div class="item-brief-block">
+                <div class="label">Good For</div>
+                <div id="item-brief-ideas">Use this box to compare options before you start changing values.</div>
+              </div>
+              <div class="item-brief-block">
+                <div class="label">Limits</div>
+                <div id="item-brief-limits">Each category has different rules around reuse, browser behavior, and scope.</div>
+              </div>
+              <div class="item-brief-block">
+                <div class="label">Keep In Mind</div>
+                <div id="item-brief-notes">After selecting an item, confirm whether it should stay inline or move into reusable CSS.</div>
+              </div>
+            </div>
+            <div class="item-brief-example">
+              <div class="label">Baseline Syntax</div>
+              <div id="item-brief-syntax" class="item-brief-syntax">No item selected yet.</div>
+            </div>
           </div>
 
           <div class="inline">
@@ -1613,7 +2638,8 @@
       </div>
 
       <div class="right">
-        <section class="card panel-syntax view-core">
+        <div class="right-stack">
+          <section class="card panel-syntax view-core">
           <h2>3) Syntax</h2>
           <p class="step-hint">Template is the source pattern. Live Output is the resolved syntax from your current values.</p>
           <div class="row">
@@ -1685,7 +2711,10 @@
           </details>
         </section>
 
-        <section class="card panel-builder view-core">
+        </div>
+
+        <div class="right-builder-column">
+          <section class="card panel-builder view-core">
           <h2>4) CSS Builder</h2>
           <p class="step-hint">Use this as your stylesheet workspace: selector targeting, media layers, variables, rule stack, and presets.</p>
           <div class="row">
@@ -2490,6 +3519,14 @@
                     </select>
                   </div>
                 </div>
+                <div class="row">
+                  <label class="label" for="animation-lab-sequence-preset">Sequence Preset</label>
+                  <div class="preset-bar">
+                    <select id="animation-lab-sequence-preset" title="Choose a tuned stagger preset for the current motion package."></select>
+                    <button id="animation-lab-sequence-apply-preset" type="button">Load Sequence Preset</button>
+                  </div>
+                  <div id="animation-lab-sequence-preset-note" class="input-hint">Sequence presets translate common stagger jobs into tuned step, gap, and order defaults.</div>
+                </div>
                 <div class="info-grid">
                   <div class="info-tile">
                     <div class="label">Pattern Summary</div>
@@ -2503,12 +3540,21 @@
                     <div class="label">Review Focus</div>
                     <div id="animation-lab-sequence-focus">The planner will call out the main thing to validate before you ship a staggered motion.</div>
                   </div>
+                  <div class="info-tile">
+                    <div class="label">Coach Verdict</div>
+                    <div id="animation-lab-sequence-coach">The coach will recommend the safest stagger pattern for this motion and preview target.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Guardrail</div>
+                    <div id="animation-lab-sequence-guardrail">Sequence guardrails will call out when repeated motion drifts too far from the original user action.</div>
+                  </div>
                 </div>
                 <div class="row" style="margin-top:8px;">
                   <label class="label">Sequence CSS</label>
                   <pre id="animation-lab-sequence-css"></pre>
                 </div>
                 <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-sequence-apply-recommendation" type="button">Tune To Recommended Sequence</button>
                   <button id="animation-lab-apply-sequence" type="button">Add Sequence To CSS Builder</button>
                   <button id="animation-lab-copy-sequence" type="button">Copy Sequence CSS</button>
                 </div>
@@ -3195,7 +4241,10 @@
           <p id="builder-status" class="tiny"></p>
         </section>
 
-        <section class="card panel-preview view-core">
+        </div>
+
+        <div class="right-preview-column">
+          <section class="card panel-preview view-core">
           <h2>5) Live Preview</h2>
           <p class="step-hint">Preview target receives current live styles and auto-applied class for fast visual validation.</p>
           <div class="row">
@@ -3236,6 +4285,17 @@
             </select>
             <div id="preview-interaction-help" class="input-hint">If your rule uses Hover, Focus, Active, Disabled, or Checked, switch this dropdown to the same state to preview it.</div>
           </div>
+          <div class="row">
+            <label class="label" for="preview-image-preset">Preview Scene / Photo</label>
+            <select id="preview-image-preset" title="Switch the photo used by the Image target and the Card backdrop scene for filter and glass testing.">
+              <option value="alpine-lake">Alpine Lake</option>
+              <option value="city-neon">City Neon</option>
+              <option value="forest-trail">Forest Trail</option>
+              <option value="coast-waves">Coast Waves</option>
+              <option value="glass-office">Glass Office</option>
+            </select>
+            <div id="preview-image-note" class="input-hint">The selected photo feeds both the Image preview and the Card backdrop scene so blur, saturation, and contrast changes are easier to inspect.</div>
+          </div>
           <div class="inline">
             <button id="preview-toggle-state" type="button">Switch To Before</button>
             <span id="preview-state-text" class="preview-state-pill">Preview: After</span>
@@ -3250,11 +4310,17 @@
             <div class="preview-grid">
               <div class="preview-panel" data-preview-key="card">
                 <div class="preview-title">Card</div>
-                <div id="preview-card" class="preview-target" data-base-class="preview-target">Preview Card</div>
+                <div id="preview-card-stage" class="preview-card-stage">
+                  <div id="preview-card" class="preview-target preview-glass-card" data-base-class="preview-target preview-glass-card">
+                    <strong>Glass Card</strong>
+                    <span class="preview-card-meta">Backdrop-sensitive sample</span>
+                  </div>
+                </div>
               </div>
               <div class="preview-panel" data-preview-key="input">
                 <div class="preview-title">Input</div>
                 <input id="preview-input" class="preview-target" data-base-class="preview-target" placeholder="Preview Input" />
+                <div id="preview-input-caret-proxy" class="preview-input-caret-proxy">Caret demo</div>
               </div>
               <div class="preview-panel" data-preview-key="button">
                 <div class="preview-title">Button</div>
@@ -3266,8 +4332,8 @@
                   id="preview-image"
                   class="preview-target preview-image"
                   data-base-class="preview-target preview-image"
-                  alt="Preview Image"
-                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23dce9ff'/%3E%3Cstop offset='1' stop-color='%23b5cffb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='320' height='180' fill='url(%23g)'/%3E%3Ccircle cx='78' cy='64' r='28' fill='%23ffffff66'/%3E%3Crect x='30' y='118' width='260' height='28' rx='8' fill='%23ffffff88'/%3E%3C/svg%3E"
+                  alt="Mountain lake with tree line"
+                  src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
                 />
               </div>
               <div class="preview-panel" data-preview-key="overlap">
@@ -3583,6 +4649,7 @@
             </div>
           </div>
         </section>
+        </div>
       </div>
     </div>
 
@@ -3765,6 +4832,8 @@ translateY()	translateY(<length|percentage>)
       const elCategoryGuideScope = document.getElementById("category-guide-scope");
       const elCategoryGuideOutput = document.getElementById("category-guide-output");
       const elCategoryGuideBest = document.getElementById("category-guide-best");
+      const elThemeSelect = document.getElementById("theme-select");
+      const elThemeStatus = document.getElementById("theme-status");
       const elSearch = document.getElementById("search");
       const elItem = document.getElementById("item");
       const elTarget = document.getElementById("target");
@@ -3795,6 +4864,13 @@ translateY()	translateY(<length|percentage>)
       const elSelectorSimRootInfo = document.getElementById("selector-sim-root-info");
       const elSelectorSimStage = document.getElementById("selector-sim-stage");
       const elParams = document.getElementById("params");
+      const elItemBriefTitle = document.getElementById("item-brief-title");
+      const elItemBriefBadge = document.getElementById("item-brief-badge");
+      const elItemBriefSummary = document.getElementById("item-brief-summary");
+      const elItemBriefIdeas = document.getElementById("item-brief-ideas");
+      const elItemBriefLimits = document.getElementById("item-brief-limits");
+      const elItemBriefNotes = document.getElementById("item-brief-notes");
+      const elItemBriefSyntax = document.getElementById("item-brief-syntax");
       const elSelectionGuideWhat = document.getElementById("selection-guide-what");
       const elSelectionGuideHow = document.getElementById("selection-guide-how");
       const elSelectionGuideNext = document.getElementById("selection-guide-next");
@@ -3991,10 +5067,16 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabSequenceSteps = document.getElementById("animation-lab-sequence-steps");
       const elAnimationLabSequenceGap = document.getElementById("animation-lab-sequence-gap");
       const elAnimationLabSequenceOrder = document.getElementById("animation-lab-sequence-order");
+      const elAnimationLabSequencePreset = document.getElementById("animation-lab-sequence-preset");
+      const elAnimationLabSequenceApplyPreset = document.getElementById("animation-lab-sequence-apply-preset");
+      const elAnimationLabSequencePresetNote = document.getElementById("animation-lab-sequence-preset-note");
       const elAnimationLabSequenceSummary = document.getElementById("animation-lab-sequence-summary");
       const elAnimationLabSequenceWindow = document.getElementById("animation-lab-sequence-window");
       const elAnimationLabSequenceFocus = document.getElementById("animation-lab-sequence-focus");
+      const elAnimationLabSequenceCoach = document.getElementById("animation-lab-sequence-coach");
+      const elAnimationLabSequenceGuardrail = document.getElementById("animation-lab-sequence-guardrail");
       const elAnimationLabSequenceCss = document.getElementById("animation-lab-sequence-css");
+      const elAnimationLabSequenceApplyRecommendation = document.getElementById("animation-lab-sequence-apply-recommendation");
       const elAnimationLabApplySequence = document.getElementById("animation-lab-apply-sequence");
       const elAnimationLabCopySequence = document.getElementById("animation-lab-copy-sequence");
       const elAnimationLabSequenceNote = document.getElementById("animation-lab-sequence-note");
@@ -4199,8 +5281,12 @@ translateY()	translateY(<length|percentage>)
       const elPreviewActualBadge = document.getElementById("preview-actual-badge");
       const elPreviewInteractionState = document.getElementById("preview-interaction-state");
       const elPreviewInteractionHelp = document.getElementById("preview-interaction-help");
+      const elPreviewImagePreset = document.getElementById("preview-image-preset");
+      const elPreviewImageNote = document.getElementById("preview-image-note");
       const elPreviewActiveHelp = document.getElementById("preview-active-help");
+      const elPreviewInputCaretProxy = document.getElementById("preview-input-caret-proxy");
 
+      const previewCardStage = document.getElementById("preview-card-stage");
       const previewCard = document.getElementById("preview-card");
       const previewInput = document.getElementById("preview-input");
       const previewButton = document.getElementById("preview-button");
@@ -4259,6 +5345,9 @@ translateY()	translateY(<length|percentage>)
       });
       let triggerSyncLastChangeMessage = "Initial load. Shared trigger state not edited yet.";
 
+      let currentPreviewImageChoice = "alpine-lake";
+      let previewSupportKeys = [];
+      let previewSupportReason = "";
       const previewImageDefaultSrc = previewImage.src;
       const builderStyleTag = document.createElement("style");
       builderStyleTag.id = "builder-style";
@@ -4451,6 +5540,75 @@ translateY()	translateY(<length|percentage>)
       const PRESET_STORAGE_KEY = "formio-az-css-playground-presets-v1";
       const LIBRARY_FAVORITES_KEY = "formio-az-css-playground-library-favorites-v1";
       const ANIMATION_LAB_SESSION_STORAGE_KEY = "formio-az-css-playground-animation-lab-session-v1";
+      const THEME_STORAGE_KEY = "formio-az-css-playground-theme-v1";
+      const PREVIEW_IMAGE_STORAGE_KEY = "formio-az-css-playground-preview-image-v1";
+      const THEME_META = {
+        "ocean-light": {
+          note: "Ocean Light keeps the airy blue studio look."
+        },
+        "forest-light": {
+          note: "Forest Light leans into mossy greens and calmer natural contrast."
+        },
+        "lavender-paper": {
+          note: "Lavender Paper uses soft editorial violets with a lighter page feel."
+        },
+        "mint-frost": {
+          note: "Mint Frost keeps things bright with cool mint and icy blue accents."
+        },
+        "slate-dark": {
+          note: "Slate Dark uses deeper contrast for low-light work."
+        },
+        "sunset-light": {
+          note: "Sunset Light warms the workspace with softer coral accents."
+        },
+        "aurora-dawn": {
+          note: "Aurora Dawn mixes cool indigo with warm coral for a high-energy light theme."
+        },
+        "citrus-pop": {
+          note: "Citrus Pop brightens the UI with sunlit yellows and punchy green accents."
+        },
+        "midnight-teal": {
+          note: "Midnight Teal keeps the dark canvas but pushes it toward deep cyan and ocean blue."
+        },
+        "rose-noir": {
+          note: "Rose Noir pairs dark graphite with berry and rose neon accents."
+        },
+        "ember-dark": {
+          note: "Ember Dark introduces charcoal surfaces with copper and ember highlights."
+        }
+      };
+      const PREVIEW_IMAGE_LIBRARY = {
+        "alpine-lake": {
+          name: "Alpine Lake",
+          src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80",
+          alt: "Mountain lake with tree line",
+          note: "Mountain water and tree detail make blur, saturation, and contrast changes easy to spot."
+        },
+        "city-neon": {
+          name: "City Neon",
+          src: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=900&q=80",
+          alt: "Dense city skyline at dusk",
+          note: "Night lights and sharp edges help with glow, blur, and color-shift testing."
+        },
+        "forest-trail": {
+          name: "Forest Trail",
+          src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=80",
+          alt: "Forest path under tall trees",
+          note: "Organic greens and layered depth make filter and opacity changes read clearly."
+        },
+        "coast-waves": {
+          name: "Coast Waves",
+          src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+          alt: "Ocean wave at the shoreline",
+          note: "Bright highlights and moving water textures make contrast and blur shifts very obvious."
+        },
+        "glass-office": {
+          name: "Glass Office",
+          src: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
+          alt: "Modern glass office interior",
+          note: "Architecture lines are useful for checking glassmorphism, backdrop blur, and sharpness."
+        }
+      };
       const GUIDED_RECIPES = [
         {
           id: "frosted-card",
@@ -5030,6 +6188,62 @@ translateY()	translateY(<length|percentage>)
         gap: "120ms",
         order: "forward"
       };
+      const ANIMATION_LAB_SEQUENCE_PRESETS = [
+        {
+          id: "steady-reveal",
+          name: "Steady Reveal",
+          bestFor: "Default helper rows, cards, and repeated content that should land in a calm front-to-back sweep.",
+          guardrail: "Keep the gap moderate so the last child still feels tied to the first user action.",
+          mode: "chain",
+          steps: "3",
+          gap: "120ms",
+          order: "forward"
+        },
+        {
+          id: "dense-feedback",
+          name: "Dense Feedback",
+          bestFor: "Inputs, toggles, and compact control clusters where the sequence must stay tight and responsive.",
+          guardrail: "Short interactive states should not outlive the click or tab movement that triggered them.",
+          mode: "overlap",
+          steps: "2",
+          gap: "60ms",
+          order: "forward"
+        },
+        {
+          id: "center-callout",
+          name: "Center Callout",
+          bestFor: "Stacked highlights that should bloom from the middle out when one central message leads the moment.",
+          guardrail: "Use on short groups. Center-out reads best when the user can see the whole cluster at once.",
+          mode: "chain",
+          steps: "3",
+          gap: "120ms",
+          order: "center"
+        },
+        {
+          id: "reverse-unwind",
+          name: "Reverse Unwind",
+          bestFor: "Lists that should echo backward from the last touched item, especially for quick hover or pressed states.",
+          guardrail: "Reverse order can feel surprising, so keep the window compressed and test it on the exact repeated DOM shape.",
+          mode: "overlap",
+          steps: "3",
+          gap: "60ms",
+          order: "reverse"
+        },
+        {
+          id: "single-anchor",
+          name: "Single Anchor",
+          bestFor: "Motion packages that should stay documented in the planner but should not fan out across siblings yet.",
+          guardrail: "Use when the current motion is already busy or when repeated siblings would make the state feel noisy.",
+          mode: "single",
+          steps: "3",
+          gap: "120ms",
+          order: "forward"
+        }
+      ];
+      const ANIMATION_LAB_SEQUENCE_PRESETS_BY_ID = ANIMATION_LAB_SEQUENCE_PRESETS.reduce(function (acc, preset) {
+        acc[preset.id] = preset;
+        return acc;
+      }, {});
       const ANIMATION_LAB_PRESETS = [
         {
           id: "intro-fade",
@@ -5188,7 +6402,7 @@ translateY()	translateY(<length|percentage>)
           label: "Background Shorthand",
           defaultValue: "center / cover no-repeat",
           description: "Background shorthand can combine position, size, repeat, and other pieces in one line. Start from the sample, then swap the parts you need.",
-          inputKind: "text"
+          inputKind: "background-shorthand"
         },
         "box-shadow::blur": {
           defaultValue: "18px",
@@ -5209,19 +6423,22 @@ translateY()	translateY(<length|percentage>)
           label: "Minimum",
           defaultValue: "14px",
           description: "The smallest value clamp() can return. Use a stable floor such as 14px or 1rem.",
-          inputKind: "text"
+          inputKind: "text",
+          presets: ["12px", "14px", "1rem", "1.25rem"]
         },
         "clamp()::preferred": {
           label: "Preferred Value",
           defaultValue: "2vw",
           description: "This is the fluid middle value. It is often a viewport value like 2vw or a calc(...) expression.",
-          inputKind: "text"
+          inputKind: "text",
+          presets: ["2vw", "3vw", "calc(1rem + 1vw)"]
         },
         "clamp()::max": {
           label: "Maximum",
           defaultValue: "20px",
           description: "The largest value clamp() can return. Use a safe ceiling such as 20px or 1.25rem.",
-          inputKind: "text"
+          inputKind: "text",
+          presets: ["20px", "24px", "1.25rem", "2rem"]
         },
         "contrast()::factor": {
           defaultValue: "1.15",
@@ -5244,37 +6461,42 @@ translateY()	translateY(<length|percentage>)
           label: "Minimum Track",
           defaultValue: "140px",
           description: "Smallest size the grid track can shrink to before it stops collapsing.",
-          inputKind: "text"
+          inputKind: "text",
+          presets: ["0", "120px", "140px", "16rem"]
         },
         "minmax()::max": {
           label: "Maximum Track",
           defaultValue: "1fr",
           description: "Largest size the grid track can grow to. 1fr is the most common flexible maximum.",
-          inputKind: "text"
+          inputKind: "text",
+          presets: ["1fr", "2fr", "max-content", "320px"]
         },
         "saturate()::factor|percent": {
           label: "Saturation",
           defaultValue: "120%",
           description: "Use 1 for neutral, below 1 to mute color, or percentages like 120% to increase saturation.",
-          inputKind: "text"
+          inputKind: "factor-or-percent",
+          presets: ["100%", "120%", "140%", "1.2"]
         },
         "transform-origin::x": {
           label: "Origin X",
           defaultValue: "50%",
           description: "Horizontal origin point. Common values are 0%, 50%, 100%, left, center, or right.",
-          inputKind: "text"
+          inputKind: "origin-x",
+          presets: ["left", "center", "right", "50%"]
         },
         "transform-origin::y": {
           label: "Origin Y",
           defaultValue: "50%",
           description: "Vertical origin point. Common values are 0%, 50%, 100%, top, center, or bottom.",
-          inputKind: "text"
+          inputKind: "origin-y",
+          presets: ["top", "center", "bottom", "50%"]
         },
         "transform::transform-list": {
           label: "Transform Functions",
           defaultValue: "translateY(-4px) scale(1.02)",
           description: "Enter one or more transform functions separated by spaces. Example: translateY(-4px) scale(1.02).",
-          inputKind: "text"
+          inputKind: "transform-list"
         }
       };
       const TOKEN_OPTION_MAP = {
@@ -5318,10 +6540,28 @@ translateY()	translateY(<length|percentage>)
           description: "Space between columns. Use a size such as 16px or 1rem.",
           inputKind: "dimension"
         },
+        "color-stop-1": {
+          label: "Start Color Stop",
+          defaultValue: "#1f5fbd",
+          description: "Use a color, or a color plus an optional stop position such as #1f5fbd 0%.",
+          inputKind: "color"
+        },
+        "color-stop-2": {
+          label: "End Color Stop",
+          defaultValue: "#8bb7ff",
+          description: "Use a color, or a color plus an optional stop position such as #8bb7ff 100%.",
+          inputKind: "color"
+        },
         "end": {
           label: "End Line",
           defaultValue: "3",
           description: "Grid line where the item should end. Use a line number such as 3, span 2, or a named line.",
+          inputKind: "text"
+        },
+        "direction": {
+          label: "Animation Direction",
+          defaultValue: "alternate",
+          description: "Controls whether later animation cycles run forward, backward, or switch direction each time.",
           inputKind: "text"
         },
         "factor": {
@@ -5334,12 +6574,24 @@ translateY()	translateY(<length|percentage>)
           label: "Factor or Percent",
           defaultValue: "120%",
           description: "Use a multiplier like 1.2 or a percentage like 120%. 100% (or 1) keeps the original intensity.",
-          inputKind: "text"
+          inputKind: "factor-or-percent"
         },
         "family-list": {
           label: "Font Stack",
           defaultValue: "\"Trebuchet MS\", sans-serif",
           description: "List font families in fallback order, separated by commas. The first available font is used.",
+          inputKind: "text"
+        },
+        "filter-list": {
+          label: "Filter Functions",
+          defaultValue: "blur(6px) saturate(115%)",
+          description: "Enter one or more filter functions separated by spaces. Example: blur(6px) saturate(115%).",
+          inputKind: "filter-list"
+        },
+        "fill-mode": {
+          label: "Fill Mode",
+          defaultValue: "both",
+          description: "Decides whether animation styles apply before the first frame, after the last frame, or both.",
           inputKind: "text"
         },
         "g": {
@@ -5370,7 +6622,7 @@ translateY()	translateY(<length|percentage>)
           label: "Integer or Auto",
           defaultValue: "1",
           description: "Use a whole number for stacking order, or type auto to let the browser use the default layer.",
-          inputKind: "text"
+          inputKind: "keyword-or-number"
         },
         "l": {
           label: "Lightness",
@@ -5387,7 +6639,7 @@ translateY()	translateY(<length|percentage>)
           label: "Length or None",
           defaultValue: "800px",
           description: "Use a length such as 800px, or type none to disable the effect.",
-          inputKind: "text"
+          inputKind: "keyword-or-dimension"
         },
         "length|percentage": {
           label: "Length or Percentage",
@@ -5399,19 +6651,19 @@ translateY()	translateY(<length|percentage>)
           label: "Length, Percentage, or Auto",
           defaultValue: "50%",
           description: "Use a size like 12px or 50%, or type auto when the browser should decide.",
-          inputKind: "text"
+          inputKind: "keyword-or-dimension"
         },
         "length|percentage|none": {
           label: "Length, Percentage, or None",
           defaultValue: "50%",
           description: "Use a size like 12px or 50%, or type none to remove the limit.",
-          inputKind: "text"
+          inputKind: "keyword-or-dimension"
         },
         "number|infinite": {
           label: "Number or Infinite",
           defaultValue: "1",
           description: "Use a number such as 1, 2, or 3, or type infinite for a looping animation.",
-          inputKind: "text"
+          inputKind: "keyword-or-number"
         },
         "number|length|percentage": {
           label: "Number, Length, or Percentage",
@@ -5454,6 +6706,13 @@ translateY()	translateY(<length|percentage>)
           description: "Color intensity. Use a percentage such as 60% or 85%.",
           inputKind: "text"
         },
+        "style": {
+          label: "Line Style",
+          defaultValue: "solid",
+          description: "Choose the visible line pattern used by borders or outlines.",
+          options: ["solid", "dashed", "dotted", "double", "none"],
+          inputKind: "text"
+        },
         "shorthand": {
           label: "Shorthand Value",
           defaultValue: "center / cover no-repeat",
@@ -5483,6 +6742,18 @@ translateY()	translateY(<length|percentage>)
           description: "Top side value. Use a size such as 12px or a percentage such as 5%.",
           inputKind: "dimension"
         },
+        "tx": {
+          label: "Translate X",
+          defaultValue: "10px",
+          description: "Horizontal move. Use a length or percentage such as 10px or 50%.",
+          inputKind: "dimension"
+        },
+        "ty": {
+          label: "Translate Y",
+          defaultValue: "10px",
+          description: "Vertical move. Use a length or percentage such as 10px or 50%.",
+          inputKind: "dimension"
+        },
         "track-list": {
           label: "Grid Tracks",
           defaultValue: "1fr 1fr",
@@ -5505,7 +6776,7 @@ translateY()	translateY(<length|percentage>)
           label: "X / Y Position",
           defaultValue: "50% 50%",
           description: "Enter two positions separated by a space, such as 50% 50% or left top.",
-          inputKind: "text"
+          inputKind: "position-pair"
         },
         "z": {
           label: "Z Offset",
@@ -5514,6 +6785,49 @@ translateY()	translateY(<length|percentage>)
           inputKind: "dimension"
         }
       };
+      const TRANSFORM_BUILDER_TYPES = [
+        { value: "", label: "Off" },
+        { value: "translateY", label: "Translate Y" },
+        { value: "translateX", label: "Translate X" },
+        { value: "translate", label: "Translate X / Y" },
+        { value: "scale", label: "Scale" },
+        { value: "scaleX", label: "Scale X" },
+        { value: "scaleY", label: "Scale Y" },
+        { value: "rotate", label: "Rotate" },
+        { value: "skewX", label: "Skew X" },
+        { value: "skewY", label: "Skew Y" },
+        { value: "custom", label: "Custom Function" }
+      ];
+      const FILTER_BUILDER_TYPES = [
+        { value: "", label: "Off" },
+        { value: "blur", label: "Blur" },
+        { value: "brightness", label: "Brightness" },
+        { value: "contrast", label: "Contrast" },
+        { value: "saturate", label: "Saturate" },
+        { value: "opacity", label: "Opacity" },
+        { value: "grayscale", label: "Grayscale" },
+        { value: "sepia", label: "Sepia" },
+        { value: "hue-rotate", label: "Hue Rotate" },
+        { value: "custom", label: "Custom Filter" }
+      ];
+      const BACKGROUND_POSITION_OPTIONS = [
+        "center",
+        "top",
+        "bottom",
+        "left",
+        "right",
+        "top left",
+        "top center",
+        "top right",
+        "center left",
+        "center right",
+        "bottom left",
+        "bottom center",
+        "bottom right"
+      ];
+      const BACKGROUND_SIZE_OPTIONS = ["cover", "contain", "auto", "100% 100%"];
+      const BACKGROUND_REPEAT_OPTIONS = ["no-repeat", "repeat", "repeat-x", "repeat-y"];
+      const BACKGROUND_ATTACHMENT_OPTIONS = ["scroll", "fixed"];
       const PREVIEW_STATE_SELECTOR_MAP = {
         hover: { pseudo: ":hover", className: "is-preview-hover", label: "Hover" },
         focus: { pseudo: ":focus", className: "is-preview-focus", label: "Focus" },
@@ -7140,7 +8454,7 @@ translateY()	translateY(<length|percentage>)
         if (meta && Object.prototype.hasOwnProperty.call(meta, "defaultValue")) {
           return meta.defaultValue;
         }
-        const t = token.toLowerCase();
+        const t = String(token || "").toLowerCase();
         if (t.indexOf("color") >= 0) return "#1f5fbd";
         if (t.indexOf("time") >= 0 || t.indexOf("duration") >= 0 || t.indexOf("delay") >= 0) return "200ms";
         if (t.indexOf("angle") >= 0) return "120deg";
@@ -9139,6 +10453,31 @@ translateY()	translateY(<length|percentage>)
         applyAnimationLabPreset();
       }
 
+      function selectedAnimationLabSequencePreset() {
+        const id = (((elAnimationLabSequencePreset && elAnimationLabSequencePreset.value) || "") + "").trim();
+        if (!id || id === "__custom__") return null;
+        return ANIMATION_LAB_SEQUENCE_PRESETS_BY_ID[id] || null;
+      }
+
+      function renderAnimationLabSequencePresetList() {
+        if (!elAnimationLabSequencePreset) return;
+        const prev = (elAnimationLabSequencePreset.value || "").trim();
+        elAnimationLabSequencePreset.innerHTML = "";
+        [{ id: "__custom__", name: "Custom Sequence" }].concat(ANIMATION_LAB_SEQUENCE_PRESETS.map(function (preset) {
+          return { id: preset.id, name: preset.name };
+        })).forEach(function (entry) {
+          const opt = document.createElement("option");
+          opt.value = entry.id;
+          opt.textContent = entry.name;
+          elAnimationLabSequencePreset.appendChild(opt);
+        });
+        if (Array.from(elAnimationLabSequencePreset.options).some(function (option) { return option.value === prev; })) {
+          elAnimationLabSequencePreset.value = prev;
+        } else {
+          elAnimationLabSequencePreset.value = "__custom__";
+        }
+      }
+
       function animationLabPresetValues() {
         return {
           presetId: (elAnimationLabPreset.value || "").trim(),
@@ -9176,6 +10515,76 @@ translateY()	translateY(<length|percentage>)
           gap: elAnimationLabSequenceGap ? elAnimationLabSequenceGap.value : DEFAULT_ANIMATION_LAB_SEQUENCE.gap,
           order: elAnimationLabSequenceOrder ? elAnimationLabSequenceOrder.value : DEFAULT_ANIMATION_LAB_SEQUENCE.order
         });
+      }
+
+      function animationLabSequenceMatchesPreset(sequence, preset) {
+        const plan = normalizeAnimationLabSequenceValueState(sequence);
+        if (!preset) return false;
+        return ["mode", "steps", "gap", "order"].every(function (key) {
+          return String(plan[key] || "").trim() === String(preset[key] || "").trim();
+        });
+      }
+
+      function matchingAnimationLabSequencePreset(sequence) {
+        const plan = normalizeAnimationLabSequenceValueState(sequence);
+        return ANIMATION_LAB_SEQUENCE_PRESETS.find(function (preset) {
+          return animationLabSequenceMatchesPreset(plan, preset);
+        }) || null;
+      }
+
+      function animationLabSequenceRecommendation(values, sequence, entries) {
+        const motion = cloneAnimationLabValueState(values);
+        const plan = normalizeAnimationLabSequenceValueState(sequence);
+        const list = Array.isArray(entries) ? entries : [];
+        const targetMeta = animationLabSurfaceMeta((elTarget.value || "card").trim());
+        const durationMs = parseAnimationLabTimeMs(motion.duration);
+        const cycles = animationLabCycleCount(motion);
+        let presetId = "steady-reveal";
+        let verdict = "Steady Reveal is the recommended baseline for this motion package.";
+        let guardrail = "Keep the last child close to the initial trigger so the stagger still feels like one event.";
+
+        if (!motion.trigger && (cycles === Infinity || motion.keyframes === "spin" || motion.keyframes === "shimmer")) {
+          presetId = "single-anchor";
+          verdict = "Single Anchor is safer because this motion is ambient or continuous, so cloning it across siblings would add avoidable noise.";
+          guardrail = "Let one anchor carry the motion, then use static styling on nearby siblings so the UI does not become a moving wall.";
+        } else if (motion.trigger === ":active") {
+          presetId = "dense-feedback";
+          verdict = "Dense Feedback is recommended for pressed states so the sequence acknowledges the action immediately and clears fast.";
+          guardrail = "Pressed sequences should be extremely short. If the effect feels like input lag, switch to Single Anchor or shorten the base motion first.";
+        } else if (motion.trigger === ":focus" || motion.trigger === ":focus-visible") {
+          presetId = targetMeta.dense ? "dense-feedback" : "center-callout";
+          verdict = presetId === "dense-feedback"
+            ? "Dense Feedback is recommended because keyboard focus on dense controls should move as one tight acknowledgment."
+            : "Center Callout is recommended because the current focus cue reads better when it blooms around one visible center point.";
+          guardrail = "Tab through the exact field order and confirm the sequence reinforces the focus ring instead of delaying it.";
+        } else if (targetMeta.dense && (list.length >= 4 || durationMs >= 700)) {
+          presetId = "dense-feedback";
+          verdict = "Dense Feedback is recommended because the current target is compact and the sequence window should stay compressed.";
+          guardrail = "Dense layouts lose clarity quickly. Keep steps low and gaps tight so the final child is still within the same scan pass.";
+        } else if (motion.trigger === ":hover" && targetMeta.pointer && !targetMeta.dense) {
+          presetId = "reverse-unwind";
+          verdict = "Reverse Unwind is recommended for pointer-first surfaces when the last touched edge should react first and echo back.";
+          guardrail = "Hover-only reverse motion can feel playful, but it should never make the hover target harder to track.";
+        } else if (targetMeta.family === "surface" && list.length >= 3) {
+          presetId = "center-callout";
+          verdict = "Center Callout is recommended because broader content surfaces can support a more expressive center-out spread.";
+          guardrail = "Use center-out only when the grouped siblings are visible together and still read as one cluster.";
+        }
+
+        const preset = ANIMATION_LAB_SEQUENCE_PRESETS_BY_ID[presetId];
+        const patch = {};
+        ["mode", "steps", "gap", "order"].forEach(function (key) {
+          if (String(plan[key] || "").trim() !== String(preset[key] || "").trim()) {
+            patch[key] = preset[key];
+          }
+        });
+
+        return {
+          preset: preset,
+          verdict: verdict,
+          guardrail: guardrail,
+          patch: patch
+        };
       }
 
       function animationLabTriggerLabel(trigger) {
@@ -11407,6 +12816,8 @@ translateY()	translateY(<length|percentage>)
         const surface = animationLabSurfaceAssessment(values);
         const intent = animationLabIntentPlan(values);
         const forge = animationLabVariantForge(values);
+        const sequencePreset = matchingAnimationLabSequencePreset(sequence);
+        const sequenceRecommendation = animationLabSequenceRecommendation(values, sequence, sequenceEntries);
         const reviewEntries = animationLabTriggerReviewEntries(values);
         const bestReview = animationLabBestReviewEntry(reviewEntries);
         const anatomy = animationLabKeyframeAnatomy(values);
@@ -11532,7 +12943,32 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabSequenceSummary.textContent = animationLabSequenceSummary(sequence, sequenceEntries);
         elAnimationLabSequenceWindow.textContent = animationLabSequenceWindowSummary(values, sequenceEntries);
         elAnimationLabSequenceFocus.textContent = animationLabSequenceFocus(values, sequence, sequenceEntries);
+        if (elAnimationLabSequencePresetNote) {
+          elAnimationLabSequencePresetNote.textContent = sequencePreset
+            ? sequencePreset.name + " is active. " + sequencePreset.bestFor
+            : "Custom sequence is active. " + sequenceRecommendation.verdict;
+        }
+        if (elAnimationLabSequenceCoach) {
+          elAnimationLabSequenceCoach.textContent = sequenceRecommendation.verdict;
+        }
+        if (elAnimationLabSequenceGuardrail) {
+          elAnimationLabSequenceGuardrail.textContent = sequenceRecommendation.guardrail;
+        }
         elAnimationLabSequenceCss.textContent = sequenceCss;
+        if (elAnimationLabSequenceApplyRecommendation) {
+          elAnimationLabSequenceApplyRecommendation.disabled = !Object.keys(sequenceRecommendation.patch).length;
+          elAnimationLabSequenceApplyRecommendation.textContent = Object.keys(sequenceRecommendation.patch).length
+            ? "Tune To " + sequenceRecommendation.preset.name
+            : "Already On Recommended Sequence";
+        }
+        if (elAnimationLabSequenceApplyPreset) {
+          const selectedPreset = selectedAnimationLabSequencePreset();
+          const selectedAlreadyActive = Boolean(selectedPreset && sequencePreset && sequencePreset.id === selectedPreset.id);
+          elAnimationLabSequenceApplyPreset.disabled = !selectedPreset || selectedAlreadyActive;
+          elAnimationLabSequenceApplyPreset.textContent = selectedPreset
+            ? (selectedAlreadyActive ? "Already On " + selectedPreset.name : "Load " + selectedPreset.name)
+            : "Load Sequence Preset";
+        }
         elAnimationLabApplySequence.textContent = sequence.mode === "single"
           ? "Add Single Selector To Builder"
           : "Add Sequence To CSS Builder";
@@ -11602,6 +13038,45 @@ translateY()	translateY(<length|percentage>)
         );
         syncBuilderPseudoFromAnimationLab();
         updateAnimationLabOutputs();
+      }
+
+      function applyAnimationLabSequencePreset() {
+        const preset = selectedAnimationLabSequencePreset();
+        if (!preset) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Choose a named sequence preset before loading it.");
+          return;
+        }
+        if (animationLabSequenceMatchesPreset(animationLabSequenceValues(), preset)) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Sequence Planner already matches " + preset.name + ".");
+          return;
+        }
+        applyAnimationLabSequenceState(preset);
+        if (elAnimationLabSequencePreset) {
+          elAnimationLabSequencePreset.value = preset.id;
+        }
+        updateAnimationLabOutputs();
+        setBuilderStatus("Sequence Planner loaded " + preset.name + ".");
+      }
+
+      function applyAnimationLabRecommendedSequence() {
+        const sequence = animationLabSequenceValues();
+        const values = animationLabPresetValues();
+        const entries = animationLabSequenceEntries(values, sequence);
+        const recommendation = animationLabSequenceRecommendation(values, sequence, entries);
+        const patch = recommendation.patch || {};
+        if (!Object.keys(patch).length) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Sequence Planner already matches the recommended " + recommendation.preset.name + " pattern.");
+          return;
+        }
+        applyAnimationLabSequenceState(Object.assign({}, sequence, patch));
+        if (elAnimationLabSequencePreset) {
+          elAnimationLabSequencePreset.value = recommendation.preset.id;
+        }
+        updateAnimationLabOutputs();
+        setBuilderStatus("Sequence Planner tuned to the recommended " + recommendation.preset.name + " pattern.");
       }
 
       function syncPreviewInteractionToAnimationLab() {
@@ -12222,6 +13697,95 @@ translateY()	translateY(<length|percentage>)
         });
       }
 
+      function normalizeThemeChoice(value) {
+        const key = String(value || "").trim();
+        return Object.prototype.hasOwnProperty.call(THEME_META, key) ? key : "ocean-light";
+      }
+
+      function themeNoteForChoice(value) {
+        const key = normalizeThemeChoice(value);
+        return THEME_META[key] ? THEME_META[key].note : "";
+      }
+
+      function applyThemeChoice(value, persist) {
+        const next = normalizeThemeChoice(value);
+        const darkThemes = ["slate-dark", "midnight-teal", "rose-noir", "ember-dark"];
+        document.body.setAttribute("data-theme", next);
+        document.body.setAttribute("data-theme-mode", darkThemes.indexOf(next) >= 0 ? "dark" : "light");
+        if (elThemeSelect && elThemeSelect.value !== next) {
+          elThemeSelect.value = next;
+        }
+        if (elThemeStatus) {
+          elThemeStatus.textContent = themeNoteForChoice(next);
+        }
+        if (persist === false) return;
+        try {
+          localStorage.setItem(THEME_STORAGE_KEY, next);
+        } catch (err) {
+          // Theme preference is optional; ignore storage errors.
+        }
+      }
+
+      function restoreThemeChoice() {
+        let stored = "";
+        try {
+          stored = localStorage.getItem(THEME_STORAGE_KEY) || "";
+        } catch (err) {
+          stored = "";
+        }
+        applyThemeChoice(stored || document.body.getAttribute("data-theme") || "ocean-light", false);
+      }
+
+      function normalizePreviewImageChoice(value) {
+        const key = String(value || "").trim();
+        return Object.prototype.hasOwnProperty.call(PREVIEW_IMAGE_LIBRARY, key) ? key : "alpine-lake";
+      }
+
+      function previewImageDataForChoice(value) {
+        const key = normalizePreviewImageChoice(value);
+        return PREVIEW_IMAGE_LIBRARY[key];
+      }
+
+      function refreshPreviewCardCopy() {
+        if (!previewCard) return;
+        previewCard.innerHTML = "<strong>Glass Card</strong><span class=\"preview-card-meta\">Backdrop-sensitive sample</span>";
+      }
+
+      function applyPreviewImageChoice(value, persist) {
+        const next = normalizePreviewImageChoice(value);
+        const meta = previewImageDataForChoice(next);
+        currentPreviewImageChoice = next;
+        if (elPreviewImagePreset && elPreviewImagePreset.value !== next) {
+          elPreviewImagePreset.value = next;
+        }
+        if (elPreviewImageNote) {
+          elPreviewImageNote.textContent = meta.note;
+        }
+        if (previewImage) {
+          previewImage.src = meta.src;
+          previewImage.alt = meta.alt;
+        }
+        if (previewCardStage) {
+          previewCardStage.style.setProperty("--preview-scene-image", "url(\"" + meta.src + "\")");
+        }
+        if (persist === false) return;
+        try {
+          localStorage.setItem(PREVIEW_IMAGE_STORAGE_KEY, next);
+        } catch (err) {
+          // Preview image preference is optional; ignore storage errors.
+        }
+      }
+
+      function restorePreviewImageChoice() {
+        let stored = "";
+        try {
+          stored = localStorage.getItem(PREVIEW_IMAGE_STORAGE_KEY) || "";
+        } catch (err) {
+          stored = "";
+        }
+        applyPreviewImageChoice(stored || currentPreviewImageChoice, false);
+      }
+
       function readLibraryFavorites() {
         try {
           const raw = localStorage.getItem(LIBRARY_FAVORITES_KEY);
@@ -12801,6 +14365,92 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function numericInputBaseStep(input) {
+        const rawStep = String((input && input.step) || "").trim().toLowerCase();
+        if (!rawStep || rawStep === "any") return 1;
+        const parsed = Number(rawStep);
+        return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+      }
+
+      function numericInputPrecision(input) {
+        const rawStep = String((input && input.step) || "").trim().toLowerCase();
+        if (!rawStep || rawStep === "any") return 3;
+        const parts = rawStep.split(".");
+        return parts.length > 1 ? parts[1].length : 0;
+      }
+
+      function numericInputValueString(value, precision) {
+        const safePrecision = Math.max(0, Number(precision) || 0);
+        if (safePrecision <= 0) return String(Math.round(value));
+        return Number(value).toFixed(safePrecision).replace(/(\.\d*?[1-9])0+$/, "$1").replace(/\.0+$/, "");
+      }
+
+      function bumpNumericInput(input, direction, multiplier) {
+        if (!input) return;
+        const scale = Math.max(1, Number(multiplier) || 1);
+        const baseStep = numericInputBaseStep(input);
+        const precision = numericInputPrecision(input);
+        const min = parseFloat(input.min);
+        const max = parseFloat(input.max);
+        let current = input.value === "" ? NaN : parseFloat(input.value);
+        if (!Number.isFinite(current)) {
+          current = Number.isFinite(min) ? min : 0;
+        }
+        let next = current + (baseStep * scale * direction);
+        if (Number.isFinite(min)) next = Math.max(min, next);
+        if (Number.isFinite(max)) next = Math.min(max, next);
+        input.value = numericInputValueString(next, precision);
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+
+      function boostableNumberInputShell(input) {
+        if (!input) return null;
+        if (input.dataset.boostEnhanced === "true") {
+          return (input.parentNode && input.parentNode.classList && input.parentNode.classList.contains("number-boost-wrap"))
+            ? input.parentNode
+            : input;
+        }
+
+        const wrap = document.createElement("div");
+        wrap.className = "number-boost-wrap";
+
+        const controls = document.createElement("div");
+        controls.className = "number-boost-controls";
+
+        [
+          { text: "+10", direction: 1, title: "Increase by 10x the normal step" },
+          { text: "-10", direction: -1, title: "Decrease by 10x the normal step" }
+        ].forEach(function (config) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "number-boost-btn";
+          btn.textContent = config.text;
+          btn.title = config.title;
+          btn.addEventListener("click", function () {
+            bumpNumericInput(input, config.direction, 10);
+          });
+          controls.appendChild(btn);
+        });
+
+        input.dataset.boostEnhanced = "true";
+
+        if (input.parentNode) {
+          input.parentNode.insertBefore(wrap, input);
+          wrap.appendChild(input);
+        } else {
+          wrap.appendChild(input);
+        }
+        wrap.appendChild(controls);
+        return wrap;
+      }
+
+      function enhanceExistingNumberInputs() {
+        Array.from(document.querySelectorAll('input[type="number"]')).forEach(function (input) {
+          boostableNumberInputShell(input);
+        });
+      }
+
       function renderColorParamControl(wrapper, param, index) {
         const line = document.createElement("div");
         line.className = "param-inline";
@@ -12851,7 +14501,7 @@ translateY()	translateY(<length|percentage>)
         input.dataset.paramIndex = String(index);
         input.addEventListener("input", handleParamChange);
         input.addEventListener("change", handleParamChange);
-        wrapper.appendChild(input);
+        wrapper.appendChild(boostableNumberInputShell(input));
       }
 
       function renderUnitParamControl(wrapper, param, index, kind) {
@@ -12920,9 +14570,1093 @@ translateY()	translateY(<length|percentage>)
         numberInput.addEventListener("change", syncValue);
         unitSelect.addEventListener("change", syncValue);
 
-        line.appendChild(numberInput);
+        line.appendChild(boostableNumberInputShell(numberInput));
         line.appendChild(unitSelect);
         wrapper.appendChild(line);
+      }
+
+      function keywordDimensionConfigForParam(param, kind) {
+        const key = String((param && param.key) || "").trim().toLowerCase();
+        if (kind === "origin-x") {
+          return {
+            keywords: ["left", "center", "right"],
+            units: ["%", "px", "rem", "em", "vw"],
+            customLabel: "Custom X"
+          };
+        }
+        if (kind === "origin-y") {
+          return {
+            keywords: ["top", "center", "bottom"],
+            units: ["%", "px", "rem", "em", "vh"],
+            customLabel: "Custom Y"
+          };
+        }
+        if (key === "length|none") {
+          return {
+            keywords: ["none"],
+            units: ["px", "rem", "em", "%", "vw", "vh"],
+            customLabel: "Custom Size"
+          };
+        }
+        if (key === "length|percentage|auto") {
+          return {
+            keywords: ["auto"],
+            units: ["px", "rem", "em", "%", "vw", "vh"],
+            customLabel: "Custom Size"
+          };
+        }
+        if (key === "length|percentage|none") {
+          return {
+            keywords: ["none"],
+            units: ["px", "rem", "em", "%", "vw", "vh"],
+            customLabel: "Custom Size"
+          };
+        }
+        return {
+          keywords: [],
+          units: defaultUnitsForKind("dimension", (param && param.label) || ""),
+          customLabel: "Custom Value"
+        };
+      }
+
+      function renderKeywordOrDimensionParamControl(wrapper, param, index, kind) {
+        const config = keywordDimensionConfigForParam(param, kind);
+        const raw = String((param && param.value) || "").trim();
+        const numericMatch = raw.match(/^(-?\d*\.?\d+)([a-z%]*)$/i);
+        const parsed = parseNumericUnitValue(raw || "0" + ((config.units && config.units[0]) || "px"), "dimension", param.label);
+
+        let mode = "__numeric__";
+        if (config.keywords.indexOf(raw) >= 0) {
+          mode = raw;
+        } else if (raw && !numericMatch) {
+          mode = "__raw__";
+        }
+
+        const modeSelect = document.createElement("select");
+        config.keywords.forEach(function (keyword) {
+          const option = document.createElement("option");
+          option.value = keyword;
+          option.textContent = keyword;
+          modeSelect.appendChild(option);
+        });
+
+        const numericOption = document.createElement("option");
+        numericOption.value = "__numeric__";
+        numericOption.textContent = config.customLabel;
+        modeSelect.appendChild(numericOption);
+
+        const rawOption = document.createElement("option");
+        rawOption.value = "__raw__";
+        rawOption.textContent = "Advanced";
+        modeSelect.appendChild(rawOption);
+        modeSelect.value = mode;
+        wrapper.appendChild(modeSelect);
+
+        const numericLine = document.createElement("div");
+        numericLine.className = "param-inline";
+
+        const numberInput = document.createElement("input");
+        numberInput.type = "number";
+        numberInput.step = "0.1";
+        numberInput.value = String(parsed.amount);
+        numericLine.appendChild(boostableNumberInputShell(numberInput));
+
+        const unitSelect = document.createElement("select");
+        config.units.forEach(function (unit) {
+          const option = document.createElement("option");
+          option.value = unit;
+          option.textContent = unit;
+          unitSelect.appendChild(option);
+        });
+        unitSelect.value = parsed.unit || config.units[0] || "px";
+        numericLine.appendChild(unitSelect);
+        wrapper.appendChild(numericLine);
+
+        const rawInput = document.createElement("input");
+        rawInput.value = raw;
+        rawInput.placeholder = "calc(100% - 24px)";
+        wrapper.appendChild(rawInput);
+
+        const syncVisibility = function () {
+          numericLine.classList.toggle("hidden", modeSelect.value !== "__numeric__");
+          rawInput.classList.toggle("hidden", modeSelect.value !== "__raw__");
+        };
+
+        const syncValue = function () {
+          if (modeSelect.value === "__numeric__") {
+            const amount = numberInput.value === "" ? "0" : numberInput.value;
+            setActiveParamValue(index, amount + (unitSelect.value || ""));
+            return;
+          }
+          if (modeSelect.value === "__raw__") {
+            setActiveParamValue(index, rawInput.value);
+            return;
+          }
+          setActiveParamValue(index, modeSelect.value);
+        };
+
+        modeSelect.addEventListener("change", function () {
+          syncVisibility();
+          syncValue();
+        });
+        numberInput.addEventListener("input", syncValue);
+        numberInput.addEventListener("change", syncValue);
+        unitSelect.addEventListener("change", syncValue);
+        rawInput.addEventListener("input", syncValue);
+        rawInput.addEventListener("change", syncValue);
+
+        syncVisibility();
+      }
+
+      function keywordNumberConfigForParam(param) {
+        const key = String((param && param.key) || "").trim().toLowerCase();
+        if (key === "integer|auto") {
+          return {
+            keywords: ["auto"],
+            step: "1",
+            placeholder: "1"
+          };
+        }
+        if (key === "number|infinite") {
+          return {
+            keywords: ["infinite"],
+            step: "0.1",
+            placeholder: "1"
+          };
+        }
+        return {
+          keywords: [],
+          step: "0.1",
+          placeholder: "1"
+        };
+      }
+
+      function renderKeywordOrNumberParamControl(wrapper, param, index) {
+        const config = keywordNumberConfigForParam(param);
+        const raw = String((param && param.value) || "").trim();
+        const isNumeric = /^-?\d*\.?\d+$/.test(raw);
+
+        let mode = "__number__";
+        if (config.keywords.indexOf(raw) >= 0) {
+          mode = raw;
+        } else if (raw && !isNumeric) {
+          mode = "__raw__";
+        }
+
+        const modeSelect = document.createElement("select");
+        config.keywords.forEach(function (keyword) {
+          const option = document.createElement("option");
+          option.value = keyword;
+          option.textContent = keyword;
+          modeSelect.appendChild(option);
+        });
+
+        const numberOption = document.createElement("option");
+        numberOption.value = "__number__";
+        numberOption.textContent = "Custom Number";
+        modeSelect.appendChild(numberOption);
+
+        const rawOption = document.createElement("option");
+        rawOption.value = "__raw__";
+        rawOption.textContent = "Advanced";
+        modeSelect.appendChild(rawOption);
+        modeSelect.value = mode;
+        wrapper.appendChild(modeSelect);
+
+        const numberInput = document.createElement("input");
+        numberInput.type = "number";
+        numberInput.step = config.step;
+        numberInput.value = isNumeric ? raw : (config.placeholder || "1");
+        numberInput.placeholder = config.placeholder || "1";
+        const boostedNumberInput = boostableNumberInputShell(numberInput);
+        wrapper.appendChild(boostedNumberInput);
+
+        const rawInput = document.createElement("input");
+        rawInput.value = raw;
+        rawInput.placeholder = "calc(2 * 3)";
+        wrapper.appendChild(rawInput);
+
+        const syncVisibility = function () {
+          boostedNumberInput.classList.toggle("hidden", modeSelect.value !== "__number__");
+          rawInput.classList.toggle("hidden", modeSelect.value !== "__raw__");
+        };
+
+        const syncValue = function () {
+          if (modeSelect.value === "__number__") {
+            setActiveParamValue(index, numberInput.value === "" ? "0" : numberInput.value);
+            return;
+          }
+          if (modeSelect.value === "__raw__") {
+            setActiveParamValue(index, rawInput.value);
+            return;
+          }
+          setActiveParamValue(index, modeSelect.value);
+        };
+
+        modeSelect.addEventListener("change", function () {
+          syncVisibility();
+          syncValue();
+        });
+        numberInput.addEventListener("input", syncValue);
+        numberInput.addEventListener("change", syncValue);
+        rawInput.addEventListener("input", syncValue);
+        rawInput.addEventListener("change", syncValue);
+
+        syncVisibility();
+      }
+
+      function renderFactorOrPercentParamControl(wrapper, param, index) {
+        const raw = String((param && param.value) || "").trim();
+        const percentMatch = raw.match(/^(-?\d*\.?\d+)%$/);
+        const factorMatch = raw.match(/^(-?\d*\.?\d+)$/);
+        const modeSelect = document.createElement("select");
+
+        [
+          { value: "factor", label: "Factor" },
+          { value: "percent", label: "Percent" },
+          { value: "raw", label: "Advanced" }
+        ].forEach(function (entry) {
+          const option = document.createElement("option");
+          option.value = entry.value;
+          option.textContent = entry.label;
+          modeSelect.appendChild(option);
+        });
+
+        if (percentMatch) {
+          modeSelect.value = "percent";
+        } else if (factorMatch || !raw) {
+          modeSelect.value = "factor";
+        } else {
+          modeSelect.value = "raw";
+        }
+        wrapper.appendChild(modeSelect);
+
+        const numericLine = document.createElement("div");
+        numericLine.className = "param-inline";
+
+        const numberInput = document.createElement("input");
+        numberInput.type = "number";
+        numberInput.step = percentMatch ? "1" : "0.1";
+        numberInput.value = percentMatch ? percentMatch[1] : (factorMatch ? factorMatch[1] : "1.1");
+        numericLine.appendChild(boostableNumberInputShell(numberInput));
+
+        const suffix = document.createElement("span");
+        suffix.className = "tiny";
+        suffix.textContent = modeSelect.value === "percent" ? "%" : "x";
+        numericLine.appendChild(suffix);
+        wrapper.appendChild(numericLine);
+
+        const rawInput = document.createElement("input");
+        rawInput.value = raw;
+        rawInput.placeholder = "120%";
+        wrapper.appendChild(rawInput);
+
+        const syncVisibility = function () {
+          const useRaw = modeSelect.value === "raw";
+          numericLine.classList.toggle("hidden", useRaw);
+          rawInput.classList.toggle("hidden", !useRaw);
+          suffix.textContent = modeSelect.value === "percent" ? "%" : "x";
+          numberInput.step = modeSelect.value === "percent" ? "1" : "0.1";
+        };
+
+        const syncValue = function () {
+          if (modeSelect.value === "raw") {
+            setActiveParamValue(index, rawInput.value);
+            return;
+          }
+          const amount = numberInput.value === "" ? (modeSelect.value === "percent" ? "100" : "1") : numberInput.value;
+          setActiveParamValue(index, modeSelect.value === "percent" ? (amount + "%") : amount);
+        };
+
+        modeSelect.addEventListener("change", function () {
+          syncVisibility();
+          syncValue();
+        });
+        numberInput.addEventListener("input", syncValue);
+        numberInput.addEventListener("change", syncValue);
+        rawInput.addEventListener("input", syncValue);
+        rawInput.addEventListener("change", syncValue);
+
+        syncVisibility();
+      }
+
+      function parsePositionPairValue(value) {
+        const raw = String(value || "").trim();
+        const horizontalOptions = ["left", "center", "right", "0%", "50%", "100%"];
+        const verticalOptions = ["top", "center", "bottom", "0%", "50%", "100%"];
+        const state = {
+          mode: "guided",
+          horizontal: "50%",
+          vertical: "50%",
+          raw: raw
+        };
+        if (!raw) return state;
+
+        const tokens = raw.split(/\s+/).filter(Boolean);
+        if (tokens.length === 1) {
+          const token = tokens[0];
+          if (horizontalOptions.indexOf(token) >= 0 && verticalOptions.indexOf(token) >= 0) {
+            state.horizontal = token;
+            state.vertical = token;
+            return state;
+          }
+          if (horizontalOptions.indexOf(token) >= 0) {
+            state.horizontal = token;
+            state.vertical = "center";
+            return state;
+          }
+          if (verticalOptions.indexOf(token) >= 0) {
+            state.horizontal = "center";
+            state.vertical = token;
+            return state;
+          }
+          state.mode = "raw";
+          return state;
+        }
+
+        if (horizontalOptions.indexOf(tokens[0]) >= 0 && verticalOptions.indexOf(tokens[1]) >= 0) {
+          state.horizontal = tokens[0];
+          state.vertical = tokens[1];
+          return state;
+        }
+        state.mode = "raw";
+        return state;
+      }
+
+      function renderPositionPairParamControl(wrapper, param, index) {
+        const state = parsePositionPairValue(param.value);
+        const modeSelect = document.createElement("select");
+
+        [
+          { value: "guided", label: "Guided Pair" },
+          { value: "raw", label: "Advanced" }
+        ].forEach(function (entry) {
+          const option = document.createElement("option");
+          option.value = entry.value;
+          option.textContent = entry.label;
+          modeSelect.appendChild(option);
+        });
+        modeSelect.value = state.mode;
+        wrapper.appendChild(modeSelect);
+
+        const pairLine = document.createElement("div");
+        pairLine.className = "param-inline";
+
+        const horizontalSelect = document.createElement("select");
+        ["left", "center", "right", "0%", "50%", "100%"].forEach(function (value) {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = "X: " + value;
+          horizontalSelect.appendChild(option);
+        });
+        horizontalSelect.value = state.horizontal;
+        pairLine.appendChild(horizontalSelect);
+
+        const verticalSelect = document.createElement("select");
+        ["top", "center", "bottom", "0%", "50%", "100%"].forEach(function (value) {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = "Y: " + value;
+          verticalSelect.appendChild(option);
+        });
+        verticalSelect.value = state.vertical;
+        pairLine.appendChild(verticalSelect);
+        wrapper.appendChild(pairLine);
+
+        const rawInput = document.createElement("input");
+        rawInput.value = state.raw;
+        rawInput.placeholder = "20% 80%";
+        wrapper.appendChild(rawInput);
+
+        const syncVisibility = function () {
+          const useRaw = modeSelect.value === "raw";
+          pairLine.classList.toggle("hidden", useRaw);
+          rawInput.classList.toggle("hidden", !useRaw);
+        };
+
+        const syncValue = function () {
+          if (modeSelect.value === "raw") {
+            setActiveParamValue(index, rawInput.value);
+            return;
+          }
+          setActiveParamValue(index, horizontalSelect.value + " " + verticalSelect.value);
+        };
+
+        modeSelect.addEventListener("change", function () {
+          syncVisibility();
+          syncValue();
+        });
+        horizontalSelect.addEventListener("change", syncValue);
+        verticalSelect.addEventListener("change", syncValue);
+        rawInput.addEventListener("input", syncValue);
+        rawInput.addEventListener("change", syncValue);
+
+        syncVisibility();
+      }
+
+      function presetChoicesForParam(param, item) {
+        const meta = paramMetaForToken(param.key, item);
+        if (meta && Array.isArray(meta.presets) && meta.presets.length) {
+          return meta.presets.slice();
+        }
+        const key = String((param && param.key) || "").trim();
+        if (!key) return [];
+        if (key === "basis") return ["auto", "160px", "220px", "30%"];
+        if (key === "blur") return ["0px", "6px", "12px", "24px"];
+        if (key === "top" || key === "right" || key === "bottom" || key === "left") return ["0px", "8px", "12px", "24px"];
+        if (key === "row-gap") return ["8px", "12px", "16px", "24px"];
+        if (key === "column-gap") return ["8px", "16px", "24px", "32px"];
+        if (key === "start" || key === "end") return ["1", "2", "span 2", "auto"];
+        if (key === "factor") return ["0.8", "1", "1.1", "1.25"];
+        if (key === "factor|percent") return ["80%", "100%", "120%", "140%"];
+        if (key === "image") return [
+          "linear-gradient(120deg, #eef4ff, #d9e7ff)",
+          "linear-gradient(135deg, #1f5fbd, #8bb7ff)",
+          "radial-gradient(circle at 50% 50%, #ffffff, #d9e7ff)",
+          "url(/path/to/image.jpg)"
+        ];
+        if (key === "integer|auto") return ["auto", "1", "5", "10"];
+        if (key === "length|none") return ["none", "240px", "480px", "800px"];
+        if (key === "length|percentage") return ["12px", "24px", "50%", "100%"];
+        if (key === "length|percentage|auto") return ["auto", "12px", "50%", "100%"];
+        if (key === "length|percentage|none") return ["none", "240px", "50%", "100%"];
+        if (key === "number|infinite") return ["1", "2", "3", "infinite"];
+        if (key === "number|length|percentage") return ["1.4", "20px", "140%", "normal"];
+        if (key === "preferred") return ["2vw", "3vw", "calc(1rem + 1vw)"];
+        if (key === "tx" || key === "ty") return ["0px", "8px", "16px", "50%"];
+        if (key === "x y") return ["50% 50%", "left top", "center center", "right bottom"];
+        if (key === "z") return ["0px", "20px", "40px"];
+        if (key === "track-list") return ["1fr 1fr", "200px 1fr", "repeat(3, 1fr)", "repeat(2, minmax(0, 1fr))"];
+        if ((param && param.type) === "text") {
+          const kind = inferParamKind(param, item);
+          if (kind === "dimension") return ["0px", "12px", "24px", "50%"];
+          if (kind === "number" || kind === "integer") return ["0", "1", "2", "3"];
+          if (kind === "time") return ["120ms", "200ms", "300ms", "1s"];
+          if (kind === "angle") return ["0deg", "15deg", "45deg", "90deg"];
+        }
+        return [];
+      }
+
+      function renderParamPresetButtons(wrapper, param, index, item, applyValue) {
+        const presets = presetChoicesForParam(param, item);
+        if (!presets.length) return null;
+
+        const row = document.createElement("div");
+        row.className = "param-choice-row";
+
+        const syncActive = function (currentValue) {
+          Array.from(row.querySelectorAll(".param-chip")).forEach(function (btn) {
+            btn.classList.toggle("param-chip-active", btn.getAttribute("data-param-preset") === currentValue);
+          });
+        };
+
+        presets.forEach(function (preset) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "param-chip";
+          btn.textContent = preset;
+          btn.setAttribute("data-param-preset", preset);
+          btn.addEventListener("click", function () {
+            applyValue(preset);
+            setActiveParamValue(index, preset);
+            syncActive(preset);
+          });
+          row.appendChild(btn);
+        });
+
+        syncActive(String((param && param.value) || "").trim());
+        wrapper.appendChild(row);
+        return row;
+      }
+
+      function parseFunctionCallsFromValue(value) {
+        const raw = String(value || "").trim();
+        if (!raw) return [];
+        const list = [];
+        let current = "";
+        let depth = 0;
+        for (let i = 0; i < raw.length; i++) {
+          const char = raw[i];
+          if (!current && /\s/.test(char)) {
+            continue;
+          }
+          current += char;
+          if (char === "(") depth += 1;
+          if (char === ")") {
+            depth = Math.max(0, depth - 1);
+            if (depth === 0) {
+              list.push(current.trim());
+              current = "";
+            }
+          }
+        }
+        if (current.trim()) {
+          list.push(current.trim());
+        }
+        return list;
+      }
+
+      function createTransformBuilderSlot(type) {
+        const slotType = String(type || "").trim();
+        if (slotType === "translate") {
+          return { type: slotType, primary: "0", primaryUnit: "px", secondary: "0", secondaryUnit: "px", raw: "" };
+        }
+        if (slotType === "translateX" || slotType === "translateY") {
+          return { type: slotType, primary: "0", primaryUnit: "px", secondary: "", secondaryUnit: "px", raw: "" };
+        }
+        if (slotType === "rotate" || slotType === "skewX" || slotType === "skewY") {
+          return { type: slotType, primary: "0", primaryUnit: "deg", secondary: "", secondaryUnit: "deg", raw: "" };
+        }
+        if (slotType === "scale" || slotType === "scaleX" || slotType === "scaleY") {
+          return { type: slotType, primary: "1", primaryUnit: "", secondary: "", secondaryUnit: "", raw: "" };
+        }
+        if (slotType === "custom") {
+          return { type: slotType, primary: "", primaryUnit: "", secondary: "", secondaryUnit: "", raw: "" };
+        }
+        return { type: "", primary: "", primaryUnit: "px", secondary: "", secondaryUnit: "px", raw: "" };
+      }
+
+      function parseTransformBuilderSlot(raw) {
+        const text = String(raw || "").trim();
+        if (!text || text === "none") return createTransformBuilderSlot("");
+        const match = text.match(/^([a-zA-Z-]+)\((.*)\)$/);
+        if (!match) {
+          const custom = createTransformBuilderSlot("custom");
+          custom.raw = text;
+          return custom;
+        }
+        const type = match[1];
+        const argText = String(match[2] || "").trim();
+        if (TRANSFORM_BUILDER_TYPES.every(function (entry) { return entry.value !== type; })) {
+          const custom = createTransformBuilderSlot("custom");
+          custom.raw = text;
+          return custom;
+        }
+        const slot = createTransformBuilderSlot(type);
+        const args = argText.indexOf(",") >= 0
+          ? argText.split(",").map(function (part) { return part.trim(); }).filter(Boolean)
+          : argText.split(/\s+/).filter(Boolean);
+        if (type === "translate") {
+          const first = parseNumericUnitValue(args[0] || "0px", "dimension", "Length");
+          const second = parseNumericUnitValue(args[1] || "0px", "dimension", "Length");
+          slot.primary = String(first.amount);
+          slot.primaryUnit = first.unit;
+          slot.secondary = String(second.amount);
+          slot.secondaryUnit = second.unit;
+          return slot;
+        }
+        if (type === "translateX" || type === "translateY") {
+          const parsed = parseNumericUnitValue(args[0] || "0px", "dimension", "Length");
+          slot.primary = String(parsed.amount);
+          slot.primaryUnit = parsed.unit;
+          return slot;
+        }
+        if (type === "rotate" || type === "skewX" || type === "skewY") {
+          const parsed = parseNumericUnitValue(args[0] || "0deg", "angle", "Angle");
+          slot.primary = String(parsed.amount);
+          slot.primaryUnit = parsed.unit;
+          return slot;
+        }
+        if (type === "scale" || type === "scaleX" || type === "scaleY") {
+          slot.primary = String(args[0] || "1");
+          return slot;
+        }
+        if (type === "custom") {
+          slot.raw = text;
+        }
+        return slot;
+      }
+
+      function buildTransformBuilderSlotText(slot) {
+        const current = slot && typeof slot === "object" ? slot : createTransformBuilderSlot("");
+        if (!current.type) return "";
+        if (current.type === "custom") return String(current.raw || "").trim();
+        if (current.type === "translate") {
+          return "translate(" + (current.primary || "0") + (current.primaryUnit || "px") + ", " + (current.secondary || "0") + (current.secondaryUnit || "px") + ")";
+        }
+        if (current.type === "translateX" || current.type === "translateY") {
+          return current.type + "(" + (current.primary || "0") + (current.primaryUnit || "px") + ")";
+        }
+        if (current.type === "rotate" || current.type === "skewX" || current.type === "skewY") {
+          return current.type + "(" + (current.primary || "0") + (current.primaryUnit || "deg") + ")";
+        }
+        if (current.type === "scale" || current.type === "scaleX" || current.type === "scaleY") {
+          return current.type + "(" + (current.primary || "1") + ")";
+        }
+        return "";
+      }
+
+      function createFilterBuilderSlot(type) {
+        const slotType = String(type || "").trim();
+        if (slotType === "blur") {
+          return { type: slotType, primary: "6", primaryUnit: "px", raw: "" };
+        }
+        if (slotType === "hue-rotate") {
+          return { type: slotType, primary: "45", primaryUnit: "deg", raw: "" };
+        }
+        if (slotType === "brightness" || slotType === "contrast" || slotType === "saturate") {
+          return { type: slotType, primary: "120", primaryUnit: "%", raw: "" };
+        }
+        if (slotType === "opacity" || slotType === "grayscale" || slotType === "sepia") {
+          return { type: slotType, primary: "100", primaryUnit: "%", raw: "" };
+        }
+        if (slotType === "custom") {
+          return { type: slotType, primary: "", primaryUnit: "", raw: "" };
+        }
+        return { type: "", primary: "", primaryUnit: "%", raw: "" };
+      }
+
+      function parseFilterBuilderSlot(raw) {
+        const text = String(raw || "").trim();
+        if (!text || text === "none") return createFilterBuilderSlot("");
+        const match = text.match(/^([a-zA-Z-]+)\((.*)\)$/);
+        if (!match) {
+          const custom = createFilterBuilderSlot("custom");
+          custom.raw = text;
+          return custom;
+        }
+        const type = match[1];
+        const argText = String(match[2] || "").trim();
+        if (FILTER_BUILDER_TYPES.every(function (entry) { return entry.value !== type; })) {
+          const custom = createFilterBuilderSlot("custom");
+          custom.raw = text;
+          return custom;
+        }
+        const slot = createFilterBuilderSlot(type);
+        if (type === "blur") {
+          const parsed = parseNumericUnitValue(argText || "6px", "dimension", "Length");
+          slot.primary = String(parsed.amount);
+          slot.primaryUnit = parsed.unit;
+          return slot;
+        }
+        if (type === "hue-rotate") {
+          const parsed = parseNumericUnitValue(argText || "45deg", "angle", "Angle");
+          slot.primary = String(parsed.amount);
+          slot.primaryUnit = parsed.unit;
+          return slot;
+        }
+        if (type === "custom") {
+          slot.raw = text;
+          return slot;
+        }
+        const isPercent = /%$/.test(argText);
+        slot.primary = String(isPercent ? Number(argText.replace(/%$/, "")) || 100 : Number(argText) || 1);
+        slot.primaryUnit = isPercent ? "%" : "";
+        return slot;
+      }
+
+      function buildFilterBuilderSlotText(slot) {
+        const current = slot && typeof slot === "object" ? slot : createFilterBuilderSlot("");
+        if (!current.type) return "";
+        if (current.type === "custom") return String(current.raw || "").trim();
+        if (current.type === "blur") {
+          return "blur(" + (current.primary || "0") + (current.primaryUnit || "px") + ")";
+        }
+        if (current.type === "hue-rotate") {
+          return "hue-rotate(" + (current.primary || "0") + (current.primaryUnit || "deg") + ")";
+        }
+        return current.type + "(" + (current.primary || "100") + (current.primaryUnit || "") + ")";
+      }
+
+      function renderTransformListParamControl(wrapper, param, index) {
+        const presetValues = [
+          "translateY(-4px) scale(1.02)",
+          "translateX(8px)",
+          "scale(1.04)",
+          "rotate(6deg)"
+        ];
+        let slots = parseFunctionCallsFromValue(param.value).slice(0, 3).map(parseTransformBuilderSlot);
+        while (slots.length < 3) slots.push(createTransformBuilderSlot(""));
+
+        const presetRow = document.createElement("div");
+        presetRow.className = "param-choice-row";
+        ["Lift", "Push", "Scale", "Rotate"].forEach(function (label, idx) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "param-chip";
+          btn.textContent = label;
+          btn.addEventListener("click", function () {
+            slots = parseFunctionCallsFromValue(presetValues[idx]).slice(0, 3).map(parseTransformBuilderSlot);
+            while (slots.length < 3) slots.push(createTransformBuilderSlot(""));
+            renderBuilder();
+            syncValue();
+          });
+          presetRow.appendChild(btn);
+        });
+        wrapper.appendChild(presetRow);
+
+        const builderGrid = document.createElement("div");
+        builderGrid.className = "param-builder-grid";
+        wrapper.appendChild(builderGrid);
+
+        const output = document.createElement("div");
+        output.className = "param-builder-output";
+        wrapper.appendChild(output);
+
+        const syncValue = function () {
+          const value = slots.map(buildTransformBuilderSlotText).filter(Boolean).join(" ") || "none";
+          output.textContent = value;
+          activeParams[index].value = value;
+          updateLive();
+        };
+
+        const renderDimensionEditor = function (host, slot, baseKey, unitKey, kind, labelText) {
+          const line = document.createElement("div");
+          line.className = "param-inline";
+          const label = document.createElement("span");
+          label.className = "tiny";
+          label.textContent = labelText;
+          line.appendChild(label);
+          const numberInput = document.createElement("input");
+          numberInput.type = "number";
+          numberInput.step = kind === "angle" ? "1" : "0.1";
+          numberInput.value = slot[baseKey];
+          const unitSelect = document.createElement("select");
+          defaultUnitsForKind(kind, labelText).forEach(function (unit) {
+            const option = document.createElement("option");
+            option.value = unit;
+            option.textContent = unit;
+            unitSelect.appendChild(option);
+          });
+          unitSelect.value = slot[unitKey] || unitSelect.options[0].value;
+          numberInput.addEventListener("input", function () {
+            slot[baseKey] = numberInput.value;
+            syncValue();
+          });
+          unitSelect.addEventListener("change", function () {
+            slot[unitKey] = unitSelect.value;
+            syncValue();
+          });
+          line.appendChild(boostableNumberInputShell(numberInput));
+          line.appendChild(unitSelect);
+          host.appendChild(line);
+        };
+
+        const renderNumberEditor = function (host, slot, baseKey, labelText) {
+          const line = document.createElement("div");
+          line.className = "param-inline";
+          const label = document.createElement("span");
+          label.className = "tiny";
+          label.textContent = labelText;
+          line.appendChild(label);
+          const input = document.createElement("input");
+          input.type = "number";
+          input.step = "0.01";
+          input.value = slot[baseKey];
+          input.addEventListener("input", function () {
+            slot[baseKey] = input.value;
+            syncValue();
+          });
+          line.appendChild(boostableNumberInputShell(input));
+          host.appendChild(line);
+        };
+
+        const renderBuilder = function () {
+          builderGrid.innerHTML = "";
+          slots.forEach(function (slot, slotIndex) {
+            const card = document.createElement("div");
+            card.className = "param-builder-slot";
+
+            const typeSelect = document.createElement("select");
+            TRANSFORM_BUILDER_TYPES.forEach(function (optionDef) {
+              const option = document.createElement("option");
+              option.value = optionDef.value;
+              option.textContent = "Slot " + (slotIndex + 1) + ": " + optionDef.label;
+              typeSelect.appendChild(option);
+            });
+            typeSelect.value = slot.type;
+            typeSelect.addEventListener("change", function () {
+              slots[slotIndex] = createTransformBuilderSlot(typeSelect.value);
+              renderBuilder();
+              syncValue();
+            });
+            card.appendChild(typeSelect);
+
+            if (slot.type === "translateX" || slot.type === "translateY") {
+              renderDimensionEditor(card, slot, "primary", "primaryUnit", "dimension", slot.type === "translateX" ? "X" : "Y");
+            } else if (slot.type === "translate") {
+              renderDimensionEditor(card, slot, "primary", "primaryUnit", "dimension", "X");
+              renderDimensionEditor(card, slot, "secondary", "secondaryUnit", "dimension", "Y");
+            } else if (slot.type === "rotate" || slot.type === "skewX" || slot.type === "skewY") {
+              renderDimensionEditor(card, slot, "primary", "primaryUnit", "angle", "Angle");
+            } else if (slot.type === "scale" || slot.type === "scaleX" || slot.type === "scaleY") {
+              renderNumberEditor(card, slot, "primary", "Value");
+            } else if (slot.type === "custom") {
+              const customInput = document.createElement("input");
+              customInput.value = slot.raw;
+              customInput.placeholder = "translate3d(0, 0, 0)";
+              customInput.addEventListener("input", function () {
+                slot.raw = customInput.value;
+                syncValue();
+              });
+              card.appendChild(customInput);
+            }
+
+            builderGrid.appendChild(card);
+          });
+        };
+
+        renderBuilder();
+        syncValue();
+      }
+
+      function renderFilterListParamControl(wrapper, param, index) {
+        const presetValues = [
+          "blur(6px)",
+          "brightness(108%) contrast(104%)",
+          "saturate(120%)",
+          "grayscale(100%)"
+        ];
+        let slots = parseFunctionCallsFromValue(param.value).slice(0, 3).map(parseFilterBuilderSlot);
+        while (slots.length < 3) slots.push(createFilterBuilderSlot(""));
+
+        const presetRow = document.createElement("div");
+        presetRow.className = "param-choice-row";
+        ["Soften", "Crisp", "Vibrant", "Mono"].forEach(function (label, idx) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "param-chip";
+          btn.textContent = label;
+          btn.addEventListener("click", function () {
+            slots = parseFunctionCallsFromValue(presetValues[idx]).slice(0, 3).map(parseFilterBuilderSlot);
+            while (slots.length < 3) slots.push(createFilterBuilderSlot(""));
+            renderBuilder();
+            syncValue();
+          });
+          presetRow.appendChild(btn);
+        });
+        wrapper.appendChild(presetRow);
+
+        const builderGrid = document.createElement("div");
+        builderGrid.className = "param-builder-grid";
+        wrapper.appendChild(builderGrid);
+
+        const output = document.createElement("div");
+        output.className = "param-builder-output";
+        wrapper.appendChild(output);
+
+        const syncValue = function () {
+          const value = slots.map(buildFilterBuilderSlotText).filter(Boolean).join(" ") || "none";
+          output.textContent = value;
+          activeParams[index].value = value;
+          updateLive();
+        };
+
+        const renderValueEditor = function (host, slot, labelText, unitOptions) {
+          const line = document.createElement("div");
+          line.className = "param-inline";
+          const label = document.createElement("span");
+          label.className = "tiny";
+          label.textContent = labelText;
+          line.appendChild(label);
+          const input = document.createElement("input");
+          input.type = "number";
+          input.step = unitOptions.indexOf("deg") >= 0 ? "1" : "0.1";
+          input.value = slot.primary;
+          input.addEventListener("input", function () {
+            slot.primary = input.value;
+            syncValue();
+          });
+          line.appendChild(boostableNumberInputShell(input));
+          if (unitOptions.length) {
+            const unitSelect = document.createElement("select");
+            unitOptions.forEach(function (unit) {
+              const option = document.createElement("option");
+              option.value = unit;
+              option.textContent = unit || "x";
+              unitSelect.appendChild(option);
+            });
+            unitSelect.value = slot.primaryUnit || unitOptions[0];
+            unitSelect.addEventListener("change", function () {
+              slot.primaryUnit = unitSelect.value;
+              syncValue();
+            });
+            line.appendChild(unitSelect);
+          }
+          host.appendChild(line);
+        };
+
+        const renderBuilder = function () {
+          builderGrid.innerHTML = "";
+          slots.forEach(function (slot, slotIndex) {
+            const card = document.createElement("div");
+            card.className = "param-builder-slot";
+            const typeSelect = document.createElement("select");
+            FILTER_BUILDER_TYPES.forEach(function (optionDef) {
+              const option = document.createElement("option");
+              option.value = optionDef.value;
+              option.textContent = "Slot " + (slotIndex + 1) + ": " + optionDef.label;
+              typeSelect.appendChild(option);
+            });
+            typeSelect.value = slot.type;
+            typeSelect.addEventListener("change", function () {
+              slots[slotIndex] = createFilterBuilderSlot(typeSelect.value);
+              renderBuilder();
+              syncValue();
+            });
+            card.appendChild(typeSelect);
+
+            if (slot.type === "blur") {
+              renderValueEditor(card, slot, "Amount", ["px", "rem", "em"]);
+            } else if (slot.type === "hue-rotate") {
+              renderValueEditor(card, slot, "Angle", ["deg", "turn", "rad"]);
+            } else if (slot.type === "brightness" || slot.type === "contrast" || slot.type === "saturate" || slot.type === "opacity" || slot.type === "grayscale" || slot.type === "sepia") {
+              renderValueEditor(card, slot, "Amount", ["%", ""]);
+            } else if (slot.type === "custom") {
+              const customInput = document.createElement("input");
+              customInput.value = slot.raw;
+              customInput.placeholder = "drop-shadow(0 8px 12px rgba(0,0,0,.18))";
+              customInput.addEventListener("input", function () {
+                slot.raw = customInput.value;
+                syncValue();
+              });
+              card.appendChild(customInput);
+            }
+
+            builderGrid.appendChild(card);
+          });
+        };
+
+        renderBuilder();
+        syncValue();
+      }
+
+      function parseBackgroundShorthandState(value) {
+        const raw = String(value || "").trim();
+        const state = {
+          position: "center",
+          size: "cover",
+          repeat: "no-repeat",
+          attachment: "scroll"
+        };
+        if (!raw) return state;
+        if (/\bfixed\b/.test(raw)) state.attachment = "fixed";
+        const repeat = BACKGROUND_REPEAT_OPTIONS.find(function (option) {
+          return raw.indexOf(option) >= 0;
+        });
+        if (repeat) state.repeat = repeat;
+        const slashParts = raw.split("/");
+        const beforeSlash = String(slashParts[0] || "").trim();
+        const afterSlash = String(slashParts[1] || "").trim();
+        const matchedPosition = BACKGROUND_POSITION_OPTIONS.slice().sort(function (a, b) { return b.length - a.length; }).find(function (option) {
+          return beforeSlash.indexOf(option) >= 0;
+        });
+        if (matchedPosition) state.position = matchedPosition;
+        if (afterSlash) {
+          const tokens = afterSlash.split(/\s+/).filter(Boolean);
+          if (tokens[0]) state.size = tokens[0];
+        }
+        return state;
+      }
+
+      function buildBackgroundShorthandValue(state) {
+        const current = state && typeof state === "object" ? state : parseBackgroundShorthandState("");
+        return (
+          (current.position || "center") +
+          " / " +
+          (current.size || "cover") +
+          " " +
+          (current.repeat || "no-repeat") +
+          ((current.attachment || "scroll") === "fixed" ? " fixed" : "")
+        ).trim();
+      }
+
+      function renderBackgroundShorthandParamControl(wrapper, param, index) {
+        const state = parseBackgroundShorthandState(param.value);
+        const presetValues = [
+          "center / cover no-repeat",
+          "top center / contain no-repeat",
+          "left top / auto repeat",
+          "center / cover no-repeat fixed"
+        ];
+
+        const presetRow = document.createElement("div");
+        presetRow.className = "param-choice-row";
+        ["Hero Cover", "Contained", "Repeating", "Fixed Cover"].forEach(function (label, idx) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "param-chip";
+          btn.textContent = label;
+          btn.addEventListener("click", function () {
+            const next = parseBackgroundShorthandState(presetValues[idx]);
+            state.position = next.position;
+            state.size = next.size;
+            state.repeat = next.repeat;
+            state.attachment = next.attachment;
+            positionSelect.value = state.position;
+            sizeSelect.value = state.size;
+            repeatSelect.value = state.repeat;
+            attachmentSelect.value = state.attachment;
+            syncValue();
+          });
+          presetRow.appendChild(btn);
+        });
+        wrapper.appendChild(presetRow);
+
+        const grid = document.createElement("div");
+        grid.className = "param-builder-grid";
+        wrapper.appendChild(grid);
+
+        const positionSelect = document.createElement("select");
+        BACKGROUND_POSITION_OPTIONS.forEach(function (optionValue) {
+          const option = document.createElement("option");
+          option.value = optionValue;
+          option.textContent = "Position: " + optionValue;
+          positionSelect.appendChild(option);
+        });
+        positionSelect.value = state.position;
+        grid.appendChild(positionSelect);
+
+        const sizeSelect = document.createElement("select");
+        BACKGROUND_SIZE_OPTIONS.forEach(function (optionValue) {
+          const option = document.createElement("option");
+          option.value = optionValue;
+          option.textContent = "Size: " + optionValue;
+          sizeSelect.appendChild(option);
+        });
+        sizeSelect.value = state.size;
+        grid.appendChild(sizeSelect);
+
+        const repeatSelect = document.createElement("select");
+        BACKGROUND_REPEAT_OPTIONS.forEach(function (optionValue) {
+          const option = document.createElement("option");
+          option.value = optionValue;
+          option.textContent = "Repeat: " + optionValue;
+          repeatSelect.appendChild(option);
+        });
+        repeatSelect.value = state.repeat;
+        grid.appendChild(repeatSelect);
+
+        const attachmentSelect = document.createElement("select");
+        BACKGROUND_ATTACHMENT_OPTIONS.forEach(function (optionValue) {
+          const option = document.createElement("option");
+          option.value = optionValue;
+          option.textContent = "Attachment: " + optionValue;
+          attachmentSelect.appendChild(option);
+        });
+        attachmentSelect.value = state.attachment;
+        grid.appendChild(attachmentSelect);
+
+        const output = document.createElement("div");
+        output.className = "param-builder-output";
+        wrapper.appendChild(output);
+
+        const syncValue = function () {
+          state.position = positionSelect.value;
+          state.size = sizeSelect.value;
+          state.repeat = repeatSelect.value;
+          state.attachment = attachmentSelect.value;
+          const value = buildBackgroundShorthandValue(state);
+          output.textContent = value;
+          activeParams[index].value = value;
+          updateLive();
+        };
+
+        positionSelect.addEventListener("change", syncValue);
+        sizeSelect.addEventListener("change", syncValue);
+        repeatSelect.addEventListener("change", syncValue);
+        attachmentSelect.addEventListener("change", syncValue);
+        syncValue();
       }
 
       function boxQuadParamMap() {
@@ -13080,6 +15814,83 @@ translateY()	translateY(<length|percentage>)
             input.value = param.value;
           } else {
             const kind = inferParamKind(param, item);
+            if (kind === "transform-list") {
+              renderTransformListParamControl(wrapper, param, index);
+              if (param.description) {
+                const note = document.createElement("div");
+                note.className = "input-hint";
+                note.textContent = param.description;
+                wrapper.appendChild(note);
+              }
+              elParams.appendChild(wrapper);
+              return;
+            }
+            if (kind === "filter-list") {
+              renderFilterListParamControl(wrapper, param, index);
+              if (param.description) {
+                const note = document.createElement("div");
+                note.className = "input-hint";
+                note.textContent = param.description;
+                wrapper.appendChild(note);
+              }
+              elParams.appendChild(wrapper);
+              return;
+            }
+            if (kind === "background-shorthand") {
+              renderBackgroundShorthandParamControl(wrapper, param, index);
+              if (param.description) {
+                const note = document.createElement("div");
+                note.className = "input-hint";
+                note.textContent = param.description;
+                wrapper.appendChild(note);
+              }
+              elParams.appendChild(wrapper);
+              return;
+            }
+            if (kind === "keyword-or-dimension" || kind === "origin-x" || kind === "origin-y") {
+              renderKeywordOrDimensionParamControl(wrapper, param, index, kind);
+              if (param.description) {
+                const note = document.createElement("div");
+                note.className = "input-hint";
+                note.textContent = param.description;
+                wrapper.appendChild(note);
+              }
+              elParams.appendChild(wrapper);
+              return;
+            }
+            if (kind === "keyword-or-number") {
+              renderKeywordOrNumberParamControl(wrapper, param, index);
+              if (param.description) {
+                const note = document.createElement("div");
+                note.className = "input-hint";
+                note.textContent = param.description;
+                wrapper.appendChild(note);
+              }
+              elParams.appendChild(wrapper);
+              return;
+            }
+            if (kind === "factor-or-percent") {
+              renderFactorOrPercentParamControl(wrapper, param, index);
+              if (param.description) {
+                const note = document.createElement("div");
+                note.className = "input-hint";
+                note.textContent = param.description;
+                wrapper.appendChild(note);
+              }
+              elParams.appendChild(wrapper);
+              return;
+            }
+            if (kind === "position-pair") {
+              renderPositionPairParamControl(wrapper, param, index);
+              if (param.description) {
+                const note = document.createElement("div");
+                note.className = "input-hint";
+                note.textContent = param.description;
+                wrapper.appendChild(note);
+              }
+              elParams.appendChild(wrapper);
+              return;
+            }
             if (kind === "color") {
               renderColorParamControl(wrapper, param, index);
               if (param.description) {
@@ -13116,6 +15927,9 @@ translateY()	translateY(<length|percentage>)
             input = document.createElement("input");
             input.value = param.value;
             input.placeholder = defaultValueForToken(param.key || param.label || "value", item);
+            renderParamPresetButtons(wrapper, param, index, item, function (nextValue) {
+              input.value = nextValue;
+            });
           }
 
           input.dataset.paramIndex = String(index);
@@ -13162,6 +15976,238 @@ translateY()	translateY(<length|percentage>)
         });
       }
 
+      function isBackdropFilterProperty(prop) {
+        const name = String(prop || "").trim();
+        return name === "backdrop-filter" || name === "-webkit-backdrop-filter";
+      }
+
+      function isLayoutContainerMirrorProperty(prop) {
+        const name = String(prop || "").trim();
+        return [
+          "align-content",
+          "align-items",
+          "justify-content",
+          "gap",
+          "row-gap",
+          "column-gap",
+          "flex-wrap",
+          "flex-direction"
+        ].indexOf(name) >= 0;
+      }
+
+      function isLayoutItemMirrorProperty(prop) {
+        const name = String(prop || "").trim();
+        return [
+          "align-self",
+          "justify-self",
+          "place-self",
+          "order"
+        ].indexOf(name) >= 0;
+      }
+
+      function primeBackdropPreviewTarget(target) {
+        if (!target) return;
+        if (!target.style.background && !target.style.backgroundColor) {
+          target.style.backgroundColor = target.id === "preview-card" ? "rgba(255, 255, 255, 0.28)" : "rgba(255, 255, 255, 0.42)";
+        }
+        if (!target.style.borderColor) {
+          target.style.borderColor = target.id === "preview-card" ? "rgba(255, 255, 255, 0.52)" : "rgba(206, 221, 247, 0.95)";
+        }
+      }
+
+      function primeLayoutPreviewTarget(target) {
+        if (!target) return;
+        target.style.display = "flex";
+        target.style.flexWrap = target.style.flexWrap || "wrap";
+        target.style.gap = target.style.gap || "8px";
+        target.style.alignContent = target.style.alignContent || "flex-start";
+        target.style.minHeight = target.style.minHeight || "152px";
+        Array.from(target.children || []).forEach(function (child, index) {
+          if (!child || !child.style) return;
+          child.style.flex = "0 0 calc(50% - 6px)";
+          if (!child.style.minHeight) {
+            child.style.minHeight = index === 1 ? "52px" : (index === 3 ? "36px" : "42px");
+          }
+          child.style.display = "flex";
+          child.style.alignItems = "center";
+          child.style.justifyContent = "center";
+        });
+      }
+
+      function previewAccentControls() {
+        return [
+          document.getElementById("preview-formio-checkbox-input"),
+          document.getElementById("preview-formio-radio-input")
+        ].concat(Array.from(document.querySelectorAll("#preview-formio-selectboxes .form-check-input")));
+      }
+
+      function previewTextEntryControls() {
+        return [
+          previewInput,
+          document.getElementById("preview-formio-textfield-input"),
+          document.getElementById("preview-formio-textarea-input"),
+          document.getElementById("preview-formio-datetime-input"),
+          document.getElementById("preview-formio-address-input")
+        ];
+      }
+
+      function isAccentPreviewControl(node) {
+        if (!node || typeof node.tagName !== "string") return false;
+        const tag = node.tagName.toUpperCase();
+        if (tag !== "INPUT") return false;
+        const type = String(node.type || "").toLowerCase();
+        return type === "checkbox" || type === "radio" || type === "range";
+      }
+
+      function isTextEntryPreviewControl(node) {
+        if (!node || typeof node.tagName !== "string") return false;
+        const tag = node.tagName.toUpperCase();
+        if (tag === "TEXTAREA") return true;
+        if (tag !== "INPUT") return false;
+        const type = String(node.type || "text").toLowerCase();
+        return [
+          "text",
+          "search",
+          "email",
+          "url",
+          "tel",
+          "password",
+          "number",
+          "date",
+          "datetime-local",
+          "time",
+          "month",
+          "week"
+        ].indexOf(type) >= 0;
+      }
+
+      function primaryPreviewTargetForProperty(target, prop) {
+        const name = String(prop || "").trim();
+        const interactive = previewInteractiveElement(target);
+        if (!name) return target || null;
+
+        if (name === "accent-color") {
+          if (isAccentPreviewControl(interactive)) return interactive;
+          return previewAccentControls().find(function (node) { return Boolean(node); }) || interactive || target || null;
+        }
+
+        if (name === "caret-color") {
+          if (isTextEntryPreviewControl(interactive)) return interactive;
+          return previewInput || interactive || target || null;
+        }
+
+        if (isLayoutContainerMirrorProperty(name)) {
+          return previewSandbox || target || null;
+        }
+
+        if (isLayoutItemMirrorProperty(name)) {
+          if (previewSandbox) {
+            return previewSandbox.querySelector(".box.alpha") || previewSandbox.firstElementChild || previewSandbox;
+          }
+        }
+
+        return target || interactive || null;
+      }
+
+      function previewSupportInfoForProperty(prop, target) {
+        const name = String(prop || "").trim();
+        const activeKey = previewKeyForElement(target);
+        let keys = [];
+        let reason = "";
+
+        if (name === "accent-color") {
+          keys = ["formio-checkbox", "formio-radio", "formio-selectboxes"];
+          reason = "accent-color only shows on native form controls with browser-managed accents.";
+        } else if (name === "caret-color") {
+          keys = ["input", "formio-textfield", "formio-textarea", "formio-datetime", "formio-address"];
+          reason = "caret-color only appears inside editable text fields while typing.";
+        } else if (isBackdropFilterProperty(name)) {
+          keys = ["card"];
+          reason = "backdrop-filter needs a translucent surface with visible detail behind it.";
+        } else if (isLayoutContainerMirrorProperty(name) || isLayoutItemMirrorProperty(name)) {
+          keys = ["sandbox"];
+          reason = "alignment and layout placement properties need a multi-child flex or grid context.";
+        }
+
+        const deduped = keys.filter(function (key, index) {
+          return key && key !== activeKey && keys.indexOf(key) === index;
+        });
+        return {
+          keys: deduped,
+          reason: deduped.length > 0 ? reason : ""
+        };
+      }
+
+      function applyPropertyCompatibilityMirrors(originalTarget, prop, value) {
+        const name = String(prop || "").trim();
+        if (!name) return;
+
+        if (name === "accent-color") {
+          previewAccentControls().forEach(function (node, index) {
+            if (!node || node === originalTarget) return;
+            node.style.setProperty("accent-color", value);
+            if (typeof node.checked === "boolean" && index !== 1) {
+              node.checked = true;
+            }
+          });
+          return;
+        }
+
+        if (name === "caret-color") {
+          previewTextEntryControls().forEach(function (node) {
+            if (!node || node === originalTarget) return;
+            node.style.setProperty("caret-color", value);
+          });
+          if (elPreviewInputCaretProxy) {
+            elPreviewInputCaretProxy.style.setProperty("--preview-caret-color", value);
+          }
+          return;
+        }
+
+        if (isBackdropFilterProperty(name)) {
+          if (previewCard && previewCard !== originalTarget) {
+            primeBackdropPreviewTarget(previewCard);
+            previewCard.style.setProperty("backdrop-filter", value);
+            previewCard.style.setProperty("-webkit-backdrop-filter", value);
+          }
+          return;
+        }
+
+        if (isLayoutContainerMirrorProperty(name)) {
+          if (previewSandbox) {
+            primeLayoutPreviewTarget(previewSandbox);
+            if (previewSandbox !== originalTarget) {
+              previewSandbox.style.setProperty(name, value);
+            }
+          }
+          return;
+        }
+
+        if (isLayoutItemMirrorProperty(name) && previewSandbox) {
+          primeLayoutPreviewTarget(previewSandbox);
+          const focusItem = previewSandbox.querySelector(".box.alpha") || previewSandbox.firstElementChild;
+          if (focusItem && focusItem !== originalTarget) {
+            focusItem.style.setProperty(name, value);
+          }
+        }
+      }
+
+      function applyPreviewPropertyToTarget(target, prop, value) {
+        const name = String(prop || "").trim();
+        if (!name) return;
+        const primaryTarget = primaryPreviewTargetForProperty(target, name);
+        if (!primaryTarget) return;
+        if (isBackdropFilterProperty(name)) {
+          primeBackdropPreviewTarget(primaryTarget);
+          primaryTarget.style.setProperty("backdrop-filter", value);
+          primaryTarget.style.setProperty("-webkit-backdrop-filter", value);
+          applyPropertyCompatibilityMirrors(primaryTarget, name, value);
+          return;
+        }
+        primaryTarget.style.setProperty(name, value);
+        applyPropertyCompatibilityMirrors(primaryTarget, name, value);
+      }
+
       function resetPreview() {
         Object.keys(previewTargets).forEach(function (key) {
           resetPreviewElement(previewTargets[key]);
@@ -13179,14 +16225,24 @@ translateY()	translateY(<length|percentage>)
           ? "Default"
           : ((PREVIEW_STATE_SELECTOR_MAP[interaction] && PREVIEW_STATE_SELECTOR_MAP[interaction].label) || interaction);
         previewPanels.forEach(function (panel) {
-          const active = panel.getAttribute("data-preview-key") === current;
+          const key = panel.getAttribute("data-preview-key") || "";
+          const active = key === current;
+          const support = !active && previewSupportKeys.indexOf(key) >= 0;
           panel.classList.toggle("preview-panel-active", active);
+          panel.classList.toggle("preview-panel-support", support);
           panel.classList.toggle("preview-panel-inactive", !active);
         });
         updatePreviewStateBadges();
-        elPreviewActiveHelp.textContent =
+        let helpText =
           "Active preview target: " + previewTargetLabel(current) +
           ". The highlighted panel receives the current styles. Interaction: " + interactionLabel + ".";
+        if (previewSupportKeys.length > 0) {
+          helpText += " Support preview: " + previewSupportKeys.map(previewTargetLabel).join(", ") + ".";
+          if (previewSupportReason) {
+            helpText += " " + previewSupportReason;
+          }
+        }
+        elPreviewActiveHelp.textContent = helpText;
       }
 
       function flashActivePreviewPanel() {
@@ -13275,7 +16331,7 @@ translateY()	translateY(<length|percentage>)
         }
 
         if (shouldApplyCurrentDraftToPreview()) {
-          target.style.setProperty(prop, resolved);
+          applyPreviewPropertyToTarget(target, prop, resolved);
           applyAnimationPreviewAssist(target, item, resolved);
         }
         return prop + ": " + resolved + ";";
@@ -13288,7 +16344,7 @@ translateY()	translateY(<length|percentage>)
         }
         const prop = getFunctionPropertyValue();
         if (shouldApplyCurrentDraftToPreview()) {
-          target.style.setProperty(prop, fnCall);
+          applyPreviewPropertyToTarget(target, prop, fnCall);
         }
         return {
           call: fnCall,
@@ -13304,6 +16360,347 @@ translateY()	translateY(<length|percentage>)
         const property = getFunctionPropertyValue();
         const call = fnCall || item.syntax;
         elFunctionHelpSyntax.textContent = property + ": " + call + ";";
+      }
+
+      function startsWithAny(text, prefixes) {
+        return prefixes.some(function (prefix) {
+          return text.indexOf(prefix) === 0;
+        });
+      }
+
+      function itemBriefMeta(item) {
+        if (!item) {
+          return {
+            title: "Choose an item to inspect it.",
+            badge: "Waiting",
+            summary: "Pick any attribute, property, or function to see a quick plain-language explanation.",
+            ideas: "Use this box to compare the role of each option before you start editing values.",
+            limits: "This is a fast practical summary, so always verify the preview and exported CSS before shipping.",
+            notes: "After you choose an item, decide whether it belongs inline on one element or in reusable CSS rules.",
+            syntax: "No item selected yet."
+          };
+        }
+
+        const category = elCategory.value;
+        const name = String(item.name || "").trim();
+        const lower = name.toLowerCase();
+        const syntax = String(item.syntax || "").trim() || "No template syntax listed.";
+
+        if (category === "attribute") {
+          if (name === "style") {
+            return {
+              title: "HTML Attribute: style",
+              badge: "Inline CSS",
+              summary: "Writes CSS declarations directly onto one element through style=\"\".",
+              ideas: "Best for quick prototypes, one-off visual fixes, or checking a value before moving it into the builder.",
+              limits: "It cannot target hover states, sibling structure, media queries, or reusable batches of elements by itself.",
+              notes: "Inline styles are harder to maintain at scale and usually win against weaker stylesheet rules, so move stable styling into Step 4 when possible.",
+              syntax: syntax
+            };
+          }
+
+          if (name === "class") {
+            return {
+              title: "HTML Attribute: class",
+              badge: "Reusable Hook",
+              summary: "Attaches one or more class names that your stylesheet can target later.",
+              ideas: "Use it for theme wrappers, component variants, and stable hooks for Form.io CSS injection.",
+              limits: "A class does not change the visuals on its own until matching CSS rules exist.",
+              notes: "Prefer clear semantic names so future selectors stay readable and you avoid one-off utility-class sprawl.",
+              syntax: syntax
+            };
+          }
+
+          if (name === "id") {
+            return {
+              title: "HTML Attribute: id",
+              badge: "Unique Hook",
+              summary: "Assigns a unique identifier to one specific element.",
+              ideas: "Useful for anchor links, singular JS hooks, or a rare one-off selector that must target exactly one node.",
+              limits: "IDs should stay unique per page and can create high-specificity CSS that is awkward to override later.",
+              notes: "Use classes for reusable styling. Keep ids for unique meaning, navigation, or behavior.",
+              syntax: syntax
+            };
+          }
+
+          if (startsWithAny(lower, ["aria-"])) {
+            return {
+              title: "HTML Attribute: " + name,
+              badge: "Accessibility",
+              summary: "Adds accessibility metadata so assistive technologies understand the element more clearly.",
+              ideas: "Use it for labels, descriptions, expanded states, control relationships, and status messaging.",
+              limits: "These attributes usually improve meaning rather than visual appearance, so you may not see a visible preview difference.",
+              notes: "Keep aria values synchronized with the real UI state and visible text so screen readers are not misled.",
+              syntax: syntax
+            };
+          }
+
+          if (name === "data-*" || startsWithAny(lower, ["data-"])) {
+            return {
+              title: "HTML Attribute: " + name,
+              badge: "Metadata Hook",
+              summary: "Stores custom metadata on the element for scripts, tests, analytics, or attribute selectors.",
+              ideas: "Good for QA selectors, state flags, integration hooks, or lightweight metadata you want to keep in the markup.",
+              limits: "It does nothing by itself until JavaScript or CSS actually reads it.",
+              notes: "Name data attributes clearly, such as data-step or data-variant, so their purpose stays obvious later.",
+              syntax: syntax
+            };
+          }
+
+          if (syntax.indexOf("=") < 0) {
+            return {
+              title: "HTML Attribute: " + name,
+              badge: "Boolean State",
+              summary: "This is a presence-based HTML flag, so the attribute is either there or it is not.",
+              ideas: "Use it to disable controls, mark required fields, hide content, or enable built-in browser behavior quickly.",
+              limits: "It is binary only, with no custom text payload beyond on or off.",
+              notes: "Boolean attributes often affect both behavior and accessibility, so verify the final form flow, not just the visual preview.",
+              syntax: syntax
+            };
+          }
+
+          return {
+            title: "HTML Attribute: " + name,
+            badge: "Markup Setting",
+            summary: "Writes a direct value into the element tag and changes the markup itself.",
+            ideas: "Use it for semantics, placeholders, labels, hints, links, sources, roles, or other per-element configuration.",
+            limits: "It affects one element at a time and is usually less reusable than a class-driven stylesheet rule.",
+            notes: "If the main goal is consistent visual styling across multiple components, add a class and move the styling into Step 4.",
+            syntax: syntax
+          };
+        }
+
+        if (category === "property") {
+          if (lower === "accent-color") {
+            return {
+              title: "CSS Property: " + name,
+              badge: "Form Control Tint",
+              summary: "Tints native checkbox, radio, range, and similar browser-controlled UI accents.",
+              ideas: "Use it to quickly brand checkboxes, radios, and selectbox-style controls without rebuilding them from scratch.",
+              limits: "It only affects controls that expose a native accent surface, so plain cards and text inputs will not visibly react.",
+              notes: "This preview mirrors the color onto the checkbox, radio, and selectboxes demos even if your active target is something else.",
+              syntax: syntax
+            };
+          }
+
+          if (lower === "caret-color") {
+            return {
+              title: "CSS Property: " + name,
+              badge: "Text Caret",
+              summary: "Changes the insertion cursor color inside editable text fields.",
+              ideas: "Useful when branded forms need the typing cursor to match the rest of the field styling.",
+              limits: "It only appears while the user is editing text, so there is no visible change on non-text elements.",
+              notes: "This preview mirrors the color onto the text-entry demos and the small caret sample under the input panel.",
+              syntax: syntax
+            };
+          }
+
+          if (lower === "backdrop-filter" || lower === "-webkit-backdrop-filter") {
+            return {
+              title: "CSS Property: " + name,
+              badge: "Glass Effect",
+              summary: "Blurs or color-shifts the pixels behind a translucent element instead of filtering the element content itself.",
+              ideas: "Use it for frosted cards, floating panels, translucent nav bars, and soft overlay surfaces.",
+              limits: "It only becomes visible when the element is at least partly transparent and there is real visual detail behind it.",
+              notes: "This preview now mirrors both the standard and WebKit property names together. For the clearest demo, keep the target on Card so the photo backdrop stays visible behind the surface.",
+              syntax: syntax
+            };
+          }
+
+          if (
+            lower === "align-content" ||
+            lower === "align-items" ||
+            lower === "justify-content" ||
+            lower === "align-self" ||
+            lower === "justify-self" ||
+            lower === "place-self"
+          ) {
+            return {
+              title: "CSS Property: " + name,
+              badge: "Layout Alignment",
+              summary: "Controls how items align or distribute inside a flex or grid layout context.",
+              ideas: "Use it to tidy repeated field stacks, chip groups, toolbar rows, or any wrapper with multiple children.",
+              limits: "Alignment properties need the right layout model and multiple items, so they can look inactive on a simple single-node target.",
+              notes: "This preview mirrors alignment changes onto the sandbox layout demo so the effect stays visible even when the current target is too simple.",
+              syntax: syntax
+            };
+          }
+
+          if (startsWithAny(lower, ["display", "position", "flex", "grid", "align-", "justify-", "place-", "order", "z-index", "float", "clear"])) {
+            return {
+              title: "CSS Property: " + name,
+              badge: "Layout Control",
+              summary: "Changes how the element participates in layout, alignment, stacking, or document flow.",
+              ideas: "Use it for grid and flex alignment, wrapper structure, sticky headers, layered cards, and placement logic.",
+              limits: "Layout properties often affect nearby siblings and parent-child relationships, not just the selected target.",
+              notes: "Re-check the live DOM or the selector simulator when you use this, because layout behavior depends heavily on surrounding structure.",
+              syntax: syntax
+            };
+          }
+
+          if (startsWithAny(lower, ["margin", "padding", "gap", "width", "height", "min-", "max-", "top", "right", "bottom", "left", "inset", "block-size", "inline-size"])) {
+            return {
+              title: "CSS Property: " + name,
+              badge: "Spacing / Size",
+              summary: "Controls physical space, dimensions, or how much room the element occupies.",
+              ideas: "Use it to create breathing room, standardize component sizes, tighten dense forms, or control offsets.",
+              limits: "Small value changes can trigger wrapping, overflow, or clipped content once real form content is present.",
+              notes: "Check narrow screens and real Form.io wrappers, because container constraints often change the final result.",
+              syntax: syntax
+            };
+          }
+
+          if (startsWithAny(lower, ["font", "text", "line-height", "letter-spacing", "word-spacing", "white-space", "list-style"])) {
+            return {
+              title: "CSS Property: " + name,
+              badge: "Text Styling",
+              summary: "Shapes how text is rendered, spaced, aligned, or wrapped.",
+              ideas: "Useful for improving readability, creating hierarchy, tightening helper text, or calming noisy labels.",
+              limits: "Typography changes can help clarity, but they will not solve structural layout issues by themselves.",
+              notes: "Verify line length, truncation, and contrast after applying text changes, especially on small inputs and helper text.",
+              syntax: syntax
+            };
+          }
+
+          if (startsWithAny(lower, ["transform", "transition", "animation", "scroll-behavior"])) {
+            return {
+              title: "CSS Property: " + name,
+              badge: "Motion / State",
+              summary: "Controls movement, transitions, or how state changes feel over time.",
+              ideas: "Good for hover polish, subtle focus feedback, pressed states, and restrained entrance motion.",
+              limits: "Overuse can distract users or reduce accessibility, especially in dense forms where fast completion matters.",
+              notes: "Keep motion short, meaningful, and compatible with reduced-motion fallbacks when you export the final CSS.",
+              syntax: syntax
+            };
+          }
+
+          if (startsWithAny(lower, ["cursor", "pointer-events", "user-select", "visibility", "overflow"])) {
+            return {
+              title: "CSS Property: " + name,
+              badge: "Interaction Control",
+              summary: "Changes interaction affordance, visibility, or clipping behavior more than decorative paint.",
+              ideas: "Use it to guide clicks, suppress accidental selection, hide overflow, or gate interaction in certain states.",
+              limits: "These rules can make content feel broken if they hide access or remove expected interaction clues.",
+              notes: "After applying it, test keyboard access, pointer behavior, and whether important content is still reachable.",
+              syntax: syntax
+            };
+          }
+
+          return {
+            title: "CSS Property: " + name,
+            badge: "Visual Style",
+            summary: "Controls one visual behavior such as color, surfaces, borders, effects, or emphasis.",
+            ideas: "Great for theming cards, inputs, buttons, and helper text with reusable declaration-level control.",
+            limits: "Visual rules can affect readability quickly, especially if they change contrast, focus visibility, or component depth.",
+            notes: "Check the target against real content states like hover, focus, disabled, and validation feedback before you ship it.",
+            syntax: syntax
+          };
+        }
+
+        if (lower.indexOf("gradient(") >= 0) {
+          return {
+            title: "CSS Function: " + name,
+            badge: "Gradient Builder",
+            summary: "Creates an image-like color blend that is usually fed into background-image or background.",
+            ideas: "Use it for hero fills, button accents, elevated cards, separators, or subtle branded surfaces.",
+            limits: "It is not a standalone color and only works on properties that accept image values.",
+            notes: "Maintain strong text contrast on top of gradients and remember the current receive property is " + getFunctionPropertyValue() + ".",
+            syntax: syntax
+          };
+        }
+
+        if (
+          lower === "blur()" ||
+          lower === "brightness()" ||
+          lower === "contrast()" ||
+          lower === "drop-shadow()" ||
+          lower === "grayscale()" ||
+          lower === "hue-rotate()" ||
+          lower === "invert()" ||
+          lower === "opacity()" ||
+          lower === "saturate()" ||
+          lower === "sepia()"
+        ) {
+          return {
+            title: "CSS Function: " + name,
+            badge: "Effect Function",
+            summary: "Generates a visual effect value, most often for filter or backdrop-filter.",
+            ideas: "Use it for frosted glass, muted disabled states, hover polish, image treatment, or gentle emphasis shifts.",
+            limits: "It needs a receiving property and can become expensive when applied to large surfaces or complex layers.",
+            notes: "Use it sparingly on content-heavy areas and remember the current receive property is " + getFunctionPropertyValue() + ".",
+            syntax: syntax
+          };
+        }
+
+        if (
+          lower.indexOf("translate") === 0 ||
+          lower.indexOf("rotate") === 0 ||
+          lower.indexOf("scale") === 0 ||
+          lower.indexOf("skew") === 0 ||
+          lower === "matrix()" ||
+          lower === "perspective()"
+        ) {
+          return {
+            title: "CSS Function: " + name,
+            badge: "Transform Function",
+            summary: "Moves, rotates, scales, or distorts the rendered box without changing normal document flow.",
+            ideas: "Useful for hover lift, icon motion, press feedback, layered offsets, and subtle visual depth.",
+            limits: "The layout space usually stays where it was, so transformed elements can overlap nearby content.",
+            notes: "Check transform-origin, clipping, and focus outlines after applying it. Current receive property: " + getFunctionPropertyValue() + ".",
+            syntax: syntax
+          };
+        }
+
+        if (
+          lower === "clamp()" ||
+          lower === "min()" ||
+          lower === "max()" ||
+          lower === "minmax()" ||
+          lower === "repeat()"
+        ) {
+          return {
+            title: "CSS Function: " + name,
+            badge: "Responsive Logic",
+            summary: "Encodes sizing or track logic so the browser computes a responsive value for you.",
+            ideas: "Use it for fluid type, safer min-max sizing, resilient grid tracks, and compact layouts that still expand gracefully.",
+            limits: "It only works when the receiving property accepts that function and the unit mix makes sense.",
+            notes: "Keep units compatible and verify the result on narrow and wide screens. Current receive property: " + getFunctionPropertyValue() + ".",
+            syntax: syntax
+          };
+        }
+
+        if (lower === "var()") {
+          return {
+            title: "CSS Function: " + name,
+            badge: "Token Lookup",
+            summary: "Reads a CSS custom property and optionally falls back to a backup value.",
+            ideas: "Use it for shared themes, design tokens, per-form overrides, and palette changes without rewriting every declaration.",
+            limits: "It only resolves if the variable is defined within the active selector scope.",
+            notes: "Define variables on a stable parent and add a fallback when the token may not exist. Current receive property: " + getFunctionPropertyValue() + ".",
+            syntax: syntax
+          };
+        }
+
+        return {
+          title: "CSS Function: " + name,
+          badge: "Value Fragment",
+          summary: "Creates only the value-side fragment of a declaration, not the full property-plus-value rule.",
+          ideas: "Use it when the real power is the value logic itself and you may want to pair it with different properties.",
+          limits: "Nothing happens until you place it inside a compatible property that accepts this function shape.",
+          notes: "Double-check property compatibility before exporting. Current receive property: " + getFunctionPropertyValue() + ".",
+          syntax: syntax
+        };
+      }
+
+      function updateItemBrief(item) {
+        const meta = itemBriefMeta(item);
+        if (elItemBriefTitle) elItemBriefTitle.textContent = meta.title;
+        if (elItemBriefBadge) elItemBriefBadge.textContent = meta.badge;
+        if (elItemBriefSummary) elItemBriefSummary.textContent = meta.summary;
+        if (elItemBriefIdeas) elItemBriefIdeas.textContent = meta.ideas;
+        if (elItemBriefLimits) elItemBriefLimits.textContent = meta.limits;
+        if (elItemBriefNotes) elItemBriefNotes.textContent = meta.notes;
+        if (elItemBriefSyntax) elItemBriefSyntax.textContent = meta.syntax;
       }
 
       function currentCategoryGuideMeta() {
@@ -13461,16 +16858,23 @@ translateY()	translateY(<length|percentage>)
           el.textContent = "Preview Button";
         }
         if (el.id === "preview-card") {
-          el.textContent = "Preview Card";
+          refreshPreviewCardCopy();
         }
         if (el.id === "preview-input") {
           el.placeholder = "Preview Input";
+          if (elPreviewInputCaretProxy) {
+            elPreviewInputCaretProxy.style.removeProperty("--preview-caret-color");
+          }
         }
         if (el.id === "preview-image") {
-          el.src = previewImageDefaultSrc;
-          el.alt = "Preview Image";
+          const previewImageMeta = previewImageDataForChoice(currentPreviewImageChoice);
+          el.src = previewImageMeta ? previewImageMeta.src : previewImageDefaultSrc;
+          el.alt = previewImageMeta ? previewImageMeta.alt : "Preview Image";
         }
         if (el.id === "preview-sandbox") {
+          el.querySelectorAll(".box, .mini-btn").forEach(function (node) {
+            node.style.cssText = "";
+          });
           el.querySelectorAll(".mini-btn").forEach(function (b) {
             b.disabled = false;
           });
@@ -14673,10 +18077,19 @@ translateY()	translateY(<length|percentage>)
         const target = targetElement();
         const beforeMode = previewMode === "before";
         latestBuilderCandidate = null;
+        if (item && elCategory.value === "property") {
+          const supportInfo = previewSupportInfoForProperty(item.name, target);
+          previewSupportKeys = supportInfo.keys;
+          previewSupportReason = supportInfo.reason;
+        } else {
+          previewSupportKeys = [];
+          previewSupportReason = "";
+        }
         updatePreviewFocus();
         updateAnimationLabReducedPreviewState();
 
         if (!item) {
+          updateItemBrief(null);
           updateSelectionGuide(null);
           if (!beforeMode) {
             applyBuilderClassToTarget();
@@ -14705,6 +18118,7 @@ translateY()	translateY(<length|percentage>)
             applyBuilderClassToTarget();
             applyPreviewInteractionStateToElement(target);
           }
+          updateItemBrief(item);
           updateSelectionGuide(item);
           updateExportWizard();
           updateDiffInspector(item, map);
@@ -14722,6 +18136,7 @@ translateY()	translateY(<length|percentage>)
             applyBuilderClassToTarget();
             applyPreviewInteractionStateToElement(target);
           }
+          updateItemBrief(item);
           updateSelectionGuide(item);
           updateExportWizard();
           updateDiffInspector(item, map);
@@ -14733,12 +18148,13 @@ translateY()	translateY(<length|percentage>)
         elLiveSyntax.textContent = fn.call + "\n\n" + ".demo-target {\n  " + fn.declaration + "\n}";
         updateFunctionHelp(item, fn.call);
         latestBuilderCandidate = { kind: "single", rule: fn.declaration };
-          if (beforeMode) {
-            resetPreview();
-          } else {
-            applyBuilderClassToTarget();
-            applyPreviewInteractionStateToElement(target);
-          }
+        if (beforeMode) {
+          resetPreview();
+        } else {
+          applyBuilderClassToTarget();
+          applyPreviewInteractionStateToElement(target);
+        }
+        updateItemBrief(item);
         updateSelectionGuide(item);
         updateExportWizard();
         updateDiffInspector(item, map);
@@ -15618,6 +19034,15 @@ translateY()	translateY(<length|percentage>)
         if (!el) return;
         el.addEventListener("change", updateAnimationLabOutputs);
       });
+      if (elAnimationLabSequencePreset) {
+        elAnimationLabSequencePreset.addEventListener("change", updateAnimationLabOutputs);
+      }
+      if (elAnimationLabSequenceApplyPreset) {
+        elAnimationLabSequenceApplyPreset.addEventListener("click", applyAnimationLabSequencePreset);
+      }
+      if (elAnimationLabSequenceApplyRecommendation) {
+        elAnimationLabSequenceApplyRecommendation.addEventListener("click", applyAnimationLabRecommendedSequence);
+      }
       elAnimationLabLoadStep2.addEventListener("click", loadAnimationLabIntoStep2);
       elAnimationLabApplyBuilder.addEventListener("click", addAnimationLabToBuilder);
       elAnimationLabApplySequence.addEventListener("click", addAnimationLabSequenceToBuilder);
@@ -15911,7 +19336,21 @@ translateY()	translateY(<length|percentage>)
           setWorkspaceView(btn.getAttribute("data-workspace-view-option"));
         });
       }
+      if (elThemeSelect) {
+        elThemeSelect.addEventListener("change", function () {
+          applyThemeChoice(elThemeSelect.value);
+        });
+      }
+      if (elPreviewImagePreset) {
+        elPreviewImagePreset.addEventListener("change", function () {
+          applyPreviewImageChoice(elPreviewImagePreset.value);
+          updateLive();
+        });
+      }
 
+      enhanceExistingNumberInputs();
+      restoreThemeChoice();
+      restorePreviewImageChoice();
       syncFunctionPropertyControl("");
       renderSharedTriggerControls();
       updateTriggerSyncNote();
@@ -15926,6 +19365,7 @@ translateY()	translateY(<length|percentage>)
       updatePreviewCycleUI();
       updateBuilderMediaControlVisibility();
       renderAnimationLabPresetList();
+      renderAnimationLabSequencePresetList();
       renderSelectorSimulatorTemplateList();
       loadSelectorSimulatorTemplate();
       updateAnimationLabSessionPanel(null);
