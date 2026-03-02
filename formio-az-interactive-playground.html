@@ -3017,10 +3017,16 @@
                 <label class="label">State QA Detail</label>
                 <pre id="quality-audit-state-summary"></pre>
               </div>
+              <div class="row">
+                <label class="label">Remediation Coach</label>
+                <pre id="quality-audit-remediation-summary"></pre>
+              </div>
               <div class="quality-audit-actions">
                 <button id="quality-audit-refresh" type="button">Refresh Audit</button>
                 <button id="quality-audit-add-focus" type="button">Add Focus Ring Rule</button>
                 <button id="quality-audit-add-reduce" type="button">Add Reduced Motion Rule</button>
+                <button id="quality-audit-fix-contrast" type="button">Apply Contrast Fix</button>
+                <button id="quality-audit-run-state" type="button">Switch To Next QA State</button>
                 <button id="quality-audit-copy" type="button">Copy Audit Snapshot</button>
               </div>
             </div>
@@ -3964,9 +3970,12 @@ translateY()	translateY(<length|percentage>)
       const elQualityAuditSummary = document.getElementById("quality-audit-summary");
       const elQualityAuditContrastSummary = document.getElementById("quality-audit-contrast-summary");
       const elQualityAuditStateSummary = document.getElementById("quality-audit-state-summary");
+      const elQualityAuditRemediationSummary = document.getElementById("quality-audit-remediation-summary");
       const elQualityAuditRefresh = document.getElementById("quality-audit-refresh");
       const elQualityAuditAddFocus = document.getElementById("quality-audit-add-focus");
       const elQualityAuditAddReduce = document.getElementById("quality-audit-add-reduce");
+      const elQualityAuditFixContrast = document.getElementById("quality-audit-fix-contrast");
+      const elQualityAuditRunState = document.getElementById("quality-audit-run-state");
       const elQualityAuditCopy = document.getElementById("quality-audit-copy");
       const elCopyBuilderCSS = document.getElementById("copy-builder-css");
       const elClearBuilder = document.getElementById("clear-builder");
@@ -12531,6 +12540,76 @@ translateY()	translateY(<length|percentage>)
         return (lighter + 0.05) / (darker + 0.05);
       }
 
+      function mixRgbColors(start, end, amount) {
+        const from = start || { r: 0, g: 0, b: 0 };
+        const to = end || { r: 255, g: 255, b: 255 };
+        const t = clampNumber(Number(amount), 0, 1);
+        return {
+          r: Math.round(from.r + (to.r - from.r) * t),
+          g: Math.round(from.g + (to.g - from.g) * t),
+          b: Math.round(from.b + (to.b - from.b) * t),
+          a: 1
+        };
+      }
+
+      function colorDistanceBetween(a, b) {
+        const first = a || { r: 0, g: 0, b: 0 };
+        const second = b || { r: 0, g: 0, b: 0 };
+        const dr = first.r - second.r;
+        const dg = first.g - second.g;
+        const db = first.b - second.b;
+        return Math.sqrt(dr * dr + dg * dg + db * db);
+      }
+
+      function chooseContrastRemediation(background, currentForeground, minimum) {
+        const bg = background || { r: 255, g: 255, b: 255 };
+        const current = currentForeground || { r: 31, g: 39, b: 62 };
+        const targets = [
+          { r: 17, g: 24, b: 39, a: 1 },
+          { r: 255, g: 255, b: 255, a: 1 },
+          { r: 15, g: 23, b: 42, a: 1 },
+          { r: 248, g: 250, b: 252, a: 1 }
+        ];
+        const candidates = [];
+        const mixSteps = [0.12, 0.24, 0.36, 0.5, 0.66, 0.82, 1];
+
+        targets.forEach(function (target) {
+          mixSteps.forEach(function (step) {
+            candidates.push(mixRgbColors(current, target, step));
+          });
+          candidates.push(target);
+        });
+        candidates.push(current);
+
+        let bestMeeting = null;
+        let strongest = null;
+        candidates.forEach(function (candidate) {
+          const ratio = contrastRatioBetweenColors(candidate, bg);
+          const entry = {
+            color: candidate,
+            ratio: ratio,
+            distance: colorDistanceBetween(candidate, current)
+          };
+          if (!strongest || ratio > strongest.ratio || (ratio === strongest.ratio && entry.distance < strongest.distance)) {
+            strongest = entry;
+          }
+          if (ratio >= minimum) {
+            if (!bestMeeting || entry.distance < bestMeeting.distance || (entry.distance === bestMeeting.distance && ratio > bestMeeting.ratio)) {
+              bestMeeting = entry;
+            }
+          }
+        });
+
+        const chosen = bestMeeting || strongest;
+        return {
+          color: chosen.color,
+          ratio: chosen.ratio,
+          meetsMinimum: chosen.ratio >= minimum,
+          cssValue: rgbToHex(chosen.color.r, chosen.color.g, chosen.color.b),
+          label: rgbText(chosen.color)
+        };
+      }
+
       function rgbText(color) {
         const source = color || { r: 0, g: 0, b: 0 };
         return "rgb(" + Math.round(source.r) + ", " + Math.round(source.g) + ", " + Math.round(source.b) + ")";
@@ -12578,6 +12657,7 @@ translateY()	translateY(<length|percentage>)
         const isLargeText = fontSize >= 24 || (fontSize >= 18.66 && fontWeight >= 700);
         const minimum = isLargeText ? 3 : 4.5;
         const ratio = contrastRatioBetweenColors(effectiveForeground, effectiveBackground);
+        const recommendation = chooseContrastRemediation(effectiveBackground, effectiveForeground, minimum);
         let level = "AAA";
         let penalty = 0;
         let summary = "Strong contrast in the live preview.";
@@ -12587,11 +12667,11 @@ translateY()	translateY(<length|percentage>)
           level = "Fail";
           penalty = ratio < 3 ? 18 : 12;
           summary = "Live preview text is below the recommended " + minimum.toFixed(1) + ":1 contrast target.";
-          fix = "Raise foreground/background contrast on " + previewTargetLabel(previewKeyForElement(host) || (elTarget.value || "card")) + " until the live preview clears " + minimum.toFixed(1) + ":1.";
+          fix = "Apply the recommended text color " + recommendation.cssValue + " on " + previewTargetLabel(previewKeyForElement(host) || (elTarget.value || "card")) + " to target " + recommendation.ratio.toFixed(2) + ":1.";
         } else if (ratio < 7) {
           level = "AA";
           if (!isLargeText && ratio < 5) {
-            penalty = 4;
+          penalty = 4;
           }
           summary = "Contrast passes AA, but it is not yet at a strong AAA cushion.";
         }
@@ -12605,13 +12685,15 @@ translateY()	translateY(<length|percentage>)
           penalty: penalty,
           summary: summary,
           fix: fix,
+          recommendation: recommendation,
           detail: [
             "Target: " + previewTargetLabel(previewKeyForElement(host) || (elTarget.value || "card")),
             "Measured ratio: " + (Math.round(ratio * 100) / 100).toFixed(2) + ":1 (" + level + ")",
             "Required minimum: " + minimum.toFixed(1) + ":1" + (isLargeText ? " (large/bold text)" : " (standard text)"),
             "Foreground: " + rgbText(effectiveForeground),
             "Backdrop: " + rgbText(effectiveBackground) + (backdrop.approximate ? " (approximate due to gradient/image layers)" : ""),
-            "Reading: " + summary
+            "Reading: " + summary,
+            "Recommended text color: " + recommendation.cssValue + " (" + recommendation.label + ", targets " + recommendation.ratio.toFixed(2) + ":1)"
           ].join("\n")
         };
       }
@@ -12636,6 +12718,7 @@ translateY()	translateY(<length|percentage>)
         let penalty = 0;
         let summary = "";
         let fix = "";
+        let nextState = "";
 
         if (targetKey === "formio-checkbox" || targetKey === "formio-radio" || targetKey === "formio-selectboxes") {
           recommended.push("checked", "focus-visible", "disabled");
@@ -12673,10 +12756,12 @@ translateY()	translateY(<length|percentage>)
           summary = targetLabel + " is not currently previewing " + uncovered.map(function (state) {
             return PREVIEW_STATE_SELECTOR_MAP[state] ? PREVIEW_STATE_SELECTOR_MAP[state].label : state;
           }).join(", ") + ", so the active selector or motion trigger is not fully verified.";
+          nextState = uncovered[0];
           fix = "Switch Preview Interaction State to " + ((PREVIEW_STATE_SELECTOR_MAP[uncovered[0]] && PREVIEW_STATE_SELECTOR_MAP[uncovered[0]].label) || uncovered[0]) + " and re-check " + targetLabel + ".";
         } else if (formTarget && recommended.length && simulated === "default" && !required.length) {
           penalty += hasPseudoState ? 8 : 4;
           summary = targetLabel + " is on Default. Run at least one state-specific pass before release.";
+          nextState = recommended[0];
           fix = "Run a focused QA pass on " + targetLabel + " using " + ((PREVIEW_STATE_SELECTOR_MAP[recommended[0]] && PREVIEW_STATE_SELECTOR_MAP[recommended[0]].label) || recommended[0]) + ".";
         } else if (formTarget) {
           summary = targetLabel + " is covering the most relevant state path for the current build.";
@@ -12707,7 +12792,18 @@ translateY()	translateY(<length|percentage>)
                 return PREVIEW_STATE_SELECTOR_MAP[state] ? PREVIEW_STATE_SELECTOR_MAP[state].label : state;
               }).join(", ")
               : "Current preview already covers the required state path.")
+            ,
+            "Next audit jump: " + (nextState
+              ? ((PREVIEW_STATE_SELECTOR_MAP[nextState] && PREVIEW_STATE_SELECTOR_MAP[nextState].label) || nextState)
+              : "No forced jump needed right now.")
           ].join("\n")
+          ,
+          nextState: nextState,
+          nextStateLabel: nextState
+            ? ((PREVIEW_STATE_SELECTOR_MAP[nextState] && PREVIEW_STATE_SELECTOR_MAP[nextState].label) || nextState)
+            : "",
+          recommendedStates: recommended.slice(),
+          uncoveredStates: uncovered.slice()
         };
       }
 
@@ -12797,6 +12893,20 @@ translateY()	translateY(<length|percentage>)
           contrast: contrast.summary,
           state: stateAudit.summary,
           fixes: fixes,
+          remediation: [
+            "Contrast Action: " + (contrast.penalty > 0 && contrast.recommendation && contrast.recommendation.meetsMinimum
+              ? "Apply " + contrast.recommendation.cssValue + " to the current selector to reach about " + contrast.recommendation.ratio.toFixed(2) + ":1."
+              : "No urgent contrast patch is required."),
+            "State Action: " + (stateAudit.nextState
+              ? "Jump the Preview Simulator to " + stateAudit.nextStateLabel + " and re-run the audit."
+              : "Current preview state already covers the critical path."),
+            "Focus Action: " + (hasFocus
+              ? "Focus treatment already exists."
+              : "Use Add Focus Ring Rule to generate a keyboard-visible cue."),
+            "Motion Action: " + (hasReducedMotion
+              ? "Reduced-motion fallback already exists."
+              : "Use Add Reduced Motion Rule if motion ships.")
+          ].join("\n"),
           summary: [
             "Accessibility Readiness: " + score + "/100",
             "Verdict: " + verdict,
@@ -12811,8 +12921,13 @@ translateY()	translateY(<length|percentage>)
           ].join("\n"),
           contrastSummary: contrast.detail,
           stateSummary: stateAudit.detail,
+          contrastPlan: contrast.recommendation,
           canAddFocus: !hasFocus,
-          canAddReducedMotion: !hasReducedMotion
+          canAddReducedMotion: !hasReducedMotion,
+          canFixContrast: contrast.penalty > 0 && Boolean(contrast.recommendation && contrast.recommendation.meetsMinimum),
+          canAdvanceState: Boolean(stateAudit.nextState),
+          nextStateKey: stateAudit.nextState,
+          nextStateLabel: stateAudit.nextStateLabel
         };
       }
 
@@ -12840,6 +12955,7 @@ translateY()	translateY(<length|percentage>)
         elQualityAuditSummary.textContent = audit.summary;
         if (elQualityAuditContrastSummary) elQualityAuditContrastSummary.textContent = audit.contrastSummary;
         if (elQualityAuditStateSummary) elQualityAuditStateSummary.textContent = audit.stateSummary;
+        if (elQualityAuditRemediationSummary) elQualityAuditRemediationSummary.textContent = audit.remediation;
 
         elQualityAuditFixes.innerHTML = "";
         if (!audit.fixes.length) {
@@ -12860,6 +12976,18 @@ translateY()	translateY(<length|percentage>)
         elQualityAuditAddFocus.textContent = audit.canAddFocus ? "Add Focus Ring Rule" : "Focus Rule Added";
         elQualityAuditAddReduce.disabled = !audit.canAddReducedMotion;
         elQualityAuditAddReduce.textContent = audit.canAddReducedMotion ? "Add Reduced Motion Rule" : "Reduced Motion Added";
+        if (elQualityAuditFixContrast) {
+          elQualityAuditFixContrast.disabled = !audit.canFixContrast;
+          elQualityAuditFixContrast.textContent = audit.canFixContrast
+            ? "Apply Contrast Fix (" + audit.contrastPlan.cssValue + ")"
+            : "Contrast Fix Not Needed";
+        }
+        if (elQualityAuditRunState) {
+          elQualityAuditRunState.disabled = !audit.canAdvanceState;
+          elQualityAuditRunState.textContent = audit.canAdvanceState
+            ? "Switch To " + audit.nextStateLabel
+            : "State QA Already Covered";
+        }
       }
 
       function addQualityAuditFocusRule() {
@@ -12908,12 +13036,52 @@ translateY()	translateY(<length|percentage>)
         setBuilderStatus("Added reduced-motion fallback for " + selector + ".");
       }
 
+      function addQualityAuditContrastFix() {
+        const audit = buildQualityAuditSnapshot();
+        if (!audit.canFixContrast || !audit.contrastPlan) {
+          setBuilderStatus("Contrast fix is not required right now.");
+          renderQualityAudit();
+          return;
+        }
+        const selector = String(composeSelector() || "").trim() || getBaseSelector();
+        const added = addDeclarationsToSelector(selector, ["color: " + audit.contrastPlan.cssValue], "");
+        if (!added) {
+          setBuilderStatus("Contrast audit rule could not be added.");
+          renderQualityAudit();
+          return;
+        }
+        renderBuilder();
+        updateLive();
+        setBuilderStatus("Applied contrast fix " + audit.contrastPlan.cssValue + " to " + selector + ".");
+      }
+
+      function applyQualityAuditRecommendedState() {
+        const audit = buildQualityAuditSnapshot();
+        if (!audit.canAdvanceState) {
+          setBuilderStatus("State coverage already matches the current audit path.");
+          renderQualityAudit();
+          return;
+        }
+        const stateKey = String(audit.nextStateKey || "").trim();
+        if (!stateKey || !PREVIEW_STATE_SELECTOR_MAP[stateKey]) {
+          setBuilderStatus("Audit could not resolve the next recommended QA state.");
+          renderQualityAudit();
+          return;
+        }
+        syncPreviewInteractionStateFromPseudo(
+          PREVIEW_STATE_SELECTOR_MAP[stateKey].pseudo,
+          "Preview Simulator switched to " + PREVIEW_STATE_SELECTOR_MAP[stateKey].label + " for the next QA pass."
+        );
+        renderQualityAudit();
+      }
+
       async function copyQualityAuditSnapshot() {
         try {
           const sections = [
             elQualityAuditSummary ? elQualityAuditSummary.textContent : "",
             elQualityAuditContrastSummary ? "Contrast Detail\n" + elQualityAuditContrastSummary.textContent : "",
-            elQualityAuditStateSummary ? "State QA Detail\n" + elQualityAuditStateSummary.textContent : ""
+            elQualityAuditStateSummary ? "State QA Detail\n" + elQualityAuditStateSummary.textContent : "",
+            elQualityAuditRemediationSummary ? "Remediation Coach\n" + elQualityAuditRemediationSummary.textContent : ""
           ].filter(Boolean);
           await navigator.clipboard.writeText(sections.join("\n\n"));
           elQualityAuditCopy.textContent = "Copied";
@@ -13920,6 +14088,8 @@ translateY()	translateY(<length|percentage>)
       });
       elQualityAuditAddFocus.addEventListener("click", addQualityAuditFocusRule);
       elQualityAuditAddReduce.addEventListener("click", addQualityAuditReducedMotionRule);
+      elQualityAuditFixContrast.addEventListener("click", addQualityAuditContrastFix);
+      elQualityAuditRunState.addEventListener("click", applyQualityAuditRecommendedState);
       elQualityAuditCopy.addEventListener("click", copyQualityAuditSnapshot);
       elClearBuilder.addEventListener("click", clearBuilder);
       elAddVariable.addEventListener("click", addVariable);
