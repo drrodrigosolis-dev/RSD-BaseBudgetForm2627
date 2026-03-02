@@ -2378,6 +2378,72 @@
                 </div>
                 <div id="animation-lab-surface-plan" class="input-hint">Use these actions to move the preview toward the strongest-fit surface before you ship the motion.</div>
               </div>
+              <div class="help-box">
+                <div><strong>Motion Sequence Planner</strong></div>
+                <p class="tiny">Turn the current motion package into a coordinated stagger plan when repeated siblings should react in order instead of all firing at once.</p>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="animation-lab-sequence-mode">Sequence Pattern</label>
+                    <select id="animation-lab-sequence-mode" title="Choose how aggressively the stagger spreads across repeated siblings.">
+                      <option value="chain" selected>Stepped Chain</option>
+                      <option value="overlap">Tight Overlap</option>
+                      <option value="single">Single Lead Only</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="animation-lab-sequence-steps">Steps</label>
+                    <select id="animation-lab-sequence-steps" title="Choose how many sibling slots should be included in the sequence.">
+                      <option value="2">2</option>
+                      <option value="3" selected>3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="animation-lab-sequence-gap">Step Gap</label>
+                    <select id="animation-lab-sequence-gap" title="Choose the base delay added between each child in the sequence.">
+                      <option value="60ms">60ms</option>
+                      <option value="120ms" selected>120ms</option>
+                      <option value="180ms">180ms</option>
+                      <option value="240ms">240ms</option>
+                      <option value="320ms">320ms</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="animation-lab-sequence-order">Order</label>
+                    <select id="animation-lab-sequence-order" title="Choose which sibling starts first.">
+                      <option value="forward" selected>Forward</option>
+                      <option value="reverse">Reverse</option>
+                      <option value="center">Center Out</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Pattern Summary</div>
+                    <div id="animation-lab-sequence-summary">Configure a sequence to see how the motion spreads across repeated siblings.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Total Window</div>
+                    <div id="animation-lab-sequence-window">The planner will estimate when the last child settles once a sequence is configured.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Review Focus</div>
+                    <div id="animation-lab-sequence-focus">The planner will call out the main thing to validate before you ship a staggered motion.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Sequence CSS</label>
+                  <pre id="animation-lab-sequence-css"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-apply-sequence" type="button">Add Sequence To CSS Builder</button>
+                  <button id="animation-lab-copy-sequence" type="button">Copy Sequence CSS</button>
+                </div>
+                <div id="animation-lab-sequence-note" class="input-hint">Use this planner when stacked rows, helper messages, or repeated fields should move in a deliberate order.</div>
+              </div>
             </div>
           </details>
 
@@ -3834,6 +3900,17 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabSurfaceBestTarget = document.getElementById("animation-lab-surface-best-target");
       const elAnimationLabSurfaceCycleTop = document.getElementById("animation-lab-surface-cycle-top");
       const elAnimationLabSurfacePlan = document.getElementById("animation-lab-surface-plan");
+      const elAnimationLabSequenceMode = document.getElementById("animation-lab-sequence-mode");
+      const elAnimationLabSequenceSteps = document.getElementById("animation-lab-sequence-steps");
+      const elAnimationLabSequenceGap = document.getElementById("animation-lab-sequence-gap");
+      const elAnimationLabSequenceOrder = document.getElementById("animation-lab-sequence-order");
+      const elAnimationLabSequenceSummary = document.getElementById("animation-lab-sequence-summary");
+      const elAnimationLabSequenceWindow = document.getElementById("animation-lab-sequence-window");
+      const elAnimationLabSequenceFocus = document.getElementById("animation-lab-sequence-focus");
+      const elAnimationLabSequenceCss = document.getElementById("animation-lab-sequence-css");
+      const elAnimationLabApplySequence = document.getElementById("animation-lab-apply-sequence");
+      const elAnimationLabCopySequence = document.getElementById("animation-lab-copy-sequence");
+      const elAnimationLabSequenceNote = document.getElementById("animation-lab-sequence-note");
       const elAnimationLabIntentLane = document.getElementById("animation-lab-intent-lane");
       const elAnimationLabIntentCadence = document.getElementById("animation-lab-intent-cadence");
       const elAnimationLabIntentWhy = document.getElementById("animation-lab-intent-why");
@@ -4858,6 +4935,12 @@ translateY()	translateY(<length|percentage>)
         direction: "alternate",
         fillMode: "both",
         playState: "running"
+      };
+      const DEFAULT_ANIMATION_LAB_SEQUENCE = {
+        mode: "chain",
+        steps: "3",
+        gap: "120ms",
+        order: "forward"
       };
       const ANIMATION_LAB_PRESETS = [
         {
@@ -8630,6 +8713,29 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function normalizeAnimationLabSequenceValueState(source) {
+        const raw = source && typeof source === "object" ? source : {};
+        const mode = String(raw.mode || DEFAULT_ANIMATION_LAB_SEQUENCE.mode).trim();
+        const steps = String(raw.steps || DEFAULT_ANIMATION_LAB_SEQUENCE.steps).trim();
+        const gap = String(raw.gap || DEFAULT_ANIMATION_LAB_SEQUENCE.gap).trim();
+        const order = String(raw.order || DEFAULT_ANIMATION_LAB_SEQUENCE.order).trim();
+        return {
+          mode: ["chain", "overlap", "single"].indexOf(mode) >= 0 ? mode : DEFAULT_ANIMATION_LAB_SEQUENCE.mode,
+          steps: ["2", "3", "4", "5"].indexOf(steps) >= 0 ? steps : DEFAULT_ANIMATION_LAB_SEQUENCE.steps,
+          gap: ["60ms", "120ms", "180ms", "240ms", "320ms"].indexOf(gap) >= 0 ? gap : DEFAULT_ANIMATION_LAB_SEQUENCE.gap,
+          order: ["forward", "reverse", "center"].indexOf(order) >= 0 ? order : DEFAULT_ANIMATION_LAB_SEQUENCE.order
+        };
+      }
+
+      function animationLabSequenceValues() {
+        return normalizeAnimationLabSequenceValueState({
+          mode: elAnimationLabSequenceMode ? elAnimationLabSequenceMode.value : DEFAULT_ANIMATION_LAB_SEQUENCE.mode,
+          steps: elAnimationLabSequenceSteps ? elAnimationLabSequenceSteps.value : DEFAULT_ANIMATION_LAB_SEQUENCE.steps,
+          gap: elAnimationLabSequenceGap ? elAnimationLabSequenceGap.value : DEFAULT_ANIMATION_LAB_SEQUENCE.gap,
+          order: elAnimationLabSequenceOrder ? elAnimationLabSequenceOrder.value : DEFAULT_ANIMATION_LAB_SEQUENCE.order
+        });
+      }
+
       function animationLabTriggerLabel(trigger) {
         const raw = String(trigger || "").trim();
         if (!raw) return "Always On";
@@ -8664,9 +8770,25 @@ translateY()	translateY(<length|percentage>)
         return parts.join(" ").trim();
       }
 
+      function animationLabShorthandWithDelay(values, delay) {
+        const next = cloneAnimationLabValueState(values);
+        next.delay = String(delay || next.delay || DEFAULT_ANIMATION_PREVIEW.delay).trim();
+        return animationLabShorthand(next);
+      }
+
       function animationLabDeclarations(values) {
         const declarations = [
           "animation: " + animationLabShorthand(values) + ";"
+        ];
+        if ((values.play || "running") !== "running") {
+          declarations.push("animation-play-state: " + values.play + ";");
+        }
+        return declarations;
+      }
+
+      function animationLabDeclarationsWithDelay(values, delay) {
+        const declarations = [
+          "animation: " + animationLabShorthandWithDelay(values, delay) + ";"
         ];
         if ((values.play || "running") !== "running") {
           declarations.push("animation-play-state: " + values.play + ";");
@@ -9715,6 +9837,14 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      function applyAnimationLabSequenceState(state) {
+        const next = normalizeAnimationLabSequenceValueState(state);
+        setSelectValueIfPresent(elAnimationLabSequenceMode, next.mode, DEFAULT_ANIMATION_LAB_SEQUENCE.mode);
+        setSelectValueIfPresent(elAnimationLabSequenceSteps, next.steps, DEFAULT_ANIMATION_LAB_SEQUENCE.steps);
+        setSelectValueIfPresent(elAnimationLabSequenceGap, next.gap, DEFAULT_ANIMATION_LAB_SEQUENCE.gap);
+        setSelectValueIfPresent(elAnimationLabSequenceOrder, next.order, DEFAULT_ANIMATION_LAB_SEQUENCE.order);
+      }
+
       function applyAnimationLabState(state) {
         if (!state || typeof state !== "object") {
           if (elAnimationLabReducePreview) {
@@ -10203,11 +10333,10 @@ translateY()	translateY(<length|percentage>)
         setBuilderStatus("Animation Lab promoted " + winner.slotTitle + " into Baseline Anchor.");
       }
 
-      function animationLabSelector() {
-        const trigger = (elAnimationLabTrigger.value || "").trim();
+      function animationLabSelectorBody() {
         const override = (elBuilderSelectorOverride.value || "").trim();
         if (override) {
-          return (override + trigger).trim();
+          return override;
         }
         if (elSelectorGraphEnabled.checked) {
           if (!selectorGraphSegments.length) seedSelectorGraphFromLegacy();
@@ -10216,7 +10345,7 @@ translateY()	translateY(<length|percentage>)
             if (idx === selectorGraphSegments.length - 1) normalized.pseudo = "";
             return normalized;
           });
-          return (composeSelectorFromSegments(getBaseSelector(), clone) + trigger).trim();
+          return composeSelectorFromSegments(getBaseSelector(), clone).trim();
         }
         const base = getBaseSelector();
         const combinator = (elBuilderCombinator.value || "self").trim();
@@ -10226,15 +10355,183 @@ translateY()	translateY(<length|percentage>)
         if (combinator === "child") selector = base + " > " + (relative || "*");
         if (combinator === "adjacent") selector = base + " + " + (relative || "*");
         if (combinator === "sibling") selector = base + " ~ " + (relative || "*");
-        return (selector + trigger).trim();
+        return selector.trim();
+      }
+
+      function animationLabSelector() {
+        const trigger = (elAnimationLabTrigger.value || "").trim();
+        return (animationLabSelectorBody() + trigger).trim();
+      }
+
+      function animationLabSequenceStepCount(sequence) {
+        if (!sequence || sequence.mode === "single") return 1;
+        const parsed = Number(sequence.steps);
+        return Math.max(2, Math.min(5, Number.isFinite(parsed) ? parsed : 3));
+      }
+
+      function animationLabSequenceIncrementMs(sequence) {
+        if (!sequence || sequence.mode === "single") return 0;
+        const baseGap = parseAnimationLabTimeMs(sequence.gap);
+        if (sequence.mode === "overlap") {
+          return Math.max(40, Math.round(baseGap * 0.6));
+        }
+        return Math.max(0, baseGap);
+      }
+
+      function animationLabSequenceOrderIndices(count, order) {
+        const total = Math.max(1, Number(count) || 1);
+        if (order === "reverse") {
+          return Array.from({ length: total }, function (_, idx) { return total - idx; });
+        }
+        if (order === "center") {
+          const center = (total + 1) / 2;
+          return Array.from({ length: total }, function (_, idx) { return idx + 1; }).sort(function (a, b) {
+            const distance = Math.abs(a - center) - Math.abs(b - center);
+            if (distance !== 0) return distance;
+            return a - b;
+          });
+        }
+        return Array.from({ length: total }, function (_, idx) { return idx + 1; });
+      }
+
+      function animationLabSequenceEntries(values, sequence) {
+        const motion = cloneAnimationLabValueState(values);
+        const plan = normalizeAnimationLabSequenceValueState(sequence);
+        const count = animationLabSequenceStepCount(plan);
+        const order = animationLabSequenceOrderIndices(count, plan.order);
+        const body = animationLabSelectorBody() || getBaseSelector();
+        const trigger = String(motion.trigger || "").trim();
+        const baseDelayMs = parseAnimationLabTimeMs(motion.delay);
+        const incrementMs = animationLabSequenceIncrementMs(plan);
+
+        return order.map(function (childIndex, timelineIndex) {
+          const totalDelayMs = baseDelayMs + (incrementMs * timelineIndex);
+          const selector = childIndex === 1
+            ? (body + trigger).trim()
+            : (body + ":nth-child(" + childIndex + ")" + trigger).trim();
+          return {
+            sequenceIndex: timelineIndex + 1,
+            childIndex: childIndex,
+            selector: selector,
+            delayMs: totalDelayMs,
+            delayText: formatAnimationLabDurationMs(totalDelayMs)
+          };
+        });
+      }
+
+      function animationLabSequenceCss(values, sequence, entries) {
+        const motion = cloneAnimationLabValueState(values);
+        const list = Array.isArray(entries) && entries.length ? entries : animationLabSequenceEntries(motion, sequence);
+        const media = currentBuilderMediaQuery();
+        const blocks = list.map(function (entry) {
+          return animationLabRuleBlock(entry.selector, animationLabDeclarationsWithDelay(motion, entry.delayText));
+        });
+        const sections = [];
+        const keyframes = keyframesBlock(motion.keyframes);
+        if (keyframes) sections.push(keyframes);
+        if (media) {
+          sections.push([
+            media + " {",
+            blocks.map(function (block) {
+              return block.split("\n").map(function (line) { return "  " + line; }).join("\n");
+            }).join("\n\n"),
+            "}"
+          ].join("\n"));
+        } else {
+          sections.push(blocks.join("\n\n"));
+        }
+        sections.push(animationLabReducedMotionCss(animationLabSelectorBody()));
+        return sections.join("\n\n");
+      }
+
+      function animationLabSequenceSummary(sequence, entries) {
+        const plan = normalizeAnimationLabSequenceValueState(sequence);
+        const list = Array.isArray(entries) ? entries : [];
+        if (plan.mode === "single") {
+          return "Single lead mode keeps the current selector only. Use it when one anchor element should move without staggering its siblings.";
+        }
+        const orderLabel = plan.order === "reverse"
+          ? "back-to-front"
+          : plan.order === "center"
+            ? "center-out"
+            : "front-to-back";
+        const cadence = plan.mode === "overlap" ? "compressed cadence" : "full-step cadence";
+        return "This " + cadence + " sequence hits " + list.length + " sibling slot" + (list.length === 1 ? "" : "s") + " in " + orderLabel + " order.";
+      }
+
+      function animationLabSequenceWindowSummary(values, entries) {
+        const motion = cloneAnimationLabValueState(values);
+        const list = Array.isArray(entries) ? entries : [];
+        if (!list.length) {
+          return "Configure the sequence planner to estimate when the last child starts and settles.";
+        }
+        const lastDelayMs = list[list.length - 1].delayMs;
+        const durationMs = parseAnimationLabTimeMs(motion.duration);
+        const cycles = animationLabCycleCount(motion);
+        if (!durationMs) {
+          return "The last child starts at " + formatAnimationLabDurationMs(lastDelayMs) + ", but duration is still unset.";
+        }
+        if (cycles === Infinity) {
+          return "The last child begins at " + formatAnimationLabDurationMs(lastDelayMs) + " and then keeps looping until the trigger ends.";
+        }
+        const settleMs = lastDelayMs + (durationMs * cycles);
+        return "The last child begins at " + formatAnimationLabDurationMs(lastDelayMs) + " and the full sequence settles by " + formatAnimationLabDurationMs(settleMs) + ".";
+      }
+
+      function animationLabSequenceFocus(values, sequence, entries) {
+        const motion = cloneAnimationLabValueState(values);
+        const plan = normalizeAnimationLabSequenceValueState(sequence);
+        const list = Array.isArray(entries) ? entries : [];
+        const hasOverride = String(elBuilderSelectorOverride.value || "").trim();
+        if (hasOverride.indexOf(",") >= 0) {
+          return "Selector override includes multiple groups. Verify the generated :nth-child() selectors still map to the intended repeated nodes before shipping.";
+        }
+        if (plan.mode === "single") {
+          return "Single mode is safest when you want documentation or export clarity without changing the current one-target behavior.";
+        }
+        if (motion.trigger === ":active") {
+          return "Pressed feedback should stay extremely short. Test quick clicks to confirm later siblings do not lag behind the interaction.";
+        }
+        if (motion.trigger === ":focus" || motion.trigger === ":focus-visible") {
+          return "Tab through repeated fields and verify the stagger does not make keyboard focus feel delayed across dense forms.";
+        }
+        if (list.length >= 4 && animationLabSequenceIncrementMs(plan) >= 180) {
+          return "This sequence spans several siblings with a wide gap. Validate that the later children still feel connected to the original user action.";
+        }
+        return "Best for repeated siblings such as stacked rows, checklist items, or helper messages that should reveal in a deliberate order.";
+      }
+
+      function addAnimationLabSequenceToBuilder() {
+        const values = animationLabPresetValues();
+        const sequence = animationLabSequenceValues();
+        const entries = animationLabSequenceEntries(values, sequence);
+        const media = currentBuilderMediaQuery();
+        let added = 0;
+
+        entries.forEach(function (entry) {
+          added += addDeclarationsToSelector(entry.selector, animationLabDeclarationsWithDelay(values, entry.delayText), media);
+        });
+
+        if (!added) {
+          setBuilderStatus("Animation Lab could not add a usable sequence rule.");
+          return;
+        }
+
+        renderBuilder();
+        syncPreviewInteractionStateFromPseudo(values.trigger);
+        flashActivePreviewPanel();
+        setBuilderStatus("Animation Lab added a " + entries.length + "-step sequence across " + entries.length + " selector" + (entries.length === 1 ? "" : "s") + ".");
       }
 
       function updateAnimationLabOutputs() {
         const values = animationLabPresetValues();
+        const sequence = animationLabSequenceValues();
         const preset = selectedAnimationLabPreset();
         const trigger = animationLabTriggerLabel(values.trigger);
         const declarations = animationLabDeclarations(values);
         const selector = animationLabSelector();
+        const sequenceEntries = animationLabSequenceEntries(values, sequence);
+        const sequenceCss = animationLabSequenceCss(values, sequence, sequenceEntries);
         const media = currentBuilderMediaQuery();
         const brief = animationLabPresetBrief(values);
         const drift = animationLabPresetDiff(values, preset);
@@ -10356,6 +10653,16 @@ translateY()	translateY(<length|percentage>)
             surface.shortlist[0].targetLabel +
             " for a stronger validation pass before shipping.";
         }
+        elAnimationLabSequenceSummary.textContent = animationLabSequenceSummary(sequence, sequenceEntries);
+        elAnimationLabSequenceWindow.textContent = animationLabSequenceWindowSummary(values, sequenceEntries);
+        elAnimationLabSequenceFocus.textContent = animationLabSequenceFocus(values, sequence, sequenceEntries);
+        elAnimationLabSequenceCss.textContent = sequenceCss;
+        elAnimationLabApplySequence.textContent = sequence.mode === "single"
+          ? "Add Single Selector To Builder"
+          : "Add Sequence To CSS Builder";
+        elAnimationLabSequenceNote.textContent = sequence.mode === "single"
+          ? "Single lead mode keeps the current selector untouched while still packaging the motion as a documented export."
+          : "Sequence output appends :nth-child() selectors to the current Animation Lab target so repeated siblings can cascade without hand-writing each delay.";
         elAnimationLabIntentLane.textContent = intent.lane;
         elAnimationLabIntentCadence.textContent = intent.cadence;
         elAnimationLabIntentWhy.textContent = intent.why;
@@ -10888,6 +11195,7 @@ translateY()	translateY(<length|percentage>)
           mediaLayer: elBuilderMediaLayer.value,
           mediaCustom: elBuilderMediaCustom.value,
           animationLab: animationLabPresetValues(),
+          animationLabSequence: animationLabSequenceValues(),
           animationLabCompareSlots: serializeAnimationLabCompareSlots(),
           animationLabReducePreview: Boolean(elAnimationLabReducePreview && elAnimationLabReducePreview.checked),
           previewMode: previewMode,
@@ -10925,6 +11233,7 @@ translateY()	translateY(<length|percentage>)
         elBuilderMediaLayer.value = state.mediaLayer || "all";
         elBuilderMediaCustom.value = state.mediaCustom || "";
         updateBuilderMediaControlVisibility();
+        applyAnimationLabSequenceState(state.animationLabSequence);
         animationLabCompareSlots = normalizeAnimationLabCompareSlots(state.animationLabCompareSlots);
         applyAnimationLabState(state.animationLab);
         if (elAnimationLabReducePreview) {
@@ -13610,6 +13919,17 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      async function copyAnimationLabSequenceCss() {
+        try {
+          await navigator.clipboard.writeText(elAnimationLabSequenceCss.textContent);
+          elAnimationLabCopySequence.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopySequence.textContent = "Copy Sequence CSS"; }, 1200);
+        } catch (err) {
+          elAnimationLabCopySequence.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopySequence.textContent = "Copy Sequence CSS"; }, 1200);
+        }
+      }
+
       function updateSpacingHelperControlState(sourceInput) {
         if (!elCustomRuleHelperSpacingLinked.checked) {
           [elCustomRuleHelperSpacingRight, elCustomRuleHelperSpacingBottom, elCustomRuleHelperSpacingLeft].forEach(function (input) {
@@ -14334,8 +14654,18 @@ translateY()	translateY(<length|percentage>)
         });
         el.addEventListener("input", updateAnimationLabOutputs);
       });
+      [
+        elAnimationLabSequenceMode,
+        elAnimationLabSequenceSteps,
+        elAnimationLabSequenceGap,
+        elAnimationLabSequenceOrder
+      ].forEach(function (el) {
+        if (!el) return;
+        el.addEventListener("change", updateAnimationLabOutputs);
+      });
       elAnimationLabLoadStep2.addEventListener("click", loadAnimationLabIntoStep2);
       elAnimationLabApplyBuilder.addEventListener("click", addAnimationLabToBuilder);
+      elAnimationLabApplySequence.addEventListener("click", addAnimationLabSequenceToBuilder);
       elAnimationLabMatchPreview.addEventListener("click", syncPreviewInteractionToAnimationLab);
       elAnimationLabRestart.addEventListener("click", restartAnimationLabPreview);
       elAnimationLabRestorePreset.addEventListener("click", restoreAnimationLabFullPreset);
@@ -14349,6 +14679,7 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabCopyReduce.addEventListener("click", copyAnimationLabReducedFallback);
       elAnimationLabCopyReview.addEventListener("click", copyAnimationLabReviewSnapshot);
       elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
+      elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
       if (elAnimationLabCompareBench) {
         elAnimationLabCompareBench.addEventListener("click", function (event) {
           const button = event.target.closest("[data-compare-action]");
