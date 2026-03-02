@@ -2098,6 +2098,39 @@
                 </div>
               </div>
               <div class="help-box">
+                <div><strong>Multi-State Review</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Primary Path</div>
+                    <div id="animation-lab-review-primary">The live motion path will be summarized here once the lab has enough timing data.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Reduced Path</div>
+                    <div id="animation-lab-review-reduced">The reduced-motion fallback review will appear here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Best Review State</div>
+                    <div id="animation-lab-review-best-trigger">The lab will score alternate trigger states for this preview target.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Review Verdict</div>
+                    <div id="animation-lab-review-verdict">A rollout recommendation will appear here after the live and reduced paths are compared.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Review Snapshot</label>
+                  <pre id="animation-lab-review-snapshot"></pre>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Trigger Validation Matrix</label>
+                  <pre id="animation-lab-trigger-matrix"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-copy-review" type="button">Copy Review Snapshot</button>
+                </div>
+                <div id="animation-lab-review-note" class="input-hint">Use this review to compare the live path, reduced-motion fallback, and alternate trigger states before you export.</div>
+              </div>
+              <div class="help-box">
                 <div><strong>Surface Fit Guide</strong></div>
                 <div class="info-grid">
                   <div class="info-tile">
@@ -3457,6 +3490,14 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabRiskFill = document.getElementById("animation-lab-risk-fill");
       const elAnimationLabReleaseNote = document.getElementById("animation-lab-release-note");
       const elAnimationLabValidationFocus = document.getElementById("animation-lab-validation-focus");
+      const elAnimationLabReviewPrimary = document.getElementById("animation-lab-review-primary");
+      const elAnimationLabReviewReduced = document.getElementById("animation-lab-review-reduced");
+      const elAnimationLabReviewBestTrigger = document.getElementById("animation-lab-review-best-trigger");
+      const elAnimationLabReviewVerdict = document.getElementById("animation-lab-review-verdict");
+      const elAnimationLabReviewSnapshot = document.getElementById("animation-lab-review-snapshot");
+      const elAnimationLabTriggerMatrix = document.getElementById("animation-lab-trigger-matrix");
+      const elAnimationLabCopyReview = document.getElementById("animation-lab-copy-review");
+      const elAnimationLabReviewNote = document.getElementById("animation-lab-review-note");
       const elAnimationLabSurfaceFit = document.getElementById("animation-lab-surface-fit");
       const elAnimationLabSurfaceBest = document.getElementById("animation-lab-surface-best");
       const elAnimationLabSurfaceCaution = document.getElementById("animation-lab-surface-caution");
@@ -8778,6 +8819,132 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function animationLabTriggerReviewEntries(values) {
+        const currentTarget = (elTarget.value || "card").trim() || "card";
+        return [
+          { value: "", label: "Always On" },
+          { value: ":hover", label: "Hover" },
+          { value: ":focus", label: "Focus" },
+          { value: ":focus-visible", label: "Focus Visible" },
+          { value: ":active", label: "Active / Pressed" },
+          { value: ":disabled", label: "Disabled" },
+          { value: ":checked", label: "Checked" }
+        ].map(function (option) {
+          const candidate = Object.assign({}, values, { trigger: option.value });
+          const risk = animationLabRiskAssessment(candidate);
+          const surface = animationLabSurfaceAssessmentForTarget(candidate, currentTarget);
+          const score = Math.max(0, Math.min(100, Math.round(((100 - risk.score) * 0.55) + (surface.score * 0.45))));
+          let verdict = "Risky";
+          if (score >= 75) verdict = "Strong";
+          else if (score >= 55) verdict = "Conditional";
+          const note = risk.score >= 55
+            ? risk.focus
+            : (surface.notes[0] || surface.caution);
+          return {
+            value: option.value,
+            label: option.label,
+            score: score,
+            verdict: verdict,
+            risk: risk,
+            surface: surface,
+            current: option.value === String(values.trigger || "").trim(),
+            note: note
+          };
+        });
+      }
+
+      function animationLabBestReviewEntry(entries) {
+        const list = Array.isArray(entries) ? entries.slice() : [];
+        if (!list.length) return null;
+        return list.slice().sort(function (a, b) {
+          if (b.score !== a.score) return b.score - a.score;
+          if (a.current !== b.current) return a.current ? -1 : 1;
+          return a.label.localeCompare(b.label);
+        })[0];
+      }
+
+      function animationLabPrimaryReviewSummary(values, risk, surface) {
+        const trigger = animationLabTriggerLabel(values.trigger);
+        const target = previewTargetLabel((elTarget.value || "card").trim());
+        if (String(values.play || "running").trim() === "paused") {
+          return "Paused on " + target + ". Resume the " + trigger.toLowerCase() + " path before treating this as release-ready.";
+        }
+        return trigger + " on " + target + " runs as a " + risk.level.toLowerCase() + "-risk path with a " + surface.verdict.toLowerCase() + ".";
+      }
+
+      function animationLabReducedReviewSummary(values, risk) {
+        const trigger = animationLabTriggerLabel(values.trigger);
+        const targetKey = (elTarget.value || "card").trim();
+        const target = previewTargetLabel(targetKey);
+        const meta = animationLabSurfaceMeta(targetKey);
+        const liveDelta = risk.score >= 50 ? "high" : risk.score >= 25 ? "noticeable" : "light";
+        let message = trigger + " on " + target + " falls back to static styling with no animation, which creates a " + liveDelta + " contrast from the live path.";
+        if (values.trigger === ":focus" || values.trigger === ":focus-visible") {
+          message += " Keep the visible focus ring intact so motion is never carrying the state alone.";
+        } else if (meta.family === "action" || meta.family === "toggle") {
+          message += " Confirm the pressed or checked state still reads clearly from color, shape, or label changes alone.";
+        } else if (!values.trigger) {
+          message += " This is usually safer for idle surfaces because the resting state stays calm.";
+        }
+        return message;
+      }
+
+      function animationLabReviewVerdict(values, risk, bestReview) {
+        if (!bestReview) {
+          return "Review data is incomplete. Change a trigger or preview target to generate a fresh matrix.";
+        }
+        if (risk.score >= 75) {
+          return "Hold rollout. The live path is high-risk and should be shortened before broader validation.";
+        }
+        if (bestReview.current && bestReview.score >= 75) {
+          return "Current trigger is the strongest review path. Validate live motion once, then confirm reduced-motion parity.";
+        }
+        if (bestReview.score >= 75) {
+          return "Live path is workable, but " + bestReview.label + " is the cleanest review state for this target.";
+        }
+        return "No trigger state looks clean yet. Use guardrail or intent tuning before expanding QA coverage.";
+      }
+
+      function animationLabReviewSnapshot(values, risk, surface, bestReview) {
+        const lines = [];
+        lines.push("Primary: " + animationLabPrimaryReviewSummary(values, risk, surface));
+        lines.push("Reduced: " + animationLabReducedReviewSummary(values, risk));
+        lines.push("Current target: " + previewTargetLabel((elTarget.value || "card").trim()) + " (" + surface.score + "/100 surface fit).");
+        if (bestReview) {
+          lines.push(
+            "Best review state: " +
+            bestReview.label +
+            " (" +
+            bestReview.score +
+            "/100" +
+            (bestReview.current ? ", current" : ", alternate") +
+            ")."
+          );
+        }
+        lines.push("Next focus: " + risk.focus);
+        return lines.join("\n");
+      }
+
+      function animationLabTriggerMatrixText(entries) {
+        const list = Array.isArray(entries) ? entries : [];
+        if (!list.length) {
+          return "No trigger review entries available.";
+        }
+        return list.map(function (entry) {
+          return (
+            entry.label +
+            ": " +
+            entry.verdict +
+            " (" +
+            entry.score +
+            "/100" +
+            (entry.current ? ", current" : "") +
+            ") - " +
+            entry.note
+          );
+        }).join("\n");
+      }
+
       function animationLabPresetBrief(values) {
         const preset = selectedAnimationLabPreset();
         if (!preset) {
@@ -8955,6 +9122,8 @@ translateY()	translateY(<length|percentage>)
         const risk = animationLabRiskAssessment(values);
         const surface = animationLabSurfaceAssessment(values);
         const intent = animationLabIntentPlan(values);
+        const reviewEntries = animationLabTriggerReviewEntries(values);
+        const bestReview = animationLabBestReviewEntry(reviewEntries);
         const packageCss = animationLabPackageCss(selector, values);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         elAnimationLabPresetIntent.textContent = brief.intent;
@@ -8995,6 +9164,17 @@ translateY()	translateY(<length|percentage>)
               : "linear-gradient(90deg, #2ca66f, #8bbf43)";
         elAnimationLabReleaseNote.textContent = risk.recommendation;
         elAnimationLabValidationFocus.textContent = risk.focus;
+        elAnimationLabReviewPrimary.textContent = animationLabPrimaryReviewSummary(values, risk, surface);
+        elAnimationLabReviewReduced.textContent = animationLabReducedReviewSummary(values, risk);
+        elAnimationLabReviewBestTrigger.textContent = bestReview
+          ? bestReview.label + " is the strongest matrix state for " + previewTargetLabel((elTarget.value || "card").trim()) + " (" + bestReview.score + "/100)."
+          : "The matrix will recommend a best review state once the lab has at least one valid trigger.";
+        elAnimationLabReviewVerdict.textContent = animationLabReviewVerdict(values, risk, bestReview);
+        elAnimationLabReviewSnapshot.textContent = animationLabReviewSnapshot(values, risk, surface, bestReview);
+        elAnimationLabTriggerMatrix.textContent = animationLabTriggerMatrixText(reviewEntries);
+        elAnimationLabReviewNote.textContent = values.reducedPreviewEnabled
+          ? "Reduced-motion preview is active. Compare the live path against the matrix notes, then turn the preview off before exporting the main package."
+          : "Use this review to compare the live path, reduced-motion fallback, and alternate trigger states before you export.";
         elAnimationLabSurfaceFit.textContent = surface.fit;
         elAnimationLabSurfaceBest.textContent = surface.best;
         elAnimationLabSurfaceCaution.textContent = surface.caution;
@@ -11604,6 +11784,19 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      async function copyAnimationLabReviewSnapshot() {
+        try {
+          await navigator.clipboard.writeText(
+            elAnimationLabReviewSnapshot.textContent + "\n\n" + elAnimationLabTriggerMatrix.textContent
+          );
+          elAnimationLabCopyReview.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopyReview.textContent = "Copy Review Snapshot"; }, 1200);
+        } catch (err) {
+          elAnimationLabCopyReview.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopyReview.textContent = "Copy Review Snapshot"; }, 1200);
+        }
+      }
+
       function updateSpacingHelperControlState(sourceInput) {
         if (!elCustomRuleHelperSpacingLinked.checked) {
           [elCustomRuleHelperSpacingRight, elCustomRuleHelperSpacingBottom, elCustomRuleHelperSpacingLeft].forEach(function (input) {
@@ -12329,6 +12522,7 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabSurfaceCycleTop.addEventListener("click", cycleAnimationLabTopSurfaces);
       elAnimationLabCopyPackage.addEventListener("click", copyAnimationLabPackage);
       elAnimationLabCopyReduce.addEventListener("click", copyAnimationLabReducedFallback);
+      elAnimationLabCopyReview.addEventListener("click", copyAnimationLabReviewSnapshot);
       elAnimationLabReducePreview.addEventListener("change", function () {
         updateAnimationLabReducedPreviewState();
         setBuilderStatus(
