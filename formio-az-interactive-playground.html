@@ -2105,6 +2105,39 @@
                 <pre id="animation-lab-keyframes"></pre>
               </div>
               <div class="help-box">
+                <div><strong>Keyframe Anatomy</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Frame Markers</div>
+                    <div id="animation-lab-anatomy-stops">Choose a built-in keyframe to inspect its timeline markers.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Animated Properties</div>
+                    <div id="animation-lab-anatomy-properties">The lab will summarize which CSS properties are moving in this keyframe.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Motion Family</div>
+                    <div id="animation-lab-anatomy-family">A reusable motion family label will appear here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Shipping Watchpoint</div>
+                    <div id="animation-lab-anatomy-watch">The lab will call out the main thing to verify before reusing this motion.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Frame Timeline</label>
+                  <pre id="animation-lab-anatomy-timeline"></pre>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Implementation Brief</label>
+                  <pre id="animation-lab-anatomy-brief"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-copy-anatomy" type="button">Copy Keyframe Brief</button>
+                </div>
+                <div id="animation-lab-anatomy-note" class="input-hint">Use this to inspect the built-in motion path before you tune duration, loops, or trigger behavior.</div>
+              </div>
+              <div class="help-box">
                 <div><strong>Motion Guidance</strong></div>
                 <div class="info-grid">
                   <div class="info-tile">
@@ -3620,6 +3653,14 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabSelectorNote = document.getElementById("animation-lab-selector-note");
       const elAnimationLabOutput = document.getElementById("animation-lab-output");
       const elAnimationLabKeyframes = document.getElementById("animation-lab-keyframes");
+      const elAnimationLabAnatomyStops = document.getElementById("animation-lab-anatomy-stops");
+      const elAnimationLabAnatomyProperties = document.getElementById("animation-lab-anatomy-properties");
+      const elAnimationLabAnatomyFamily = document.getElementById("animation-lab-anatomy-family");
+      const elAnimationLabAnatomyWatch = document.getElementById("animation-lab-anatomy-watch");
+      const elAnimationLabAnatomyTimeline = document.getElementById("animation-lab-anatomy-timeline");
+      const elAnimationLabAnatomyBrief = document.getElementById("animation-lab-anatomy-brief");
+      const elAnimationLabCopyAnatomy = document.getElementById("animation-lab-copy-anatomy");
+      const elAnimationLabAnatomyNote = document.getElementById("animation-lab-anatomy-note");
       const elAnimationLabIntensity = document.getElementById("animation-lab-intensity");
       const elAnimationLabTriggerFit = document.getElementById("animation-lab-trigger-fit");
       const elAnimationLabReduceNote = document.getElementById("animation-lab-reduce-note");
@@ -7263,6 +7304,113 @@ translateY()	translateY(<length|percentage>)
         return "@keyframes " + name + " {\n  " + body.split("\n").join("\n  ") + "\n}";
       }
 
+      function parseBuiltInKeyframeStops(name) {
+        const body = BUILTIN_KEYFRAMES[name];
+        if (!body) return [];
+        return body.split("\n").map(function (line) {
+          const match = String(line || "").trim().match(/^([^{}]+)\{([^{}]+)\}$/);
+          if (!match) return null;
+          const selectors = match[1].split(",").map(function (part) {
+            return part.trim();
+          }).filter(Boolean);
+          const declarations = match[2].split(";").map(function (part) {
+            const trimmed = part.trim();
+            if (!trimmed) return null;
+            const idx = trimmed.indexOf(":");
+            if (idx < 0) return null;
+            return {
+              property: trimmed.slice(0, idx).trim(),
+              value: trimmed.slice(idx + 1).trim()
+            };
+          }).filter(Boolean);
+          return {
+            selectors: selectors,
+            declarations: declarations
+          };
+        }).filter(Boolean);
+      }
+
+      function animationLabKeyframeFamily(stops) {
+        const summary = stops.map(function (stop) {
+          return stop.declarations.map(function (decl) {
+            return decl.property + ":" + decl.value;
+          }).join(" ");
+        }).join(" ").toLowerCase();
+        if (summary.indexOf("rotate(") >= 0) return "Continuous rotation";
+        if (summary.indexOf("box-shadow") >= 0 || summary.indexOf("scale(") >= 0) return "Pulse emphasis";
+        if (summary.indexOf("brightness(") >= 0 || summary.indexOf("translatex(") >= 0) return "Shimmer sweep";
+        if (summary.indexOf("translatey(") >= 0 && stops.length >= 3) return "Bounce / float";
+        if (summary.indexOf("translatey(") >= 0) return "Vertical entrance";
+        if (summary.indexOf("opacity") >= 0 && summary.indexOf("transform") < 0) return "Opacity reveal";
+        if (summary.indexOf("transform") >= 0) return "Transform-driven motion";
+        return "General motion utility";
+      }
+
+      function animationLabKeyframeAnatomy(values) {
+        const name = String((values && values.keyframes) || "").trim();
+        const stops = parseBuiltInKeyframeStops(name);
+        const markerLabels = [];
+        const propertyList = [];
+        stops.forEach(function (stop) {
+          stop.selectors.forEach(function (selector) {
+            if (markerLabels.indexOf(selector) < 0) markerLabels.push(selector);
+          });
+          stop.declarations.forEach(function (decl) {
+            if (propertyList.indexOf(decl.property) < 0) propertyList.push(decl.property);
+          });
+        });
+        const family = animationLabKeyframeFamily(stops);
+        const joinedSummary = stops.map(function (stop) {
+          return stop.declarations.map(function (decl) {
+            return decl.property + ":" + decl.value;
+          }).join(" ");
+        }).join(" ").toLowerCase();
+        let watch = "Verify the visible start and end states still match the selected fill mode once this motion is attached to a real Form.io surface.";
+        if (!stops.length) {
+          watch = "This keyframe name is not part of the built-in atlas yet, so inspect the exported CSS block directly before reuse.";
+        } else if (joinedSummary.indexOf("box-shadow") >= 0 || joinedSummary.indexOf("filter") >= 0) {
+          watch = "This sequence uses paint-heavy frames. Validate on dense forms and lower-powered devices before you ship it broadly.";
+        } else if (joinedSummary.indexOf("rotate(") >= 0 && String((values && values.iterations) || "").trim() === "infinite") {
+          watch = "Infinite rotation should communicate loading or progress only. Pair it with reduced motion and verify it does not become background noise.";
+        } else if (joinedSummary.indexOf("translatey(") >= 0 && String((values && values.iterations) || "").trim() === "infinite") {
+          watch = "Looping vertical motion keeps pulling attention. Reserve it for ambient accents instead of dense input controls.";
+        } else if (propertyList.length === 1 && propertyList[0] === "opacity") {
+          watch = "This is a low-risk reveal, but check readability during the first frame if the element starts fully transparent.";
+        }
+        const timeline = stops.length
+          ? stops.map(function (stop) {
+            return stop.selectors.join(", ") + ": " + stop.declarations.map(function (decl) {
+              return decl.property + " -> " + decl.value;
+            }).join(" | ");
+          }).join("\n")
+          : "No built-in frame timeline is available for " + (name || "this keyframe") + ".";
+        const markersText = markerLabels.length
+          ? markerLabels.join(" -> ")
+          : "No built-in markers";
+        const propertiesText = propertyList.length
+          ? propertyList.join(", ")
+          : "No built-in properties";
+        const briefLines = [
+          "Keyframe: " + (name || "Unspecified"),
+          "Family: " + family,
+          "Markers: " + markersText,
+          "Properties: " + propertiesText,
+          "Current Timing: " + animationLabShorthand(values),
+          "Watchpoint: " + watch
+        ];
+        return {
+          stopCount: markerLabels.length
+            ? markerLabels.length + " markers across " + stops.length + " frame rule" + (stops.length === 1 ? "" : "s") + "."
+            : "No built-in frame markers available.",
+          properties: propertiesText,
+          family: family,
+          watch: watch,
+          timeline: timeline,
+          brief: briefLines.join("\n"),
+          known: Boolean(stops.length)
+        };
+      }
+
       function writeBuiltInKeyframesStyles() {
         const names = Object.keys(BUILTIN_KEYFRAMES);
         builtInKeyframesStyleTag.textContent = names.map(keyframesBlock).filter(Boolean).join("\n\n");
@@ -9804,6 +9952,7 @@ translateY()	translateY(<length|percentage>)
         const intent = animationLabIntentPlan(values);
         const reviewEntries = animationLabTriggerReviewEntries(values);
         const bestReview = animationLabBestReviewEntry(reviewEntries);
+        const anatomy = animationLabKeyframeAnatomy(values);
         const packageCss = animationLabPackageCss(selector, values);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         elAnimationLabPresetIntent.textContent = brief.intent;
@@ -9836,6 +9985,15 @@ translateY()	translateY(<length|percentage>)
           selector + " | Trigger: " + trigger + " | Applies" + scopeText + ".";
         elAnimationLabOutput.textContent = declarations.join("\n");
         elAnimationLabKeyframes.textContent = keyframesBlock(values.keyframes) || "No built-in keyframes found for " + values.keyframes + ".";
+        elAnimationLabAnatomyStops.textContent = anatomy.stopCount;
+        elAnimationLabAnatomyProperties.textContent = anatomy.properties;
+        elAnimationLabAnatomyFamily.textContent = anatomy.family;
+        elAnimationLabAnatomyWatch.textContent = anatomy.watch;
+        elAnimationLabAnatomyTimeline.textContent = anatomy.timeline;
+        elAnimationLabAnatomyBrief.textContent = anatomy.brief;
+        elAnimationLabAnatomyNote.textContent = anatomy.known
+          ? "Use this breakdown to understand the built-in motion path before you retune timing, loops, or trigger behavior."
+          : "This keyframe is not in the built-in atlas, so the anatomy panel falls back to timing guidance plus the exported CSS block.";
         elAnimationLabIntensity.textContent = animationLabIntensitySummary(values);
         elAnimationLabTriggerFit.textContent = animationLabTriggerGuidance(values);
         elAnimationLabReduceNote.textContent = animationLabReducedMotionNote(values);
@@ -12513,6 +12671,19 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      async function copyAnimationLabAnatomyBrief() {
+        try {
+          await navigator.clipboard.writeText(
+            elAnimationLabAnatomyBrief.textContent + "\n\n" + elAnimationLabAnatomyTimeline.textContent
+          );
+          elAnimationLabCopyAnatomy.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopyAnatomy.textContent = "Copy Keyframe Brief"; }, 1200);
+        } catch (err) {
+          elAnimationLabCopyAnatomy.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopyAnatomy.textContent = "Copy Keyframe Brief"; }, 1200);
+        }
+      }
+
       function updateSpacingHelperControlState(sourceInput) {
         if (!elCustomRuleHelperSpacingLinked.checked) {
           [elCustomRuleHelperSpacingRight, elCustomRuleHelperSpacingBottom, elCustomRuleHelperSpacingLeft].forEach(function (input) {
@@ -13242,6 +13413,7 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabCopyPackage.addEventListener("click", copyAnimationLabPackage);
       elAnimationLabCopyReduce.addEventListener("click", copyAnimationLabReducedFallback);
       elAnimationLabCopyReview.addEventListener("click", copyAnimationLabReviewSnapshot);
+      elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
       if (elAnimationLabCompareBench) {
         elAnimationLabCompareBench.addEventListener("click", function (event) {
           const button = event.target.closest("[data-compare-action]");
