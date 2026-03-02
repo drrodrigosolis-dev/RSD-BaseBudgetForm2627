@@ -2147,6 +2147,25 @@
                 </div>
                 <div id="animation-lab-compare-note" class="input-hint">Capture a baseline, a likely keeper, and a stress-test variant so motion decisions stay deliberate instead of living only in the current form fields.</div>
               </div>
+              <div class="help-box">
+                <div><strong>Motion Session Vault</strong></div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Saved Status</div>
+                    <div id="animation-lab-session-status">No autosaved lab session yet.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Saved Contents</div>
+                    <div id="animation-lab-session-summary">Current motion draft, sequence plan, and compare slots will be summarized here once a session is stored.</div>
+                  </div>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-session-save" type="button">Save Session Now</button>
+                  <button id="animation-lab-session-restore" type="button">Restore Saved Session</button>
+                  <button id="animation-lab-session-clear" type="button">Clear Saved Session</button>
+                </div>
+                <div id="animation-lab-session-note" class="input-hint">The lab auto-saves the current motion draft, sequence planner, and compare bench so you can leave and resume without rebuilding the same experiment.</div>
+              </div>
               <div class="row">
                 <label class="label">Effective Selector</label>
                 <div id="animation-lab-selector-note" class="selector-preview">The lab will target your current builder selector.</div>
@@ -3851,6 +3870,12 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabCopyWinner = document.getElementById("animation-lab-copy-winner");
       const elAnimationLabCopyCompare = document.getElementById("animation-lab-copy-compare");
       const elAnimationLabCompareNote = document.getElementById("animation-lab-compare-note");
+      const elAnimationLabSessionStatus = document.getElementById("animation-lab-session-status");
+      const elAnimationLabSessionSummary = document.getElementById("animation-lab-session-summary");
+      const elAnimationLabSessionSave = document.getElementById("animation-lab-session-save");
+      const elAnimationLabSessionRestore = document.getElementById("animation-lab-session-restore");
+      const elAnimationLabSessionClear = document.getElementById("animation-lab-session-clear");
+      const elAnimationLabSessionNote = document.getElementById("animation-lab-session-note");
       const elAnimationLabSelectorNote = document.getElementById("animation-lab-selector-note");
       const elAnimationLabOutput = document.getElementById("animation-lab-output");
       const elAnimationLabKeyframes = document.getElementById("animation-lab-keyframes");
@@ -4363,6 +4388,7 @@ translateY()	translateY(<length|percentage>)
       };
       const PRESET_STORAGE_KEY = "formio-az-css-playground-presets-v1";
       const LIBRARY_FAVORITES_KEY = "formio-az-css-playground-library-favorites-v1";
+      const ANIMATION_LAB_SESSION_STORAGE_KEY = "formio-az-css-playground-animation-lab-session-v1";
       const GUIDED_RECIPES = [
         {
           id: "frosted-card",
@@ -6684,6 +6710,9 @@ translateY()	translateY(<length|percentage>)
       let previewCycleTimer = null;
       const ANIMATION_LAB_COMPARE_SLOT_ORDER = ["baseline", "candidate", "stress"];
       let animationLabCompareSlots = createEmptyAnimationLabCompareSlots();
+      let animationLabSessionSnapshot = null;
+      let animationLabSessionReady = false;
+      let animationLabSessionRestoreInProgress = false;
       const builderMediaLayerMap = {
         all: "",
         "sm-down": "(max-width: 640px)",
@@ -7513,6 +7542,9 @@ translateY()	translateY(<length|percentage>)
         renderBuilder();
         updateLive();
         updatePreviewCycleUI();
+        if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+          saveAnimationLabSession(false);
+        }
         setBuilderStatus("Loaded Form.io native target: " + preset.name + ".");
       }
 
@@ -9845,6 +9877,33 @@ translateY()	translateY(<length|percentage>)
         setSelectValueIfPresent(elAnimationLabSequenceOrder, next.order, DEFAULT_ANIMATION_LAB_SEQUENCE.order);
       }
 
+      function cloneAnimationLabCompareSnapshot(source) {
+        const raw = source && typeof source === "object" ? source : {};
+        const valueSource = raw.values && typeof raw.values === "object" ? raw.values : raw;
+        const sequenceSource = raw.sequence && typeof raw.sequence === "object"
+          ? raw.sequence
+          : raw.animationLabSequence && typeof raw.animationLabSequence === "object"
+            ? raw.animationLabSequence
+            : null;
+        return {
+          values: cloneAnimationLabValueState(valueSource),
+          sequence: normalizeAnimationLabSequenceValueState(sequenceSource)
+        };
+      }
+
+      function currentAnimationLabCompareSnapshot() {
+        return cloneAnimationLabCompareSnapshot({
+          values: animationLabPresetValues(),
+          sequence: animationLabSequenceValues()
+        });
+      }
+
+      function applyAnimationLabCompareSnapshot(snapshot) {
+        const next = cloneAnimationLabCompareSnapshot(snapshot);
+        applyAnimationLabSequenceState(next.sequence);
+        applyAnimationLabState(next.values);
+      }
+
       function applyAnimationLabState(state) {
         if (!state || typeof state !== "object") {
           if (elAnimationLabReducePreview) {
@@ -9914,8 +9973,7 @@ translateY()	translateY(<length|percentage>)
           return Object.prototype.hasOwnProperty.call(source, key);
         });
         if (!hasStoredValue) return null;
-        const values = cloneAnimationLabValueState(source);
-        return { values: values };
+        return cloneAnimationLabCompareSnapshot(slot);
       }
 
       function normalizeAnimationLabCompareSlots(slots) {
@@ -9931,12 +9989,219 @@ translateY()	translateY(<length|percentage>)
         const data = {};
         ANIMATION_LAB_COMPARE_SLOT_ORDER.forEach(function (slotKey) {
           if (animationLabCompareSlots[slotKey] && animationLabCompareSlots[slotKey].values) {
-            data[slotKey] = {
-              values: cloneAnimationLabValueState(animationLabCompareSlots[slotKey].values)
-            };
+            data[slotKey] = cloneAnimationLabCompareSnapshot(animationLabCompareSlots[slotKey]);
           }
         });
         return data;
+      }
+
+      function normalizeAnimationLabSessionState(state) {
+        if (!state || typeof state !== "object") return null;
+        const target = String(state.target || "").trim();
+        const previewInteractionState = String(state.previewInteractionState || "").trim();
+        const selectorState = state.selectorState && typeof state.selectorState === "object" ? state.selectorState : {};
+        return {
+          savedAt: String(state.savedAt || "").trim(),
+          target: Object.prototype.hasOwnProperty.call(previewTargets, target) ? target : "",
+          previewInteractionState:
+            previewInteractionState === "default" || PREVIEW_STATE_SELECTOR_MAP[previewInteractionState]
+              ? (previewInteractionState || "default")
+              : "default",
+          followActualPreview: Boolean(state.followActualPreview),
+          selectorState: {
+            className: String(selectorState.className || "").trim(),
+            baseSelector: String(selectorState.baseSelector || "").trim(),
+            combinator: String(selectorState.combinator || "self").trim(),
+            relativeSelector: String(selectorState.relativeSelector || "").trim(),
+            selectorOverride: String(selectorState.selectorOverride || "").trim(),
+            selectorGraphEnabled: Boolean(selectorState.selectorGraphEnabled),
+            selectorGraphSegments: Array.isArray(selectorState.selectorGraphSegments) && selectorState.selectorGraphSegments.length
+              ? selectorState.selectorGraphSegments.map(normalizeGraphSegment)
+              : []
+          },
+          animationLab: cloneAnimationLabValueState(state.animationLab),
+          animationLabSequence: normalizeAnimationLabSequenceValueState(state.animationLabSequence),
+          animationLabCompareSlots: normalizeAnimationLabCompareSlots(state.animationLabCompareSlots)
+        };
+      }
+
+      function readAnimationLabSession() {
+        try {
+          const raw = localStorage.getItem(ANIMATION_LAB_SESSION_STORAGE_KEY);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          return normalizeAnimationLabSessionState(parsed);
+        } catch (err) {
+          return null;
+        }
+      }
+
+      function formatAnimationLabSessionSavedAt(savedAt) {
+        const raw = String(savedAt || "").trim();
+        if (!raw) return "No autosaved lab session yet.";
+        const parsed = new Date(raw);
+        if (Number.isNaN(parsed.getTime())) return "Saved timestamp is unavailable.";
+        try {
+          return "Saved " + parsed.toLocaleString() + ".";
+        } catch (err) {
+          return "Saved " + raw + ".";
+        }
+      }
+
+      function animationLabSessionSummaryText(session) {
+        const snapshot = normalizeAnimationLabSessionState(session);
+        if (!snapshot) {
+          return "Current motion draft, sequence plan, and compare slots will be summarized here once a session is stored.";
+        }
+        const values = snapshot.animationLab;
+        const preset = ANIMATION_LAB_PRESETS_BY_ID[values.presetId] || null;
+        const compareCount = ANIMATION_LAB_COMPARE_SLOT_ORDER.filter(function (slotKey) {
+          return Boolean(snapshot.animationLabCompareSlots[slotKey]);
+        }).length;
+        const targetLabel = snapshot.target ? previewTargetLabel(snapshot.target) : previewTargetLabel((elTarget.value || "card").trim());
+        const sequence = snapshot.animationLabSequence;
+        return [
+          (preset ? preset.name : "Custom draft") + " using " + values.keyframes,
+          animationLabTriggerLabel(values.trigger),
+          sequence.steps + "-step " + sequence.mode + " " + sequence.order + " @ " + sequence.gap,
+          compareCount + " compare slot" + (compareCount === 1 ? "" : "s"),
+          "target " + targetLabel
+        ].join(" | ");
+      }
+
+      function updateAnimationLabSessionPanel(session) {
+        if (
+          !elAnimationLabSessionStatus ||
+          !elAnimationLabSessionSummary ||
+          !elAnimationLabSessionSave ||
+          !elAnimationLabSessionRestore ||
+          !elAnimationLabSessionClear ||
+          !elAnimationLabSessionNote
+        ) {
+          return;
+        }
+        const snapshot = normalizeAnimationLabSessionState(session || animationLabSessionSnapshot);
+        elAnimationLabSessionStatus.textContent = formatAnimationLabSessionSavedAt(snapshot && snapshot.savedAt);
+        elAnimationLabSessionSummary.textContent = animationLabSessionSummaryText(snapshot);
+        elAnimationLabSessionSave.disabled = false;
+        elAnimationLabSessionRestore.disabled = !snapshot;
+        elAnimationLabSessionClear.disabled = !snapshot;
+        elAnimationLabSessionRestore.textContent = snapshot ? "Restore Saved Session" : "No Saved Session";
+        elAnimationLabSessionClear.textContent = snapshot ? "Clear Saved Session" : "Nothing To Clear";
+        elAnimationLabSessionNote.textContent = snapshot
+          ? "The lab auto-saves every motion change. Use Restore when a new experiment drifts too far, or Clear when you want the next reload to start fresh."
+          : "The lab auto-saves the current motion draft, sequence planner, and compare bench so you can leave and resume without rebuilding the same experiment.";
+      }
+
+      function saveAnimationLabSession(manual) {
+        const snapshot = normalizeAnimationLabSessionState({
+          savedAt: new Date().toISOString(),
+          target: (elTarget.value || "").trim(),
+          previewInteractionState: (elPreviewInteractionState.value || "default").trim(),
+          followActualPreview: Boolean(elTriggerFollowActual && elTriggerFollowActual.checked),
+          selectorState: {
+            className: (elBuilderClass.value || "").trim(),
+            baseSelector: (elBuilderBaseSelector.value || "").trim(),
+            combinator: (elBuilderCombinator.value || "self").trim(),
+            relativeSelector: (elBuilderRelativeSelector.value || "").trim(),
+            selectorOverride: (elBuilderSelectorOverride.value || "").trim(),
+            selectorGraphEnabled: Boolean(elSelectorGraphEnabled && elSelectorGraphEnabled.checked),
+            selectorGraphSegments: selectorGraphSegments.map(function (seg) {
+              return normalizeGraphSegment(seg);
+            })
+          },
+          animationLab: animationLabPresetValues(),
+          animationLabSequence: animationLabSequenceValues(),
+          animationLabCompareSlots: serializeAnimationLabCompareSlots()
+        });
+        try {
+          localStorage.setItem(ANIMATION_LAB_SESSION_STORAGE_KEY, JSON.stringify(snapshot));
+          animationLabSessionSnapshot = snapshot;
+          updateAnimationLabSessionPanel(snapshot);
+          if (manual) {
+            setBuilderStatus("Animation Lab saved the current motion session.");
+          }
+          return true;
+        } catch (err) {
+          updateAnimationLabSessionPanel(animationLabSessionSnapshot);
+          if (manual) {
+            setBuilderStatus("Animation Lab could not save this browser session.");
+          }
+          return false;
+        }
+      }
+
+      function applyAnimationLabSessionState(snapshot) {
+        const session = normalizeAnimationLabSessionState(snapshot);
+        if (!session) return false;
+        animationLabSessionRestoreInProgress = true;
+        try {
+          stopPreviewTargetCycle(true);
+          if (session.target) {
+            elTarget.value = session.target;
+          }
+          if (elTriggerFollowActual) {
+            elTriggerFollowActual.checked = session.followActualPreview;
+          }
+          elBuilderClass.value = session.selectorState.className || elBuilderClass.value;
+          elBuilderBaseSelector.value = session.selectorState.baseSelector || elBuilderBaseSelector.value;
+          elBuilderCombinator.value = session.selectorState.combinator || "self";
+          elBuilderRelativeSelector.value = session.selectorState.relativeSelector || "";
+          elBuilderSelectorOverride.value = session.selectorState.selectorOverride || "";
+          elSelectorGraphEnabled.checked = Boolean(session.selectorState.selectorGraphEnabled);
+          selectorGraphSegments = Array.isArray(session.selectorState.selectorGraphSegments) && session.selectorState.selectorGraphSegments.length
+            ? session.selectorState.selectorGraphSegments.map(normalizeGraphSegment)
+            : [];
+          if (!selectorGraphSegments.length) {
+            seedSelectorGraphFromLegacy();
+          }
+          lastAutoBaseClass = sanitizeClassName(elBuilderClass.value);
+          renderSelectorGraph();
+          renderBuilder();
+          animationLabCompareSlots = normalizeAnimationLabCompareSlots(session.animationLabCompareSlots);
+          applyAnimationLabSequenceState(session.animationLabSequence);
+          applyAnimationLabState(session.animationLab);
+          elPreviewInteractionState.value = session.previewInteractionState;
+          updatePreviewInteractionHelp();
+          updateSelectorSimulatorRootClass();
+          syncPreviewSimulatorToActualIfEnabled(targetElement());
+          updateLive();
+          updateAnimationLabOutputs();
+        } finally {
+          animationLabSessionRestoreInProgress = false;
+        }
+        animationLabSessionSnapshot = session;
+        updateAnimationLabSessionPanel(session);
+        return true;
+      }
+
+      function restoreAnimationLabSession(manual) {
+        const session = readAnimationLabSession();
+        animationLabSessionSnapshot = session;
+        if (!session) {
+          updateAnimationLabSessionPanel(null);
+          if (manual) {
+            setBuilderStatus("Animation Lab does not have a saved session yet.");
+          }
+          return false;
+        }
+        const restored = applyAnimationLabSessionState(session);
+        if (manual && restored) {
+          setBuilderStatus("Animation Lab restored the saved motion session.");
+        }
+        return restored;
+      }
+
+      function clearAnimationLabSession() {
+        try {
+          localStorage.removeItem(ANIMATION_LAB_SESSION_STORAGE_KEY);
+        } catch (err) {
+          setBuilderStatus("Animation Lab could not clear the saved session in this browser.");
+          return;
+        }
+        animationLabSessionSnapshot = null;
+        updateAnimationLabSessionPanel(null);
+        setBuilderStatus("Animation Lab cleared the saved motion session.");
       }
 
       function animationLabCompareSlotTitle(slotKey) {
@@ -9953,18 +10218,20 @@ translateY()	translateY(<length|percentage>)
         return "Capture the current motion package when you need a stable checkpoint.";
       }
 
-      function animationLabCompareEntry(slotKey, values) {
-        const snapshot = cloneAnimationLabValueState(values);
-        const risk = animationLabRiskAssessment(snapshot);
+      function animationLabCompareEntry(slotKey, snapshotSource) {
+        const snapshot = cloneAnimationLabCompareSnapshot(snapshotSource);
+        const values = snapshot.values;
+        const risk = animationLabRiskAssessment(values);
         const currentTarget = (elTarget.value || "card").trim() || "card";
-        const surface = animationLabSurfaceAssessmentForTarget(snapshot, currentTarget);
+        const surface = animationLabSurfaceAssessmentForTarget(values, currentTarget);
         const releaseScore = Math.max(0, Math.min(100, Math.round(((100 - risk.score) * 0.62) + (surface.score * 0.38))));
-        const preset = ANIMATION_LAB_PRESETS_BY_ID[snapshot.presetId] || null;
-        const triggerLabel = animationLabTriggerLabel(snapshot.trigger);
+        const preset = ANIMATION_LAB_PRESETS_BY_ID[values.presetId] || null;
+        const triggerLabel = animationLabTriggerLabel(values.trigger);
         return {
           slotKey: slotKey,
           slotTitle: animationLabCompareSlotTitle(slotKey),
-          values: snapshot,
+          values: values,
+          sequence: snapshot.sequence,
           risk: risk,
           surface: surface,
           releaseScore: releaseScore,
@@ -9977,7 +10244,7 @@ translateY()	translateY(<length|percentage>)
         return ANIMATION_LAB_COMPARE_SLOT_ORDER.map(function (slotKey) {
           const slot = animationLabCompareSlots[slotKey];
           if (!slot || !slot.values) return null;
-          return animationLabCompareEntry(slotKey, slot.values);
+          return animationLabCompareEntry(slotKey, slot);
         }).filter(Boolean);
       }
 
@@ -10005,8 +10272,8 @@ translateY()	translateY(<length|percentage>)
       }
 
       function animationLabCompareDiffLines(fromValues, toValues) {
-        const base = cloneAnimationLabValueState(fromValues);
-        const next = cloneAnimationLabValueState(toValues);
+        const base = cloneAnimationLabCompareSnapshot(fromValues);
+        const next = cloneAnimationLabCompareSnapshot(toValues);
         const fields = [
           { key: "presetId", label: "Preset" },
           { key: "trigger", label: "Trigger" },
@@ -10019,16 +10286,53 @@ translateY()	translateY(<length|percentage>)
           { key: "fill", label: "Fill" },
           { key: "play", label: "Play" }
         ];
-        return fields.map(function (field) {
-          const before = animationLabCompareFieldValue(field.label, field.key, base);
-          const after = animationLabCompareFieldValue(field.label, field.key, next);
+        const sequenceFields = [
+          { key: "mode", label: "Sequence Mode" },
+          { key: "steps", label: "Sequence Steps" },
+          { key: "gap", label: "Sequence Gap" },
+          { key: "order", label: "Sequence Order" }
+        ];
+        const lines = fields.map(function (field) {
+          const before = animationLabCompareFieldValue(field.label, field.key, base.values);
+          const after = animationLabCompareFieldValue(field.label, field.key, next.values);
           if (before === after) return "";
           return field.label + ": " + before + " -> " + after;
         }).filter(Boolean);
+        sequenceFields.forEach(function (field) {
+          const before = String(base.sequence[field.key] || "").trim();
+          const after = String(next.sequence[field.key] || "").trim();
+          if (before === after) return;
+          lines.push(field.label + ": " + before + " -> " + after);
+        });
+        return lines;
+      }
+
+      function animationLabSequenceRuleSet(values, sequence, entries) {
+        const motion = cloneAnimationLabValueState(values);
+        const sourceEntries = Array.isArray(entries) && entries.length ? entries : animationLabSequenceEntries(motion, sequence);
+        const list = sourceEntries.filter(function (entry) { return entry.childIndex !== 1; });
+        const media = currentBuilderMediaQuery();
+        const blocks = list.map(function (entry) {
+          return animationLabRuleBlock(entry.selector, animationLabDeclarationsWithDelay(motion, entry.delayText));
+        });
+        if (!blocks.length) return "";
+        if (media) {
+          return [
+            media + " {",
+            blocks.map(function (block) {
+              return block.split("\n").map(function (line) { return "  " + line; }).join("\n");
+            }).join("\n\n"),
+            "}"
+          ].join("\n");
+        }
+        return blocks.join("\n\n");
       }
 
       function animationLabCompareWinnerPackageText(entry, selector, currentTarget, anchorEntry) {
         if (!entry) return "No compare winner selected yet.";
+        const sequence = normalizeAnimationLabSequenceValueState(entry.sequence);
+        const sequenceEntries = animationLabSequenceEntries(entry.values, sequence);
+        const sequenceRuleSet = animationLabSequenceRuleSet(entry.values, sequence, sequenceEntries);
         const lines = [
           "Release keeper: " + entry.slotTitle + " (" + entry.presetLabel + ")",
           "Selector: " + selector,
@@ -10036,7 +10340,8 @@ translateY()	translateY(<length|percentage>)
           "Trigger: " + entry.triggerLabel,
           "Release score: " + entry.releaseScore + "/100",
           "Risk: " + entry.risk.level + " " + entry.risk.score + "/100",
-          "Surface fit: " + entry.surface.score + "/100 on " + currentTarget
+          "Surface fit: " + entry.surface.score + "/100 on " + currentTarget,
+          "Sequence: " + animationLabSequenceSummary(sequence, sequenceEntries)
         ];
         if (anchorEntry && anchorEntry.slotKey !== entry.slotKey) {
           const releaseDelta = entry.releaseScore - anchorEntry.releaseScore;
@@ -10050,6 +10355,11 @@ translateY()	translateY(<length|percentage>)
         }
         lines.push("");
         lines.push(animationLabPackageCss(selector, entry.values));
+        if (sequence.mode !== "single" && sequenceRuleSet) {
+          lines.push("");
+          lines.push("Sequence add-on:");
+          lines.push(sequenceRuleSet);
+        }
         return lines.join("\n");
       }
 
@@ -10057,8 +10367,8 @@ translateY()	translateY(<length|percentage>)
         if (!elAnimationLabCompareHandoffPackage) return;
 
         const selector = animationLabSelector();
-        const liveValues = animationLabPresetValues();
-        const liveDiff = winner ? animationLabCompareDiffLines(winner.values, liveValues) : [];
+        const liveSnapshot = currentAnimationLabCompareSnapshot();
+        const liveDiff = winner ? animationLabCompareDiffLines(winner, liveSnapshot) : [];
         const winnerLoaded = Boolean(winner) && liveDiff.length === 0;
         const hasBaseline = Boolean(anchorEntry && anchorEntry.slotKey === "baseline");
         const canPromote = Boolean(winner) && winner.slotKey !== "baseline";
@@ -10149,14 +10459,15 @@ translateY()	translateY(<length|percentage>)
             return;
           }
 
-          const entry = animationLabCompareEntry(slotKey, slot.values);
+          const entry = animationLabCompareEntry(slotKey, slot);
           const riskText = entry.risk.level + " risk " + entry.risk.score + "/100";
           const surfaceText = entry.surface.score + "/100 on " + currentTarget;
+          const sequenceText = entry.sequence.steps + "-step " + entry.sequence.mode + " " + entry.sequence.order + " @ " + entry.sequence.gap;
           if (status) {
             status.textContent = entry.presetLabel + " | " + entry.triggerLabel + " | " + entry.values.keyframes;
           }
           if (meta) {
-            meta.textContent = "Release " + entry.releaseScore + "/100. " + riskText + ". Surface fit " + surfaceText + ".";
+            meta.textContent = "Release " + entry.releaseScore + "/100. " + riskText + ". Surface fit " + surfaceText + ". " + sequenceText + ".";
           }
           if (applyBtn) applyBtn.disabled = false;
           if (clearBtn) clearBtn.disabled = false;
@@ -10190,7 +10501,14 @@ translateY()	translateY(<length|percentage>)
             entry.risk.score +
             "/100 | Surface " +
             entry.surface.score +
-            "/100"
+            "/100 | Sequence " +
+            entry.sequence.steps +
+            "-step " +
+            entry.sequence.mode +
+            " " +
+            entry.sequence.order +
+            " @ " +
+            entry.sequence.gap
           );
         });
 
@@ -10218,7 +10536,7 @@ translateY()	translateY(<length|percentage>)
         const comparisonEntry = winner && winner.slotKey !== anchorEntry.slotKey
           ? winner
           : entries.find(function (entry) { return entry.slotKey !== anchorEntry.slotKey; }) || anchorEntry;
-        const diffLines = animationLabCompareDiffLines(anchorEntry.values, comparisonEntry.values);
+        const diffLines = animationLabCompareDiffLines(anchorEntry, comparisonEntry);
         const releaseDelta = comparisonEntry.releaseScore - anchorEntry.releaseScore;
         const riskDelta = anchorEntry.risk.score - comparisonEntry.risk.score;
         const surfaceDelta = comparisonEntry.surface.score - anchorEntry.surface.score;
@@ -10265,9 +10583,7 @@ translateY()	translateY(<length|percentage>)
 
       function captureAnimationLabCompareSlot(slotKey) {
         if (ANIMATION_LAB_COMPARE_SLOT_ORDER.indexOf(slotKey) === -1) return;
-        animationLabCompareSlots[slotKey] = {
-          values: cloneAnimationLabValueState(animationLabPresetValues())
-        };
+        animationLabCompareSlots[slotKey] = currentAnimationLabCompareSnapshot();
         updateAnimationLabOutputs();
         setBuilderStatus("Animation Lab captured the current motion package into " + animationLabCompareSlotTitle(slotKey) + ".");
       }
@@ -10280,7 +10596,7 @@ translateY()	translateY(<length|percentage>)
           updateAnimationLabOutputs();
           return;
         }
-        applyAnimationLabState(slot.values);
+        applyAnimationLabCompareSnapshot(slot);
         setBuilderStatus("Animation Lab loaded " + animationLabCompareSlotTitle(slotKey) + " into the live controls.");
       }
 
@@ -10303,13 +10619,13 @@ translateY()	translateY(<length|percentage>)
           updateAnimationLabOutputs();
           return;
         }
-        const liveDiff = animationLabCompareDiffLines(winner.values, animationLabPresetValues());
+        const liveDiff = animationLabCompareDiffLines(winner, currentAnimationLabCompareSnapshot());
         if (!liveDiff.length) {
           setBuilderStatus("Animation Lab is already showing the recommended keeper.");
           updateAnimationLabOutputs();
           return;
         }
-        applyAnimationLabState(winner.values);
+        applyAnimationLabCompareSnapshot(winner);
         setBuilderStatus("Animation Lab loaded the recommended keeper from " + winner.slotTitle + ".");
       }
 
@@ -10326,9 +10642,7 @@ translateY()	translateY(<length|percentage>)
           updateAnimationLabOutputs();
           return;
         }
-        animationLabCompareSlots.baseline = {
-          values: cloneAnimationLabValueState(winner.values)
-        };
+        animationLabCompareSlots.baseline = cloneAnimationLabCompareSnapshot(winner);
         updateAnimationLabOutputs();
         setBuilderStatus("Animation Lab promoted " + winner.slotTitle + " into Baseline Anchor.");
       }
@@ -10675,6 +10989,11 @@ translateY()	translateY(<length|percentage>)
           ? "Use this when you want the lab to rebalance timing, loops, and delay for the current motion lane."
           : "This motion already matches the recommended lane budget for its current trigger and target.";
         updateAnimationLabReducedPreviewState(selector);
+        if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+          saveAnimationLabSession(false);
+        } else {
+          updateAnimationLabSessionPanel(animationLabSessionSnapshot);
+        }
         renderQualityAudit();
       }
 
@@ -14711,8 +15030,24 @@ translateY()	translateY(<length|percentage>)
       if (elAnimationLabCopyWinner) {
         elAnimationLabCopyWinner.addEventListener("click", copyAnimationLabCompareWinnerPackage);
       }
+      if (elAnimationLabSessionSave) {
+        elAnimationLabSessionSave.addEventListener("click", function () {
+          saveAnimationLabSession(true);
+        });
+      }
+      if (elAnimationLabSessionRestore) {
+        elAnimationLabSessionRestore.addEventListener("click", function () {
+          restoreAnimationLabSession(true);
+        });
+      }
+      if (elAnimationLabSessionClear) {
+        elAnimationLabSessionClear.addEventListener("click", clearAnimationLabSession);
+      }
       elAnimationLabReducePreview.addEventListener("change", function () {
         updateAnimationLabReducedPreviewState();
+        if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+          saveAnimationLabSession(false);
+        }
         setBuilderStatus(
           elAnimationLabReducePreview.checked
             ? "Animation Lab reduced-motion preview is active."
@@ -14734,6 +15069,9 @@ translateY()	translateY(<length|percentage>)
         );
         syncPreviewSimulatorToActualIfEnabled(targetElement());
         updateLive();
+        if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+          saveAnimationLabSession(false);
+        }
         setBuilderStatus(
           elTriggerFollowActual.checked
             ? "Preview simulator now follows live interactions on the active preview target."
@@ -14789,6 +15127,9 @@ translateY()	translateY(<length|percentage>)
         updatePreviewInteractionHelp();
         updateSelectorSimulatorRootClass();
         updateLive();
+        if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+          saveAnimationLabSession(false);
+        }
       });
       if (elBuilderFormioTarget) {
         elBuilderFormioTarget.addEventListener("change", updateFormioNativeTargetHelp);
@@ -14806,15 +15147,24 @@ translateY()	translateY(<length|percentage>)
         lastAutoBaseClass = newClass;
         renderBuilder();
         updateLive();
+        if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+          saveAnimationLabSession(false);
+        }
       });
       [elBuilderBaseSelector, elBuilderCombinator, elBuilderRelativeSelector, elBuilderSelectorOverride, elBuilderVariableScope].forEach(function (el) {
         el.addEventListener("input", function () {
           renderBuilder();
           updateLive();
+          if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+            saveAnimationLabSession(false);
+          }
         });
         el.addEventListener("change", function () {
           renderBuilder();
           updateLive();
+          if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+            saveAnimationLabSession(false);
+          }
         });
       });
       if (elSelectorOverrideSeed) {
@@ -14822,6 +15172,9 @@ translateY()	translateY(<length|percentage>)
           elBuilderSelectorOverride.value = composeSelectorFromBuilderInputs();
           renderBuilder();
           updateLive();
+          if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+            saveAnimationLabSession(false);
+          }
           setBuilderStatus("Selector override seeded from the guided selector.");
         });
       }
@@ -14837,6 +15190,9 @@ translateY()	translateY(<length|percentage>)
           elBuilderSelectorOverride.value = next;
           renderBuilder();
           updateLive();
+          if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+            saveAnimationLabSession(false);
+          }
           setBuilderStatus("Selector override normalized.");
         });
       }
@@ -14851,6 +15207,9 @@ translateY()	translateY(<length|percentage>)
           elBuilderSelectorOverride.value = "";
           renderBuilder();
           updateLive();
+          if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+            saveAnimationLabSession(false);
+          }
           setBuilderStatus("Selector override cleared. Guided selector controls are active again.");
         });
       }
@@ -14925,6 +15284,9 @@ translateY()	translateY(<length|percentage>)
       renderAnimationLabPresetList();
       renderSelectorSimulatorTemplateList();
       loadSelectorSimulatorTemplate();
+      updateAnimationLabSessionPanel(null);
+      restoreAnimationLabSession(false);
+      animationLabSessionReady = true;
       renderRecipeList();
       renderGlossaryTermList();
       renderLibraryCategoryList();
