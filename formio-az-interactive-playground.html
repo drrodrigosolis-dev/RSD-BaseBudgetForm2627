@@ -2087,6 +2087,12 @@
                     <div id="animation-lab-surface-caution">The guide will flag when the current motion is too heavy for dense Form.io controls.</div>
                   </div>
                 </div>
+                <div id="animation-lab-surface-shortlist" class="selector-preview">Top recommended surfaces will appear here once the lab scores the motion against the preview targets.</div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-surface-best-target" type="button">Switch To Best Surface</button>
+                  <button id="animation-lab-surface-cycle-top" type="button">Cycle Top Surfaces</button>
+                </div>
+                <div id="animation-lab-surface-plan" class="input-hint">Use these actions to move the preview toward the strongest-fit surface before you ship the motion.</div>
               </div>
             </div>
           </details>
@@ -3421,6 +3427,10 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabSurfaceFit = document.getElementById("animation-lab-surface-fit");
       const elAnimationLabSurfaceBest = document.getElementById("animation-lab-surface-best");
       const elAnimationLabSurfaceCaution = document.getElementById("animation-lab-surface-caution");
+      const elAnimationLabSurfaceShortlist = document.getElementById("animation-lab-surface-shortlist");
+      const elAnimationLabSurfaceBestTarget = document.getElementById("animation-lab-surface-best-target");
+      const elAnimationLabSurfaceCycleTop = document.getElementById("animation-lab-surface-cycle-top");
+      const elAnimationLabSurfacePlan = document.getElementById("animation-lab-surface-plan");
       const elAnimationLabIntentLane = document.getElementById("animation-lab-intent-lane");
       const elAnimationLabIntentCadence = document.getElementById("animation-lab-intent-cadence");
       const elAnimationLabIntentWhy = document.getElementById("animation-lab-intent-why");
@@ -8506,8 +8516,8 @@ translateY()	translateY(<length|percentage>)
         return "Best on larger surfaces or short-lived helper content where motion reads as polish instead of noise.";
       }
 
-      function animationLabSurfaceAssessment(values) {
-        const currentKey = (elTarget.value || "card").trim();
+      function animationLabSurfaceAssessmentForTarget(values, targetKey) {
+        const currentKey = String(targetKey || "card").trim() || "card";
         const meta = animationLabSurfaceMeta(currentKey);
         let score = 62;
         const notes = [];
@@ -8591,17 +8601,54 @@ translateY()	translateY(<length|percentage>)
         if (score < 40) verdict = "Poor fit";
 
         return {
+          targetKey: currentKey,
+          targetLabel: previewTargetLabel(currentKey),
           score: score,
           verdict: verdict,
           fit: verdict + " for " + previewTargetLabel(currentKey) + " (" + score + "/100). " + (notes[0] || "No strong conflict detected."),
-          best: animationLabBestSurfaceHint(values),
           caution: score < 40
             ? "Move this motion to a lighter-weight surface or shorten the cycle before shipping."
             : score < 60
               ? "Ship only if the surrounding form stays easy to scan and the motion has a clear job."
               : meta.dense && values.iterations === "infinite"
                 ? "Usable, but consider a one-shot loop before production so the form does not feel restless."
-                : "Current surface is reasonable. Validate it against real form density before rollout."
+                : "Current surface is reasonable. Validate it against real form density before rollout.",
+          notes: notes
+        };
+      }
+
+      function animationLabRecommendedSurfaces(values) {
+        return Object.keys(previewTargets)
+          .map(function (targetKey) {
+            return animationLabSurfaceAssessmentForTarget(values, targetKey);
+          })
+          .sort(function (a, b) {
+            if (b.score !== a.score) return b.score - a.score;
+            return a.targetLabel.localeCompare(b.targetLabel);
+          });
+      }
+
+      function animationLabSurfaceAssessment(values) {
+        const currentKey = (elTarget.value || "card").trim();
+        const rankedTargets = animationLabRecommendedSurfaces(values);
+        const current = rankedTargets.find(function (entry) { return entry.targetKey === currentKey; }) || animationLabSurfaceAssessmentForTarget(values, currentKey);
+        const best = rankedTargets[0] || current;
+        const shortlist = rankedTargets.slice(0, 3);
+        let bestMessage = animationLabBestSurfaceHint(values);
+        if (best && best.targetKey === current.targetKey) {
+          bestMessage = current.targetLabel + " is already the strongest fit for this motion package.";
+        } else if (best) {
+          bestMessage = "Best match is " + best.targetLabel + " (" + best.score + "/100). " + (best.notes[0] || animationLabBestSurfaceHint(values));
+        }
+
+        return {
+          score: current.score,
+          verdict: current.verdict,
+          fit: current.fit,
+          best: bestMessage,
+          caution: current.caution,
+          rankedTargets: rankedTargets,
+          shortlist: shortlist
         };
       }
 
@@ -8817,6 +8864,31 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabSurfaceFit.textContent = surface.fit;
         elAnimationLabSurfaceBest.textContent = surface.best;
         elAnimationLabSurfaceCaution.textContent = surface.caution;
+        elAnimationLabSurfaceShortlist.textContent = surface.shortlist.length
+          ? surface.shortlist.map(function (entry, index) {
+            return (index + 1) + ". " + entry.targetLabel + " (" + entry.score + "/100)";
+          }).join(" | ")
+          : "No preview targets are available for surface scoring right now.";
+        elAnimationLabSurfaceBestTarget.disabled = !surface.shortlist.length || surface.shortlist[0].targetKey === (elTarget.value || "").trim();
+        elAnimationLabSurfaceBestTarget.textContent = elAnimationLabSurfaceBestTarget.disabled
+          ? "Best Surface Active"
+          : "Switch To Best Surface";
+        elAnimationLabSurfaceCycleTop.disabled = surface.shortlist.length < 2;
+        elAnimationLabSurfaceCycleTop.textContent = surface.shortlist.length >= 2
+          ? "Cycle Top " + surface.shortlist.length + " Surfaces"
+          : "Top Surface Only";
+        if (!surface.shortlist.length) {
+          elAnimationLabSurfacePlan.textContent = "Surface recommendation actions are waiting for at least one available preview target.";
+        } else if (surface.shortlist[0].targetKey === (elTarget.value || "").trim()) {
+          elAnimationLabSurfacePlan.textContent = "You are already previewing the strongest-fit surface. Use the cycle action to compare nearby alternatives.";
+        } else {
+          elAnimationLabSurfacePlan.textContent =
+            "Current preview can move from " +
+            previewTargetLabel((elTarget.value || "card").trim()) +
+            " to " +
+            surface.shortlist[0].targetLabel +
+            " for a stronger validation pass before shipping.";
+        }
         elAnimationLabIntentLane.textContent = intent.lane;
         elAnimationLabIntentCadence.textContent = intent.cadence;
         elAnimationLabIntentWhy.textContent = intent.why;
@@ -8961,6 +9033,54 @@ translateY()	translateY(<length|percentage>)
         setSelectValueIfPresent(elAnimationLabDuration, patch.duration, elAnimationLabDuration.value);
         updateAnimationLabOutputs();
         setBuilderStatus("Animation Lab tuned the motion for the " + plan.lane.toLowerCase() + " lane.");
+      }
+
+      function applyAnimationLabBestSurfaceTarget() {
+        const values = animationLabPresetValues();
+        const surface = animationLabSurfaceAssessment(values);
+        const best = surface.shortlist[0] || null;
+        if (!best) {
+          setBuilderStatus("Animation Lab could not find a preview target to recommend.");
+          return;
+        }
+        if ((elTarget.value || "").trim() === best.targetKey) {
+          setBuilderStatus("Animation Lab is already previewing the strongest-fit surface.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        stopPreviewTargetCycle(true);
+        elTarget.value = best.targetKey;
+        syncPreviewSimulatorToActualIfEnabled(targetElement());
+        updateLive();
+        updateAnimationLabOutputs();
+        flashActivePreviewPanel();
+        setBuilderStatus("Animation Lab switched the preview to the strongest-fit surface: " + best.targetLabel + ".");
+      }
+
+      function cycleAnimationLabTopSurfaces() {
+        const values = animationLabPresetValues();
+        const surface = animationLabSurfaceAssessment(values);
+        const targets = surface.shortlist.map(function (entry) { return entry.targetKey; }).filter(Boolean);
+        if (targets.length < 2) {
+          setBuilderStatus("Animation Lab needs at least two strong surface candidates before it can start a comparison cycle.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        stopPreviewTargetCycle(true);
+        previewCycleTargets.splice(0, previewCycleTargets.length);
+        targets.forEach(function (target) {
+          previewCycleTargets.push(target);
+        });
+        const currentIndex = targets.indexOf((elTarget.value || "").trim());
+        previewCycleIndex = currentIndex >= 0 ? currentIndex : 0;
+        elTarget.value = previewCycleTargets[previewCycleIndex];
+        previewMode = "after";
+        updatePreviewModeUI();
+        syncPreviewSimulatorToActualIfEnabled(targetElement());
+        updateLive();
+        updatePreviewCycleUI();
+        previewCycleTimer = setInterval(cycleTargetStep, 1800);
+        setBuilderStatus("Animation Lab is cycling the top " + targets.length + " recommended surfaces for comparison.");
       }
 
       function filteredGlossaryTerms() {
@@ -12049,6 +12169,8 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabRestart.addEventListener("click", restartAnimationLabPreview);
       elAnimationLabApplyGuardrail.addEventListener("click", applyAnimationLabGuardrail);
       elAnimationLabApplyIntent.addEventListener("click", applyAnimationLabIntentPlan);
+      elAnimationLabSurfaceBestTarget.addEventListener("click", applyAnimationLabBestSurfaceTarget);
+      elAnimationLabSurfaceCycleTop.addEventListener("click", cycleAnimationLabTopSurfaces);
       elAnimationLabReducePreview.addEventListener("change", function () {
         updateAnimationLabReducedPreviewState();
         setBuilderStatus(
