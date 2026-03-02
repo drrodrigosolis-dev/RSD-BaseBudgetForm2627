@@ -3985,7 +3985,15 @@
                   <label class="label">Trigger Validation Matrix</label>
                   <pre id="animation-lab-trigger-matrix"></pre>
                 </div>
+                <div class="info-grid" style="margin-top:10px;">
+                  <div class="info-tile">
+                    <div class="label">Next Review Move</div>
+                    <div id="animation-lab-review-action">The review matrix will suggest whether to rehearse the best state, switch the live trigger, or retune the motion.</div>
+                  </div>
+                </div>
                 <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-review-match-best" type="button">Match Preview To Best State</button>
+                  <button id="animation-lab-review-load-best" type="button">Use Best Trigger In Motion</button>
                   <button id="animation-lab-copy-review" type="button">Copy Review Snapshot</button>
                 </div>
                 <div id="animation-lab-review-note" class="input-hint">Use this review to compare the live path, reduced-motion fallback, and alternate trigger states before you export.</div>
@@ -5691,6 +5699,9 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabReviewVerdict = document.getElementById("animation-lab-review-verdict");
       const elAnimationLabReviewSnapshot = document.getElementById("animation-lab-review-snapshot");
       const elAnimationLabTriggerMatrix = document.getElementById("animation-lab-trigger-matrix");
+      const elAnimationLabReviewAction = document.getElementById("animation-lab-review-action");
+      const elAnimationLabReviewMatchBest = document.getElementById("animation-lab-review-match-best");
+      const elAnimationLabReviewLoadBest = document.getElementById("animation-lab-review-load-best");
       const elAnimationLabCopyReview = document.getElementById("animation-lab-copy-review");
       const elAnimationLabReviewNote = document.getElementById("animation-lab-review-note");
       const elAnimationLabSurfaceFit = document.getElementById("animation-lab-surface-fit");
@@ -12467,6 +12478,45 @@ translateY()	translateY(<length|percentage>)
         return lines.join("\n");
       }
 
+      function animationLabReviewActionPlan(values, risk, bestReview) {
+        if (!bestReview) {
+          return {
+            summary: "Review matrix needs a valid trigger comparison before guided actions unlock.",
+            previewAlreadyMatched: false,
+            loadAlreadyMatched: false,
+            canLoad: false
+          };
+        }
+
+        const bestState = stateKeyForPseudoSelector(bestReview.value) || "default";
+        const previewState = String(elPreviewInteractionState.value || "default").trim();
+        const previewAlreadyMatched = previewState === bestState;
+        const loadAlreadyMatched = bestReview.current;
+        const canLoad = !loadAlreadyMatched && bestReview.score >= 55;
+        let summary = "";
+
+        if (loadAlreadyMatched && previewAlreadyMatched) {
+          summary = "Current trigger already matches the strongest review state. Run the checklist, then compare the reduced-motion fallback before exporting.";
+        } else if (loadAlreadyMatched) {
+          summary = "Current trigger is already the strongest review state. Match the Preview Simulator to " + bestReview.label + " so QA and the live motion stay aligned.";
+        } else if (bestReview.score >= 75 && risk.score >= 75) {
+          summary = "The live path is high-risk. Rehearse " + bestReview.label + " in the Preview Simulator first, then switch the motion trigger if it reads cleaner.";
+        } else if (bestReview.score >= 75) {
+          summary = bestReview.label + " is the cleanest review state right now. Rehearse it in Preview Simulator, then promote it into the live motion if the interaction still feels deliberate.";
+        } else if (bestReview.score >= 55) {
+          summary = bestReview.label + " is the best available alternate, but it is still only conditionally safe. Review it in Preview Simulator before replacing the live trigger.";
+        } else {
+          summary = "No trigger state is clean enough to promote. Keep the live trigger, then use guardrail or intent tuning before switching states.";
+        }
+
+        return {
+          summary: summary,
+          previewAlreadyMatched: previewAlreadyMatched,
+          loadAlreadyMatched: loadAlreadyMatched,
+          canLoad: canLoad
+        };
+      }
+
       function animationLabTriggerMatrixText(entries) {
         const list = Array.isArray(entries) ? entries : [];
         if (!list.length) {
@@ -13964,6 +14014,28 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabReviewVerdict.textContent = animationLabReviewVerdict(values, risk, bestReview);
         elAnimationLabReviewSnapshot.textContent = animationLabReviewSnapshot(values, risk, surface, bestReview);
         elAnimationLabTriggerMatrix.textContent = animationLabTriggerMatrixText(reviewEntries);
+        if (elAnimationLabReviewAction) {
+          const reviewAction = animationLabReviewActionPlan(values, risk, bestReview);
+          elAnimationLabReviewAction.textContent = reviewAction.summary;
+          if (elAnimationLabReviewMatchBest) {
+            elAnimationLabReviewMatchBest.disabled = !bestReview || reviewAction.previewAlreadyMatched;
+            elAnimationLabReviewMatchBest.textContent = !bestReview
+              ? "Review State Unavailable"
+              : reviewAction.previewAlreadyMatched
+                ? "Preview Already Matched"
+                : "Match Preview To " + bestReview.label;
+          }
+          if (elAnimationLabReviewLoadBest) {
+            elAnimationLabReviewLoadBest.disabled = !bestReview || reviewAction.loadAlreadyMatched || !reviewAction.canLoad;
+            elAnimationLabReviewLoadBest.textContent = !bestReview
+              ? "No Best Trigger Yet"
+              : reviewAction.loadAlreadyMatched
+                ? "Best Trigger Already Live"
+                : reviewAction.canLoad
+                  ? "Use " + bestReview.label + " In Motion"
+                  : "Retune Before Switching";
+          }
+        }
         elAnimationLabReviewNote.textContent = values.reducedPreviewEnabled
           ? "Reduced-motion preview is active. Compare the live path against the matrix notes, then turn the preview off before exporting the main package."
           : "Use this review to compare the live path, reduced-motion fallback, and alternate trigger states before you export.";
@@ -19665,6 +19737,68 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      function applyAnimationLabBestReviewToPreview() {
+        const values = animationLabPresetValues();
+        const bestReview = animationLabBestReviewEntry(animationLabTriggerReviewEntries(values));
+        if (!bestReview) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab review does not have a best state yet.");
+          return false;
+        }
+        const nextState = stateKeyForPseudoSelector(bestReview.value) || "default";
+        if ((elPreviewInteractionState.value || "default").trim() === nextState) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Preview Simulator already matches the strongest review state.");
+          return false;
+        }
+        setTriggerSyncLastChange(
+          "Preview Simulator matched the Animation Lab review state " + bestReview.label + "."
+        );
+        syncPreviewInteractionStateFromPseudo(
+          bestReview.value,
+          "Preview Simulator matched to the strongest Animation Lab review state (" + bestReview.label + ")."
+        );
+        updateTriggerSyncNote();
+        if (animationLabSessionReady && !animationLabSessionRestoreInProgress) {
+          saveAnimationLabSession(false);
+        }
+        return true;
+      }
+
+      function applyAnimationLabBestReviewTrigger() {
+        const values = animationLabPresetValues();
+        const risk = animationLabRiskAssessment(values);
+        const bestReview = animationLabBestReviewEntry(animationLabTriggerReviewEntries(values));
+        if (!bestReview) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab review does not have a best trigger yet.");
+          return false;
+        }
+        if (bestReview.current) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab is already using the strongest review trigger.");
+          return false;
+        }
+        if (bestReview.score < 55) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("No review trigger is safe enough to promote yet. Use guardrail or intent tuning first.");
+          return false;
+        }
+        elAnimationLabTrigger.value = bestReview.value;
+        setTriggerSyncLastChange(
+          "Animation Lab adopted the review-backed trigger " + bestReview.label + "."
+        );
+        syncBuilderPseudoFromAnimationLab();
+        updateTriggerSyncNote();
+        updateAnimationLabOutputs();
+        setBuilderStatus(
+          risk.score >= 75
+            ? "Animation Lab switched to " + bestReview.label + " for a safer review pass."
+            : "Animation Lab trigger switched to the strongest review state (" + bestReview.label + ")."
+        );
+        return true;
+      }
+
       async function copyAnimationLabCompareReport() {
         try {
           await navigator.clipboard.writeText(elAnimationLabCompareReport.textContent);
@@ -20511,6 +20645,8 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabSurfaceCycleTop.addEventListener("click", cycleAnimationLabTopSurfaces);
       elAnimationLabCopyPackage.addEventListener("click", copyAnimationLabPackage);
       elAnimationLabCopyReduce.addEventListener("click", copyAnimationLabReducedFallback);
+      elAnimationLabReviewMatchBest.addEventListener("click", applyAnimationLabBestReviewToPreview);
+      elAnimationLabReviewLoadBest.addEventListener("click", applyAnimationLabBestReviewTrigger);
       elAnimationLabCopyReview.addEventListener("click", copyAnimationLabReviewSnapshot);
       elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
       elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
