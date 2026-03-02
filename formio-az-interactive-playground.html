@@ -4686,6 +4686,71 @@
                   <button id="copy-export-snippet" type="button">Copy Export Snippet</button>
                 </div>
               </div>
+              <div class="help-box">
+                <div><strong>Portable Bundle</strong></div>
+                <p class="tiny">Package the current builder, selector graph, Animation Lab state, export choice, deployment guidance, and audit summary into one portable JSON handoff.</p>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Bundle Scope</div>
+                    <div id="export-bundle-scope">The portable bundle will summarize the current export route here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Included Payload</div>
+                    <div id="export-bundle-includes">Builder rules, variables, and export metadata will be counted here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Rollback Safety</div>
+                    <div id="export-bundle-safety">Save at least one rollback checkpoint before importing external bundles.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Handoff Summary</div>
+                    <div id="export-bundle-summary">Use this bundle when the receiving browser should recreate your full styling workspace, not just the final snippet.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Portable Bundle JSON</label>
+                  <pre id="export-bundle-json"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="copy-export-bundle" type="button">Copy Portable Bundle</button>
+                  <button id="export-bundle-seed-import" type="button">Load Current Into Import</button>
+                  <button id="save-export-checkpoint" type="button">Save Rollback Checkpoint</button>
+                </div>
+                <div id="export-bundle-note" class="input-hint">Portable bundle export keeps the authored workspace intact so another browser can restore the same selector, preview, and motion context before deployment.</div>
+              </div>
+              <div class="help-box">
+                <div><strong>Import + Rollback Console</strong></div>
+                <p class="tiny">Paste a portable bundle here to restore a shared workspace. The console auto-captures a safety checkpoint before imports and restores.</p>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Import Status</div>
+                    <div id="import-bundle-status">No bundle imported in this session yet.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Rollback Queue</div>
+                    <div id="rollback-status">No rollback checkpoints yet.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Restore Coverage</div>
+                    <div id="rollback-summary">A restore will rewind builder rules, variables, selector graph, Animation Lab, preview target, and export format together.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label" for="import-bundle-input">Portable Bundle Input</label>
+                  <textarea id="import-bundle-input" rows="9" placeholder="Paste a portable bundle JSON payload here, then click Apply Imported Bundle." title="Paste a portable bundle JSON payload here."></textarea>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Rollback Timeline</label>
+                  <pre id="rollback-history"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="import-bundle-apply" type="button">Apply Imported Bundle</button>
+                  <button id="rollback-restore-latest" type="button">Restore Latest Checkpoint</button>
+                  <button id="rollback-restore-previous" type="button">Restore Previous Checkpoint</button>
+                  <button id="rollback-clear" type="button">Clear Checkpoints</button>
+                </div>
+                <div id="rollback-note" class="input-hint">The newest checkpoint is always first. Each import or restore captures a fresh safety snapshot before changing the live workspace.</div>
+              </div>
             </div>
           </details>
           <details id="deployment-assistant-disclosure" class="disclosure">
@@ -5806,6 +5871,25 @@ translateY()	translateY(<length|percentage>)
       const elExportSnippet = document.getElementById("export-snippet");
       const elCopyExportAttributes = document.getElementById("copy-export-attributes");
       const elCopyExportSnippet = document.getElementById("copy-export-snippet");
+      const elExportBundleScope = document.getElementById("export-bundle-scope");
+      const elExportBundleIncludes = document.getElementById("export-bundle-includes");
+      const elExportBundleSafety = document.getElementById("export-bundle-safety");
+      const elExportBundleSummary = document.getElementById("export-bundle-summary");
+      const elExportBundleJson = document.getElementById("export-bundle-json");
+      const elCopyExportBundle = document.getElementById("copy-export-bundle");
+      const elExportBundleSeedImport = document.getElementById("export-bundle-seed-import");
+      const elSaveExportCheckpoint = document.getElementById("save-export-checkpoint");
+      const elExportBundleNote = document.getElementById("export-bundle-note");
+      const elImportBundleStatus = document.getElementById("import-bundle-status");
+      const elRollbackStatus = document.getElementById("rollback-status");
+      const elRollbackSummary = document.getElementById("rollback-summary");
+      const elImportBundleInput = document.getElementById("import-bundle-input");
+      const elRollbackHistory = document.getElementById("rollback-history");
+      const elImportBundleApply = document.getElementById("import-bundle-apply");
+      const elRollbackRestoreLatest = document.getElementById("rollback-restore-latest");
+      const elRollbackRestorePrevious = document.getElementById("rollback-restore-previous");
+      const elRollbackClear = document.getElementById("rollback-clear");
+      const elRollbackNote = document.getElementById("rollback-note");
       const elDeploymentPath = document.getElementById("deployment-path");
       const elDeploymentMount = document.getElementById("deployment-mount");
       const elDeploymentScope = document.getElementById("deployment-scope");
@@ -6116,8 +6200,10 @@ translateY()	translateY(<length|percentage>)
       const PRESET_STORAGE_KEY = "formio-az-css-playground-presets-v1";
       const LIBRARY_FAVORITES_KEY = "formio-az-css-playground-library-favorites-v1";
       const ANIMATION_LAB_SESSION_STORAGE_KEY = "formio-az-css-playground-animation-lab-session-v1";
+      const ROLLBACK_HISTORY_STORAGE_KEY = "formio-az-css-playground-rollback-history-v1";
       const THEME_STORAGE_KEY = "formio-az-css-playground-theme-v1";
       const PREVIEW_IMAGE_STORAGE_KEY = "formio-az-css-playground-preview-image-v1";
+      const EXPORT_BUNDLE_VERSION = 1;
       const THEME_META = {
         "ocean-light": {
           note: "Ocean Light keeps the airy blue studio look."
@@ -8978,6 +9064,8 @@ translateY()	translateY(<length|percentage>)
       let animationLabSessionSnapshot = null;
       let animationLabSessionReady = false;
       let animationLabSessionRestoreInProgress = false;
+      let rollbackHistory = [];
+      let importBundleStatusMessage = "No bundle imported in this session yet.";
       const builderMediaLayerMap = {
         all: "",
         "sm-down": "(max-width: 640px)",
@@ -18159,7 +18247,32 @@ translateY()	translateY(<length|percentage>)
         return "<div" + attrs + ">Sample Content</div>";
       }
 
-      function updateExportWizard() {
+      function normalizeExportFormat(value) {
+        const next = String(value || "").trim();
+        return next === "inline-style" || next === "html-bundle" || next === "class-css" ? next : "class-css";
+      }
+
+      function normalizeExportTag(value) {
+        const next = String(value || "").trim();
+        return next === "button" || next === "input" || next === "img" || next === "div" ? next : "div";
+      }
+
+      function exportFormatLabel(format) {
+        const next = normalizeExportFormat(format);
+        if (next === "inline-style") return "Inline style";
+        if (next === "html-bundle") return "Self-contained HTML snippet";
+        return "Reusable Class + CSS";
+      }
+
+      function cloneSerializable(value) {
+        try {
+          return JSON.parse(JSON.stringify(value));
+        } catch (err) {
+          return null;
+        }
+      }
+
+      function buildExportViewModel() {
         const format = (elExportFormat.value || "class-css").trim();
         const tag = (elExportTag.value || "div").trim();
         const cssText = (elBuilderCSS.textContent || "").trim();
@@ -18187,10 +18300,315 @@ translateY()	translateY(<length|percentage>)
           notes = "Recommended for reusable styling. Paste the class into Form.io HTML Attributes, then inject the Generated Stylesheet using your HTML component or supported attribute workflow.";
         }
 
-        elExportAttributes.textContent = attrText;
-        elExportSnippet.textContent = snippet;
-        elExportNotes.textContent = notes;
+        return {
+          format: normalizeExportFormat(format),
+          tag: normalizeExportTag(tag),
+          cssText: cssText,
+          attrText: attrText,
+          snippet: snippet,
+          notes: notes
+        };
+      }
+
+      function formatPortableTimestamp(value) {
+        const stamp = new Date(value || "");
+        if (Number.isNaN(stamp.getTime())) return "Unknown time";
+        return stamp.toLocaleString();
+      }
+
+      function normalizeRollbackHistoryEntry(entry) {
+        if (!entry || typeof entry !== "object") return null;
+        const state = cloneSerializable(entry.state);
+        if (!state || typeof state !== "object") return null;
+        return {
+          label: String(entry.label || "Rollback Checkpoint").trim() || "Rollback Checkpoint",
+          reason: String(entry.reason || "").trim(),
+          savedAt: String(entry.savedAt || "").trim() || new Date().toISOString(),
+          exportFormat: normalizeExportFormat(entry.exportFormat),
+          exportTag: normalizeExportTag(entry.exportTag),
+          state: state
+        };
+      }
+
+      function readRollbackHistory() {
+        try {
+          const raw = localStorage.getItem(ROLLBACK_HISTORY_STORAGE_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed)) return [];
+          return parsed
+            .map(normalizeRollbackHistoryEntry)
+            .filter(Boolean)
+            .slice(0, 6);
+        } catch (err) {
+          return [];
+        }
+      }
+
+      function writeRollbackHistory(history) {
+        try {
+          localStorage.setItem(ROLLBACK_HISTORY_STORAGE_KEY, JSON.stringify((history || []).slice(0, 6)));
+        } catch (err) {
+          setBuilderStatus("Could not save rollback checkpoints in this browser.");
+        }
+      }
+
+      function checkpointRuleCount(state) {
+        return Array.isArray(state && state.rules)
+          ? state.rules.reduce(function (sum, block) {
+            return sum + (Array.isArray(block && block.declarations) ? block.declarations.length : 0);
+          }, 0)
+          : 0;
+      }
+
+      function checkpointVariableCount(state) {
+        return Array.isArray(state && state.variables) ? state.variables.length : 0;
+      }
+
+      function rollbackHistoryTimelineText() {
+        if (!rollbackHistory.length) {
+          return "No rollback checkpoints yet.\nSave one before importing external bundles or before trying a risky export path.";
+        }
+        return rollbackHistory.map(function (entry, index) {
+          return (
+            (index + 1) + ". " + entry.label +
+            " | " + formatPortableTimestamp(entry.savedAt) +
+            " | " + checkpointRuleCount(entry.state) + " rules" +
+            ", " + checkpointVariableCount(entry.state) + " vars" +
+            ", target " + (entry.state && entry.state.target ? entry.state.target : "card") +
+            ", " + exportFormatLabel(entry.exportFormat)
+          );
+        }).join("\n");
+      }
+
+      function buildPortableExportBundle(viewModel) {
+        const model = viewModel || buildExportViewModel();
+        const state = cloneSerializable(snapshotBuilderState()) || snapshotBuilderState();
+        return {
+          bundleType: "formio-az-css-playground-bundle",
+          bundleVersion: EXPORT_BUNDLE_VERSION,
+          bundleLabel: exportFormatLabel(model.format) + " handoff",
+          exportedAt: new Date().toISOString(),
+          export: {
+            format: model.format,
+            formatLabel: exportFormatLabel(model.format),
+            tag: model.tag,
+            attributes: model.attrText,
+            notes: model.notes,
+            snippet: model.snippet
+          },
+          deployment: {
+            path: elDeploymentPath ? (elDeploymentPath.textContent || "").trim() : "",
+            mount: elDeploymentMount ? (elDeploymentMount.textContent || "").trim() : "",
+            scope: elDeploymentScope ? (elDeploymentScope.textContent || "").trim() : "",
+            risk: elDeploymentRisk ? (elDeploymentRisk.textContent || "").trim() : "",
+            steps: Array.from(elDeploymentSteps ? elDeploymentSteps.querySelectorAll("li") : []).map(function (item) {
+              return (item.textContent || "").trim();
+            }).filter(Boolean),
+            checklist: Array.from(elDeploymentChecklist ? elDeploymentChecklist.querySelectorAll(".deployment-check") : []).map(function (item) {
+              return (item.textContent || "").trim();
+            }).filter(Boolean)
+          },
+          qualityAudit: {
+            score: elQualityAuditScore ? (elQualityAuditScore.textContent || "").trim() : "",
+            verdict: elQualityAuditVerdict ? (elQualityAuditVerdict.textContent || "").trim() : ""
+          },
+          stylesheet: model.cssText || (elBuilderCSS.textContent || "").trim(),
+          builderState: state
+        };
+      }
+
+      function renderExportPortabilityTools(viewModel) {
+        const model = viewModel || buildExportViewModel();
+        const bundle = buildPortableExportBundle(model);
+        const rules = checkpointRuleCount(bundle.builderState);
+        const vars = checkpointVariableCount(bundle.builderState);
+
+        if (elExportBundleScope) {
+          elExportBundleScope.textContent =
+            exportFormatLabel(model.format) + " bundle for a " + model.tag + " preview. The handoff recreates the full workspace, not just the pasted snippet.";
+        }
+        if (elExportBundleIncludes) {
+          elExportBundleIncludes.textContent =
+            rules + " rule" + (rules === 1 ? "" : "s") +
+            ", " + vars + " variable" + (vars === 1 ? "" : "s") +
+            ", selector graph, Animation Lab session data, deployment notes, and the current preview target.";
+        }
+        if (elExportBundleSafety) {
+          elExportBundleSafety.textContent = rollbackHistory.length
+            ? "Rollback coverage is active with " + rollbackHistory.length + " saved checkpoint" + (rollbackHistory.length === 1 ? "" : "s") + "."
+            : "No rollback checkpoints yet. Save one now so imports and restores have a safe known-good fallback.";
+        }
+        if (elExportBundleSummary) {
+          elExportBundleSummary.textContent =
+            "Best when another browser, teammate, or future session needs the same builder state plus the " +
+            exportFormatLabel(model.format).toLowerCase() + " handoff details.";
+        }
+        if (elExportBundleJson) {
+          elExportBundleJson.textContent = JSON.stringify(bundle, null, 2);
+        }
+        if (elExportBundleNote) {
+          elExportBundleNote.textContent =
+            "Portable bundle export keeps the live builder, preview, and deployment context together so restores can resume exactly where this handoff was prepared.";
+        }
+        if (elImportBundleStatus) {
+          elImportBundleStatus.textContent = importBundleStatusMessage;
+        }
+        if (elRollbackStatus) {
+          elRollbackStatus.textContent = rollbackHistory.length
+            ? "Latest: " + rollbackHistory[0].label + " (" + formatPortableTimestamp(rollbackHistory[0].savedAt) + ")."
+            : "No rollback checkpoints yet.";
+        }
+        if (elRollbackSummary) {
+          elRollbackSummary.textContent = rollbackHistory.length
+            ? "Latest restore can rewind to " + rollbackHistory[0].label + " and preserve the current state as a fresh safety checkpoint first."
+            : "A restore will rewind builder rules, variables, selector graph, Animation Lab, preview target, and export format together.";
+        }
+        if (elRollbackHistory) {
+          elRollbackHistory.textContent = rollbackHistoryTimelineText();
+        }
+        if (elRollbackRestoreLatest) {
+          elRollbackRestoreLatest.disabled = rollbackHistory.length < 1;
+        }
+        if (elRollbackRestorePrevious) {
+          elRollbackRestorePrevious.disabled = rollbackHistory.length < 2;
+        }
+        if (elRollbackClear) {
+          elRollbackClear.disabled = rollbackHistory.length < 1;
+        }
+        if (elRollbackNote) {
+          elRollbackNote.textContent = rollbackHistory.length
+            ? "Newest checkpoint first. Imports and restores save another safety snapshot before they overwrite the live workspace."
+            : "Save a manual checkpoint before risky experiments, or rely on the auto safety snapshots that run before imports and restores.";
+        }
+      }
+
+      function captureRollbackCheckpoint(label, reason, options) {
+        const entry = normalizeRollbackHistoryEntry({
+          label: label,
+          reason: reason,
+          savedAt: new Date().toISOString(),
+          exportFormat: elExportFormat ? elExportFormat.value : "class-css",
+          exportTag: elExportTag ? elExportTag.value : "div",
+          state: snapshotBuilderState()
+        });
+        if (!entry) {
+          setBuilderStatus("Could not capture the current workspace for rollback.");
+          return null;
+        }
+        rollbackHistory = [entry].concat(rollbackHistory).slice(0, 6);
+        writeRollbackHistory(rollbackHistory);
+        renderExportPortabilityTools();
+        if (!options || !options.silent) {
+          setBuilderStatus("Rollback checkpoint saved: " + entry.label + ".");
+        }
+        return entry;
+      }
+
+      function restoreRollbackCheckpoint(index) {
+        if (index < 0 || index >= rollbackHistory.length) {
+          setBuilderStatus("No rollback checkpoint available for that restore action.");
+          renderExportPortabilityTools();
+          return;
+        }
+        const target = normalizeRollbackHistoryEntry(rollbackHistory[index]);
+        if (!target) {
+          setBuilderStatus("That rollback checkpoint could not be restored.");
+          return;
+        }
+        const safety = captureRollbackCheckpoint("Auto Safety Before Restore", "before restore", { silent: true });
+        if (elExportFormat) elExportFormat.value = target.exportFormat;
+        if (elExportTag) elExportTag.value = target.exportTag;
+        applyBuilderState(target.state);
+        updateExportWizard();
+        importBundleStatusMessage = "Restored rollback checkpoint: " + target.label + ".";
+        renderExportPortabilityTools();
+        setBuilderStatus(
+          "Rollback restored: " + target.label + "." +
+          (safety ? " Safety checkpoint captured before restore." : "")
+        );
+      }
+
+      function clearRollbackCheckpointHistory() {
+        rollbackHistory = [];
+        try {
+          localStorage.removeItem(ROLLBACK_HISTORY_STORAGE_KEY);
+        } catch (err) {
+          writeRollbackHistory([]);
+        }
+        renderExportPortabilityTools();
+        setBuilderStatus("Rollback checkpoints cleared.");
+      }
+
+      function normalizePortableBundlePayload(payload) {
+        if (!payload || typeof payload !== "object") return null;
+        const state = cloneSerializable(payload.builderState || payload.state);
+        if (!state || typeof state !== "object") return null;
+        const exportMeta = payload.export && typeof payload.export === "object" ? payload.export : {};
+        return {
+          label: String(payload.bundleLabel || payload.label || "Imported bundle").trim() || "Imported bundle",
+          exportedAt: String(payload.exportedAt || payload.savedAt || "").trim(),
+          exportFormat: normalizeExportFormat(exportMeta.format || payload.exportFormat),
+          exportTag: normalizeExportTag(exportMeta.tag || payload.exportTag),
+          state: state
+        };
+      }
+
+      function seedCurrentBundleIntoImportEditor() {
+        if (!elImportBundleInput) return;
+        elImportBundleInput.value = JSON.stringify(buildPortableExportBundle(), null, 2);
+        importBundleStatusMessage = "Current live bundle loaded into the import editor.";
+        renderExportPortabilityTools();
+        setBuilderStatus("Loaded the current portable bundle into the import editor.");
+      }
+
+      function applyImportedBundle() {
+        if (!elImportBundleInput) return;
+        const raw = String(elImportBundleInput.value || "").trim();
+        if (!raw) {
+          importBundleStatusMessage = "Paste a portable bundle JSON payload first.";
+          renderExportPortabilityTools();
+          setBuilderStatus("Portable bundle input is empty.");
+          return;
+        }
+        let parsed = null;
+        try {
+          parsed = JSON.parse(raw);
+        } catch (err) {
+          importBundleStatusMessage = "Import failed. JSON could not be parsed.";
+          renderExportPortabilityTools();
+          setBuilderStatus("Portable bundle JSON is invalid.");
+          return;
+        }
+        const bundle = normalizePortableBundlePayload(parsed);
+        if (!bundle) {
+          importBundleStatusMessage = "Import failed. Bundle payload is missing builder state.";
+          renderExportPortabilityTools();
+          setBuilderStatus("Portable bundle is missing the required builder state.");
+          return;
+        }
+        const safety = captureRollbackCheckpoint("Auto Safety Before Import", "before import", { silent: true });
+        if (elExportFormat) elExportFormat.value = bundle.exportFormat;
+        if (elExportTag) elExportTag.value = bundle.exportTag;
+        applyBuilderState(bundle.state);
+        updateExportWizard();
+        importBundleStatusMessage =
+          "Imported " + bundle.label +
+          (bundle.exportedAt ? " from " + formatPortableTimestamp(bundle.exportedAt) + "." : ".");
+        renderExportPortabilityTools();
+        setBuilderStatus(
+          "Portable bundle imported." +
+          (safety ? " Safety checkpoint captured before import." : "")
+        );
+      }
+
+      function updateExportWizard() {
+        const viewModel = buildExportViewModel();
+        elExportAttributes.textContent = viewModel.attrText;
+        elExportSnippet.textContent = viewModel.snippet;
+        elExportNotes.textContent = viewModel.notes;
         updateDeploymentAssistant();
+        renderExportPortabilityTools(viewModel);
       }
 
       function updateDeploymentAssistant() {
@@ -18922,6 +19340,7 @@ translateY()	translateY(<length|percentage>)
         updateExportWizard();
         updateAnimationLabOutputs();
         renderQualityAudit();
+        renderExportPortabilityTools();
 
         elBuilderVars.innerHTML = "";
         if (builderVariables.length === 0) {
@@ -19196,6 +19615,18 @@ translateY()	translateY(<length|percentage>)
         } catch (err) {
           elCopyExportSnippet.textContent = "Copy Failed";
           setTimeout(function () { elCopyExportSnippet.textContent = "Copy Export Snippet"; }, 1200);
+        }
+      }
+
+      async function copyPortableExportBundle() {
+        try {
+          await navigator.clipboard.writeText(JSON.stringify(buildPortableExportBundle(), null, 2));
+          elCopyExportBundle.textContent = "Copied";
+          setTimeout(function () { elCopyExportBundle.textContent = "Copy Portable Bundle"; }, 1200);
+          setBuilderStatus("Portable bundle copied.");
+        } catch (err) {
+          elCopyExportBundle.textContent = "Copy Failed";
+          setTimeout(function () { elCopyExportBundle.textContent = "Copy Portable Bundle"; }, 1200);
         }
       }
 
@@ -19944,6 +20375,33 @@ translateY()	translateY(<length|percentage>)
       elExportTag.addEventListener("change", updateExportWizard);
       elCopyExportAttributes.addEventListener("click", copyExportAttributes);
       elCopyExportSnippet.addEventListener("click", copyExportSnippet);
+      if (elCopyExportBundle) {
+        elCopyExportBundle.addEventListener("click", copyPortableExportBundle);
+      }
+      if (elExportBundleSeedImport) {
+        elExportBundleSeedImport.addEventListener("click", seedCurrentBundleIntoImportEditor);
+      }
+      if (elSaveExportCheckpoint) {
+        elSaveExportCheckpoint.addEventListener("click", function () {
+          captureRollbackCheckpoint("Manual Rollback Checkpoint", "manual save");
+        });
+      }
+      if (elImportBundleApply) {
+        elImportBundleApply.addEventListener("click", applyImportedBundle);
+      }
+      if (elRollbackRestoreLatest) {
+        elRollbackRestoreLatest.addEventListener("click", function () {
+          restoreRollbackCheckpoint(0);
+        });
+      }
+      if (elRollbackRestorePrevious) {
+        elRollbackRestorePrevious.addEventListener("click", function () {
+          restoreRollbackCheckpoint(1);
+        });
+      }
+      if (elRollbackClear) {
+        elRollbackClear.addEventListener("click", clearRollbackCheckpointHistory);
+      }
       elQualityAuditRefresh.addEventListener("click", function () {
         renderQualityAudit();
         setBuilderStatus("Accessibility and quality audit refreshed.");
@@ -20366,6 +20824,7 @@ translateY()	translateY(<length|percentage>)
       loadSelectorSimulatorTemplate();
       updateAnimationLabSessionPanel(null);
       restoreAnimationLabSession(false);
+      rollbackHistory = readRollbackHistory();
       animationLabSessionReady = true;
       renderRecipeList();
       renderGlossaryTermList();
