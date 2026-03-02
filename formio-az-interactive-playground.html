@@ -2084,6 +2084,14 @@
                   <option value="fluid-clamp">Fluid Clamp</option>
                 </select>
               </div>
+              <div class="row">
+                <label class="label" for="custom-rule-helper-preset">Starter Preset</label>
+                <div class="preset-bar">
+                  <select id="custom-rule-helper-preset" title="Choose a tuned starting point for the current declaration type."></select>
+                  <button id="custom-rule-helper-apply-preset" type="button">Load Preset</button>
+                </div>
+                <div id="custom-rule-helper-preset-note" class="input-hint">Preset guidance updates when you switch declaration type.</div>
+              </div>
               <div id="custom-rule-helper-radius-group" class="builder-row">
                 <div class="row">
                   <label class="label" for="custom-rule-helper-radius-value">Radius Amount</label>
@@ -3293,6 +3301,9 @@ translateY()	translateY(<length|percentage>)
       const elSyntaxAddCurrentRule = document.getElementById("syntax-add-current-rule");
       const elCustomRule = document.getElementById("custom-rule");
       const elCustomRuleHelperType = document.getElementById("custom-rule-helper-type");
+      const elCustomRuleHelperPreset = document.getElementById("custom-rule-helper-preset");
+      const elCustomRuleHelperApplyPreset = document.getElementById("custom-rule-helper-apply-preset");
+      const elCustomRuleHelperPresetNote = document.getElementById("custom-rule-helper-preset-note");
       const elCustomRuleHelperRadiusGroup = document.getElementById("custom-rule-helper-radius-group");
       const elCustomRuleHelperRadiusValue = document.getElementById("custom-rule-helper-radius-value");
       const elCustomRuleHelperRadiusUnit = document.getElementById("custom-rule-helper-radius-unit");
@@ -3350,6 +3361,49 @@ translateY()	translateY(<length|percentage>)
       const elCustomRuleHelperNote = document.getElementById("custom-rule-helper-note");
       const elCustomRuleHelperLoad = document.getElementById("custom-rule-helper-load");
       const elCustomRuleHelperAppend = document.getElementById("custom-rule-helper-append");
+      const CUSTOM_RULE_HELPER_PRESET_TARGETS = {
+        radiusValue: elCustomRuleHelperRadiusValue,
+        radiusUnit: elCustomRuleHelperRadiusUnit,
+        shadowX: elCustomRuleHelperShadowX,
+        shadowY: elCustomRuleHelperShadowY,
+        shadowBlur: elCustomRuleHelperShadowBlur,
+        shadowSpread: elCustomRuleHelperShadowSpread,
+        shadowColor: elCustomRuleHelperShadowColor,
+        shadowAlpha: elCustomRuleHelperShadowAlpha,
+        shadowInset: elCustomRuleHelperShadowInset,
+        focusWidth: elCustomRuleHelperFocusWidth,
+        focusStyle: elCustomRuleHelperFocusStyle,
+        focusColor: elCustomRuleHelperFocusColor,
+        focusAlpha: elCustomRuleHelperFocusAlpha,
+        focusOffset: elCustomRuleHelperFocusOffset,
+        spacingProperty: elCustomRuleHelperSpacingProperty,
+        spacingUnit: elCustomRuleHelperSpacingUnit,
+        spacingLinked: elCustomRuleHelperSpacingLinked,
+        spacingTop: elCustomRuleHelperSpacingTop,
+        spacingRight: elCustomRuleHelperSpacingRight,
+        spacingBottom: elCustomRuleHelperSpacingBottom,
+        spacingLeft: elCustomRuleHelperSpacingLeft,
+        gradientProperty: elCustomRuleHelperGradientProperty,
+        gradientAngle: elCustomRuleHelperGradientAngle,
+        gradientStartColor: elCustomRuleHelperGradientStartColor,
+        gradientStartStop: elCustomRuleHelperGradientStartStop,
+        gradientEndColor: elCustomRuleHelperGradientEndColor,
+        gradientEndStop: elCustomRuleHelperGradientEndStop,
+        transitionProperty: elCustomRuleHelperTransitionProperty,
+        transitionDuration: elCustomRuleHelperTransitionDuration,
+        transitionEasing: elCustomRuleHelperTransitionEasing,
+        transitionDelay: elCustomRuleHelperTransitionDelay,
+        transformUnit: elCustomRuleHelperTransformUnit,
+        transformX: elCustomRuleHelperTransformX,
+        transformY: elCustomRuleHelperTransformY,
+        transformScale: elCustomRuleHelperTransformScale,
+        transformRotate: elCustomRuleHelperTransformRotate,
+        fluidProperty: elCustomRuleHelperFluidProperty,
+        fluidUnit: elCustomRuleHelperFluidUnit,
+        fluidMin: elCustomRuleHelperFluidMin,
+        fluidMax: elCustomRuleHelperFluidMax,
+        fluidVw: elCustomRuleHelperFluidVw
+      };
       const elBuilderMediaLayer = document.getElementById("builder-media-layer");
       const elBuilderMediaCustomWrap = document.getElementById("builder-media-custom-wrap");
       const elBuilderMediaCustom = document.getElementById("builder-media-custom");
@@ -3482,6 +3536,120 @@ translateY()	translateY(<length|percentage>)
       styleProbeHost.style.display = "grid";
       styleProbeHost.style.gap = "8px";
       document.body.appendChild(styleProbeHost);
+      const CUSTOM_RULE_HELPER_PRESETS = {
+        "border-radius": [
+          {
+            value: "soft-card",
+            label: "Soft Card",
+            note: "A safe rounded-corner default for cards, wrappers, and grouped fields.",
+            fields: { radiusValue: 12, radiusUnit: "px" }
+          },
+          {
+            value: "pill-action",
+            label: "Pill Action",
+            note: "Use this when buttons or tags need a full-pill silhouette.",
+            fields: { radiusValue: 999, radiusUnit: "px" }
+          }
+        ],
+        "box-shadow": [
+          {
+            value: "card-lift",
+            label: "Card Lift",
+            note: "Balanced depth for wrappers and cards without overpowering dense forms.",
+            fields: { shadowX: 0, shadowY: 12, shadowBlur: 24, shadowSpread: 0, shadowColor: "#214f9b", shadowAlpha: 0.18, shadowInset: false }
+          },
+          {
+            value: "input-inset",
+            label: "Input Inset",
+            note: "A subtle inset treatment that reads well on fields and embedded controls.",
+            fields: { shadowX: 0, shadowY: 1, shadowBlur: 3, shadowSpread: 0, shadowColor: "#0f2f66", shadowAlpha: 0.14, shadowInset: true }
+          }
+        ],
+        "focus-ring": [
+          {
+            value: "aa-default",
+            label: "Accessible Ring",
+            note: "A visible, production-safe default for keyboard focus states.",
+            fields: { focusWidth: 3, focusStyle: "solid", focusColor: "#245fe6", focusAlpha: 0.9, focusOffset: 2 }
+          },
+          {
+            value: "tight-contrast",
+            label: "Tight Contrast",
+            note: "Keeps the ring close to the edge when space is limited.",
+            fields: { focusWidth: 2, focusStyle: "solid", focusColor: "#153d91", focusAlpha: 1, focusOffset: 1 }
+          }
+        ],
+        "spacing": [
+          {
+            value: "uniform-card",
+            label: "Uniform Card",
+            note: "Linked spacing for wrappers where all four sides should stay equal.",
+            fields: { spacingProperty: "padding", spacingUnit: "px", spacingLinked: true, spacingTop: 16, spacingRight: 16, spacingBottom: 16, spacingLeft: 16 }
+          },
+          {
+            value: "stack-gap",
+            label: "Stack Gap",
+            note: "A common vertical rhythm: taller top/bottom spacing with tighter horizontal edges.",
+            fields: { spacingProperty: "margin", spacingUnit: "rem", spacingLinked: false, spacingTop: 1, spacingRight: 0, spacingBottom: 1, spacingLeft: 0 }
+          }
+        ],
+        "gradient": [
+          {
+            value: "cool-panel",
+            label: "Cool Panel",
+            note: "Soft two-stop panel fill for cards, banners, and highlighted sections.",
+            fields: { gradientProperty: "background", gradientAngle: "135deg", gradientStartColor: "#eff4ff", gradientStartStop: 0, gradientEndColor: "#d8e6ff", gradientEndStop: 100 }
+          },
+          {
+            value: "button-sheen",
+            label: "Button Sheen",
+            note: "A tighter diagonal sheen for buttons and compact controls.",
+            fields: { gradientProperty: "background-image", gradientAngle: "45deg", gradientStartColor: "#fdfefe", gradientStartStop: 0, gradientEndColor: "#d3e4ff", gradientEndStop: 92 }
+          }
+        ],
+        "transition": [
+          {
+            value: "hover-snappy",
+            label: "Hover Snappy",
+            note: "Fast enough for hover feedback without feeling abrupt.",
+            fields: { transitionProperty: "transform", transitionDuration: "150ms", transitionEasing: "ease-out", transitionDelay: "0s" }
+          },
+          {
+            value: "form-calm",
+            label: "Form Calm",
+            note: "A steady control-state transition for borders, shadows, and color changes.",
+            fields: { transitionProperty: "box-shadow", transitionDuration: "250ms", transitionEasing: "ease", transitionDelay: "0s" }
+          }
+        ],
+        "transform-stack": [
+          {
+            value: "hover-lift",
+            label: "Hover Lift",
+            note: "A restrained hover nudge that pairs well with button or card motion.",
+            fields: { transformUnit: "px", transformX: 0, transformY: -2, transformScale: 1.01, transformRotate: 0 }
+          },
+          {
+            value: "tag-settle",
+            label: "Tag Settle",
+            note: "A softer transform for badges and chips that should barely move.",
+            fields: { transformUnit: "px", transformX: 0, transformY: -1, transformScale: 1, transformRotate: 0 }
+          }
+        ],
+        "fluid-clamp": [
+          {
+            value: "headline-scale",
+            label: "Headline Scale",
+            note: "A practical font-size clamp for short headings and section labels.",
+            fields: { fluidProperty: "font-size", fluidUnit: "rem", fluidMin: 1, fluidMax: 2, fluidVw: 2.5 }
+          },
+          {
+            value: "section-gap",
+            label: "Section Gap",
+            note: "Lets spacing grow modestly across larger viewports.",
+            fields: { fluidProperty: "padding", fluidUnit: "rem", fluidMin: 0.75, fluidMax: 1.5, fluidVw: 1.8 }
+          }
+        ]
+      };
 
       const functionPropertyDefaults = {
         "blur()": "filter",
@@ -10965,6 +11133,80 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperSpacingRationale.textContent = details.rationale;
       }
 
+      function currentCustomRuleHelperPresets() {
+        const type = (elCustomRuleHelperType.value || "border-radius").trim();
+        return CUSTOM_RULE_HELPER_PRESETS[type] || [];
+      }
+
+      function currentCustomRuleHelperPreset() {
+        const presets = currentCustomRuleHelperPresets();
+        const currentValue = elCustomRuleHelperPreset ? (elCustomRuleHelperPreset.value || "").trim() : "";
+        if (!presets.length) {
+          return null;
+        }
+        return presets.find(function (preset) {
+          return preset.value === currentValue;
+        }) || presets[0];
+      }
+
+      function updateCustomRuleHelperPresetNote() {
+        if (!elCustomRuleHelperPresetNote) {
+          return;
+        }
+        const preset = currentCustomRuleHelperPreset();
+        elCustomRuleHelperPresetNote.textContent = preset
+          ? preset.note
+          : "No starter presets are available for this declaration type yet.";
+      }
+
+      function updateCustomRuleHelperPresetOptions() {
+        if (!elCustomRuleHelperPreset) {
+          return;
+        }
+        const presets = currentCustomRuleHelperPresets();
+        if (!presets.length) {
+          replaceSelectOptions(elCustomRuleHelperPreset, [{ value: "", label: "No presets available" }], "");
+          if (elCustomRuleHelperApplyPreset) {
+            elCustomRuleHelperApplyPreset.disabled = true;
+          }
+          updateCustomRuleHelperPresetNote();
+          return;
+        }
+        replaceSelectOptions(
+          elCustomRuleHelperPreset,
+          presets.map(function (preset) {
+            return { value: preset.value, label: preset.label };
+          }),
+          elCustomRuleHelperPreset.value
+        );
+        if (elCustomRuleHelperApplyPreset) {
+          elCustomRuleHelperApplyPreset.disabled = false;
+        }
+        updateCustomRuleHelperPresetNote();
+      }
+
+      function applyCustomRuleHelperPreset() {
+        const preset = currentCustomRuleHelperPreset();
+        if (!preset) {
+          setBuilderStatus("No starter preset is available for this declaration type.");
+          return;
+        }
+        Object.keys(preset.fields || {}).forEach(function (key) {
+          const target = CUSTOM_RULE_HELPER_PRESET_TARGETS[key];
+          if (!target) {
+            return;
+          }
+          if (target.type === "checkbox") {
+            target.checked = Boolean(preset.fields[key]);
+          } else {
+            target.value = String(preset.fields[key]);
+          }
+        });
+        updateSpacingHelperControlState(elCustomRuleHelperSpacingTop);
+        updateCustomRuleHelper();
+        setBuilderStatus("Custom declaration preset loaded: " + preset.label + ".");
+      }
+
       function customRuleHelperDeclaration() {
         const type = (elCustomRuleHelperType.value || "border-radius").trim();
         if (type === "box-shadow") {
@@ -11229,7 +11471,16 @@ translateY()	translateY(<length|percentage>)
       elSyntaxAddCurrentRule.addEventListener("click", addCurrentRuleToBuilder);
       elAddCurrentRule.addEventListener("click", addCurrentRuleToBuilder);
       elAddCustomRule.addEventListener("click", addCustomRuleToBuilder);
-      elCustomRuleHelperType.addEventListener("change", updateCustomRuleHelper);
+      elCustomRuleHelperType.addEventListener("change", function () {
+        updateCustomRuleHelperPresetOptions();
+        updateCustomRuleHelper();
+      });
+      if (elCustomRuleHelperPreset) {
+        elCustomRuleHelperPreset.addEventListener("change", updateCustomRuleHelperPresetNote);
+      }
+      if (elCustomRuleHelperApplyPreset) {
+        elCustomRuleHelperApplyPreset.addEventListener("click", applyCustomRuleHelperPreset);
+      }
       [
         elCustomRuleHelperRadiusValue,
         elCustomRuleHelperRadiusUnit,
@@ -11579,6 +11830,7 @@ translateY()	translateY(<length|percentage>)
       renderLibraryCategoryList();
       renderLibraryPresetList();
       renderPresetList();
+      updateCustomRuleHelperPresetOptions();
       updateCustomRuleHelper();
       renderBuilder();
       populateItems();
