@@ -771,6 +771,34 @@
       line-height: 1.4;
     }
 
+    .quality-audit-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.9fr) minmax(0, 1.1fr);
+      gap: 8px;
+      margin-top: 6px;
+      margin-bottom: 8px;
+    }
+
+    .quality-audit-actions {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .quality-audit-actions button {
+      min-width: 0;
+      width: 100%;
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
+    .quality-audit-score {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #234787;
+    }
+
     .diff-list {
       display: grid;
       gap: 8px;
@@ -1303,6 +1331,7 @@
       .selection-guide-grid,
       .selector-coach-grid,
       .animation-compare-grid,
+      .quality-audit-grid,
       .info-grid,
       .glossary-grid,
       .export-grid {
@@ -1320,7 +1349,8 @@
       .style-helper-grid,
       .builder-row,
       .preset-bar,
-      .animation-compare-actions {
+      .animation-compare-actions,
+      .quality-audit-actions {
         grid-template-columns: 1fr;
       }
     }
@@ -2929,6 +2959,56 @@
               </div>
             </div>
           </details>
+          <details id="quality-audit-disclosure" class="disclosure">
+            <summary>Accessibility + Quality Checks</summary>
+            <div class="disclosure-body">
+              <p class="tiny">Run a release-style audit against the current selector, motion package, and export route before you ship.</p>
+              <div class="quality-audit-grid">
+                <div class="specificity-wrap">
+                  <div class="specificity-head">
+                    <div class="label">Accessibility Readiness</div>
+                    <code id="quality-audit-score" class="quality-audit-score">100 / 100</code>
+                  </div>
+                  <div class="specificity-meter">
+                    <div id="quality-audit-fill" class="specificity-fill" style="width:100%;"></div>
+                  </div>
+                  <p id="quality-audit-verdict" class="tiny">Audit has not found any release blockers yet.</p>
+                </div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Focus Coverage</div>
+                    <div id="quality-audit-focus">Focus styling guidance will appear here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Motion Safeguard</div>
+                    <div id="quality-audit-motion">Motion fallback guidance will appear here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Export Confidence</div>
+                    <div id="quality-audit-deploy">Export-specific rollout guidance will appear here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Selector Pressure</div>
+                    <div id="quality-audit-selector">Selector complexity guidance will appear here.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="label">Priority Fixes</label>
+                <div id="quality-audit-fixes" class="deployment-checklist"></div>
+              </div>
+              <div class="row">
+                <label class="label">Audit Snapshot</label>
+                <pre id="quality-audit-summary"></pre>
+              </div>
+              <div class="quality-audit-actions">
+                <button id="quality-audit-refresh" type="button">Refresh Audit</button>
+                <button id="quality-audit-add-focus" type="button">Add Focus Ring Rule</button>
+                <button id="quality-audit-add-reduce" type="button">Add Reduced Motion Rule</button>
+                <button id="quality-audit-copy" type="button">Copy Audit Snapshot</button>
+              </div>
+            </div>
+          </details>
           <p id="builder-status" class="tiny"></p>
         </section>
 
@@ -3855,6 +3935,19 @@ translateY()	translateY(<length|percentage>)
       const elDeploymentRisk = document.getElementById("deployment-risk");
       const elDeploymentSteps = document.getElementById("deployment-steps");
       const elDeploymentChecklist = document.getElementById("deployment-checklist");
+      const elQualityAuditScore = document.getElementById("quality-audit-score");
+      const elQualityAuditFill = document.getElementById("quality-audit-fill");
+      const elQualityAuditVerdict = document.getElementById("quality-audit-verdict");
+      const elQualityAuditFocus = document.getElementById("quality-audit-focus");
+      const elQualityAuditMotion = document.getElementById("quality-audit-motion");
+      const elQualityAuditDeploy = document.getElementById("quality-audit-deploy");
+      const elQualityAuditSelector = document.getElementById("quality-audit-selector");
+      const elQualityAuditFixes = document.getElementById("quality-audit-fixes");
+      const elQualityAuditSummary = document.getElementById("quality-audit-summary");
+      const elQualityAuditRefresh = document.getElementById("quality-audit-refresh");
+      const elQualityAuditAddFocus = document.getElementById("quality-audit-add-focus");
+      const elQualityAuditAddReduce = document.getElementById("quality-audit-add-reduce");
+      const elQualityAuditCopy = document.getElementById("quality-audit-copy");
       const elCopyBuilderCSS = document.getElementById("copy-builder-css");
       const elClearBuilder = document.getElementById("clear-builder");
       const elBuilderStatus = document.getElementById("builder-status");
@@ -10076,6 +10169,7 @@ translateY()	translateY(<length|percentage>)
           ? "Use this when you want the lab to rebalance timing, loops, and delay for the current motion lane."
           : "This motion already matches the recommended lane budget for its current trigger and target.";
         updateAnimationLabReducedPreviewState(selector);
+        renderQualityAudit();
       }
 
       function updateAnimationLabReducedPreviewState(forcedSelector) {
@@ -12348,6 +12442,229 @@ translateY()	translateY(<length|percentage>)
         });
       }
 
+      function selectorWithoutTrailingPseudo() {
+        const selector = String(composeSelector() || "").trim();
+        const pseudo = String(getSelectedPseudoSelector() || "").trim();
+        if (pseudo && selector.endsWith(pseudo)) {
+          return selector.slice(0, -pseudo.length).trim();
+        }
+        return selector;
+      }
+
+      function focusAuditSelector() {
+        const base = selectorWithoutTrailingPseudo() || getBaseSelector();
+        return (base || ".target") + ":focus-visible";
+      }
+
+      function hasBuilderFocusRule(cssText) {
+        const css = String(cssText || "");
+        return /:focus(?:-visible)?[^{]*\{[^}]*\b(?:outline|box-shadow|border-color)\b/i.test(css);
+      }
+
+      function hasBuilderReducedMotionRule(cssText) {
+        return /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\{[\s\S]*\banimation\s*:/i.test(String(cssText || ""));
+      }
+
+      function selectorComplexityNote(selector) {
+        const specificity = computeSpecificityForSingle(selector || "");
+        const weight = specificity.a * 100 + specificity.b * 10 + specificity.c;
+        if (specificity.a > 0 || weight >= 140) {
+          return "High specificity. This selector may require stronger override discipline in production.";
+        }
+        if (/[>+~]/.test(selector || "") || weight >= 70) {
+          return "Moderate selector pressure. Re-check the live DOM so structural relationships stay intact.";
+        }
+        return "Scoped and restrained. This selector should stay manageable if the wrapper remains stable.";
+      }
+
+      function buildQualityAuditSnapshot() {
+        const selector = String(composeSelector() || "").trim() || getBaseSelector();
+        const cssText = String(elBuilderCSS && elBuilderCSS.textContent || "").trim();
+        const format = String(elExportFormat && elExportFormat.value || "class-css").trim();
+        const motionValues = animationLabPresetValues();
+        const motionRisk = animationLabRiskAssessment(motionValues);
+        const hasRules = builderRules.some(function (block) {
+          return Array.isArray(block.declarations) && block.declarations.length > 0;
+        });
+        const hasMedia = builderRules.some(function (block) {
+          return Boolean(String(block.media || "").trim());
+        });
+        const hasPseudoState = /:(hover|focus|focus-visible|active|disabled|checked|visited)\b/.test(cssText);
+        const hasFocus = hasBuilderFocusRule(cssText);
+        const hasReducedMotion = hasBuilderReducedMotionRule(cssText);
+        const focusSelector = focusAuditSelector();
+        const selectorNote = selectorComplexityNote(selector);
+        let score = 100;
+        const fixes = [];
+
+        if (!hasRules && builderVariables.length === 0) {
+          score -= 55;
+          fixes.push("Add at least one reusable rule before treating this as shippable CSS.");
+        }
+        if (!hasFocus) {
+          score -= 18;
+          fixes.push("Add a visible " + focusSelector + " treatment so keyboard users keep an obvious focus cue.");
+        }
+        if ((/animation\s*:/i.test(cssText) || motionRisk.score >= 40) && !hasReducedMotion) {
+          score -= 20;
+          fixes.push("Add a prefers-reduced-motion fallback before shipping animation-heavy states.");
+        }
+        if (format === "inline-style" && (hasPseudoState || hasMedia)) {
+          score -= 18;
+          fixes.push("Switch export away from inline style because inline attributes cannot carry states or media logic.");
+        } else if (format === "html-bundle" && /[>+~]/.test(selector)) {
+          score -= 10;
+          fixes.push("Re-check the exported wrapper structure because complex selectors depend on markup staying intact.");
+        }
+        if (motionRisk.score >= 75) {
+          score -= 16;
+          fixes.push("Animation Lab is in a high-risk state. Shorten or calm the motion before rollout.");
+        } else if (motionRisk.score >= 50) {
+          score -= 8;
+          fixes.push("Run one more motion QA pass on timing and distraction before rollout.");
+        }
+
+        score = Math.max(0, score);
+
+        let verdict = "Ready for final verification.";
+        if (score < 55) {
+          verdict = "Blocked until the priority fixes are addressed.";
+        } else if (score < 75) {
+          verdict = "Usable, but it still needs cleanup before production.";
+        }
+
+        return {
+          score: score,
+          verdict: verdict,
+          focus: hasFocus
+            ? "Visible focus styling is present in the current stylesheet."
+            : "No visible focus rule found yet. Keyboard users need a dedicated focus-visible treatment.",
+          motion: hasReducedMotion
+            ? "Reduced-motion fallback is present for animated output."
+            : "No reduced-motion fallback found yet. Add one if motion will ship.",
+          deploy: format === "inline-style"
+            ? (hasPseudoState || hasMedia
+              ? "Inline export is currently risky because advanced state or media logic would be lost."
+              : "Inline export is acceptable only for static one-off styling.")
+            : format === "html-bundle"
+              ? "HTML bundle is portable, but wrapper structure must stay stable after Form.io renders it."
+              : "Reusable class export is the safest deployment path for this build.",
+          selector: selectorNote,
+          fixes: fixes,
+          summary: [
+            "Accessibility Readiness: " + score + "/100",
+            "Verdict: " + verdict,
+            "Selector: " + selector,
+            "Focus Rule: " + (hasFocus ? "Present" : "Missing"),
+            "Reduced Motion: " + (hasReducedMotion ? "Present" : "Missing"),
+            "Export Route: " + format,
+            "Animation Risk: " + motionRisk.score + "/100 (" + motionRisk.level + ")",
+            "Top Fix: " + (fixes[0] || "No urgent blockers. Run a final live Form.io verification.")
+          ].join("\n"),
+          canAddFocus: !hasFocus,
+          canAddReducedMotion: !hasReducedMotion
+        };
+      }
+
+      function renderQualityAudit() {
+        if (!elQualityAuditScore || !elQualityAuditFill || !elQualityAuditVerdict || !elQualityAuditFixes || !elQualityAuditSummary) {
+          return;
+        }
+        const audit = buildQualityAuditSnapshot();
+        elQualityAuditScore.textContent = audit.score + " / 100";
+        elQualityAuditFill.style.width = audit.score + "%";
+        elQualityAuditFill.style.background = audit.score >= 85
+          ? "linear-gradient(90deg, #2ca66f, #8bbf43)"
+          : audit.score >= 65
+            ? "linear-gradient(90deg, #4d8fcb, #83bfd8)"
+            : audit.score >= 45
+              ? "linear-gradient(90deg, #e28a2d, #f2c14e)"
+              : "linear-gradient(90deg, #d44a55, #f18b56)";
+        elQualityAuditVerdict.textContent = audit.verdict;
+        elQualityAuditFocus.textContent = audit.focus;
+        elQualityAuditMotion.textContent = audit.motion;
+        elQualityAuditDeploy.textContent = audit.deploy;
+        elQualityAuditSelector.textContent = audit.selector;
+        elQualityAuditSummary.textContent = audit.summary;
+
+        elQualityAuditFixes.innerHTML = "";
+        if (!audit.fixes.length) {
+          const ok = document.createElement("div");
+          ok.className = "deployment-check";
+          ok.textContent = "No urgent blockers detected. Final step is a live Form.io pass for real DOM confirmation.";
+          elQualityAuditFixes.appendChild(ok);
+        } else {
+          audit.fixes.forEach(function (text) {
+            const item = document.createElement("div");
+            item.className = "deployment-check";
+            item.textContent = text;
+            elQualityAuditFixes.appendChild(item);
+          });
+        }
+
+        elQualityAuditAddFocus.disabled = !audit.canAddFocus;
+        elQualityAuditAddFocus.textContent = audit.canAddFocus ? "Add Focus Ring Rule" : "Focus Rule Added";
+        elQualityAuditAddReduce.disabled = !audit.canAddReducedMotion;
+        elQualityAuditAddReduce.textContent = audit.canAddReducedMotion ? "Add Reduced Motion Rule" : "Reduced Motion Added";
+      }
+
+      function addQualityAuditFocusRule() {
+        const selector = focusAuditSelector();
+        const declarations = [
+          "outline: " + Math.max(1, Number(elCustomRuleHelperFocusWidth.value) || 3) + "px " +
+            (elCustomRuleHelperFocusStyle.value || "solid") + " " +
+            buildColorStringFromControls(
+              elCustomRuleHelperFocusColor.value,
+              "rgb",
+              elCustomRuleHelperFocusAlpha.value
+            ),
+          "outline-offset: " + (Number(elCustomRuleHelperFocusOffset.value) || 2) + "px"
+        ];
+        const added = addDeclarationsToSelector(selector, declarations, "");
+        if (!added) {
+          setBuilderStatus("Focus ring audit rule could not be added.");
+          renderQualityAudit();
+          return;
+        }
+        renderBuilder();
+        updateLive();
+        setBuilderStatus("Added keyboard focus rule to " + selector + ".");
+      }
+
+      function addQualityAuditReducedMotionRule() {
+        const cssText = String(elBuilderCSS && elBuilderCSS.textContent || "");
+        if (hasBuilderReducedMotionRule(cssText)) {
+          setBuilderStatus("Reduced-motion fallback is already present.");
+          renderQualityAudit();
+          return;
+        }
+        const selector = selectorWithoutTrailingPseudo() || getBaseSelector();
+        const declarations = [
+          "animation: none !important",
+          "transition-duration: 0.01ms !important"
+        ];
+        const added = addDeclarationsToSelector(selector, declarations, "(prefers-reduced-motion: reduce)");
+        if (!added) {
+          setBuilderStatus("Reduced-motion audit rule could not be added.");
+          renderQualityAudit();
+          return;
+        }
+        renderBuilder();
+        updateLive();
+        setBuilderStatus("Added reduced-motion fallback for " + selector + ".");
+      }
+
+      async function copyQualityAuditSnapshot() {
+        try {
+          await navigator.clipboard.writeText(elQualityAuditSummary.textContent);
+          elQualityAuditCopy.textContent = "Copied";
+          setTimeout(function () { elQualityAuditCopy.textContent = "Copy Audit Snapshot"; }, 1200);
+        } catch (err) {
+          elQualityAuditCopy.textContent = "Copy Failed";
+          setTimeout(function () { elQualityAuditCopy.textContent = "Copy Audit Snapshot"; }, 1200);
+        }
+      }
+
       function renderBuilder() {
         updateSelectorPreview();
 
@@ -12361,6 +12678,7 @@ translateY()	translateY(<length|percentage>)
         updateSelectorSimulatorRootClass();
         updateExportWizard();
         updateAnimationLabOutputs();
+        renderQualityAudit();
 
         elBuilderVars.innerHTML = "";
         if (builderVariables.length === 0) {
@@ -13337,6 +13655,13 @@ translateY()	translateY(<length|percentage>)
       elExportTag.addEventListener("change", updateExportWizard);
       elCopyExportAttributes.addEventListener("click", copyExportAttributes);
       elCopyExportSnippet.addEventListener("click", copyExportSnippet);
+      elQualityAuditRefresh.addEventListener("click", function () {
+        renderQualityAudit();
+        setBuilderStatus("Accessibility and quality audit refreshed.");
+      });
+      elQualityAuditAddFocus.addEventListener("click", addQualityAuditFocusRule);
+      elQualityAuditAddReduce.addEventListener("click", addQualityAuditReducedMotionRule);
+      elQualityAuditCopy.addEventListener("click", copyQualityAuditSnapshot);
       elClearBuilder.addEventListener("click", clearBuilder);
       elAddVariable.addEventListener("click", addVariable);
       elSelectorGraphEnabled.addEventListener("change", function () {
