@@ -4131,6 +4131,29 @@ opacity: 0;</textarea>
                   </div>
                   <div class="input-hint">Use this when the draft is easier to tune stop-by-stop than as raw text. The textarea above still stays in sync, so you can switch between structured edits and freeform edits at any time.</div>
                 </div>
+                <div class="info-grid" style="margin-top:10px;">
+                  <div class="info-tile">
+                    <div class="label">Draft Coverage</div>
+                    <div id="animation-lab-custom-coverage">The lab will summarize how fully the draft covers the first and last visible frame.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Marker Health</div>
+                    <div id="animation-lab-custom-marker-health">Duplicate or unusual markers will be called out here before export.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Property Span</div>
+                    <div id="animation-lab-custom-property-span">The lab will list which CSS properties the custom draft is actually moving.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Repair Plan</div>
+                    <div id="animation-lab-custom-repair-plan">Use the recovery actions when the draft is missing edge frames or repeats the same marker more than once.</div>
+                  </div>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-custom-fill-edges" type="button">Fill Missing 0% / 100%</button>
+                  <button id="animation-lab-custom-merge-markers" type="button">Merge Duplicate Markers</button>
+                </div>
+                <div id="animation-lab-custom-repair-note" class="input-hint">These repair actions only reshape the custom draft textarea. They do not change the built-in motion pack you are using as the intent baseline.</div>
                 <div id="animation-lab-custom-note" class="input-hint">The selected built-in keyframe still powers the Motion Pack brief and guardrails. The custom draft only overrides the live preview, exported keyframes block, and shipped animation name while enabled.</div>
               </div>
               <div class="help-box">
@@ -6162,6 +6185,13 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabCustomStopUpdate = document.getElementById("animation-lab-custom-stop-update");
       const elAnimationLabCustomStopRemove = document.getElementById("animation-lab-custom-stop-remove");
       const elAnimationLabCustomStopSort = document.getElementById("animation-lab-custom-stop-sort");
+      const elAnimationLabCustomCoverage = document.getElementById("animation-lab-custom-coverage");
+      const elAnimationLabCustomMarkerHealth = document.getElementById("animation-lab-custom-marker-health");
+      const elAnimationLabCustomPropertySpan = document.getElementById("animation-lab-custom-property-span");
+      const elAnimationLabCustomRepairPlan = document.getElementById("animation-lab-custom-repair-plan");
+      const elAnimationLabCustomFillEdges = document.getElementById("animation-lab-custom-fill-edges");
+      const elAnimationLabCustomMergeMarkers = document.getElementById("animation-lab-custom-merge-markers");
+      const elAnimationLabCustomRepairNote = document.getElementById("animation-lab-custom-repair-note");
       const elAnimationLabCustomNote = document.getElementById("animation-lab-custom-note");
       const elAnimationLabAnatomyStops = document.getElementById("animation-lab-anatomy-stops");
       const elAnimationLabAnatomyProperties = document.getElementById("animation-lab-anatomy-properties");
@@ -10671,6 +10701,181 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function animationLabNormalizedMarkerMeta(marker) {
+        const raw = String(marker || "").trim();
+        if (!raw) {
+          return {
+            raw: "",
+            label: "",
+            key: "",
+            sortValue: 1000,
+            recognized: false,
+            inRange: false
+          };
+        }
+        const lower = raw.toLowerCase();
+        if (lower === "from") {
+          return {
+            raw: raw,
+            label: "0%",
+            key: "0%",
+            sortValue: 0,
+            recognized: true,
+            inRange: true
+          };
+        }
+        if (lower === "to") {
+          return {
+            raw: raw,
+            label: "100%",
+            key: "100%",
+            sortValue: 100,
+            recognized: true,
+            inRange: true
+          };
+        }
+        const percentMatch = lower.match(/^(-?\d+(?:\.\d+)?)%$/);
+        if (percentMatch) {
+          const numeric = Number(percentMatch[1]);
+          const canonical = String(Number(numeric.toFixed(3))).replace(/\.0+$/, "").replace(/(\.\d*?)0+$/, "$1") + "%";
+          return {
+            raw: raw,
+            label: canonical,
+            key: canonical,
+            sortValue: numeric,
+            recognized: true,
+            inRange: numeric >= 0 && numeric <= 100
+          };
+        }
+        return {
+          raw: raw,
+          label: raw,
+          key: lower,
+          sortValue: 1000,
+          recognized: false,
+          inRange: false
+        };
+      }
+
+      function animationLabCustomDraftDiagnostics(draft) {
+        const activeDraft = normalizeAnimationLabCustomKeyframeState(draft);
+        const analysis = analyzeAnimationLabCustomKeyframeDraft(activeDraft.body);
+        const selectorCounts = {};
+        const selectorMeta = {};
+        const propertyList = [];
+        analysis.stops.forEach(function (stop) {
+          stop.selectors.forEach(function (selector) {
+            const meta = animationLabNormalizedMarkerMeta(selector);
+            if (!meta.key) return;
+            selectorCounts[meta.key] = (selectorCounts[meta.key] || 0) + 1;
+            if (!selectorMeta[meta.key]) {
+              selectorMeta[meta.key] = meta;
+            }
+          });
+          stop.declarations.forEach(function (decl) {
+            if (propertyList.indexOf(decl.property) < 0) {
+              propertyList.push(decl.property);
+            }
+          });
+        });
+
+        const selectorKeys = Object.keys(selectorCounts);
+        const duplicateMarkers = selectorKeys.filter(function (key) {
+          return selectorCounts[key] > 1;
+        }).map(function (key) {
+          return selectorMeta[key] || animationLabNormalizedMarkerMeta(key);
+        });
+        const unusualMarkers = selectorKeys.filter(function (key) {
+          const meta = selectorMeta[key];
+          return meta && (!meta.recognized || !meta.inRange);
+        }).map(function (key) {
+          return selectorMeta[key];
+        });
+        const hasStart = selectorKeys.indexOf("0%") >= 0;
+        const hasEnd = selectorKeys.indexOf("100%") >= 0;
+        const missingEdges = [];
+        if (!hasStart) missingEdges.push("0%");
+        if (!hasEnd) missingEdges.push("100%");
+
+        let coverage = "No recoverable frame stops yet. Add or seed a stop before you export a custom motion.";
+        if (analysis.stops.length) {
+          if (hasStart && hasEnd) {
+            coverage =
+              analysis.stops.length +
+              " recoverable stop" +
+              (analysis.stops.length === 1 ? "" : "s") +
+              " cover the full first pass from 0% to 100%.";
+          } else {
+            coverage =
+              analysis.stops.length +
+              " recoverable stop" +
+              (analysis.stops.length === 1 ? "" : "s") +
+              " found. Add " +
+              missingEdges.join(" and ") +
+              " so the first and last visible frames stay explicit.";
+          }
+        }
+
+        let markerHealth = "Markers are unique and timeline-safe.";
+        if (!analysis.stops.length) {
+          markerHealth = "No parsed markers yet. The editor needs at least one recoverable keyframe block.";
+        } else if (duplicateMarkers.length) {
+          markerHealth =
+            duplicateMarkers.length +
+            " duplicate marker" +
+            (duplicateMarkers.length === 1 ? "" : "s") +
+            " can be merged before export: " +
+            duplicateMarkers.map(function (meta) { return meta.label; }).join(", ") +
+            ".";
+        } else if (unusualMarkers.length) {
+          markerHealth =
+            unusualMarkers.length +
+            " custom marker" +
+            (unusualMarkers.length === 1 ? "" : "s") +
+            " need a manual browser check: " +
+            unusualMarkers.map(function (meta) { return meta.raw; }).join(", ") +
+            ".";
+        }
+
+        const propertySpan = propertyList.length
+          ? propertyList.length + " moving propert" + (propertyList.length === 1 ? "y" : "ies") + ": " + propertyList.join(", ") + "."
+          : "No valid declarations were parsed yet. Each stop needs at least one CSS declaration.";
+
+        const repairNotes = [];
+        if (!analysis.stops.length) {
+          repairNotes.push("Seed from a built-in keyframe or load a stop template first.");
+        } else {
+          if (missingEdges.length) {
+            repairNotes.push("Fill missing " + missingEdges.join(" and ") + " frames from the nearest recoverable stop.");
+          }
+          if (duplicateMarkers.length) {
+            repairNotes.push("Merge repeated markers into one canonical stop before final tuning.");
+          }
+          if (analysis.hasResidualText) {
+            repairNotes.push("Normalize parsed stops to remove unmatched freeform text.");
+          }
+          if (!repairNotes.length) {
+            repairNotes.push("The draft is structurally stable. Fine-tune declarations or bench it into compare slots.");
+          }
+        }
+
+        return {
+          analysis: analysis,
+          duplicateMarkers: duplicateMarkers,
+          unusualMarkers: unusualMarkers,
+          propertyList: propertyList,
+          hasStart: hasStart,
+          hasEnd: hasEnd,
+          missingEdges: missingEdges,
+          coverage: coverage,
+          markerHealth: markerHealth,
+          propertySpan: propertySpan,
+          repairPlan: repairNotes.join(" "),
+          canFillEdges: Boolean(analysis.stops.length && missingEdges.length),
+          canMergeDuplicates: Boolean(duplicateMarkers.length)
+        };
+      }
+
       function parseAnimationLabKeyframeStopsFromBody(body) {
         return collectAnimationLabKeyframeStopsFromBody(body);
       }
@@ -14405,6 +14610,100 @@ translateY()	translateY(<length|percentage>)
         setBuilderStatus("Structured custom keyframe stops were sorted into timeline order.");
       }
 
+      function fillAnimationLabCustomKeyframeEdges() {
+        const diagnostics = animationLabCustomDraftDiagnostics(animationLabCustomKeyframeDraft);
+        const stops = diagnostics.analysis.stops.slice();
+        if (!stops.length) {
+          setBuilderStatus("There are no recoverable stops yet. Seed or add a stop before filling edge frames.");
+          return;
+        }
+        if (!diagnostics.canFillEdges) {
+          setBuilderStatus("The custom draft already includes explicit 0% and 100% edge frames.");
+          return;
+        }
+        const sorted = stops.slice().sort(function (a, b) {
+          const aValue = Math.min.apply(null, a.selectors.map(animationLabKeyframeStopSortValue));
+          const bValue = Math.min.apply(null, b.selectors.map(animationLabKeyframeStopSortValue));
+          if (aValue !== bValue) return aValue - bValue;
+          return a.markerText.localeCompare(b.markerText);
+        });
+        if (!diagnostics.hasStart) {
+          sorted.unshift(normalizeAnimationLabKeyframeStop({
+            markerText: "0%",
+            declarations: sorted[0].declarations
+          }));
+        }
+        if (!diagnostics.hasEnd) {
+          sorted.push(normalizeAnimationLabKeyframeStop({
+            markerText: "100%",
+            declarations: sorted[sorted.length - 1].declarations
+          }));
+        }
+        overwriteAnimationLabCustomStops(sorted.filter(Boolean));
+        setBuilderStatus("Added explicit " + diagnostics.missingEdges.join(" and ") + " edge frame" + (diagnostics.missingEdges.length === 1 ? "" : "s") + " to the custom keyframe draft.");
+      }
+
+      function mergeAnimationLabCustomDuplicateMarkers() {
+        const diagnostics = animationLabCustomDraftDiagnostics(animationLabCustomKeyframeDraft);
+        const stops = diagnostics.analysis.stops;
+        if (!stops.length) {
+          setBuilderStatus("There are no recoverable stops to merge yet.");
+          return;
+        }
+        if (!diagnostics.canMergeDuplicates) {
+          setBuilderStatus("The custom draft does not have duplicate markers to merge.");
+          return;
+        }
+        const mergedByMarker = {};
+        const order = [];
+        stops.forEach(function (stop) {
+          stop.selectors.forEach(function (selector) {
+            const meta = animationLabNormalizedMarkerMeta(selector);
+            if (!meta.key) return;
+            if (!mergedByMarker[meta.key]) {
+              mergedByMarker[meta.key] = {
+                markerText: meta.label || meta.raw,
+                declarations: []
+              };
+              order.push(meta.key);
+            }
+            const declarationMap = {};
+            mergedByMarker[meta.key].declarations.forEach(function (decl) {
+              declarationMap[decl.property] = decl.value;
+            });
+            stop.declarations.forEach(function (decl) {
+              declarationMap[decl.property] = decl.value;
+            });
+            mergedByMarker[meta.key].declarations = Object.keys(declarationMap).map(function (property) {
+              return {
+                property: property,
+                value: declarationMap[property]
+              };
+            });
+          });
+        });
+        const mergedStops = order.map(function (key) {
+          const entry = mergedByMarker[key];
+          return normalizeAnimationLabKeyframeStop({
+            markerText: entry.markerText,
+            declarations: entry.declarations
+          });
+        }).filter(Boolean).sort(function (a, b) {
+          const aValue = Math.min.apply(null, a.selectors.map(animationLabKeyframeStopSortValue));
+          const bValue = Math.min.apply(null, b.selectors.map(animationLabKeyframeStopSortValue));
+          if (aValue !== bValue) return aValue - bValue;
+          return a.markerText.localeCompare(b.markerText);
+        });
+        overwriteAnimationLabCustomStops(mergedStops);
+        setBuilderStatus(
+          "Merged " +
+          diagnostics.duplicateMarkers.length +
+          " duplicate marker" +
+          (diagnostics.duplicateMarkers.length === 1 ? "" : "s") +
+          " into canonical single-selector stops."
+        );
+      }
+
       function writeAnimationLabCustomKeyframesStyles(values) {
         const draft = animationLabCustomKeyframeState(values);
         animationLabCustomKeyframesStyleTag.textContent = draft.enabled && draft.body
@@ -16436,6 +16735,7 @@ translateY()	translateY(<length|percentage>)
         const packageCss = animationLabPackageCss(selector, values);
         const currentTarget = previewTargetLabel((elTarget.value || "card").trim());
         const customDraft = animationLabCustomKeyframeState(values);
+        const customDiagnostics = animationLabCustomDraftDiagnostics(customDraft);
         writeAnimationLabCustomKeyframesStyles(values);
         if (elAnimationLabRolloutSource) {
           const alternateOption = elAnimationLabRolloutSource.querySelector('option[value="alternate"]');
@@ -16502,6 +16802,35 @@ translateY()	translateY(<length|percentage>)
           elAnimationLabCustomNote.textContent = customDraft.enabled
             ? "The custom draft now overrides the live animation name and keyframes block. Keep using the selected built-in motion pack as the intent baseline while you iterate."
             : "The selected built-in keyframe still powers the Motion Pack brief and guardrails. Turn on the custom draft when you are ready to ship a bespoke motion block.";
+        }
+        if (elAnimationLabCustomCoverage) {
+          elAnimationLabCustomCoverage.textContent = customDiagnostics.coverage;
+        }
+        if (elAnimationLabCustomMarkerHealth) {
+          elAnimationLabCustomMarkerHealth.textContent = customDiagnostics.markerHealth;
+        }
+        if (elAnimationLabCustomPropertySpan) {
+          elAnimationLabCustomPropertySpan.textContent = customDiagnostics.propertySpan;
+        }
+        if (elAnimationLabCustomRepairPlan) {
+          elAnimationLabCustomRepairPlan.textContent = customDiagnostics.repairPlan;
+        }
+        if (elAnimationLabCustomFillEdges) {
+          elAnimationLabCustomFillEdges.disabled = !customDiagnostics.canFillEdges;
+          elAnimationLabCustomFillEdges.textContent = customDiagnostics.canFillEdges
+            ? "Fill Missing " + customDiagnostics.missingEdges.join(" + ")
+            : "0% / 100% Already Covered";
+        }
+        if (elAnimationLabCustomMergeMarkers) {
+          elAnimationLabCustomMergeMarkers.disabled = !customDiagnostics.canMergeDuplicates;
+          elAnimationLabCustomMergeMarkers.textContent = customDiagnostics.canMergeDuplicates
+            ? "Merge " + customDiagnostics.duplicateMarkers.length + " Duplicate Marker" + (customDiagnostics.duplicateMarkers.length === 1 ? "" : "s")
+            : "No Duplicate Markers";
+        }
+        if (elAnimationLabCustomRepairNote) {
+          elAnimationLabCustomRepairNote.textContent = customDiagnostics.analysis.hasResidualText
+            ? "The draft still contains unmatched freeform text outside recoverable keyframe blocks. Use Normalize Parsed Stops after the repair actions if you want a fully canonical export body."
+            : "These repair actions only reshape the custom draft textarea. They do not change the built-in motion pack you are using as the intent baseline.";
         }
         elAnimationLabAnatomyStops.textContent = anatomy.stopCount;
         elAnimationLabAnatomyProperties.textContent = anatomy.properties;
@@ -23519,6 +23848,12 @@ translateY()	translateY(<length|percentage>)
       }
       if (elAnimationLabCustomStopNormalize) {
         elAnimationLabCustomStopNormalize.addEventListener("click", normalizeAnimationLabCustomKeyframeDraftLayout);
+      }
+      if (elAnimationLabCustomFillEdges) {
+        elAnimationLabCustomFillEdges.addEventListener("click", fillAnimationLabCustomKeyframeEdges);
+      }
+      if (elAnimationLabCustomMergeMarkers) {
+        elAnimationLabCustomMergeMarkers.addEventListener("click", mergeAnimationLabCustomDuplicateMarkers);
       }
       elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
       elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
