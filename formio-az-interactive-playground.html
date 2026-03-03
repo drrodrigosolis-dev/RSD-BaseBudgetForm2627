@@ -3968,6 +3968,37 @@
                 <pre id="animation-lab-keyframes"></pre>
               </div>
               <div class="help-box">
+                <div><strong>Custom Keyframe Draft</strong></div>
+                <p class="tiny">Override the selected built-in keyframe with a named draft for live preview and export while keeping the chosen built-in motion pack as the coaching baseline.</p>
+                <div class="row">
+                  <label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;color:#33466f;">
+                    <input id="animation-lab-custom-enabled" type="checkbox" />
+                    Use custom keyframe draft for preview and export
+                  </label>
+                  <div id="animation-lab-custom-status" class="input-hint">Custom keyframe drafting is off. Turn it on to preview and export a bespoke motion block.</div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="animation-lab-custom-name">Custom Keyframe Name</label>
+                    <input id="animation-lab-custom-name" value="customMotionDraft" placeholder="customMotionDraft" title="This name will replace the selected built-in keyframe in preview and exported CSS while the draft is enabled." />
+                  </div>
+                  <div class="row">
+                    <label class="label">Draft Actions</label>
+                    <div class="inline">
+                      <button id="animation-lab-custom-seed" type="button">Seed From Selected Built-In</button>
+                      <button id="animation-lab-custom-clear" type="button">Clear Draft</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="label" for="animation-lab-custom-body">Custom Keyframe Body</label>
+                  <textarea id="animation-lab-custom-body" spellcheck="false" title="Write one or more keyframe stops, for example: 0% { opacity: 0; } 100% { opacity: 1; }">0% { transform: translateY(18px); opacity: 0; }
+60% { transform: translateY(-2px); opacity: 1; }
+100% { transform: translateY(0); opacity: 1; }</textarea>
+                </div>
+                <div id="animation-lab-custom-note" class="input-hint">The selected built-in keyframe still powers the Motion Pack brief and guardrails. The custom draft only overrides the live preview, exported keyframes block, and shipped animation name while enabled.</div>
+              </div>
+              <div class="help-box">
                 <div><strong>Keyframe Anatomy</strong></div>
                 <div class="info-grid">
                   <div class="info-tile">
@@ -5926,6 +5957,13 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabSelectorNote = document.getElementById("animation-lab-selector-note");
       const elAnimationLabOutput = document.getElementById("animation-lab-output");
       const elAnimationLabKeyframes = document.getElementById("animation-lab-keyframes");
+      const elAnimationLabCustomEnabled = document.getElementById("animation-lab-custom-enabled");
+      const elAnimationLabCustomStatus = document.getElementById("animation-lab-custom-status");
+      const elAnimationLabCustomName = document.getElementById("animation-lab-custom-name");
+      const elAnimationLabCustomSeed = document.getElementById("animation-lab-custom-seed");
+      const elAnimationLabCustomClear = document.getElementById("animation-lab-custom-clear");
+      const elAnimationLabCustomBody = document.getElementById("animation-lab-custom-body");
+      const elAnimationLabCustomNote = document.getElementById("animation-lab-custom-note");
       const elAnimationLabAnatomyStops = document.getElementById("animation-lab-anatomy-stops");
       const elAnimationLabAnatomyProperties = document.getElementById("animation-lab-anatomy-properties");
       const elAnimationLabAnatomyFamily = document.getElementById("animation-lab-anatomy-family");
@@ -6314,6 +6352,9 @@ translateY()	translateY(<length|percentage>)
       const builtInKeyframesStyleTag = document.createElement("style");
       builtInKeyframesStyleTag.id = "builder-builtin-keyframes-style";
       document.head.appendChild(builtInKeyframesStyleTag);
+      const animationLabCustomKeyframesStyleTag = document.createElement("style");
+      animationLabCustomKeyframesStyleTag.id = "builder-animation-lab-custom-keyframes-style";
+      document.head.appendChild(animationLabCustomKeyframesStyleTag);
       const styleProbeHost = document.createElement("div");
       styleProbeHost.id = "style-probe-host";
       styleProbeHost.setAttribute("aria-hidden", "true");
@@ -7136,6 +7177,14 @@ translateY()	translateY(<length|percentage>)
         direction: "alternate",
         fillMode: "both",
         playState: "running"
+      };
+      const DEFAULT_ANIMATION_LAB_CUSTOM_KEYFRAMES = {
+        enabled: false,
+        name: "customMotionDraft",
+        body:
+          "0% { transform: translateY(18px); opacity: 0; }\n" +
+          "60% { transform: translateY(-2px); opacity: 1; }\n" +
+          "100% { transform: translateY(0); opacity: 1; }"
       };
       const DEFAULT_ANIMATION_LAB_SEQUENCE = {
         mode: "chain",
@@ -9356,6 +9405,7 @@ translateY()	translateY(<length|percentage>)
       const ANIMATION_LAB_STAGE_CHECKPOINT_ORDER = ["start", "peak", "settle"];
       let animationLabCompareSlots = createEmptyAnimationLabCompareSlots();
       let animationLabStageCheckpoints = createEmptyAnimationLabStageCheckpoints();
+      let animationLabCustomKeyframeDraft = normalizeAnimationLabCustomKeyframeState();
       let animationLabSessionSnapshot = null;
       let animationLabSessionReady = false;
       let animationLabSessionRestoreInProgress = false;
@@ -10246,14 +10296,61 @@ translateY()	translateY(<length|percentage>)
         return changed ? mirrored : "";
       }
 
-      function keyframesBlock(name) {
-        const body = BUILTIN_KEYFRAMES[name];
+      function normalizeAnimationLabCustomKeyframeState(state) {
+        const source = state && typeof state === "object" ? state : {};
+        const rawName = String(source.name || DEFAULT_ANIMATION_LAB_CUSTOM_KEYFRAMES.name).trim();
+        const safeName = rawName.replace(/[^a-zA-Z0-9_-]+/g, "").replace(/^[^a-zA-Z_-]+/, "");
+        const body = String(source.body || DEFAULT_ANIMATION_LAB_CUSTOM_KEYFRAMES.body)
+          .replace(/\r\n?/g, "\n")
+          .trim();
+        return {
+          enabled: Boolean(source.enabled),
+          name: safeName || DEFAULT_ANIMATION_LAB_CUSTOM_KEYFRAMES.name,
+          body: body || DEFAULT_ANIMATION_LAB_CUSTOM_KEYFRAMES.body
+        };
+      }
+
+      function cloneAnimationLabCustomKeyframeState(state) {
+        return normalizeAnimationLabCustomKeyframeState(state);
+      }
+
+      function animationLabCustomKeyframeState(values) {
+        if (values && values.customKeyframes && typeof values.customKeyframes === "object") {
+          return normalizeAnimationLabCustomKeyframeState(values.customKeyframes);
+        }
+        return normalizeAnimationLabCustomKeyframeState(animationLabCustomKeyframeDraft);
+      }
+
+      function animationLabCustomKeyframeActive(values) {
+        const draft = animationLabCustomKeyframeState(values);
+        return Boolean(draft.enabled && draft.name && draft.body);
+      }
+
+      function animationLabResolvedKeyframeName(values) {
+        const draft = animationLabCustomKeyframeState(values);
+        if (draft.enabled && draft.name && draft.body) {
+          return draft.name;
+        }
+        return String((values && values.keyframes) || DEFAULT_ANIMATION_PREVIEW.name).trim();
+      }
+
+      function animationLabKeyframeBody(name, values) {
+        const keyframeName = String(name || "").trim();
+        const draft = animationLabCustomKeyframeState(values);
+        if (draft.enabled && draft.body && keyframeName === draft.name) {
+          return draft.body;
+        }
+        return BUILTIN_KEYFRAMES[keyframeName] || "";
+      }
+
+      function keyframesBlock(name, values) {
+        const body = animationLabKeyframeBody(name, values);
         if (!body) return "";
         return "@keyframes " + name + " {\n  " + body.split("\n").join("\n  ") + "\n}";
       }
 
-      function parseBuiltInKeyframeStops(name) {
-        const body = BUILTIN_KEYFRAMES[name];
+      function parseBuiltInKeyframeStops(name, values) {
+        const body = animationLabKeyframeBody(name, values);
         if (!body) return [];
         return body.split("\n").map(function (line) {
           const match = String(line || "").trim().match(/^([^{}]+)\{([^{}]+)\}$/);
@@ -10295,8 +10392,9 @@ translateY()	translateY(<length|percentage>)
       }
 
       function animationLabKeyframeAnatomy(values) {
-        const name = String((values && values.keyframes) || "").trim();
-        const stops = parseBuiltInKeyframeStops(name);
+        const name = animationLabResolvedKeyframeName(values);
+        const isCustom = animationLabCustomKeyframeActive(values);
+        const stops = parseBuiltInKeyframeStops(name, values);
         const markerLabels = [];
         const propertyList = [];
         stops.forEach(function (stop) {
@@ -10316,6 +10414,8 @@ translateY()	translateY(<length|percentage>)
         let watch = "Verify the visible start and end states still match the selected fill mode once this motion is attached to a real Form.io surface.";
         if (!stops.length) {
           watch = "This keyframe name is not part of the built-in atlas yet, so inspect the exported CSS block directly before reuse.";
+        } else if (isCustom) {
+          watch = "This custom draft overrides the seeded built-in path. Rehearse the start and end frames on the mini stage before promoting it into the compare bench.";
         } else if (joinedSummary.indexOf("box-shadow") >= 0 || joinedSummary.indexOf("filter") >= 0) {
           watch = "This sequence uses paint-heavy frames. Validate on dense forms and lower-powered devices before you ship it broadly.";
         } else if (joinedSummary.indexOf("rotate(") >= 0 && String((values && values.iterations) || "").trim() === "infinite") {
@@ -10355,7 +10455,8 @@ translateY()	translateY(<length|percentage>)
           watch: watch,
           timeline: timeline,
           brief: briefLines.join("\n"),
-          known: Boolean(stops.length)
+          known: Boolean(stops.length),
+          isCustom: isCustom
         };
       }
 
@@ -11469,6 +11570,7 @@ translateY()	translateY(<length|percentage>)
           direction: (elAnimationLabDirection.value || DEFAULT_ANIMATION_PREVIEW.direction).trim(),
           fill: (elAnimationLabFill.value || DEFAULT_ANIMATION_PREVIEW.fillMode).trim(),
           play: (elAnimationLabPlay.value || DEFAULT_ANIMATION_PREVIEW.playState).trim(),
+          customKeyframes: cloneAnimationLabCustomKeyframeState(animationLabCustomKeyframeDraft),
           reducedPreviewEnabled: Boolean(elAnimationLabReducePreview && elAnimationLabReducePreview.checked)
         };
       }
@@ -11589,7 +11691,7 @@ translateY()	translateY(<length|percentage>)
 
       function animationLabShorthand(values) {
         const parts = [
-          values.keyframes || DEFAULT_ANIMATION_PREVIEW.name,
+          animationLabResolvedKeyframeName(values),
           values.duration || DEFAULT_ANIMATION_PREVIEW.duration,
           values.easing || DEFAULT_ANIMATION_PREVIEW.timingFunction,
           values.delay || DEFAULT_ANIMATION_PREVIEW.delay,
@@ -12604,7 +12706,7 @@ translateY()	translateY(<length|percentage>)
         const media = currentBuilderMediaQuery();
         const ruleBlock = animationLabRuleBlock(selector, declarations);
         const sections = [];
-        const keyframes = keyframesBlock(values.keyframes);
+        const keyframes = keyframesBlock(animationLabResolvedKeyframeName(values), values);
 
         if (keyframes) {
           sections.push(keyframes);
@@ -13458,6 +13560,8 @@ translateY()	translateY(<length|percentage>)
 
       function applyAnimationLabState(state) {
         if (!state || typeof state !== "object") {
+          animationLabCustomKeyframeDraft = normalizeAnimationLabCustomKeyframeState();
+          syncAnimationLabCustomKeyframeControls();
           if (elAnimationLabReducePreview) {
             elAnimationLabReducePreview.checked = false;
           }
@@ -13475,6 +13579,8 @@ translateY()	translateY(<length|percentage>)
         setSelectValueIfPresent(elAnimationLabDirection, state.direction, fallback.direction);
         setSelectValueIfPresent(elAnimationLabFill, state.fill, fallback.fillMode);
         setSelectValueIfPresent(elAnimationLabPlay, state.play, fallback.playState);
+        animationLabCustomKeyframeDraft = cloneAnimationLabCustomKeyframeState(state.customKeyframes);
+        syncAnimationLabCustomKeyframeControls();
         if (elAnimationLabReducePreview) {
           elAnimationLabReducePreview.checked = Boolean(state.reducedPreviewEnabled);
         }
@@ -13495,8 +13601,65 @@ translateY()	translateY(<length|percentage>)
           direction: String(source.direction || DEFAULT_ANIMATION_PREVIEW.direction).trim(),
           fill: String(source.fill || DEFAULT_ANIMATION_PREVIEW.fillMode).trim(),
           play: String(source.play || DEFAULT_ANIMATION_PREVIEW.playState).trim(),
+          customKeyframes: cloneAnimationLabCustomKeyframeState(source.customKeyframes),
           reducedPreviewEnabled: Boolean(source.reducedPreviewEnabled)
         };
+      }
+
+      function syncAnimationLabCustomKeyframeControls() {
+        const draft = normalizeAnimationLabCustomKeyframeState(animationLabCustomKeyframeDraft);
+        animationLabCustomKeyframeDraft = draft;
+        if (elAnimationLabCustomEnabled) {
+          elAnimationLabCustomEnabled.checked = draft.enabled;
+        }
+        if (elAnimationLabCustomName) {
+          elAnimationLabCustomName.value = draft.name;
+        }
+        if (elAnimationLabCustomBody) {
+          elAnimationLabCustomBody.value = draft.body;
+        }
+      }
+
+      function updateAnimationLabCustomKeyframeDraftFromControls() {
+        animationLabCustomKeyframeDraft = normalizeAnimationLabCustomKeyframeState({
+          enabled: Boolean(elAnimationLabCustomEnabled && elAnimationLabCustomEnabled.checked),
+          name: elAnimationLabCustomName ? elAnimationLabCustomName.value : DEFAULT_ANIMATION_LAB_CUSTOM_KEYFRAMES.name,
+          body: elAnimationLabCustomBody ? elAnimationLabCustomBody.value : DEFAULT_ANIMATION_LAB_CUSTOM_KEYFRAMES.body
+        });
+        syncAnimationLabCustomKeyframeControls();
+      }
+
+      function writeAnimationLabCustomKeyframesStyles(values) {
+        const draft = animationLabCustomKeyframeState(values);
+        animationLabCustomKeyframesStyleTag.textContent = draft.enabled && draft.body
+          ? keyframesBlock(draft.name, { customKeyframes: draft })
+          : "";
+      }
+
+      function seedAnimationLabCustomKeyframesFromSelection() {
+        const keyframeName = String((elAnimationLabName && elAnimationLabName.value) || DEFAULT_ANIMATION_PREVIEW.name).trim();
+        const body = BUILTIN_KEYFRAMES[keyframeName];
+        if (!body) {
+          setBuilderStatus("Animation Lab could not seed a custom draft from that built-in keyframe.");
+          return;
+        }
+        animationLabCustomKeyframeDraft = normalizeAnimationLabCustomKeyframeState({
+          enabled: true,
+          name: keyframeName + "Draft",
+          body: body
+        });
+        syncAnimationLabCustomKeyframeControls();
+        updateAnimationLabOutputs();
+        setBuilderStatus("Custom keyframe draft seeded from " + keyframeName + ".");
+      }
+
+      function clearAnimationLabCustomKeyframeDraft() {
+        animationLabCustomKeyframeDraft = normalizeAnimationLabCustomKeyframeState({
+          enabled: false
+        });
+        syncAnimationLabCustomKeyframeControls();
+        updateAnimationLabOutputs();
+        setBuilderStatus("Custom keyframe draft reset to the default template and turned off.");
       }
 
       function createEmptyAnimationLabCompareSlots() {
@@ -15059,6 +15222,7 @@ translateY()	translateY(<length|percentage>)
         const sequence = animationLabSequenceValues();
         const preset = selectedAnimationLabPreset();
         const trigger = animationLabTriggerLabel(values.trigger);
+        const resolvedKeyframeName = animationLabResolvedKeyframeName(values);
         const declarations = animationLabDeclarations(values);
         const selector = animationLabSelector();
         const sequenceEntries = animationLabSequenceEntries(values, sequence);
@@ -15082,6 +15246,8 @@ translateY()	translateY(<length|percentage>)
         const anatomy = animationLabKeyframeAnatomy(values);
         const packageCss = animationLabPackageCss(selector, values);
         const currentTarget = previewTargetLabel((elTarget.value || "card").trim());
+        const customDraft = animationLabCustomKeyframeState(values);
+        writeAnimationLabCustomKeyframesStyles(values);
         if (elAnimationLabRolloutSource) {
           const alternateOption = elAnimationLabRolloutSource.querySelector('option[value="alternate"]');
           const hasAlternate = Boolean(animationLabCompareAlternateEntry(compareEntries, compareWinner));
@@ -15126,9 +15292,27 @@ translateY()	translateY(<length|percentage>)
           : "The tracker compares the current controls to the selected motion pack so you can reset intentionally instead of reloading the whole lab by accident.";
         renderAnimationLabCompareBench();
         elAnimationLabSelectorNote.textContent =
-          selector + " | Trigger: " + trigger + " | Applies" + scopeText + ".";
+          selector + " | Trigger: " + trigger + " | Keyframes: " + resolvedKeyframeName + " | Applies" + scopeText + ".";
         elAnimationLabOutput.textContent = declarations.join("\n");
-        elAnimationLabKeyframes.textContent = keyframesBlock(values.keyframes) || "No built-in keyframes found for " + values.keyframes + ".";
+        elAnimationLabKeyframes.textContent = keyframesBlock(resolvedKeyframeName, values) || "No keyframes found for " + resolvedKeyframeName + ".";
+        if (elAnimationLabCustomStatus) {
+          if (!customDraft.enabled) {
+            elAnimationLabCustomStatus.textContent = "Custom keyframe drafting is off. The live lab is using the selected built-in " + values.keyframes + " keyframe.";
+          } else {
+            elAnimationLabCustomStatus.textContent = "Custom draft " + customDraft.name + " is active for preview and export, seeded from " + values.keyframes + ".";
+          }
+        }
+        if (elAnimationLabCustomSeed) {
+          elAnimationLabCustomSeed.textContent = "Seed From " + values.keyframes;
+        }
+        if (elAnimationLabCustomClear) {
+          elAnimationLabCustomClear.textContent = customDraft.enabled ? "Turn Off + Reset Draft" : "Reset Draft Template";
+        }
+        if (elAnimationLabCustomNote) {
+          elAnimationLabCustomNote.textContent = customDraft.enabled
+            ? "The custom draft now overrides the live animation name and keyframes block. Keep using the selected built-in motion pack as the intent baseline while you iterate."
+            : "The selected built-in keyframe still powers the Motion Pack brief and guardrails. Turn on the custom draft when you are ready to ship a bespoke motion block.";
+        }
         elAnimationLabAnatomyStops.textContent = anatomy.stopCount;
         elAnimationLabAnatomyProperties.textContent = anatomy.properties;
         elAnimationLabAnatomyFamily.textContent = anatomy.family;
@@ -15136,7 +15320,9 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabAnatomyTimeline.textContent = anatomy.timeline;
         elAnimationLabAnatomyBrief.textContent = anatomy.brief;
         elAnimationLabAnatomyNote.textContent = anatomy.known
-          ? "Use this breakdown to understand the built-in motion path before you retune timing, loops, or trigger behavior."
+          ? (anatomy.isCustom
+            ? "This breakdown is reading the active custom keyframe draft. Use the mini stage and compare bench to validate the bespoke motion before you export it."
+            : "Use this breakdown to understand the built-in motion path before you retune timing, loops, or trigger behavior.")
           : "This keyframe is not in the built-in atlas, so the anatomy panel falls back to timing guidance plus the exported CSS block.";
         elAnimationLabIntensity.textContent = animationLabIntensitySummary(values);
         elAnimationLabTriggerFit.textContent = animationLabTriggerGuidance(values);
@@ -15432,7 +15618,7 @@ translateY()	translateY(<length|percentage>)
           return;
         }
         pendingParamOverrides = {
-          name: values.keyframes,
+          name: animationLabResolvedKeyframeName(values),
           duration: values.duration,
           "timing-function": values.easing,
           delay: values.delay,
@@ -21955,6 +22141,27 @@ translateY()	translateY(<length|percentage>)
       if (elAnimationLabCopyRolloutPacket) {
         elAnimationLabCopyRolloutPacket.addEventListener("click", copyAnimationLabRolloutPacket);
       }
+      [
+        elAnimationLabCustomEnabled,
+        elAnimationLabCustomName,
+        elAnimationLabCustomBody
+      ].forEach(function (el) {
+        if (!el) return;
+        el.addEventListener("change", function () {
+          updateAnimationLabCustomKeyframeDraftFromControls();
+          updateAnimationLabOutputs();
+        });
+        el.addEventListener("input", function () {
+          updateAnimationLabCustomKeyframeDraftFromControls();
+          updateAnimationLabOutputs();
+        });
+      });
+      if (elAnimationLabCustomSeed) {
+        elAnimationLabCustomSeed.addEventListener("click", seedAnimationLabCustomKeyframesFromSelection);
+      }
+      if (elAnimationLabCustomClear) {
+        elAnimationLabCustomClear.addEventListener("click", clearAnimationLabCustomKeyframeDraft);
+      }
       elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
       elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
       if (elAnimationLabCopyVariants) {
@@ -22293,6 +22500,7 @@ translateY()	translateY(<length|percentage>)
       updatePreviewInteractionHelp();
       updatePreviewCycleUI();
       updateBuilderMediaControlVisibility();
+      syncAnimationLabCustomKeyframeControls();
       renderAnimationLabPresetList();
       renderAnimationLabSequencePresetList();
       renderSelectorSimulatorTemplateList();
