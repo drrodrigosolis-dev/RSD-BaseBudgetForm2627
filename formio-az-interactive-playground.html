@@ -1416,6 +1416,50 @@
       margin: 0;
     }
 
+    .animation-lab-checkpoint-bank {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .animation-lab-checkpoint-card {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid #d7e1f3;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .animation-lab-checkpoint-card-active {
+      border-color: rgba(66, 103, 173, 0.42);
+      box-shadow: 0 10px 18px rgba(30, 54, 102, 0.08);
+    }
+
+    .animation-lab-checkpoint-status {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #284674;
+      line-height: 1.45;
+    }
+
+    .animation-lab-checkpoint-meta {
+      font-size: 0.73rem;
+      color: #566b92;
+      line-height: 1.45;
+    }
+
+    .animation-lab-checkpoint-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .animation-lab-checkpoint-actions button {
+      flex: 1 1 96px;
+    }
+
     .animation-lab-sequence-board {
       display: grid;
       gap: 8px;
@@ -2541,13 +2585,19 @@
     }
 
     body[data-theme-mode="dark"] .animation-lab-sequence-empty,
+    body[data-theme-mode="dark"] .animation-lab-checkpoint-card,
     body[data-theme-mode="dark"] .animation-lab-sequence-lane {
       border-color: #31415f;
       background: rgba(18, 29, 52, 0.74);
     }
 
+    body[data-theme-mode="dark"] .animation-lab-checkpoint-status,
     body[data-theme-mode="dark"] .animation-lab-sequence-title {
       color: #e3edff;
+    }
+
+    body[data-theme-mode="dark"] .animation-lab-checkpoint-meta {
+      color: #b9c9e8;
     }
 
     body[data-theme-mode="dark"] .animation-lab-sequence-badge,
@@ -3643,6 +3693,66 @@
                         <div class="label">Before Step 2</div>
                         <div id="animation-lab-coach-next">Use the mini stage first, then send the motion to Step 2 once the movement feels intentional.</div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="help-box">
+                <div><strong>Stage Checkpoint Bank</strong></div>
+                <p class="tiny">Save named rehearsal frames from Frame Inspect, reload them later, or send them straight into the compare bench so motion reviews keep a stable visual checkpoint.</p>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Saved Frames</div>
+                    <div id="animation-lab-checkpoint-status">No stage checkpoints saved yet.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Compare Route</div>
+                    <div id="animation-lab-checkpoint-route">Candidate Shelf is the current compare destination.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Live Frame</div>
+                    <div id="animation-lab-checkpoint-live">Turn on Frame Inspect to tag compare captures with a frozen rehearsal frame.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label" for="animation-lab-checkpoint-compare-slot">Send Saved Checkpoints To</label>
+                  <div class="inline">
+                    <select id="animation-lab-checkpoint-compare-slot" title="Choose which compare bench slot should receive a saved stage checkpoint.">
+                      <option value="baseline">Baseline Anchor</option>
+                      <option value="candidate" selected>Candidate Shelf</option>
+                      <option value="stress">Stress Test</option>
+                    </select>
+                  </div>
+                </div>
+                <div id="animation-lab-checkpoint-bank" class="animation-lab-checkpoint-bank">
+                  <div class="animation-lab-checkpoint-card" data-stage-checkpoint="start">
+                    <div class="label">Start Cue</div>
+                    <div class="animation-lab-checkpoint-status" data-stage-checkpoint-status>Empty. Save the opening frame or the earliest waiting checkpoint.</div>
+                    <div class="animation-lab-checkpoint-meta" data-stage-checkpoint-meta>Best for confirming delay timing, immediate feedback, and whether the first visible frame starts soon enough.</div>
+                    <div class="animation-lab-checkpoint-actions">
+                      <button data-stage-checkpoint-action="capture" data-stage-checkpoint-slot-key="start" type="button">Save Frame</button>
+                      <button data-stage-checkpoint-action="load" data-stage-checkpoint-slot-key="start" type="button">Load Frame</button>
+                      <button data-stage-checkpoint-action="compare" data-stage-checkpoint-slot-key="start" type="button">Send To Compare</button>
+                    </div>
+                  </div>
+                  <div class="animation-lab-checkpoint-card" data-stage-checkpoint="peak">
+                    <div class="label">Motion Peak</div>
+                    <div class="animation-lab-checkpoint-status" data-stage-checkpoint-status>Empty. Save the most revealing in-motion checkpoint.</div>
+                    <div class="animation-lab-checkpoint-meta" data-stage-checkpoint-meta>Best for preserving the clearest moving frame before you compare variants or promote a keeper.</div>
+                    <div class="animation-lab-checkpoint-actions">
+                      <button data-stage-checkpoint-action="capture" data-stage-checkpoint-slot-key="peak" type="button">Save Frame</button>
+                      <button data-stage-checkpoint-action="load" data-stage-checkpoint-slot-key="peak" type="button">Load Frame</button>
+                      <button data-stage-checkpoint-action="compare" data-stage-checkpoint-slot-key="peak" type="button">Send To Compare</button>
+                    </div>
+                  </div>
+                  <div class="animation-lab-checkpoint-card" data-stage-checkpoint="settle">
+                    <div class="label">Settle Pose</div>
+                    <div class="animation-lab-checkpoint-status" data-stage-checkpoint-status>Empty. Save the held end pose or final cycle edge.</div>
+                    <div class="animation-lab-checkpoint-meta" data-stage-checkpoint-meta>Best for checking fill mode, end-state polish, and whether the motion lands cleanly before export.</div>
+                    <div class="animation-lab-checkpoint-actions">
+                      <button data-stage-checkpoint-action="capture" data-stage-checkpoint-slot-key="settle" type="button">Save Frame</button>
+                      <button data-stage-checkpoint-action="load" data-stage-checkpoint-slot-key="settle" type="button">Load Frame</button>
+                      <button data-stage-checkpoint-action="compare" data-stage-checkpoint-slot-key="settle" type="button">Send To Compare</button>
                     </div>
                   </div>
                 </div>
@@ -5742,6 +5852,11 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabStageSurface = document.getElementById("animation-lab-stage-surface");
       const elAnimationLabStageFrame = document.getElementById("animation-lab-stage-frame");
       const elAnimationLabStageFrameCue = document.getElementById("animation-lab-stage-frame-cue");
+      const elAnimationLabCheckpointStatus = document.getElementById("animation-lab-checkpoint-status");
+      const elAnimationLabCheckpointRoute = document.getElementById("animation-lab-checkpoint-route");
+      const elAnimationLabCheckpointLive = document.getElementById("animation-lab-checkpoint-live");
+      const elAnimationLabCheckpointCompareSlot = document.getElementById("animation-lab-checkpoint-compare-slot");
+      const elAnimationLabCheckpointBank = document.getElementById("animation-lab-checkpoint-bank");
       const elAnimationLabCoachSummary = document.getElementById("animation-lab-coach-summary");
       const elAnimationLabCoachStart = document.getElementById("animation-lab-coach-start");
       const elAnimationLabCoachBehavior = document.getElementById("animation-lab-coach-behavior");
@@ -9217,7 +9332,9 @@ translateY()	translateY(<length|percentage>)
       let previewCycleIndex = 0;
       let previewCycleTimer = null;
       const ANIMATION_LAB_COMPARE_SLOT_ORDER = ["baseline", "candidate", "stress"];
+      const ANIMATION_LAB_STAGE_CHECKPOINT_ORDER = ["start", "peak", "settle"];
       let animationLabCompareSlots = createEmptyAnimationLabCompareSlots();
+      let animationLabStageCheckpoints = createEmptyAnimationLabStageCheckpoints();
       let animationLabSessionSnapshot = null;
       let animationLabSessionReady = false;
       let animationLabSessionRestoreInProgress = false;
@@ -11932,6 +12049,197 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function currentAnimationLabStageCheckpointMeta(values) {
+        const lens = animationLabStageLensConfig(values);
+        const guide = animationLabStageGuide(lens.values);
+        const scrub = animationLabStageScrubState(lens.values, guide);
+        if (!scrub.enabled) return null;
+        return normalizeAnimationLabStageCheckpointMeta({
+          label: scrub.phase,
+          phase: scrub.phase,
+          percent: scrub.percent,
+          checkpointMs: scrub.checkpointMs,
+          cue: scrub.cue
+        }, scrub.phase);
+      }
+
+      function formatAnimationLabStageCheckpointSavedAt(savedAt) {
+        const raw = String(savedAt || "").trim();
+        if (!raw) return "Saved time unavailable";
+        const parsed = new Date(raw);
+        if (Number.isNaN(parsed.getTime())) return "Saved " + raw;
+        try {
+          return "Saved " + parsed.toLocaleString();
+        } catch (err) {
+          return "Saved " + raw;
+        }
+      }
+
+      function renderAnimationLabStageCheckpointBank() {
+        if (!elAnimationLabCheckpointBank) return;
+
+        const liveMeta = currentAnimationLabStageCheckpointMeta(animationLabPresetValues());
+        const savedCount = ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.filter(function (slotKey) {
+          return Boolean(animationLabStageCheckpoints[slotKey] && animationLabStageCheckpoints[slotKey].values);
+        }).length;
+        const routeSlotKey = elAnimationLabCheckpointCompareSlot ? (elAnimationLabCheckpointCompareSlot.value || "candidate").trim() : "candidate";
+        const routeLabel = animationLabCompareSlotTitle(routeSlotKey);
+
+        if (elAnimationLabCheckpointStatus) {
+          elAnimationLabCheckpointStatus.textContent = savedCount
+            ? savedCount + " named stage checkpoint" + (savedCount === 1 ? "" : "s") + " saved."
+            : "No stage checkpoints saved yet.";
+        }
+        if (elAnimationLabCheckpointRoute) {
+          elAnimationLabCheckpointRoute.textContent = routeLabel + " is the current compare destination.";
+        }
+        if (elAnimationLabCheckpointLive) {
+          elAnimationLabCheckpointLive.textContent = liveMeta
+            ? liveMeta.label + " is live at " + liveMeta.percent + "% (" + formatAnimationLabStageMs(liveMeta.checkpointMs) + "). Compare captures will carry this frame tag."
+            : "Turn on Frame Inspect to tag compare captures with a frozen rehearsal frame.";
+        }
+
+        ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.forEach(function (slotKey) {
+          const card = elAnimationLabCheckpointBank.querySelector('[data-stage-checkpoint="' + slotKey + '"]');
+          if (!card) return;
+          const slot = animationLabStageCheckpoints[slotKey];
+          const status = card.querySelector("[data-stage-checkpoint-status]");
+          const meta = card.querySelector("[data-stage-checkpoint-meta]");
+          const loadBtn = card.querySelector('[data-stage-checkpoint-action="load"]');
+          const compareBtn = card.querySelector('[data-stage-checkpoint-action="compare"]');
+
+          card.classList.toggle("animation-lab-checkpoint-card-active", Boolean(slot && slot.values));
+
+          if (!slot || !slot.values) {
+            if (status) {
+              status.textContent = "Empty. Save the current scrub frame here, or use the default " + animationLabStageCheckpointDefaultPercent(slotKey) + "% checkpoint.";
+            }
+            if (meta) {
+              meta.textContent = "Stores the motion draft, sequence plan, stage lens, and frozen frame so you can re-run this rehearsal point later.";
+            }
+            if (loadBtn) loadBtn.disabled = true;
+            if (compareBtn) compareBtn.disabled = true;
+            return;
+          }
+
+          const stageMeta = normalizeAnimationLabStageCheckpointMeta(slot.stageCheckpoint, animationLabStageCheckpointTitle(slotKey));
+          const sequence = normalizeAnimationLabSequenceValueState(slot.sequence);
+          if (status) {
+            status.textContent = stageMeta.label + " at " + stageMeta.percent + "% (" + formatAnimationLabStageMs(stageMeta.checkpointMs) + ") in " + stageMeta.phase.toLowerCase() + ".";
+          }
+          if (meta) {
+            meta.textContent =
+              formatAnimationLabStageCheckpointSavedAt(slot.savedAt) +
+              " | " +
+              (slot.lens === "coach" ? "Slow Coach" : slot.lens === "single" ? "Single Cycle" : "Live Speed") +
+              " | " +
+              slot.values.keyframes +
+              " | " +
+              sequence.steps +
+              "-step " +
+              sequence.mode +
+              " " +
+              sequence.order +
+              " @ " +
+              sequence.gap;
+          }
+          if (loadBtn) loadBtn.disabled = false;
+          if (compareBtn) compareBtn.disabled = false;
+        });
+      }
+
+      function animationLabStageCheckpointSnapshot(slotKey) {
+        const values = animationLabPresetValues();
+        const lensMode = String(elAnimationLabStageLens && elAnimationLabStageLens.value || "live").trim() || "live";
+        const lens = animationLabStageLensConfig(values);
+        const guide = animationLabStageGuide(lens.values);
+        const percent = Boolean(elAnimationLabStageFreeze && elAnimationLabStageFreeze.checked)
+          ? Math.max(0, Math.min(100, Number(elAnimationLabStageScrub && elAnimationLabStageScrub.value || 0)))
+          : animationLabStageCheckpointDefaultPercent(slotKey);
+        const scrub = animationLabStageScrubState(
+          lens.values,
+          guide
+        );
+        const checkpointMs = Math.round((Math.max(guide.delayMs + guide.durationMs + guide.holdMs, 1) * percent) / 100);
+        let phase = "Active motion";
+        if (checkpointMs < guide.delayMs) {
+          phase = "Delay window";
+        } else if (checkpointMs < guide.delayMs + guide.durationMs) {
+          phase = "Active motion";
+        } else if (guide.holdMs > 0) {
+          phase = "Held end pose";
+        } else {
+          phase = "Cycle edge";
+        }
+        const stageMeta = normalizeAnimationLabStageCheckpointMeta({
+          label: animationLabStageCheckpointTitle(slotKey),
+          phase: scrub.enabled ? scrub.phase : phase,
+          percent: percent,
+          checkpointMs: checkpointMs,
+          cue: scrub.enabled && scrub.percent === percent ? scrub.cue : "Saved " + animationLabStageCheckpointTitle(slotKey).toLowerCase() + " for repeatable rehearsal."
+        }, animationLabStageCheckpointTitle(slotKey));
+        return {
+          savedAt: new Date().toISOString(),
+          lens: lensMode,
+          percent: Math.round(percent),
+          values: cloneAnimationLabValueState(values),
+          sequence: normalizeAnimationLabSequenceValueState(animationLabSequenceValues()),
+          stageCheckpoint: stageMeta
+        };
+      }
+
+      function captureAnimationLabStageCheckpoint(slotKey) {
+        if (ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.indexOf(slotKey) === -1) return;
+        animationLabStageCheckpoints[slotKey] = animationLabStageCheckpointSnapshot(slotKey);
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab saved " + animationLabStageCheckpointTitle(slotKey) + " in the Stage Checkpoint Bank.");
+      }
+
+      function loadAnimationLabStageCheckpoint(slotKey) {
+        if (ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.indexOf(slotKey) === -1) return;
+        const slot = animationLabStageCheckpoints[slotKey];
+        if (!slot || !slot.values) {
+          setBuilderStatus(animationLabStageCheckpointTitle(slotKey) + " is empty.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        applyAnimationLabSequenceState(slot.sequence);
+        if (elAnimationLabStageLens) {
+          elAnimationLabStageLens.value = slot.lens || "live";
+        }
+        if (elAnimationLabStageFreeze) {
+          elAnimationLabStageFreeze.checked = true;
+        }
+        if (elAnimationLabStageScrub) {
+          elAnimationLabStageScrub.value = Math.max(0, Math.min(100, Number(slot.percent) || 0));
+        }
+        applyAnimationLabState(slot.values);
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab restored " + animationLabStageCheckpointTitle(slotKey) + " into the live stage.");
+      }
+
+      function sendAnimationLabStageCheckpointToCompare(slotKey) {
+        if (ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.indexOf(slotKey) === -1) return;
+        const checkpoint = animationLabStageCheckpoints[slotKey];
+        if (!checkpoint || !checkpoint.values) {
+          setBuilderStatus(animationLabStageCheckpointTitle(slotKey) + " is empty.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        const compareSlotKey = elAnimationLabCheckpointCompareSlot ? (elAnimationLabCheckpointCompareSlot.value || "candidate").trim() : "candidate";
+        if (ANIMATION_LAB_COMPARE_SLOT_ORDER.indexOf(compareSlotKey) === -1) {
+          setBuilderStatus("Choose a valid compare destination before sending a checkpoint.");
+          return;
+        }
+        animationLabCompareSlots[compareSlotKey] = cloneAnimationLabCompareSnapshot({
+          values: checkpoint.values,
+          sequence: checkpoint.sequence,
+          stageCheckpoint: normalizeAnimationLabStageCheckpointMeta(checkpoint.stageCheckpoint, animationLabStageCheckpointTitle(slotKey))
+        });
+        updateAnimationLabOutputs();
+        setBuilderStatus(animationLabStageCheckpointTitle(slotKey) + " was sent to " + animationLabCompareSlotTitle(compareSlotKey) + ".");
+      }
+
       function updateAnimationLabStage(values, risk, surface) {
         const lens = animationLabStageLensConfig(values);
         const stageValues = lens.values;
@@ -12902,6 +13210,37 @@ translateY()	translateY(<length|percentage>)
         setSelectValueIfPresent(elAnimationLabSequenceOrder, next.order, DEFAULT_ANIMATION_LAB_SEQUENCE.order);
       }
 
+      function animationLabStageCheckpointTitle(slotKey) {
+        if (slotKey === "start") return "Start Cue";
+        if (slotKey === "peak") return "Motion Peak";
+        if (slotKey === "settle") return "Settle Pose";
+        return "Stage Checkpoint";
+      }
+
+      function animationLabStageCheckpointDefaultPercent(slotKey) {
+        if (slotKey === "start") return 0;
+        if (slotKey === "peak") return 50;
+        if (slotKey === "settle") return 100;
+        return 0;
+      }
+
+      function normalizeAnimationLabStageCheckpointMeta(source, fallbackLabel) {
+        const raw = source && typeof source === "object" ? source : {};
+        const label = String(raw.label || fallbackLabel || "").trim();
+        const phase = String(raw.phase || "Active motion").trim();
+        const percent = Math.max(0, Math.min(100, Number.isFinite(Number(raw.percent)) ? Number(raw.percent) : 0));
+        const checkpointMs = Math.max(0, Number.isFinite(Number(raw.checkpointMs)) ? Number(raw.checkpointMs) : 0);
+        const cue = String(raw.cue || "").trim();
+        if (!label && !phase && !cue && !checkpointMs && !percent) return null;
+        return {
+          label: label || "Stage Checkpoint",
+          phase: phase || "Active motion",
+          percent: Math.round(percent),
+          checkpointMs: Math.round(checkpointMs),
+          cue: cue || "Saved rehearsal frame."
+        };
+      }
+
       function cloneAnimationLabCompareSnapshot(source) {
         const raw = source && typeof source === "object" ? source : {};
         const valueSource = raw.values && typeof raw.values === "object" ? raw.values : raw;
@@ -12912,20 +13251,27 @@ translateY()	translateY(<length|percentage>)
             : null;
         return {
           values: cloneAnimationLabValueState(valueSource),
-          sequence: normalizeAnimationLabSequenceValueState(sequenceSource)
+          sequence: normalizeAnimationLabSequenceValueState(sequenceSource),
+          stageCheckpoint: normalizeAnimationLabStageCheckpointMeta(raw.stageCheckpoint || raw.stageCheckpointMeta, "")
         };
       }
 
       function currentAnimationLabCompareSnapshot() {
+        const values = animationLabPresetValues();
         return cloneAnimationLabCompareSnapshot({
-          values: animationLabPresetValues(),
-          sequence: animationLabSequenceValues()
+          values: values,
+          sequence: animationLabSequenceValues(),
+          stageCheckpoint: currentAnimationLabStageCheckpointMeta(values)
         });
       }
 
       function applyAnimationLabCompareSnapshot(snapshot) {
         const next = cloneAnimationLabCompareSnapshot(snapshot);
         applyAnimationLabSequenceState(next.sequence);
+        if (next.stageCheckpoint && elAnimationLabStageFreeze && elAnimationLabStageScrub) {
+          elAnimationLabStageFreeze.checked = true;
+          elAnimationLabStageScrub.value = Math.max(0, Math.min(100, Number(next.stageCheckpoint.percent) || 0));
+        }
         applyAnimationLabState(next.values);
       }
 
@@ -12980,6 +13326,14 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function createEmptyAnimationLabStageCheckpoints() {
+        return {
+          start: null,
+          peak: null,
+          settle: null
+        };
+      }
+
       function normalizeAnimationLabCompareSlot(slot) {
         if (!slot || typeof slot !== "object") return null;
         const source = slot.values && typeof slot.values === "object" ? slot.values : slot;
@@ -13020,6 +13374,46 @@ translateY()	translateY(<length|percentage>)
         return data;
       }
 
+      function normalizeAnimationLabStageCheckpoint(slotKey, slot) {
+        if (!slot || typeof slot !== "object") return null;
+        const snapshot = cloneAnimationLabCompareSnapshot(slot);
+        if (!snapshot.values) return null;
+        return {
+          savedAt: String(slot.savedAt || "").trim(),
+          lens: String(slot.lens || "live").trim() || "live",
+          percent: Math.max(0, Math.min(100, Number.isFinite(Number(slot.percent)) ? Number(slot.percent) : animationLabStageCheckpointDefaultPercent(slotKey))),
+          values: snapshot.values,
+          sequence: snapshot.sequence,
+          stageCheckpoint: normalizeAnimationLabStageCheckpointMeta(slot.stageCheckpoint || snapshot.stageCheckpoint, animationLabStageCheckpointTitle(slotKey))
+        };
+      }
+
+      function normalizeAnimationLabStageCheckpoints(state) {
+        const source = state && typeof state === "object" ? state : {};
+        const next = createEmptyAnimationLabStageCheckpoints();
+        ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.forEach(function (slotKey) {
+          next[slotKey] = normalizeAnimationLabStageCheckpoint(slotKey, source[slotKey]);
+        });
+        return next;
+      }
+
+      function serializeAnimationLabStageCheckpoints() {
+        const data = {};
+        ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.forEach(function (slotKey) {
+          const slot = animationLabStageCheckpoints[slotKey];
+          if (!slot || !slot.values) return;
+          data[slotKey] = {
+            savedAt: String(slot.savedAt || "").trim(),
+            lens: String(slot.lens || "live").trim() || "live",
+            percent: Math.max(0, Math.min(100, Number(slot.percent) || 0)),
+            values: cloneAnimationLabValueState(slot.values),
+            sequence: normalizeAnimationLabSequenceValueState(slot.sequence),
+            stageCheckpoint: normalizeAnimationLabStageCheckpointMeta(slot.stageCheckpoint, animationLabStageCheckpointTitle(slotKey))
+          };
+        });
+        return data;
+      }
+
       function normalizeAnimationLabSessionState(state) {
         if (!state || typeof state !== "object") return null;
         const target = String(state.target || "").trim();
@@ -13046,7 +13440,11 @@ translateY()	translateY(<length|percentage>)
           },
           animationLab: cloneAnimationLabValueState(state.animationLab),
           animationLabSequence: normalizeAnimationLabSequenceValueState(state.animationLabSequence),
-          animationLabCompareSlots: normalizeAnimationLabCompareSlots(state.animationLabCompareSlots)
+          animationLabCompareSlots: normalizeAnimationLabCompareSlots(state.animationLabCompareSlots),
+          animationLabStageCheckpoints: normalizeAnimationLabStageCheckpoints(state.animationLabStageCheckpoints),
+          animationLabCheckpointCompareSlot: ANIMATION_LAB_COMPARE_SLOT_ORDER.indexOf(String(state.animationLabCheckpointCompareSlot || "").trim()) >= 0
+            ? String(state.animationLabCheckpointCompareSlot || "").trim()
+            : "candidate"
         };
       }
 
@@ -13083,6 +13481,9 @@ translateY()	translateY(<length|percentage>)
         const compareCount = ANIMATION_LAB_COMPARE_SLOT_ORDER.filter(function (slotKey) {
           return Boolean(snapshot.animationLabCompareSlots[slotKey]);
         }).length;
+        const checkpointCount = ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.filter(function (slotKey) {
+          return Boolean(snapshot.animationLabStageCheckpoints && snapshot.animationLabStageCheckpoints[slotKey]);
+        }).length;
         const targetLabel = snapshot.target ? previewTargetLabel(snapshot.target) : previewTargetLabel((elTarget.value || "card").trim());
         const sequence = snapshot.animationLabSequence;
         return [
@@ -13090,6 +13491,7 @@ translateY()	translateY(<length|percentage>)
           animationLabTriggerLabel(values.trigger),
           sequence.steps + "-step " + sequence.mode + " " + sequence.order + " @ " + sequence.gap,
           compareCount + " compare slot" + (compareCount === 1 ? "" : "s"),
+          checkpointCount + " stage checkpoint" + (checkpointCount === 1 ? "" : "s"),
           "target " + targetLabel
         ].join(" | ");
       }
@@ -13137,7 +13539,9 @@ translateY()	translateY(<length|percentage>)
           },
           animationLab: animationLabPresetValues(),
           animationLabSequence: animationLabSequenceValues(),
-          animationLabCompareSlots: serializeAnimationLabCompareSlots()
+          animationLabCompareSlots: serializeAnimationLabCompareSlots(),
+          animationLabStageCheckpoints: serializeAnimationLabStageCheckpoints(),
+          animationLabCheckpointCompareSlot: elAnimationLabCheckpointCompareSlot ? (elAnimationLabCheckpointCompareSlot.value || "candidate").trim() : "candidate"
         });
         try {
           localStorage.setItem(ANIMATION_LAB_SESSION_STORAGE_KEY, JSON.stringify(snapshot));
@@ -13184,6 +13588,10 @@ translateY()	translateY(<length|percentage>)
           renderSelectorGraph();
           renderBuilder();
           animationLabCompareSlots = normalizeAnimationLabCompareSlots(session.animationLabCompareSlots);
+          animationLabStageCheckpoints = normalizeAnimationLabStageCheckpoints(session.animationLabStageCheckpoints);
+          if (elAnimationLabCheckpointCompareSlot) {
+            setSelectValueIfPresent(elAnimationLabCheckpointCompareSlot, session.animationLabCheckpointCompareSlot, "candidate");
+          }
           applyAnimationLabSequenceState(session.animationLabSequence);
           applyAnimationLabState(session.animationLab);
           elPreviewInteractionState.value = session.previewInteractionState;
@@ -13257,6 +13665,7 @@ translateY()	translateY(<length|percentage>)
           slotTitle: animationLabCompareSlotTitle(slotKey),
           values: values,
           sequence: snapshot.sequence,
+          stageCheckpoint: normalizeAnimationLabStageCheckpointMeta(snapshot.stageCheckpoint, ""),
           risk: risk,
           surface: surface,
           releaseScore: releaseScore,
@@ -13376,6 +13785,9 @@ translateY()	translateY(<length|percentage>)
           "Selector: " + selector,
           "Target: " + currentTarget,
           "Trigger: " + entry.triggerLabel,
+          "Stage checkpoint: " + (entry.stageCheckpoint
+            ? entry.stageCheckpoint.label + " at " + entry.stageCheckpoint.percent + "% (" + formatAnimationLabStageMs(entry.stageCheckpoint.checkpointMs) + ")"
+            : "No frozen frame tag saved"),
           "Release score: " + entry.releaseScore + "/100",
           "Risk: " + entry.risk.level + " " + entry.risk.score + "/100",
           "Surface fit: " + entry.surface.score + "/100 on " + currentTarget,
@@ -13789,11 +14201,14 @@ translateY()	translateY(<length|percentage>)
           const riskText = entry.risk.level + " risk " + entry.risk.score + "/100";
           const surfaceText = entry.surface.score + "/100 on " + currentTarget;
           const sequenceText = entry.sequence.steps + "-step " + entry.sequence.mode + " " + entry.sequence.order + " @ " + entry.sequence.gap;
+          const checkpointText = entry.stageCheckpoint
+            ? entry.stageCheckpoint.label + " @ " + entry.stageCheckpoint.percent + "%"
+            : "No frame tag";
           if (status) {
             status.textContent = entry.presetLabel + " | " + entry.triggerLabel + " | " + entry.values.keyframes;
           }
           if (meta) {
-            meta.textContent = "Release " + entry.releaseScore + "/100. " + riskText + ". Surface fit " + surfaceText + ". " + sequenceText + ".";
+            meta.textContent = "Release " + entry.releaseScore + "/100. " + riskText + ". Surface fit " + surfaceText + ". " + sequenceText + ". Frame: " + checkpointText + ".";
           }
           if (applyBtn) applyBtn.disabled = false;
           if (clearBtn) clearBtn.disabled = false;
@@ -13821,6 +14236,10 @@ translateY()	translateY(<length|percentage>)
             entry.values.keyframes +
             " | " +
             entry.triggerLabel +
+            " | Frame " +
+            (entry.stageCheckpoint
+              ? entry.stageCheckpoint.label + " @ " + entry.stageCheckpoint.percent + "%"
+              : "live only") +
             " | Risk " +
             entry.risk.level +
             " " +
@@ -14498,6 +14917,7 @@ translateY()	translateY(<length|percentage>)
         const rolloutPacket = animationLabRolloutPacketData(compareEntries, compareAnchor, compareWinner, values, bestReview, currentTarget, selector, handoff);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         updateAnimationLabStage(values, risk, surface);
+        renderAnimationLabStageCheckpointBank();
         elAnimationLabPresetIntent.textContent = brief.intent;
         elAnimationLabPresetBestFor.textContent = brief.bestFor;
         elAnimationLabPresetGuardrail.textContent = brief.guardrail;
@@ -15312,6 +15732,8 @@ translateY()	translateY(<length|percentage>)
           animationLab: animationLabPresetValues(),
           animationLabSequence: animationLabSequenceValues(),
           animationLabCompareSlots: serializeAnimationLabCompareSlots(),
+          animationLabStageCheckpoints: serializeAnimationLabStageCheckpoints(),
+          animationLabCheckpointCompareSlot: elAnimationLabCheckpointCompareSlot ? (elAnimationLabCheckpointCompareSlot.value || "candidate").trim() : "candidate",
           animationLabReducePreview: Boolean(elAnimationLabReducePreview && elAnimationLabReducePreview.checked),
           previewMode: previewMode,
           previewInteractionState: elPreviewInteractionState.value,
@@ -15350,6 +15772,10 @@ translateY()	translateY(<length|percentage>)
         updateBuilderMediaControlVisibility();
         applyAnimationLabSequenceState(state.animationLabSequence);
         animationLabCompareSlots = normalizeAnimationLabCompareSlots(state.animationLabCompareSlots);
+        animationLabStageCheckpoints = normalizeAnimationLabStageCheckpoints(state.animationLabStageCheckpoints);
+        if (elAnimationLabCheckpointCompareSlot) {
+          setSelectValueIfPresent(elAnimationLabCheckpointCompareSlot, state.animationLabCheckpointCompareSlot, "candidate");
+        }
         applyAnimationLabState(state.animationLab);
         if (elAnimationLabReducePreview) {
           elAnimationLabReducePreview.checked = Boolean(state.animationLabReducePreview || (state.animationLab && state.animationLab.reducedPreviewEnabled));
@@ -21325,6 +21751,9 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabStageScrub.addEventListener("input", updateAnimationLabOutputs);
         elAnimationLabStageScrub.addEventListener("change", updateAnimationLabOutputs);
       }
+      if (elAnimationLabCheckpointCompareSlot) {
+        elAnimationLabCheckpointCompareSlot.addEventListener("change", updateAnimationLabOutputs);
+      }
       elAnimationLabRestorePreset.addEventListener("click", restoreAnimationLabFullPreset);
       elAnimationLabRestoreTiming.addEventListener("click", restoreAnimationLabPresetTiming);
       elAnimationLabRestoreBehavior.addEventListener("click", restoreAnimationLabPresetBehavior);
@@ -21371,6 +21800,25 @@ translateY()	translateY(<length|percentage>)
           }
           if (action === "clear") {
             clearAnimationLabCompareSlot(slotKey);
+          }
+        });
+      }
+      if (elAnimationLabCheckpointBank) {
+        elAnimationLabCheckpointBank.addEventListener("click", function (event) {
+          const button = event.target.closest("[data-stage-checkpoint-action]");
+          if (!button) return;
+          const action = button.getAttribute("data-stage-checkpoint-action");
+          const slotKey = button.getAttribute("data-stage-checkpoint-slot-key");
+          if (action === "capture") {
+            captureAnimationLabStageCheckpoint(slotKey);
+            return;
+          }
+          if (action === "load") {
+            loadAnimationLabStageCheckpoint(slotKey);
+            return;
+          }
+          if (action === "compare") {
+            sendAnimationLabStageCheckpointToCompare(slotKey);
           }
         });
       }
