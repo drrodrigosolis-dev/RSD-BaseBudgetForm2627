@@ -4675,6 +4675,9 @@ opacity: 0;</textarea>
                   <option value="transition">Transition</option>
                   <option value="transform-stack">Transform Stack</option>
                   <option value="fluid-clamp">Fluid Clamp</option>
+                  <option value="text-stack">Text Stack</option>
+                  <option value="flex-layout">Flex Layout</option>
+                  <option value="glass-surface">Glass Surface</option>
                 </select>
               </div>
               <div class="row">
@@ -5083,6 +5086,181 @@ opacity: 0;</textarea>
                     <div class="info-tile">
                       <div class="label">Why This Fits</div>
                       <div id="custom-rule-helper-fluid-rationale">Balanced fluid growth keeps the property flexible without overshooting the final cap too early.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="custom-rule-helper-text-group" class="hidden">
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-text-size">Font Size</label>
+                    <input id="custom-rule-helper-text-size" type="number" min="0" step="0.1" value="1" title="Base font-size amount." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-text-unit">Font Unit</label>
+                    <select id="custom-rule-helper-text-unit" title="Unit used for font-size and letter-spacing.">
+                      <option value="rem" selected>rem</option>
+                      <option value="px">px</option>
+                      <option value="em">em</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-text-weight">Font Weight</label>
+                    <select id="custom-rule-helper-text-weight" title="Weight used by the text stack.">
+                      <option value="400">400</option>
+                      <option value="500" selected>500</option>
+                      <option value="600">600</option>
+                      <option value="700">700</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-text-line-height">Line Height</label>
+                    <input id="custom-rule-helper-text-line-height" type="number" min="1" step="0.05" value="1.5" title="Unitless line-height multiplier." />
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-text-letter-spacing">Letter Spacing</label>
+                    <input id="custom-rule-helper-text-letter-spacing" type="number" step="0.01" value="0" title="Tracking amount. Positive values spread letters out." />
+                  </div>
+                  <div class="row">
+                    <div class="label">Text Intent</div>
+                    <div class="input-hint">Use this for labels, helper text, and compact headings that need deliberate rhythm without hand-typing four declarations.</div>
+                  </div>
+                </div>
+                <div id="custom-rule-helper-text-coach" class="help-box">
+                  <div><strong>Text Stack Coach</strong></div>
+                  <div class="info-grid">
+                    <div class="info-tile">
+                      <div class="label">Readability</div>
+                      <div id="custom-rule-helper-text-readability">Balanced body rhythm for labels and helper copy.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Density</div>
+                      <div id="custom-rule-helper-text-density">A moderate size and line-height keep dense forms readable.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Guardrail</div>
+                      <div id="custom-rule-helper-text-rationale">Keep typographic contrast visible without tightening the line-height so far that stacked fields start to feel cramped.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="custom-rule-helper-flex-group" class="hidden">
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-flex-direction">Direction</label>
+                    <select id="custom-rule-helper-flex-direction" title="Primary flex axis.">
+                      <option value="row" selected>row</option>
+                      <option value="column">column</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-flex-wrap">Wrap</label>
+                    <select id="custom-rule-helper-flex-wrap" title="Whether flex items should wrap.">
+                      <option value="nowrap" selected>nowrap</option>
+                      <option value="wrap">wrap</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-flex-justify">Justify</label>
+                    <select id="custom-rule-helper-flex-justify" title="Main-axis distribution.">
+                      <option value="flex-start" selected>flex-start</option>
+                      <option value="center">center</option>
+                      <option value="space-between">space-between</option>
+                      <option value="space-around">space-around</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-flex-align">Align</label>
+                    <select id="custom-rule-helper-flex-align" title="Cross-axis alignment.">
+                      <option value="stretch">stretch</option>
+                      <option value="flex-start">flex-start</option>
+                      <option value="center" selected>center</option>
+                      <option value="flex-end">flex-end</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-flex-gap">Gap</label>
+                    <input id="custom-rule-helper-flex-gap" type="number" min="0" step="1" value="12" title="Gap between flex items." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-flex-gap-unit">Gap Unit</label>
+                    <select id="custom-rule-helper-flex-gap-unit" title="Unit used by the gap value.">
+                      <option value="px" selected>px</option>
+                      <option value="rem">rem</option>
+                    </select>
+                  </div>
+                </div>
+                <div id="custom-rule-helper-flex-coach" class="help-box">
+                  <div><strong>Flex Layout Coach</strong></div>
+                  <div class="info-grid">
+                    <div class="info-tile">
+                      <div class="label">Flow</div>
+                      <div id="custom-rule-helper-flex-flow">A horizontal lane is active for inline actions or compact field groups.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Gap Load</div>
+                      <div id="custom-rule-helper-flex-gap-note">12px keeps siblings distinct without forcing oversized gutters.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Guardrail</div>
+                      <div id="custom-rule-helper-flex-rationale">Use row layouts for short control clusters. Switch to column when content length can grow unpredictably.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="custom-rule-helper-glass-group" class="hidden">
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-glass-tint">Tint Color</label>
+                    <input id="custom-rule-helper-glass-tint" type="color" value="#ffffff" title="Base tint layered over the blurred surface." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-glass-alpha">Tint Alpha</label>
+                    <input id="custom-rule-helper-glass-alpha" type="number" min="0" max="1" step="0.01" value="0.72" title="Opacity of the glass tint." />
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-glass-blur">Backdrop Blur</label>
+                    <input id="custom-rule-helper-glass-blur" type="number" min="0" step="1" value="14" title="Backdrop blur radius in pixels." />
+                  </div>
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-glass-border-alpha">Border Alpha</label>
+                    <input id="custom-rule-helper-glass-border-alpha" type="number" min="0" max="1" step="0.01" value="0.45" title="Opacity of the subtle border edge." />
+                  </div>
+                </div>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="custom-rule-helper-glass-shadow-alpha">Shadow Alpha</label>
+                    <input id="custom-rule-helper-glass-shadow-alpha" type="number" min="0" max="1" step="0.01" value="0.12" title="Opacity of the supporting shadow." />
+                  </div>
+                  <div class="row">
+                    <div class="label">Surface Intent</div>
+                    <div class="input-hint">Use this when a panel should feel elevated and translucent without hand-building the tint, border, blur, and shadow stack.</div>
+                  </div>
+                </div>
+                <div id="custom-rule-helper-glass-coach" class="help-box">
+                  <div><strong>Glass Surface Coach</strong></div>
+                  <div class="info-grid">
+                    <div class="info-tile">
+                      <div class="label">Transparency</div>
+                      <div id="custom-rule-helper-glass-clarity">The surface is translucent enough to feel layered while still preserving text legibility.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Blur Load</div>
+                      <div id="custom-rule-helper-glass-blur-note">14px blur reads as polished depth for cards and overlay shells.</div>
+                    </div>
+                    <div class="info-tile">
+                      <div class="label">Guardrail</div>
+                      <div id="custom-rule-helper-glass-rationale">Keep glass surfaces restrained on dense forms so decorative chrome does not compete with labels, errors, or focus states.</div>
                     </div>
                   </div>
                 </div>
@@ -6447,6 +6625,37 @@ translateY()	translateY(<length|percentage>)
       const elCustomRuleHelperFluidRange = document.getElementById("custom-rule-helper-fluid-range");
       const elCustomRuleHelperFluidMid = document.getElementById("custom-rule-helper-fluid-mid");
       const elCustomRuleHelperFluidRationale = document.getElementById("custom-rule-helper-fluid-rationale");
+      const elCustomRuleHelperTextGroup = document.getElementById("custom-rule-helper-text-group");
+      const elCustomRuleHelperTextSize = document.getElementById("custom-rule-helper-text-size");
+      const elCustomRuleHelperTextUnit = document.getElementById("custom-rule-helper-text-unit");
+      const elCustomRuleHelperTextWeight = document.getElementById("custom-rule-helper-text-weight");
+      const elCustomRuleHelperTextLineHeight = document.getElementById("custom-rule-helper-text-line-height");
+      const elCustomRuleHelperTextLetterSpacing = document.getElementById("custom-rule-helper-text-letter-spacing");
+      const elCustomRuleHelperTextCoach = document.getElementById("custom-rule-helper-text-coach");
+      const elCustomRuleHelperTextReadability = document.getElementById("custom-rule-helper-text-readability");
+      const elCustomRuleHelperTextDensity = document.getElementById("custom-rule-helper-text-density");
+      const elCustomRuleHelperTextRationale = document.getElementById("custom-rule-helper-text-rationale");
+      const elCustomRuleHelperFlexGroup = document.getElementById("custom-rule-helper-flex-group");
+      const elCustomRuleHelperFlexDirection = document.getElementById("custom-rule-helper-flex-direction");
+      const elCustomRuleHelperFlexWrap = document.getElementById("custom-rule-helper-flex-wrap");
+      const elCustomRuleHelperFlexJustify = document.getElementById("custom-rule-helper-flex-justify");
+      const elCustomRuleHelperFlexAlign = document.getElementById("custom-rule-helper-flex-align");
+      const elCustomRuleHelperFlexGap = document.getElementById("custom-rule-helper-flex-gap");
+      const elCustomRuleHelperFlexGapUnit = document.getElementById("custom-rule-helper-flex-gap-unit");
+      const elCustomRuleHelperFlexCoach = document.getElementById("custom-rule-helper-flex-coach");
+      const elCustomRuleHelperFlexFlow = document.getElementById("custom-rule-helper-flex-flow");
+      const elCustomRuleHelperFlexGapNote = document.getElementById("custom-rule-helper-flex-gap-note");
+      const elCustomRuleHelperFlexRationale = document.getElementById("custom-rule-helper-flex-rationale");
+      const elCustomRuleHelperGlassGroup = document.getElementById("custom-rule-helper-glass-group");
+      const elCustomRuleHelperGlassTint = document.getElementById("custom-rule-helper-glass-tint");
+      const elCustomRuleHelperGlassAlpha = document.getElementById("custom-rule-helper-glass-alpha");
+      const elCustomRuleHelperGlassBlur = document.getElementById("custom-rule-helper-glass-blur");
+      const elCustomRuleHelperGlassBorderAlpha = document.getElementById("custom-rule-helper-glass-border-alpha");
+      const elCustomRuleHelperGlassShadowAlpha = document.getElementById("custom-rule-helper-glass-shadow-alpha");
+      const elCustomRuleHelperGlassCoach = document.getElementById("custom-rule-helper-glass-coach");
+      const elCustomRuleHelperGlassClarity = document.getElementById("custom-rule-helper-glass-clarity");
+      const elCustomRuleHelperGlassBlurNote = document.getElementById("custom-rule-helper-glass-blur-note");
+      const elCustomRuleHelperGlassRationale = document.getElementById("custom-rule-helper-glass-rationale");
       const elCustomRuleHelperOutput = document.getElementById("custom-rule-helper-output");
       const elCustomRuleHelperNote = document.getElementById("custom-rule-helper-note");
       const elCustomRuleHelperLoad = document.getElementById("custom-rule-helper-load");
@@ -6497,7 +6706,23 @@ translateY()	translateY(<length|percentage>)
         fluidUnit: elCustomRuleHelperFluidUnit,
         fluidMin: elCustomRuleHelperFluidMin,
         fluidMax: elCustomRuleHelperFluidMax,
-        fluidVw: elCustomRuleHelperFluidVw
+        fluidVw: elCustomRuleHelperFluidVw,
+        textSize: elCustomRuleHelperTextSize,
+        textUnit: elCustomRuleHelperTextUnit,
+        textWeight: elCustomRuleHelperTextWeight,
+        textLineHeight: elCustomRuleHelperTextLineHeight,
+        textLetterSpacing: elCustomRuleHelperTextLetterSpacing,
+        flexDirection: elCustomRuleHelperFlexDirection,
+        flexWrap: elCustomRuleHelperFlexWrap,
+        flexJustify: elCustomRuleHelperFlexJustify,
+        flexAlign: elCustomRuleHelperFlexAlign,
+        flexGap: elCustomRuleHelperFlexGap,
+        flexGapUnit: elCustomRuleHelperFlexGapUnit,
+        glassTint: elCustomRuleHelperGlassTint,
+        glassAlpha: elCustomRuleHelperGlassAlpha,
+        glassBlur: elCustomRuleHelperGlassBlur,
+        glassBorderAlpha: elCustomRuleHelperGlassBorderAlpha,
+        glassShadowAlpha: elCustomRuleHelperGlassShadowAlpha
       };
       const elBuilderMediaLayer = document.getElementById("builder-media-layer");
       const elBuilderMediaCustomWrap = document.getElementById("builder-media-custom-wrap");
@@ -6805,6 +7030,48 @@ translateY()	translateY(<length|percentage>)
             label: "Section Gap",
             note: "Lets spacing grow modestly across larger viewports.",
             fields: { fluidProperty: "padding", fluidUnit: "rem", fluidMin: 0.75, fluidMax: 1.5, fluidVw: 1.8 }
+          }
+        ],
+        "text-stack": [
+          {
+            value: "field-label",
+            label: "Field Label",
+            note: "A readable label stack for compact controls and steady scanning.",
+            fields: { textSize: 0.95, textUnit: "rem", textWeight: "600", textLineHeight: 1.35, textLetterSpacing: 0.01 }
+          },
+          {
+            value: "helper-copy",
+            label: "Helper Copy",
+            note: "A quieter text rhythm for descriptions, hints, and secondary guidance.",
+            fields: { textSize: 0.88, textUnit: "rem", textWeight: "400", textLineHeight: 1.55, textLetterSpacing: 0 }
+          }
+        ],
+        "flex-layout": [
+          {
+            value: "inline-actions",
+            label: "Inline Actions",
+            note: "Good for compact button rows and small control clusters.",
+            fields: { flexDirection: "row", flexWrap: "wrap", flexJustify: "flex-start", flexAlign: "center", flexGap: 12, flexGapUnit: "px" }
+          },
+          {
+            value: "stacked-fields",
+            label: "Stacked Fields",
+            note: "A safer default for vertical field groups where copy length can vary.",
+            fields: { flexDirection: "column", flexWrap: "nowrap", flexJustify: "flex-start", flexAlign: "stretch", flexGap: 10, flexGapUnit: "px" }
+          }
+        ],
+        "glass-surface": [
+          {
+            value: "modal-shell",
+            label: "Modal Shell",
+            note: "A polished frosted panel for overlays, side sheets, and guided callouts.",
+            fields: { glassTint: "#ffffff", glassAlpha: 0.78, glassBlur: 18, glassBorderAlpha: 0.5, glassShadowAlpha: 0.14 }
+          },
+          {
+            value: "quiet-card",
+            label: "Quiet Card",
+            note: "A calmer translucent treatment for dashboard cards and support panels.",
+            fields: { glassTint: "#f7fbff", glassAlpha: 0.7, glassBlur: 10, glassBorderAlpha: 0.38, glassShadowAlpha: 0.08 }
           }
         ]
       };
@@ -23594,6 +23861,133 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperFluidRationale.textContent = rationale;
       }
 
+      function updateTextStackCoach() {
+        if (!elCustomRuleHelperTextCoach || !elCustomRuleHelperTextReadability || !elCustomRuleHelperTextDensity || !elCustomRuleHelperTextRationale) {
+          return;
+        }
+
+        const size = Math.max(0, Number(elCustomRuleHelperTextSize.value || 0));
+        const unit = String(elCustomRuleHelperTextUnit.value || "rem").trim() || "rem";
+        const weight = Number(elCustomRuleHelperTextWeight.value || 400);
+        const lineHeight = Math.max(1, Number(elCustomRuleHelperTextLineHeight.value || 1));
+        const tracking = Number(elCustomRuleHelperTextLetterSpacing.value || 0);
+
+        if (size < 0.9) {
+          elCustomRuleHelperTextReadability.textContent = "Compact text stack for helper copy, meta labels, and dense support text.";
+        } else if (size > 1.15) {
+          elCustomRuleHelperTextReadability.textContent = "This reads more like a compact heading than field chrome, which is good for section labels and strong callouts.";
+        } else {
+          elCustomRuleHelperTextReadability.textContent = "Balanced body rhythm for labels, value summaries, and steady form scanning.";
+        }
+
+        if (lineHeight <= 1.25) {
+          elCustomRuleHelperTextDensity.textContent = "Tight vertical rhythm. Best for one-line labels or chips, not multi-line help text.";
+        } else if (lineHeight >= 1.7) {
+          elCustomRuleHelperTextDensity.textContent = "Relaxed line-height improves readability, but it can make stacked forms feel loose if used everywhere.";
+        } else {
+          elCustomRuleHelperTextDensity.textContent = "A moderate size and line-height keep dense forms readable without wasting vertical space.";
+        }
+
+        let rationale = "Keep typographic contrast visible without tightening the line-height so far that stacked fields start to feel cramped.";
+        if (weight >= 700 && tracking <= 0) {
+          rationale = "Heavy weights benefit from a touch of positive tracking so short labels do not feel crowded.";
+        } else if (tracking >= 0.08) {
+          rationale = "Wide tracking reads as a display treatment. Keep it for short labels, pills, and uppercase accents.";
+        } else if (tracking < -0.01) {
+          rationale = "Negative tracking can collapse readability on smaller controls. Re-check narrow fields and helper copy before shipping.";
+        } else if (size < 0.8 && lineHeight < 1.35) {
+          rationale = "This stack is dense and compact. Raise either size or line-height if hints and validation text must stay readable.";
+        }
+        elCustomRuleHelperTextRationale.textContent = rationale;
+      }
+
+      function updateFlexLayoutCoach() {
+        if (!elCustomRuleHelperFlexCoach || !elCustomRuleHelperFlexFlow || !elCustomRuleHelperFlexGapNote || !elCustomRuleHelperFlexRationale) {
+          return;
+        }
+
+        const direction = String(elCustomRuleHelperFlexDirection.value || "row").trim() || "row";
+        const wrap = String(elCustomRuleHelperFlexWrap.value || "nowrap").trim() || "nowrap";
+        const justify = String(elCustomRuleHelperFlexJustify.value || "flex-start").trim() || "flex-start";
+        const align = String(elCustomRuleHelperFlexAlign.value || "stretch").trim() || "stretch";
+        const gap = Math.max(0, Number(elCustomRuleHelperFlexGap.value || 0));
+        const gapUnit = String(elCustomRuleHelperFlexGapUnit.value || "px").trim() || "px";
+
+        if (direction === "column") {
+          elCustomRuleHelperFlexFlow.textContent = "A vertical stack is active, which is usually safer for fields, helper text, and long labels.";
+        } else if (wrap === "wrap") {
+          elCustomRuleHelperFlexFlow.textContent = "A horizontal lane with wrapping is active for action rows, chips, and control clusters that may need a second line.";
+        } else {
+          elCustomRuleHelperFlexFlow.textContent = "A horizontal lane is active for inline actions or compact field groups.";
+        }
+
+        if (gap === 0) {
+          elCustomRuleHelperFlexGapNote.textContent = "No gap is active. That only works when child components already carry their own spacing.";
+        } else if (gap <= 8) {
+          elCustomRuleHelperFlexGapNote.textContent = formatCompactNumber(gap) + gapUnit + " keeps the group tight, which is useful for chips or compact input accessories.";
+        } else if (gap >= 20) {
+          elCustomRuleHelperFlexGapNote.textContent = formatCompactNumber(gap) + gapUnit + " creates large gutters. Use it for roomy callouts or paired cards, not dense input stacks.";
+        } else {
+          elCustomRuleHelperFlexGapNote.textContent = formatCompactNumber(gap) + gapUnit + " keeps siblings distinct without forcing oversized gutters.";
+        }
+
+        let rationale = "Use row layouts for short control clusters. Switch to column when content length can grow unpredictably.";
+        if (direction === "row" && justify.indexOf("space-") === 0 && wrap === "nowrap") {
+          rationale = "Space distribution in a single row can create awkward gaps when labels wrap. Reserve it for stable button bars or summary chips.";
+        } else if (direction === "column" && align === "center") {
+          rationale = "Centered alignment in column stacks can hurt scanability. Stretch or flex-start is usually safer for fields and explanatory copy.";
+        } else if (direction === "row" && align === "stretch") {
+          rationale = "Stretching a row can create mismatched heights across mixed controls. Center alignment is usually cleaner for inline rows.";
+        } else if (wrap === "wrap" && gap < 6) {
+          rationale = "Wrapped rows need a little breathing room so items do not visually merge when they break lines.";
+        }
+        elCustomRuleHelperFlexRationale.textContent = rationale;
+      }
+
+      function updateGlassSurfaceCoach() {
+        if (!elCustomRuleHelperGlassCoach || !elCustomRuleHelperGlassClarity || !elCustomRuleHelperGlassBlurNote || !elCustomRuleHelperGlassRationale) {
+          return;
+        }
+
+        const alphaRaw = Number(elCustomRuleHelperGlassAlpha.value);
+        const alpha = Number.isFinite(alphaRaw) ? Math.max(0, Math.min(1, alphaRaw)) : 0.72;
+        const blur = Math.max(0, Number(elCustomRuleHelperGlassBlur.value || 0));
+        const borderAlphaRaw = Number(elCustomRuleHelperGlassBorderAlpha.value);
+        const borderAlpha = Number.isFinite(borderAlphaRaw) ? Math.max(0, Math.min(1, borderAlphaRaw)) : 0.45;
+        const shadowAlphaRaw = Number(elCustomRuleHelperGlassShadowAlpha.value);
+        const shadowAlpha = Number.isFinite(shadowAlphaRaw) ? Math.max(0, Math.min(1, shadowAlphaRaw)) : 0.12;
+
+        if (alpha >= 0.84) {
+          elCustomRuleHelperGlassClarity.textContent = "This surface is nearly opaque. It will feel more like a softly tinted card than pronounced glass.";
+        } else if (alpha <= 0.45) {
+          elCustomRuleHelperGlassClarity.textContent = "The tint is very transparent. Re-check text contrast because background content will stay visually active.";
+        } else {
+          elCustomRuleHelperGlassClarity.textContent = "The surface is translucent enough to feel layered while still preserving text legibility.";
+        }
+
+        if (blur === 0) {
+          elCustomRuleHelperGlassBlurNote.textContent = "Backdrop blur is off, so this becomes a translucent panel without the frosted-glass effect.";
+        } else if (blur <= 8) {
+          elCustomRuleHelperGlassBlurNote.textContent = formatCompactNumber(blur) + "px blur is subtle and works well when the background already has limited noise.";
+        } else if (blur >= 24) {
+          elCustomRuleHelperGlassBlurNote.textContent = formatCompactNumber(blur) + "px blur is expressive and can feel heavy if the panel is large or repeated often.";
+        } else {
+          elCustomRuleHelperGlassBlurNote.textContent = formatCompactNumber(blur) + "px blur reads as polished depth for cards and overlay shells.";
+        }
+
+        let rationale = "Keep glass surfaces restrained on dense forms so decorative chrome does not compete with labels, errors, or focus states.";
+        if (alpha <= 0.5 && blur <= 6) {
+          rationale = "Low tint plus low blur can make the surface feel unfinished. Raise one of them so the layer reads intentionally.";
+        } else if (borderAlpha < 0.2) {
+          rationale = "A very faint border can disappear against bright backdrops. Increase edge contrast if the panel must stay visually distinct.";
+        } else if (shadowAlpha > 0.2) {
+          rationale = "A strong shadow pushes the panel toward a card aesthetic. Reduce shadow alpha if you want the glass to stay light and airy.";
+        } else if (blur >= 24 && alpha < 0.6) {
+          rationale = "Heavy blur plus light tint can look busy on dynamic backgrounds. Increase tint opacity or reduce blur before rollout.";
+        }
+        elCustomRuleHelperGlassRationale.textContent = rationale;
+      }
+
       function updateTransitionHelperCoach() {
         if (!elCustomRuleHelperTransitionCoach || !elCustomRuleHelperTransitionScope || !elCustomRuleHelperTransitionTempo || !elCustomRuleHelperTransitionRationale) {
           return;
@@ -23827,6 +24221,52 @@ translateY()	translateY(<length|percentage>)
           const vwText = String(Math.round(vw * 100) / 100).replace(/\.0+$/, "").replace(/(\.\d*[1-9])0+$/, "$1");
           return prop + ": clamp(" + min + unit + ", " + (vwText || "0") + "vw, " + max + unit + ");";
         }
+        if (type === "text-stack") {
+          const size = Math.max(0, Number(elCustomRuleHelperTextSize.value || 0));
+          const unit = (elCustomRuleHelperTextUnit.value || "rem").trim() || "rem";
+          const weight = (elCustomRuleHelperTextWeight.value || "500").trim() || "500";
+          const lineHeight = Math.max(1, Number(elCustomRuleHelperTextLineHeight.value || 1));
+          const tracking = Number(elCustomRuleHelperTextLetterSpacing.value || 0);
+          return [
+            "font-size: " + formatCompactNumber(size) + unit + ";",
+            "font-weight: " + weight + ";",
+            "line-height: " + formatCompactNumber(lineHeight) + ";",
+            "letter-spacing: " + formatCompactNumber(tracking) + unit + ";"
+          ].join(" ");
+        }
+        if (type === "flex-layout") {
+          const direction = (elCustomRuleHelperFlexDirection.value || "row").trim() || "row";
+          const wrap = (elCustomRuleHelperFlexWrap.value || "nowrap").trim() || "nowrap";
+          const justify = (elCustomRuleHelperFlexJustify.value || "flex-start").trim() || "flex-start";
+          const align = (elCustomRuleHelperFlexAlign.value || "center").trim() || "center";
+          const gap = Math.max(0, Number(elCustomRuleHelperFlexGap.value || 0));
+          const gapUnit = (elCustomRuleHelperFlexGapUnit.value || "px").trim() || "px";
+          return [
+            "display: flex;",
+            "flex-direction: " + direction + ";",
+            "flex-wrap: " + wrap + ";",
+            "justify-content: " + justify + ";",
+            "align-items: " + align + ";",
+            "gap: " + formatCompactNumber(gap) + gapUnit + ";"
+          ].join(" ");
+        }
+        if (type === "glass-surface") {
+          const tint = parseCssColorToRgb(elCustomRuleHelperGlassTint.value || "#ffffff");
+          const alphaRaw = Number(elCustomRuleHelperGlassAlpha.value);
+          const alpha = Number.isFinite(alphaRaw) ? Math.max(0, Math.min(1, alphaRaw)) : 0.72;
+          const blur = Math.max(0, Number(elCustomRuleHelperGlassBlur.value || 0));
+          const borderAlphaRaw = Number(elCustomRuleHelperGlassBorderAlpha.value);
+          const borderAlpha = Number.isFinite(borderAlphaRaw) ? Math.max(0, Math.min(1, borderAlphaRaw)) : 0.45;
+          const shadowAlphaRaw = Number(elCustomRuleHelperGlassShadowAlpha.value);
+          const shadowAlpha = Number.isFinite(shadowAlphaRaw) ? Math.max(0, Math.min(1, shadowAlphaRaw)) : 0.12;
+          return [
+            "background-color: rgba(" + tint.r + ", " + tint.g + ", " + tint.b + ", " + alpha.toFixed(2) + ");",
+            "backdrop-filter: blur(" + formatCompactNumber(blur) + "px);",
+            "-webkit-backdrop-filter: blur(" + formatCompactNumber(blur) + "px);",
+            "border: 1px solid rgba(" + tint.r + ", " + tint.g + ", " + tint.b + ", " + borderAlpha.toFixed(2) + ");",
+            "box-shadow: 0 18px 34px rgba(18, 40, 86, " + shadowAlpha.toFixed(2) + ");"
+          ].join(" ");
+        }
         const amount = Math.max(0, Number(elCustomRuleHelperRadiusValue.value || 0));
         return "border-radius: " + amount + (elCustomRuleHelperRadiusUnit.value || "px") + ";";
       }
@@ -23857,6 +24297,9 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperTransitionGroup.classList.toggle("hidden", type !== "transition");
         elCustomRuleHelperTransformGroup.classList.toggle("hidden", type !== "transform-stack");
         elCustomRuleHelperFluidGroup.classList.toggle("hidden", type !== "fluid-clamp");
+        elCustomRuleHelperTextGroup.classList.toggle("hidden", type !== "text-stack");
+        elCustomRuleHelperFlexGroup.classList.toggle("hidden", type !== "flex-layout");
+        elCustomRuleHelperGlassGroup.classList.toggle("hidden", type !== "glass-surface");
         if (elCustomRuleHelperSpacingCoach) {
           elCustomRuleHelperSpacingCoach.classList.toggle("hidden", type !== "spacing");
         }
@@ -23869,11 +24312,23 @@ translateY()	translateY(<length|percentage>)
         if (elCustomRuleHelperFluidCoach) {
           elCustomRuleHelperFluidCoach.classList.toggle("hidden", type !== "fluid-clamp");
         }
+        if (elCustomRuleHelperTextCoach) {
+          elCustomRuleHelperTextCoach.classList.toggle("hidden", type !== "text-stack");
+        }
+        if (elCustomRuleHelperFlexCoach) {
+          elCustomRuleHelperFlexCoach.classList.toggle("hidden", type !== "flex-layout");
+        }
+        if (elCustomRuleHelperGlassCoach) {
+          elCustomRuleHelperGlassCoach.classList.toggle("hidden", type !== "glass-surface");
+        }
         updateSpacingHelperControlState();
         updateSpacingHelperCoach();
         updateTransitionHelperCoach();
         updateBorderHelperCoach();
         updateFluidClampCoach();
+        updateTextStackCoach();
+        updateFlexLayoutCoach();
+        updateGlassSurfaceCoach();
 
         if (type === "box-shadow") {
           elCustomRuleHelperNote.textContent = "Build a reusable shadow with consistent offsets, blur, spread, color, and optional inset behavior.";
@@ -23891,6 +24346,12 @@ translateY()	translateY(<length|percentage>)
           elCustomRuleHelperNote.textContent = "Compose translate, scale, and rotation together so hover lifts and positional tweaks stay in one ordered transform stack.";
         } else if (type === "fluid-clamp") {
           elCustomRuleHelperNote.textContent = "Generate a bounded clamp() value so typography and spacing can scale across breakpoints without hand-tuning every viewport.";
+        } else if (type === "text-stack") {
+          elCustomRuleHelperNote.textContent = "Generate a readable text rhythm as one reusable stack of typography declarations instead of tuning size, weight, line-height, and tracking separately.";
+        } else if (type === "flex-layout") {
+          elCustomRuleHelperNote.textContent = "Use this when a row or column needs explicit layout rules so spacing, alignment, and wrapping stay coordinated.";
+        } else if (type === "glass-surface") {
+          elCustomRuleHelperNote.textContent = "Generate a frosted-glass surface package with tint, blur, border, and shadow tuned together for overlays or premium support panels.";
         } else {
           elCustomRuleHelperNote.textContent = "Use this when you want rounded corners without hand-typing the declaration.";
         }
@@ -24095,7 +24556,23 @@ translateY()	translateY(<length|percentage>)
         elCustomRuleHelperFluidUnit,
         elCustomRuleHelperFluidMin,
         elCustomRuleHelperFluidMax,
-        elCustomRuleHelperFluidVw
+        elCustomRuleHelperFluidVw,
+        elCustomRuleHelperTextSize,
+        elCustomRuleHelperTextUnit,
+        elCustomRuleHelperTextWeight,
+        elCustomRuleHelperTextLineHeight,
+        elCustomRuleHelperTextLetterSpacing,
+        elCustomRuleHelperFlexDirection,
+        elCustomRuleHelperFlexWrap,
+        elCustomRuleHelperFlexJustify,
+        elCustomRuleHelperFlexAlign,
+        elCustomRuleHelperFlexGap,
+        elCustomRuleHelperFlexGapUnit,
+        elCustomRuleHelperGlassTint,
+        elCustomRuleHelperGlassAlpha,
+        elCustomRuleHelperGlassBlur,
+        elCustomRuleHelperGlassBorderAlpha,
+        elCustomRuleHelperGlassShadowAlpha
       ].forEach(function (el) {
         el.addEventListener("input", updateCustomRuleHelper);
         el.addEventListener("change", updateCustomRuleHelper);
