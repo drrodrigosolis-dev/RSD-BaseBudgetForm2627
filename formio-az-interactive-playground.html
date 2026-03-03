@@ -4048,6 +4048,38 @@
                 </div>
                 <div id="animation-lab-variant-note" class="input-hint">Use the forge to jump between a safer QA draft, a tuned default, and a higher-drama comparison pass before you overwrite compare slots.</div>
               </div>
+              <div class="help-box">
+                <div><strong>Motion Launch Gate</strong></div>
+                <p class="tiny">Roll the keeper bench, review matrix, checkpoints, and forge into one launch decision so the lab can tell you what to load, what to rehearse, and what still blocks release.</p>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Gate Status</div>
+                    <div id="animation-lab-launch-status">The launch gate will summarize the current release posture here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Primary Source</div>
+                    <div id="animation-lab-launch-source">A release source recommendation appears after the lab scores the current motion draft.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Route Readiness</div>
+                    <div id="animation-lab-launch-readiness">The gate will show how complete the current rehearsal path is before export.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Immediate Focus</div>
+                    <div id="animation-lab-launch-focus">The next safe action will appear here once the lab has enough evidence.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Launch Gate Brief</label>
+                  <pre id="animation-lab-launch-report"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-load-launch-candidate" type="button">Load Launch Candidate</button>
+                  <button id="animation-lab-queue-launch-route" type="button">Queue Launch Route</button>
+                  <button id="animation-lab-copy-launch-gate" type="button">Copy Launch Gate</button>
+                </div>
+                <div id="animation-lab-launch-note" class="input-hint">The launch gate chooses the highest-value safe next move from the current lab evidence instead of making you cross-check each motion panel manually.</div>
+              </div>
               <div class="row">
                 <label class="label">Effective Selector</label>
                 <div id="animation-lab-selector-note" class="selector-preview">The lab will target your current builder selector.</div>
@@ -6403,6 +6435,15 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabCopyVariants = document.getElementById("animation-lab-copy-variants");
       const elAnimationLabVariantNote = document.getElementById("animation-lab-variant-note");
       const animationLabVariantLoadButtons = Array.from(document.querySelectorAll("[data-animation-variant-load]"));
+      const elAnimationLabLaunchStatus = document.getElementById("animation-lab-launch-status");
+      const elAnimationLabLaunchSource = document.getElementById("animation-lab-launch-source");
+      const elAnimationLabLaunchReadiness = document.getElementById("animation-lab-launch-readiness");
+      const elAnimationLabLaunchFocus = document.getElementById("animation-lab-launch-focus");
+      const elAnimationLabLaunchReport = document.getElementById("animation-lab-launch-report");
+      const elAnimationLabLoadLaunchCandidate = document.getElementById("animation-lab-load-launch-candidate");
+      const elAnimationLabQueueLaunchRoute = document.getElementById("animation-lab-queue-launch-route");
+      const elAnimationLabCopyLaunchGate = document.getElementById("animation-lab-copy-launch-gate");
+      const elAnimationLabLaunchNote = document.getElementById("animation-lab-launch-note");
       const elAnimationLabSelectorNote = document.getElementById("animation-lab-selector-note");
       const elAnimationLabOutput = document.getElementById("animation-lab-output");
       const elAnimationLabKeyframes = document.getElementById("animation-lab-keyframes");
@@ -16236,6 +16277,167 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function animationLabLaunchGateData() {
+        const values = animationLabPresetValues();
+        const risk = animationLabRiskAssessment(values);
+        const currentTarget = previewTargetLabel((elTarget.value || "card").trim());
+        const compareEntries = animationLabCompareEntries();
+        const winner = animationLabBestCompareEntry(compareEntries);
+        const forge = animationLabVariantForge(values);
+        const recommendedVariant = forge.byKey[forge.recommendedKey] || null;
+        const bestReview = animationLabBestReviewEntry(animationLabTriggerReviewEntries(values));
+        const reviewAction = animationLabReviewActionPlan(values, risk, bestReview);
+        const customDiagnostics = animationLabCustomDraftDiagnostics(animationLabCustomKeyframeState(values));
+        const savedCheckpoints = savedAnimationLabStageCheckpointKeys();
+        const liveWinnerDiff = winner ? animationLabCompareDiffLines(winner, currentAnimationLabCompareSnapshot()) : [];
+        const allCheckpointsCovered = savedCheckpoints.length === ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.length;
+        const customIssues = customDiagnostics.canFillEdges || customDiagnostics.canBalanceEdgeProperties || customDiagnostics.canMergeDuplicates || customDiagnostics.canDeduplicateStopProperties;
+        const routeSource = compareEntries.length
+          ? "compare"
+          : forge.entries.length
+            ? "forge"
+            : savedCheckpoints.length
+              ? "checkpoint"
+              : "";
+
+        let score = 22;
+        if (winner) score += 28;
+        if (bestReview) score += bestReview.current ? 16 : reviewAction.canLoad ? 12 : 5;
+        if (allCheckpointsCovered) score += 14;
+        else if (savedCheckpoints.length) score += 7;
+        if (risk.score <= 30) score += 14;
+        else if (risk.score <= 50) score += 8;
+        else if (risk.score <= 70) score += 2;
+        if (recommendedVariant) score += 8;
+        if (!customIssues) score += 8;
+        else score -= 6;
+        score = Math.max(8, Math.min(100, score));
+
+        let status = "Needs Hardening";
+        if (score >= 82) status = "Launch Ready";
+        else if (score >= 62) status = "Near Ready";
+        else if (score >= 42) status = "Stabilizing";
+
+        let source = "";
+        if (winner) {
+          source = winner.slotTitle + " is the current launch anchor for " + currentTarget + " at " + winner.releaseScore + "/100.";
+        } else if (recommendedVariant) {
+          source = recommendedVariant.label + " is the best unsaved launch branch. Bench it before you treat this draft as a keeper.";
+        } else {
+          source = "Live controls are still the only source. Save a compare slot or forge branch before you export.";
+        }
+
+        let readiness = "";
+        if (!routeSource) {
+          readiness = "No reusable rehearsal route exists yet. The launch path still depends on the live controls only.";
+        } else if (routeSource === "compare") {
+          readiness = allCheckpointsCovered
+            ? "Compare bench and full checkpoint arc are ready, so the lab can replay a keeper-backed launch route."
+            : "Compare bench is ready, but the checkpoint arc is partial. Fill the missing frames to make launch review repeatable.";
+        } else if (routeSource === "forge") {
+          readiness = "Variant Forge can generate a launch route, but benching the best branch will make the release path safer and named.";
+        } else {
+          readiness = "Checkpoint arc exists, but there is no saved keeper yet. Use it as a rehearsal aid, not a release baseline.";
+        }
+
+        let focus = "";
+        if (!winner && recommendedVariant) {
+          focus = "Load or bench " + recommendedVariant.label + " so the launch path stops depending on unsaved live controls.";
+        } else if (!winner) {
+          focus = "Capture a baseline or candidate slot before you export anything from this motion draft.";
+        } else if (bestReview && !bestReview.current && reviewAction.canLoad) {
+          focus = "Promote the review-backed " + bestReview.label + " trigger, then rerun the final motion pass.";
+        } else if (!allCheckpointsCovered) {
+          focus = "Auto fill the missing stage checkpoints so the release route covers start, peak, and settle.";
+        } else if (customIssues) {
+          focus = "Repair the active custom keyframe draft before you treat this as release-safe.";
+        } else if (risk.score > 50) {
+          focus = "Trim timing or loop pressure before you call this package launch-ready.";
+        } else {
+          focus = "Load the queued route once more, verify reduced-motion, then export the keeper-backed bundle.";
+        }
+
+        const loadAction = { mode: "none", label: "Launch Candidate Already Live", disabled: true };
+        if (winner && liveWinnerDiff.length) {
+          loadAction.mode = "compare";
+          loadAction.label = "Load " + winner.slotTitle;
+          loadAction.disabled = false;
+        } else if (!winner && recommendedVariant && !animationLabValuesMatchPreset(values, recommendedVariant.values)) {
+          loadAction.mode = "variant";
+          loadAction.label = "Load " + recommendedVariant.label;
+          loadAction.disabled = false;
+        } else if (bestReview && !bestReview.current && reviewAction.canLoad) {
+          loadAction.mode = "review";
+          loadAction.label = "Use " + bestReview.label;
+          loadAction.disabled = false;
+        }
+
+        const queueAction = {
+          source: routeSource,
+          label: routeSource
+            ? "Queue " + animationLabRehearsalSourceLabel(routeSource)
+            : "Launch Route Unavailable",
+          disabled: !routeSource
+        };
+
+        const lines = [
+          "Animation Lab Launch Gate",
+          "Gate score: " + score + "/100 (" + status + ")",
+          "Target: " + currentTarget,
+          "Risk: " + risk.level + " " + risk.score + "/100",
+          "Current motion: " + animationLabShorthand(values),
+          "Primary source: " + source,
+          "Route readiness: " + readiness,
+          "Immediate focus: " + focus,
+          "",
+          "Keeper: " + (winner
+            ? winner.slotTitle + " at " + winner.releaseScore + "/100."
+            : "No saved keeper yet."),
+          "Review matrix: " + (bestReview
+            ? bestReview.label + " scores " + bestReview.score + "/100" + (bestReview.current ? " and is already live." : ".")
+            : "No best trigger recommendation yet."),
+          "Checkpoints: " + (savedCheckpoints.length
+            ? savedCheckpoints.map(function (slotKey) {
+              return animationLabStageCheckpointTitle(slotKey);
+            }).join(", ")
+            : "none saved") + (allCheckpointsCovered ? " (full arc)." : "."),
+          "Forge: " + (recommendedVariant
+            ? recommendedVariant.label + " is the recommended branch."
+            : "Forge recommendation unavailable."),
+          "Custom draft: " + (customIssues
+            ? customDiagnostics.repairPlan
+            : "Current custom keyframe draft is release-safe enough for this pass."),
+          "",
+          "Next launch action: " + (
+            loadAction.mode === "compare"
+              ? "Load the saved keeper into the live controls."
+              : loadAction.mode === "variant"
+                ? "Load the recommended forge branch, then bench it."
+                : loadAction.mode === "review"
+                  ? "Promote the review-backed trigger before export."
+                  : "Live controls already match the current launch candidate."
+          )
+        ];
+
+        return {
+          score: score,
+          status: status,
+          source: source,
+          readiness: readiness,
+          focus: focus,
+          report: lines.join("\n"),
+          note: routeSource === "compare"
+            ? "The launch gate is sourcing a keeper-backed route. Rehearse the compare path before you copy the final package."
+            : routeSource === "forge"
+              ? "The launch gate is sourcing the forge route because no keeper is locked yet. Bench the best branch to harden the release path."
+              : routeSource === "checkpoint"
+                ? "The launch gate is leaning on the checkpoint arc only. Use it to stabilize review, then save a named keeper."
+                : "The launch gate is waiting for a reusable path. Save a compare slot, forge branch, or checkpoint arc first.",
+          loadAction: loadAction,
+          queueAction: queueAction
+        };
+      }
+
       function renderAnimationLabCompareReleaseHandoff(entries, anchorEntry, winner, currentTarget) {
         if (!elAnimationLabCompareHandoffPackage) return;
 
@@ -17397,6 +17599,35 @@ translateY()	translateY(<length|percentage>)
         );
       }
 
+      function loadAnimationLabLaunchCandidate() {
+        const gate = animationLabLaunchGateData();
+        if (gate.loadAction.mode === "compare") {
+          loadAnimationLabCompareWinner();
+          return;
+        }
+        if (gate.loadAction.mode === "variant") {
+          loadRecommendedAnimationLabVariant();
+          return;
+        }
+        if (gate.loadAction.mode === "review") {
+          applyAnimationLabBestReviewTrigger();
+          return;
+        }
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab launch gate is already aligned with the current live candidate.");
+      }
+
+      function queueAnimationLabLaunchRoute() {
+        const gate = animationLabLaunchGateData();
+        if (!gate.queueAction.source) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab needs a compare slot, forge branch, or checkpoint arc before it can queue a launch route.");
+          return;
+        }
+        setAnimationLabRehearsalSource(gate.queueAction.source, true);
+        syncAnimationLabRehearsalRoute();
+      }
+
       function updateAnimationLabOutputs() {
         const values = animationLabPresetValues();
         const sequence = animationLabSequenceValues();
@@ -17445,6 +17676,7 @@ translateY()	translateY(<length|percentage>)
         const handoff = animationLabReleaseHandoffData(compareAnchor, compareWinner, values, risk, surface, bestReview, currentTarget, selector);
         const handoffBundle = animationLabReleaseHandoffBundleData(handoff, compareWinner, values, sequence, selector);
         const rolloutPacket = animationLabRolloutPacketData(compareEntries, compareAnchor, compareWinner, values, bestReview, currentTarget, selector, handoff);
+        const launchGate = animationLabLaunchGateData();
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         updateAnimationLabStage(values, risk, surface);
         renderAnimationLabStageCheckpointBank();
@@ -17801,6 +18033,36 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabVariantNote.textContent = forge.byKey[forge.recommendedKey] && animationLabValuesMatchPreset(values, forge.byKey[forge.recommendedKey].values)
           ? "The recommended forge variant already matches the live controls. Bench it directly or load another branch to create a deliberate compare spread."
           : "Use the forge to branch the live motion into a QA-safe option, a launch default, or a showcase-weight comparison before promoting a winner.";
+        if (elAnimationLabLaunchStatus) {
+          elAnimationLabLaunchStatus.textContent = launchGate.status + " | " + launchGate.score + "/100";
+        }
+        if (elAnimationLabLaunchSource) {
+          elAnimationLabLaunchSource.textContent = launchGate.source;
+        }
+        if (elAnimationLabLaunchReadiness) {
+          elAnimationLabLaunchReadiness.textContent = launchGate.readiness;
+        }
+        if (elAnimationLabLaunchFocus) {
+          elAnimationLabLaunchFocus.textContent = launchGate.focus;
+        }
+        if (elAnimationLabLaunchReport) {
+          elAnimationLabLaunchReport.textContent = launchGate.report;
+        }
+        if (elAnimationLabLoadLaunchCandidate) {
+          elAnimationLabLoadLaunchCandidate.disabled = launchGate.loadAction.disabled;
+          elAnimationLabLoadLaunchCandidate.textContent = launchGate.loadAction.label;
+        }
+        if (elAnimationLabQueueLaunchRoute) {
+          elAnimationLabQueueLaunchRoute.disabled = launchGate.queueAction.disabled;
+          elAnimationLabQueueLaunchRoute.textContent = launchGate.queueAction.label;
+        }
+        if (elAnimationLabCopyLaunchGate) {
+          elAnimationLabCopyLaunchGate.disabled = !launchGate.report;
+          elAnimationLabCopyLaunchGate.textContent = "Copy Launch Gate";
+        }
+        if (elAnimationLabLaunchNote) {
+          elAnimationLabLaunchNote.textContent = launchGate.note;
+        }
         elAnimationLabSequenceSummary.textContent = animationLabSequenceSummary(sequence, sequenceEntries);
         elAnimationLabSequenceWindow.textContent = animationLabSequenceWindowSummary(values, sequenceEntries);
         elAnimationLabSequenceFocus.textContent = animationLabSequenceFocus(values, sequence, sequenceEntries);
@@ -23737,6 +23999,18 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      async function copyAnimationLabLaunchGate() {
+        try {
+          await navigator.clipboard.writeText(elAnimationLabLaunchReport.textContent);
+          elAnimationLabCopyLaunchGate.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopyLaunchGate.textContent = "Copy Launch Gate"; }, 1200);
+          setBuilderStatus("Animation Lab launch gate copied.");
+        } catch (err) {
+          elAnimationLabCopyLaunchGate.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopyLaunchGate.textContent = "Copy Launch Gate"; }, 1200);
+        }
+      }
+
       function updateSpacingHelperControlState(sourceInput) {
         if (!elCustomRuleHelperSpacingLinked.checked) {
           [elCustomRuleHelperSpacingRight, elCustomRuleHelperSpacingBottom, elCustomRuleHelperSpacingLeft].forEach(function (input) {
@@ -24855,6 +25129,15 @@ translateY()	translateY(<length|percentage>)
       }
       if (elAnimationLabBenchVariants) {
         elAnimationLabBenchVariants.addEventListener("click", benchAllAnimationLabVariants);
+      }
+      if (elAnimationLabLoadLaunchCandidate) {
+        elAnimationLabLoadLaunchCandidate.addEventListener("click", loadAnimationLabLaunchCandidate);
+      }
+      if (elAnimationLabQueueLaunchRoute) {
+        elAnimationLabQueueLaunchRoute.addEventListener("click", queueAnimationLabLaunchRoute);
+      }
+      if (elAnimationLabCopyLaunchGate) {
+        elAnimationLabCopyLaunchGate.addEventListener("click", copyAnimationLabLaunchGate);
       }
       if (elAnimationLabRehearsalSource) {
         elAnimationLabRehearsalSource.addEventListener("change", function () {
