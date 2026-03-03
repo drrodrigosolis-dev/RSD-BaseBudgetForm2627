@@ -3926,6 +3926,54 @@
                 <div id="animation-lab-compare-note" class="input-hint">Capture a baseline, a likely keeper, and a stress-test variant so motion decisions stay deliberate instead of living only in the current form fields.</div>
               </div>
               <div class="help-box">
+                <div><strong>Rehearsal Runbook</strong></div>
+                <p class="tiny">Turn the saved compare bench, the forge branches, or the checkpoint arc into a repeatable walkthrough so you can replay validation in the same order before handoff.</p>
+                <div class="row">
+                  <label class="label" for="animation-lab-rehearsal-source">Route Source</label>
+                  <select id="animation-lab-rehearsal-source" title="Choose which Animation Lab source should generate the current rehearsal route.">
+                    <option value="compare">Compare Bench</option>
+                    <option value="forge">Variant Forge</option>
+                    <option value="checkpoint">Checkpoint Arc</option>
+                  </select>
+                </div>
+                <div class="info-grid" style="margin-top:10px;">
+                  <div class="info-tile">
+                    <div class="label">Coverage</div>
+                    <div id="animation-lab-rehearsal-coverage">Choose a source to build a repeatable review route.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Queued Step</div>
+                    <div id="animation-lab-rehearsal-status">No rehearsal step is queued yet.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Step Position</div>
+                    <div id="animation-lab-rehearsal-step">0 / 0 | No route</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Handoff Readiness</div>
+                    <div id="animation-lab-rehearsal-ready">The runbook will call out when the route is strong enough to export.</div>
+                  </div>
+                </div>
+                <div class="info-grid" style="margin-top:10px;">
+                  <div class="info-tile">
+                    <div class="label">Next Move</div>
+                    <div id="animation-lab-rehearsal-next">Save or generate at least one motion route to start rehearsing.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Run Sheet</label>
+                  <pre id="animation-lab-rehearsal-report"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-rehearsal-sync" type="button">Sync Route</button>
+                  <button id="animation-lab-rehearsal-prev" type="button">Previous Step</button>
+                  <button id="animation-lab-rehearsal-next-step" type="button">Next Step</button>
+                  <button id="animation-lab-rehearsal-apply" type="button">Load Queued Step</button>
+                  <button id="animation-lab-rehearsal-copy" type="button">Copy Run Sheet</button>
+                </div>
+                <div id="animation-lab-rehearsal-note" class="input-hint">Use this runbook to replay the same validation sequence instead of rebuilding the order from memory before every export pass.</div>
+              </div>
+              <div class="help-box">
                 <div><strong>Motion Session Vault</strong></div>
                 <div class="info-grid">
                   <div class="info-tile">
@@ -6027,6 +6075,19 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabCopyWinner = document.getElementById("animation-lab-copy-winner");
       const elAnimationLabCopyCompare = document.getElementById("animation-lab-copy-compare");
       const elAnimationLabCompareNote = document.getElementById("animation-lab-compare-note");
+      const elAnimationLabRehearsalSource = document.getElementById("animation-lab-rehearsal-source");
+      const elAnimationLabRehearsalCoverage = document.getElementById("animation-lab-rehearsal-coverage");
+      const elAnimationLabRehearsalStatus = document.getElementById("animation-lab-rehearsal-status");
+      const elAnimationLabRehearsalStep = document.getElementById("animation-lab-rehearsal-step");
+      const elAnimationLabRehearsalReady = document.getElementById("animation-lab-rehearsal-ready");
+      const elAnimationLabRehearsalNext = document.getElementById("animation-lab-rehearsal-next");
+      const elAnimationLabRehearsalReport = document.getElementById("animation-lab-rehearsal-report");
+      const elAnimationLabRehearsalSync = document.getElementById("animation-lab-rehearsal-sync");
+      const elAnimationLabRehearsalPrev = document.getElementById("animation-lab-rehearsal-prev");
+      const elAnimationLabRehearsalNextStep = document.getElementById("animation-lab-rehearsal-next-step");
+      const elAnimationLabRehearsalApply = document.getElementById("animation-lab-rehearsal-apply");
+      const elAnimationLabRehearsalCopy = document.getElementById("animation-lab-rehearsal-copy");
+      const elAnimationLabRehearsalNote = document.getElementById("animation-lab-rehearsal-note");
       const elAnimationLabSessionStatus = document.getElementById("animation-lab-session-status");
       const elAnimationLabSessionSummary = document.getElementById("animation-lab-session-summary");
       const elAnimationLabSessionSave = document.getElementById("animation-lab-session-save");
@@ -9549,6 +9610,7 @@ translateY()	translateY(<length|percentage>)
       let animationLabSessionSnapshot = null;
       let animationLabSessionReady = false;
       let animationLabSessionRestoreInProgress = false;
+      let animationLabRehearsalState = { source: "compare", activeIndex: 0 };
       let rollbackHistory = [];
       let importBundleStatusMessage = "No bundle imported in this session yet.";
       const builderMediaLayerMap = {
@@ -14263,9 +14325,19 @@ translateY()	translateY(<length|percentage>)
           animationLabSequence: normalizeAnimationLabSequenceValueState(state.animationLabSequence),
           animationLabCompareSlots: normalizeAnimationLabCompareSlots(state.animationLabCompareSlots),
           animationLabStageCheckpoints: normalizeAnimationLabStageCheckpoints(state.animationLabStageCheckpoints),
+          animationLabRehearsal: normalizeAnimationLabRehearsalState(state.animationLabRehearsal),
           animationLabCheckpointCompareSlot: ANIMATION_LAB_COMPARE_SLOT_ORDER.indexOf(String(state.animationLabCheckpointCompareSlot || "").trim()) >= 0
             ? String(state.animationLabCheckpointCompareSlot || "").trim()
             : "candidate"
+        };
+      }
+
+      function normalizeAnimationLabRehearsalState(state) {
+        const source = String(state && state.source || "compare").trim();
+        const parsedIndex = Number(state && state.activeIndex);
+        return {
+          source: source === "forge" || source === "checkpoint" ? source : "compare",
+          activeIndex: Math.max(0, Math.round(Number.isFinite(parsedIndex) ? parsedIndex : 0))
         };
       }
 
@@ -14313,6 +14385,7 @@ translateY()	translateY(<length|percentage>)
           sequence.steps + "-step " + sequence.mode + " " + sequence.order + " @ " + sequence.gap,
           compareCount + " compare slot" + (compareCount === 1 ? "" : "s"),
           checkpointCount + " stage checkpoint" + (checkpointCount === 1 ? "" : "s"),
+          "rehearsal " + animationLabRehearsalSourceLabel(snapshot.animationLabRehearsal && snapshot.animationLabRehearsal.source),
           "target " + targetLabel
         ].join(" | ");
       }
@@ -14362,6 +14435,7 @@ translateY()	translateY(<length|percentage>)
           animationLabSequence: animationLabSequenceValues(),
           animationLabCompareSlots: serializeAnimationLabCompareSlots(),
           animationLabStageCheckpoints: serializeAnimationLabStageCheckpoints(),
+          animationLabRehearsal: normalizeAnimationLabRehearsalState(animationLabRehearsalState),
           animationLabCheckpointCompareSlot: elAnimationLabCheckpointCompareSlot ? (elAnimationLabCheckpointCompareSlot.value || "candidate").trim() : "candidate"
         });
         try {
@@ -14410,8 +14484,12 @@ translateY()	translateY(<length|percentage>)
           renderBuilder();
           animationLabCompareSlots = normalizeAnimationLabCompareSlots(session.animationLabCompareSlots);
           animationLabStageCheckpoints = normalizeAnimationLabStageCheckpoints(session.animationLabStageCheckpoints);
+          animationLabRehearsalState = normalizeAnimationLabRehearsalState(session.animationLabRehearsal);
           if (elAnimationLabCheckpointCompareSlot) {
             setSelectValueIfPresent(elAnimationLabCheckpointCompareSlot, session.animationLabCheckpointCompareSlot, "candidate");
+          }
+          if (elAnimationLabRehearsalSource) {
+            setSelectValueIfPresent(elAnimationLabRehearsalSource, animationLabRehearsalState.source, "compare");
           }
           applyAnimationLabSequenceState(session.animationLabSequence);
           applyAnimationLabState(session.animationLab);
@@ -15220,6 +15298,303 @@ translateY()	translateY(<length|percentage>)
         setBuilderStatus("Animation Lab promoted " + winner.slotTitle + " into Baseline Anchor.");
       }
 
+      function animationLabRehearsalSourceValue() {
+        const uiValue = String(elAnimationLabRehearsalSource && elAnimationLabRehearsalSource.value || animationLabRehearsalState.source || "compare").trim();
+        return uiValue === "forge" || uiValue === "checkpoint" ? uiValue : "compare";
+      }
+
+      function animationLabRehearsalSourceLabel(source) {
+        if (source === "forge") return "Variant Forge";
+        if (source === "checkpoint") return "Checkpoint Arc";
+        return "Compare Bench";
+      }
+
+      function animationLabRehearsalSteps(source) {
+        const routeSource = source || animationLabRehearsalSourceValue();
+        if (routeSource === "forge") {
+          const forge = animationLabVariantForge(animationLabPresetValues());
+          const sequence = normalizeAnimationLabSequenceValueState(animationLabSequenceValues());
+          return ["calm", "balanced", "bold"].map(function (variantKey, index) {
+            const entry = forge.byKey[variantKey];
+            if (!entry) return null;
+            return {
+              source: routeSource,
+              itemKey: variantKey,
+              title: entry.label,
+              phaseLabel: index === 0 ? "Stabilize" : index === 1 ? "Validate" : "Stress-test",
+              snapshot: {
+                values: cloneAnimationLabValueState(entry.values),
+                sequence: normalizeAnimationLabSequenceValueState(sequence),
+                stageCheckpoint: currentAnimationLabStageCheckpointMeta(entry.values)
+              },
+              score: Math.max(0, Math.min(100, Math.round(((100 - entry.risk.score) * 0.62) + (entry.surface.score * 0.38)))),
+              summary: entry.summary,
+              detail: "Bench target: " + animationLabCompareSlotTitle(animationLabVariantBenchSlot(variantKey)) + ".",
+              risk: entry.risk,
+              surface: entry.surface
+            };
+          }).filter(Boolean);
+        }
+        if (routeSource === "checkpoint") {
+          return ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.map(function (slotKey) {
+            const checkpoint = animationLabStageCheckpoints[slotKey];
+            if (!checkpoint || !checkpoint.values) return null;
+            const stageMeta = normalizeAnimationLabStageCheckpointMeta(checkpoint.stageCheckpoint, animationLabStageCheckpointTitle(slotKey));
+            const risk = animationLabRiskAssessment(checkpoint.values);
+            const targetKey = (elTarget.value || "card").trim() || "card";
+            const surface = animationLabSurfaceAssessmentForTarget(checkpoint.values, targetKey);
+            const releaseScore = Math.max(0, Math.min(100, Math.round(((100 - risk.score) * 0.62) + (surface.score * 0.38))));
+            return {
+              source: routeSource,
+              itemKey: slotKey,
+              title: animationLabStageCheckpointTitle(slotKey),
+              phaseLabel: stageMeta.phase,
+              checkpoint: checkpoint,
+              snapshot: {
+                values: cloneAnimationLabValueState(checkpoint.values),
+                sequence: normalizeAnimationLabSequenceValueState(checkpoint.sequence),
+                stageCheckpoint: stageMeta
+              },
+              score: releaseScore,
+              summary: stageMeta.cue,
+              detail: (checkpoint.lens === "coach" ? "Slow Coach" : checkpoint.lens === "single" ? "Single Cycle" : "Live Speed") + " @ " + stageMeta.percent + "%.",
+              risk: risk,
+              surface: surface
+            };
+          }).filter(Boolean);
+        }
+        return ANIMATION_LAB_COMPARE_SLOT_ORDER.map(function (slotKey) {
+          const slot = animationLabCompareSlots[slotKey];
+          if (!slot || !slot.values) return null;
+          const entry = animationLabCompareEntry(slotKey, slot);
+          return {
+            source: routeSource,
+            itemKey: slotKey,
+            title: entry.slotTitle,
+            phaseLabel: slotKey === "baseline" ? "Protect" : slotKey === "candidate" ? "Validate" : "Stress-test",
+            compareEntry: entry,
+            snapshot: cloneAnimationLabCompareSnapshot(slot),
+            score: entry.releaseScore,
+            summary: entry.motionSourceLabel + " | " + entry.triggerLabel,
+            detail: entry.stageCheckpoint
+              ? "Frame " + entry.stageCheckpoint.label + " @ " + entry.stageCheckpoint.percent + "%."
+              : "No frozen frame tag saved.",
+            risk: entry.risk,
+            surface: entry.surface
+          };
+        }).filter(Boolean);
+      }
+
+      function animationLabRecommendedRehearsalIndex(source, steps) {
+        const list = Array.isArray(steps) ? steps : [];
+        if (!list.length) return 0;
+        if (source === "forge") {
+          const forge = animationLabVariantForge(animationLabPresetValues());
+          const recommendedKey = forge.recommendedKey || "balanced";
+          const idx = list.findIndex(function (step) { return step.itemKey === recommendedKey; });
+          return idx >= 0 ? idx : 0;
+        }
+        if (source === "compare") {
+          const baselineIdx = list.findIndex(function (step) { return step.itemKey === "baseline"; });
+          return baselineIdx >= 0 ? baselineIdx : 0;
+        }
+        const startIdx = list.findIndex(function (step) { return step.itemKey === "start"; });
+        return startIdx >= 0 ? startIdx : 0;
+      }
+
+      function animationLabRehearsalPlan() {
+        const source = animationLabRehearsalSourceValue();
+        const steps = animationLabRehearsalSteps(source);
+        animationLabRehearsalState.source = source;
+        const maxIndex = Math.max(0, steps.length - 1);
+        animationLabRehearsalState.activeIndex = Math.max(0, Math.min(maxIndex, Number(animationLabRehearsalState.activeIndex) || 0));
+        const activeStep = steps[animationLabRehearsalState.activeIndex] || null;
+        const sourceLabel = animationLabRehearsalSourceLabel(source);
+        let coverage = "No usable route steps are ready yet.";
+        let readiness = "This route still needs at least one saved step before it can support handoff.";
+        let nextAction = "Save or generate one motion route so the runbook has something concrete to replay.";
+
+        if (steps.length) {
+          coverage = steps.length + " step" + (steps.length === 1 ? "" : "s") + " are ready from " + sourceLabel + ".";
+          if (source === "compare") {
+            const winner = animationLabBestCompareEntry(animationLabCompareEntries());
+            readiness = winner
+              ? winner.slotTitle + " is the current keeper. Rehearse the full saved ladder before export."
+              : "Saved compare steps exist, but the bench still needs a clearer keeper before handoff.";
+            nextAction = steps.length >= 2
+              ? "Run the queued compare step, then promote the strongest keeper only after the full ladder still reads clean."
+              : "Capture one more compare slot so the runbook can show a real before-vs-after motion pass.";
+          } else if (source === "forge") {
+            readiness = "Forge route is ready to audition safer, default, and expressive branches without overwriting the live draft.";
+            nextAction = "Load each forge branch in order, then bench or keep only the branch that still lands cleanly on the current preview target.";
+          } else {
+            readiness = steps.length === ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.length
+              ? "Checkpoint arc covers the full first pass, so frozen-frame rehearsal is export-ready."
+              : "Checkpoint arc is partially mapped. Fill the missing frames before treating it as a complete replay path.";
+            nextAction = steps.length === ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.length
+              ? "Replay the saved arc in order and confirm the same timing cues still hold before handoff."
+              : "Capture the missing default checkpoint frames so the first-pass story is complete.";
+          }
+        }
+
+        const lines = [
+          "Animation Lab Rehearsal Run Sheet",
+          "Source: " + sourceLabel,
+          "Coverage: " + coverage,
+          "Readiness: " + readiness
+        ];
+
+        if (!steps.length) {
+          lines.push("");
+          lines.push("No route steps are available yet.");
+          lines.push("Next action: " + nextAction);
+        } else {
+          lines.push("");
+          steps.forEach(function (step, index) {
+            lines.push(
+              (index + 1) +
+              ". " +
+              step.title +
+              (index === animationLabRehearsalState.activeIndex ? " [Queued]" : "") +
+              " | " +
+              step.phaseLabel
+            );
+            lines.push("   Score " + step.score + "/100 | " + step.risk.level + " risk " + step.risk.score + "/100 | Surface " + step.surface.score + "/100");
+            lines.push("   " + step.summary);
+            lines.push("   " + step.detail);
+          });
+          lines.push("");
+          lines.push("Next action: " + nextAction);
+        }
+
+        return {
+          source: source,
+          sourceLabel: sourceLabel,
+          steps: steps,
+          activeIndex: animationLabRehearsalState.activeIndex,
+          activeStep: activeStep,
+          coverage: coverage,
+          readiness: readiness,
+          nextAction: nextAction,
+          report: lines.join("\n")
+        };
+      }
+
+      function renderAnimationLabRehearsalPlanner() {
+        if (
+          !elAnimationLabRehearsalSource ||
+          !elAnimationLabRehearsalCoverage ||
+          !elAnimationLabRehearsalStatus ||
+          !elAnimationLabRehearsalStep ||
+          !elAnimationLabRehearsalReady ||
+          !elAnimationLabRehearsalNext ||
+          !elAnimationLabRehearsalReport ||
+          !elAnimationLabRehearsalSync ||
+          !elAnimationLabRehearsalPrev ||
+          !elAnimationLabRehearsalNextStep ||
+          !elAnimationLabRehearsalApply ||
+          !elAnimationLabRehearsalCopy ||
+          !elAnimationLabRehearsalNote
+        ) {
+          return;
+        }
+        const plan = animationLabRehearsalPlan();
+        if ((elAnimationLabRehearsalSource.value || "compare").trim() !== plan.source) {
+          setSelectValueIfPresent(elAnimationLabRehearsalSource, plan.source, "compare");
+        }
+        const activeStep = plan.activeStep;
+        elAnimationLabRehearsalCoverage.textContent = plan.coverage;
+        elAnimationLabRehearsalStatus.textContent = activeStep
+          ? activeStep.title + " is queued from " + plan.sourceLabel + "."
+          : "No rehearsal step is queued yet.";
+        elAnimationLabRehearsalStep.textContent = activeStep
+          ? (plan.activeIndex + 1) + " / " + plan.steps.length + " | " + activeStep.phaseLabel
+          : "0 / 0 | No route";
+        elAnimationLabRehearsalReady.textContent = plan.readiness;
+        elAnimationLabRehearsalNext.textContent = plan.nextAction;
+        elAnimationLabRehearsalReport.textContent = plan.report;
+        elAnimationLabRehearsalSync.disabled = !plan.steps.length;
+        elAnimationLabRehearsalPrev.disabled = !plan.steps.length || plan.activeIndex <= 0;
+        elAnimationLabRehearsalNextStep.disabled = !plan.steps.length || plan.activeIndex >= plan.steps.length - 1;
+        elAnimationLabRehearsalApply.disabled = !activeStep;
+        elAnimationLabRehearsalApply.textContent = activeStep ? "Load " + activeStep.title : "Load Queued Step";
+        elAnimationLabRehearsalCopy.disabled = !plan.steps.length;
+        elAnimationLabRehearsalNote.textContent = plan.source === "compare"
+          ? "Replay the saved compare ladder in the same order so keeper decisions stay repeatable before you promote or export."
+          : plan.source === "forge"
+            ? "Use the forge route to rehearse safer, default, and expressive branches in one fixed pass before you bench or discard them."
+            : "Use the checkpoint arc when you need a frozen-frame walkthrough of the first pass instead of a full live-motion comparison.";
+      }
+
+      function setAnimationLabRehearsalSource(source, silent) {
+        const nextState = normalizeAnimationLabRehearsalState({ source: source, activeIndex: 0 });
+        animationLabRehearsalState.source = nextState.source;
+        animationLabRehearsalState.activeIndex = 0;
+        if (elAnimationLabRehearsalSource) {
+          setSelectValueIfPresent(elAnimationLabRehearsalSource, nextState.source, "compare");
+        }
+        updateAnimationLabOutputs();
+        if (!silent) {
+          setBuilderStatus("Animation Lab rehearsal runbook switched to " + animationLabRehearsalSourceLabel(nextState.source) + ".");
+        }
+      }
+
+      function syncAnimationLabRehearsalRoute() {
+        const source = animationLabRehearsalSourceValue();
+        const steps = animationLabRehearsalSteps(source);
+        if (!steps.length) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab needs at least one usable route step before it can sync the rehearsal runbook.");
+          return;
+        }
+        animationLabRehearsalState.source = source;
+        animationLabRehearsalState.activeIndex = animationLabRecommendedRehearsalIndex(source, steps);
+        updateAnimationLabOutputs();
+        const plan = animationLabRehearsalPlan();
+        setBuilderStatus("Animation Lab queued " + (plan.activeStep ? plan.activeStep.title : "the first step") + " from " + plan.sourceLabel + ".");
+      }
+
+      function moveAnimationLabRehearsalStep(delta) {
+        const plan = animationLabRehearsalPlan();
+        if (!plan.steps.length) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab does not have a rehearsal route to step through yet.");
+          return;
+        }
+        const nextIndex = Math.max(0, Math.min(plan.steps.length - 1, plan.activeIndex + delta));
+        if (nextIndex === plan.activeIndex) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab is already at this rehearsal route boundary.");
+          return;
+        }
+        animationLabRehearsalState.activeIndex = nextIndex;
+        updateAnimationLabOutputs();
+        const nextPlan = animationLabRehearsalPlan();
+        setBuilderStatus("Animation Lab queued rehearsal step " + (nextPlan.activeIndex + 1) + ": " + nextPlan.activeStep.title + ".");
+      }
+
+      function loadQueuedAnimationLabRehearsalStep() {
+        const plan = animationLabRehearsalPlan();
+        const step = plan.activeStep;
+        if (!step) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab does not have a queued rehearsal step yet.");
+          return;
+        }
+        if (step.source === "compare") {
+          loadAnimationLabCompareSlot(step.itemKey);
+          return;
+        }
+        if (step.source === "checkpoint") {
+          loadAnimationLabStageCheckpoint(step.itemKey);
+          return;
+        }
+        applyAnimationLabSequenceState(step.snapshot.sequence);
+        applyAnimationLabState(step.snapshot.values);
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab loaded " + step.title + " from the rehearsal runbook.");
+      }
+
       function animationLabSelectorBody() {
         const override = (elBuilderSelectorOverride.value || "").trim();
         if (override) {
@@ -15867,6 +16242,7 @@ translateY()	translateY(<length|percentage>)
             : preset.name + " is still fully intact. Start tuning any control and the tracker will call out exactly what drifted.")
           : "The tracker compares the current controls to the selected motion pack so you can reset intentionally instead of reloading the whole lab by accident.";
         renderAnimationLabCompareBench();
+        renderAnimationLabRehearsalPlanner();
         elAnimationLabSelectorNote.textContent =
           selector + " | Trigger: " + trigger + " | Keyframes: " + resolvedKeyframeName + " | Applies" + scopeText + ".";
         elAnimationLabOutput.textContent = declarations.join("\n");
@@ -21918,6 +22294,18 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      async function copyAnimationLabRehearsalReport() {
+        try {
+          await navigator.clipboard.writeText(elAnimationLabRehearsalReport.textContent);
+          elAnimationLabRehearsalCopy.textContent = "Copied";
+          setTimeout(function () { elAnimationLabRehearsalCopy.textContent = "Copy Run Sheet"; }, 1200);
+          setBuilderStatus("Animation Lab rehearsal run sheet copied.");
+        } catch (err) {
+          elAnimationLabRehearsalCopy.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabRehearsalCopy.textContent = "Copy Run Sheet"; }, 1200);
+        }
+      }
+
       async function copyAnimationLabAnatomyBrief() {
         try {
           await navigator.clipboard.writeText(
@@ -22821,6 +23209,30 @@ translateY()	translateY(<length|percentage>)
       }
       if (elAnimationLabBenchVariants) {
         elAnimationLabBenchVariants.addEventListener("click", benchAllAnimationLabVariants);
+      }
+      if (elAnimationLabRehearsalSource) {
+        elAnimationLabRehearsalSource.addEventListener("change", function () {
+          setAnimationLabRehearsalSource(elAnimationLabRehearsalSource.value);
+        });
+      }
+      if (elAnimationLabRehearsalSync) {
+        elAnimationLabRehearsalSync.addEventListener("click", syncAnimationLabRehearsalRoute);
+      }
+      if (elAnimationLabRehearsalPrev) {
+        elAnimationLabRehearsalPrev.addEventListener("click", function () {
+          moveAnimationLabRehearsalStep(-1);
+        });
+      }
+      if (elAnimationLabRehearsalNextStep) {
+        elAnimationLabRehearsalNextStep.addEventListener("click", function () {
+          moveAnimationLabRehearsalStep(1);
+        });
+      }
+      if (elAnimationLabRehearsalApply) {
+        elAnimationLabRehearsalApply.addEventListener("click", loadQueuedAnimationLabRehearsalStep);
+      }
+      if (elAnimationLabRehearsalCopy) {
+        elAnimationLabRehearsalCopy.addEventListener("click", copyAnimationLabRehearsalReport);
       }
       animationLabVariantLoadButtons.forEach(function (button) {
         button.addEventListener("click", function () {
