@@ -4251,6 +4251,38 @@ opacity: 0;</textarea>
                 </div>
               </div>
               <div class="help-box">
+                <div><strong>Timing Ladder</strong></div>
+                <p class="tiny">Test three tempo tiers for the current motion without rebuilding the rest of the package. Each tier rewrites duration, delay, and easing together so timing stays coherent while the trigger, keyframes, and behavior remain intact.</p>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Fast Response</div>
+                    <div id="animation-lab-timing-fast">Immediate timing guidance will appear here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Balanced Response</div>
+                    <div id="animation-lab-timing-balanced">Balanced timing guidance will appear here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Expressive Pass</div>
+                    <div id="animation-lab-timing-expressive">A longer timing pass will appear here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Recommended Tier</div>
+                    <div id="animation-lab-timing-recommendation">The ladder will nominate the safest timing tier for the current trigger and surface.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Operator Note</div>
+                    <div id="animation-lab-timing-note">The ladder will explain what to validate before you promote a new timing tier.</div>
+                  </div>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-apply-timing-fast" type="button">Use Fast Response</button>
+                  <button id="animation-lab-apply-timing-balanced" type="button">Use Balanced Response</button>
+                  <button id="animation-lab-apply-timing-expressive" type="button">Use Expressive Pass</button>
+                  <button id="animation-lab-apply-timing-recommended" type="button">Use Recommended Tier</button>
+                </div>
+              </div>
+              <div class="help-box">
                 <div><strong>Motion Execution Map</strong></div>
                 <div class="info-grid">
                   <div class="info-tile">
@@ -6147,6 +6179,15 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabReducePreviewNote = document.getElementById("animation-lab-reduce-preview-note");
       const elAnimationLabApplyGuardrail = document.getElementById("animation-lab-apply-guardrail");
       const elAnimationLabGuardrailNote = document.getElementById("animation-lab-guardrail-note");
+      const elAnimationLabTimingFast = document.getElementById("animation-lab-timing-fast");
+      const elAnimationLabTimingBalanced = document.getElementById("animation-lab-timing-balanced");
+      const elAnimationLabTimingExpressive = document.getElementById("animation-lab-timing-expressive");
+      const elAnimationLabTimingRecommendation = document.getElementById("animation-lab-timing-recommendation");
+      const elAnimationLabTimingNote = document.getElementById("animation-lab-timing-note");
+      const elAnimationLabApplyTimingFast = document.getElementById("animation-lab-apply-timing-fast");
+      const elAnimationLabApplyTimingBalanced = document.getElementById("animation-lab-apply-timing-balanced");
+      const elAnimationLabApplyTimingExpressive = document.getElementById("animation-lab-apply-timing-expressive");
+      const elAnimationLabApplyTimingRecommended = document.getElementById("animation-lab-apply-timing-recommended");
       const elAnimationLabActiveWindow = document.getElementById("animation-lab-active-window");
       const elAnimationLabFirstMovement = document.getElementById("animation-lab-first-movement");
       const elAnimationLabSettleBehavior = document.getElementById("animation-lab-settle-behavior");
@@ -12322,6 +12363,202 @@ translateY()	translateY(<length|percentage>)
         return "Assertive motion. Best reserved for hero moments, strong emphasis, or short-lived attention cues.";
       }
 
+      function animationLabNearestTimeOption(ms, options, fallback) {
+        const list = Array.isArray(options) ? options : [];
+        if (!list.length) return fallback || "";
+        const target = Math.max(0, Number(ms) || 0);
+        let best = list[0];
+        let bestDelta = Math.abs((Number(best.ms) || 0) - target);
+        list.forEach(function (entry) {
+          const delta = Math.abs((Number(entry.ms) || 0) - target);
+          if (delta < bestDelta) {
+            best = entry;
+            bestDelta = delta;
+          }
+        });
+        return best.value || fallback || "";
+      }
+
+      function animationLabTimingTierPatch(values, tier) {
+        const patch = {};
+        if (!values || !tier) return patch;
+        ["duration", "delay", "easing"].forEach(function (key) {
+          const current = String(values[key] || "").trim();
+          const next = String(tier[key] || "").trim();
+          if (next && current !== next) {
+            patch[key] = next;
+          }
+        });
+        return patch;
+      }
+
+      function animationLabTimingTierSummary(tier) {
+        if (!tier) return "Timing tier unavailable.";
+        return tier.duration + " + " + tier.delay + " + " + tier.easing + ". " + tier.summary;
+      }
+
+      function animationLabTimingLadder(values, risk) {
+        const motion = cloneAnimationLabValueState(values);
+        const targetMeta = animationLabSurfaceMeta((elTarget.value || "card").trim());
+        const currentDurationMs = parseAnimationLabTimeMs(motion.duration);
+        const currentDelayMs = parseAnimationLabTimeMs(motion.delay);
+        const cycles = animationLabCycleCount(motion);
+        const motionName = String(motion.keyframes || "").trim().toLowerCase();
+        const isAmbient = !motion.trigger && (cycles === Infinity || /(spin|shimmer|pulse|float)/.test(motionName));
+        const isDense = Boolean(targetMeta && targetMeta.dense);
+        const isFocus = motion.trigger === ":focus" || motion.trigger === ":focus-visible";
+        const isPressed = motion.trigger === ":active";
+        const isHover = motion.trigger === ":hover";
+        const durationOptions = [
+          { value: "150ms", ms: 150 },
+          { value: "250ms", ms: 250 },
+          { value: "300ms", ms: 300 },
+          { value: "400ms", ms: 400 },
+          { value: "700ms", ms: 700 },
+          { value: "900ms", ms: 900 },
+          { value: "1.2s", ms: 1200 },
+          { value: "1.6s", ms: 1600 },
+          { value: "2s", ms: 2000 }
+        ];
+        const delayOptions = [
+          { value: "0s", ms: 0 },
+          { value: "80ms", ms: 80 },
+          { value: "150ms", ms: 150 },
+          { value: "250ms", ms: 250 },
+          { value: "400ms", ms: 400 },
+          { value: "700ms", ms: 700 }
+        ];
+
+        let fastTargetMs = Math.min(Math.max(currentDurationMs || 300, 150), 300);
+        let balancedTargetMs = Math.min(Math.max(currentDurationMs || 400, 300), 700);
+        let expressiveTargetMs = Math.min(Math.max(currentDurationMs || 700, 700), 1200);
+        let fastDelayMs = 0;
+        let balancedDelayMs = currentDelayMs > 0 ? Math.min(currentDelayMs, 80) : 0;
+        let expressiveDelayMs = currentDelayMs > 80 ? Math.min(currentDelayMs, 150) : 80;
+        let fastEasing = isPressed ? "linear" : "ease-out";
+        let balancedEasing = "ease-in-out";
+        let expressiveEasing = isAmbient ? "ease" : "ease-in-out";
+        let recommendedKey = "balanced";
+        let recommendation = "Balanced Response is the default release tier because it keeps the motion visible without creating extra lag.";
+        let note = "Promote a faster tier when the motion is tied to direct user input, and use the expressive tier only when the current surface has enough visual breathing room.";
+
+        if (isPressed) {
+          fastTargetMs = 150;
+          balancedTargetMs = 250;
+          expressiveTargetMs = 400;
+          fastDelayMs = 0;
+          balancedDelayMs = 0;
+          expressiveDelayMs = 80;
+          fastEasing = "linear";
+          balancedEasing = "ease-out";
+          expressiveEasing = "ease-out";
+          recommendedKey = "fast";
+          recommendation = "Fast Response is recommended because pressed feedback should acknowledge the action immediately.";
+          note = "Test this on rapid taps. If the first visible frame feels late, stay on Fast Response and shorten the underlying motion instead of adding delay.";
+        } else if (isFocus) {
+          fastTargetMs = isDense ? 150 : 250;
+          balancedTargetMs = isDense ? 250 : 400;
+          expressiveTargetMs = isDense ? 400 : 700;
+          fastDelayMs = 0;
+          balancedDelayMs = 0;
+          expressiveDelayMs = isDense ? 80 : 150;
+          fastEasing = "ease-out";
+          balancedEasing = "ease-in-out";
+          expressiveEasing = "ease";
+          recommendedKey = isDense ? "fast" : "balanced";
+          recommendation = isDense
+            ? "Fast Response is recommended because dense focus cues should read as immediate keyboard confirmation."
+            : "Balanced Response is recommended because focus cues should feel deliberate without delaying the ring.";
+          note = "Tab through the exact field order and make sure the first visible change supports the focus ring instead of competing with it.";
+        } else if (isHover && !isDense) {
+          fastTargetMs = 250;
+          balancedTargetMs = 400;
+          expressiveTargetMs = 700;
+          fastDelayMs = 0;
+          balancedDelayMs = 80;
+          expressiveDelayMs = 150;
+          fastEasing = "ease-out";
+          balancedEasing = "ease-in-out";
+          expressiveEasing = "ease";
+          recommendedKey = "balanced";
+          recommendation = "Balanced Response is recommended because hover feedback can carry a little shape, but it still needs to start quickly.";
+          note = "Sweep the pointer in and out quickly. If the hover state lingers after the pointer leaves, pull the delay back down.";
+        } else if (isAmbient) {
+          fastTargetMs = 400;
+          balancedTargetMs = 700;
+          expressiveTargetMs = 1200;
+          fastDelayMs = 0;
+          balancedDelayMs = 80;
+          expressiveDelayMs = 150;
+          fastEasing = "linear";
+          balancedEasing = "ease-in-out";
+          expressiveEasing = "ease";
+          recommendedKey = risk && risk.score >= 75 ? "fast" : "balanced";
+          recommendation = recommendedKey === "fast"
+            ? "Fast Response is recommended because this ambient loop is already high risk, so the timing should stay restrained."
+            : "Balanced Response is recommended because ambient motion needs a calmer cadence more than raw speed.";
+          note = "Watch the motion for several loops. Ambient timing should stay calm enough that the surface still feels usable after repeated exposure.";
+        } else if (isDense) {
+          fastTargetMs = 250;
+          balancedTargetMs = 300;
+          expressiveTargetMs = 400;
+          fastDelayMs = 0;
+          balancedDelayMs = 0;
+          expressiveDelayMs = 80;
+          fastEasing = "ease-out";
+          balancedEasing = "ease-in-out";
+          expressiveEasing = "ease";
+          recommendedKey = "fast";
+          recommendation = "Fast Response is recommended because compact controls lose clarity quickly when timing stretches out.";
+          note = "Dense Form.io controls should finish in one scan pass. If the tier feels decorative instead of informative, drop back to Fast Response.";
+        }
+
+        if (risk && risk.score >= 75 && recommendedKey === "expressive") {
+          recommendedKey = "balanced";
+        }
+        if (risk && risk.score >= 75 && recommendedKey === "balanced" && !isHover && !isAmbient) {
+          recommendation += " Risk is elevated, so avoid the expressive tier until the package is calmer.";
+        }
+
+        const tiers = {
+          fast: {
+            key: "fast",
+            name: "Fast Response",
+            duration: animationLabNearestTimeOption(fastTargetMs, durationOptions, motion.duration),
+            delay: animationLabNearestTimeOption(fastDelayMs, delayOptions, motion.delay),
+            easing: fastEasing,
+            summary: "Immediate feedback for direct input and compact controls."
+          },
+          balanced: {
+            key: "balanced",
+            name: "Balanced Response",
+            duration: animationLabNearestTimeOption(balancedTargetMs, durationOptions, motion.duration),
+            delay: animationLabNearestTimeOption(balancedDelayMs, delayOptions, motion.delay),
+            easing: balancedEasing,
+            summary: "A release-ready default that keeps the motion readable without dragging the interaction."
+          },
+          expressive: {
+            key: "expressive",
+            name: "Expressive Pass",
+            duration: animationLabNearestTimeOption(expressiveTargetMs, durationOptions, motion.duration),
+            delay: animationLabNearestTimeOption(expressiveDelayMs, delayOptions, motion.delay),
+            easing: expressiveEasing,
+            summary: "A slower presentation pass for broader surfaces and deliberate reveal moments."
+          }
+        };
+
+        Object.keys(tiers).forEach(function (key) {
+          tiers[key].patch = animationLabTimingTierPatch(motion, tiers[key]);
+        });
+
+        return {
+          tiers: tiers,
+          recommendedKey: recommendedKey,
+          recommendation: recommendation,
+          note: note
+        };
+      }
+
       function animationLabCoachSummaryText(values) {
         const motionName = String(values && values.keyframes || DEFAULT_ANIMATION_PREVIEW.name).trim();
         const triggerLabel = animationLabTriggerLabel(values && values.trigger);
@@ -16184,6 +16421,7 @@ translateY()	translateY(<length|percentage>)
         const guardrail = animationLabGuardrailRecommendation(values);
         const risk = animationLabRiskAssessment(values);
         const surface = animationLabSurfaceAssessment(values);
+        const timingLadder = animationLabTimingLadder(values, risk);
         const intent = animationLabIntentPlan(values);
         const forge = animationLabVariantForge(values);
         const sequencePreset = matchingAnimationLabSequencePreset(sequence);
@@ -16285,6 +16523,49 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabApplyGuardrail.textContent = Object.keys(guardrail.patch).length
           ? "Apply Suggested Guardrail"
           : "Guardrail Already Applied";
+        if (elAnimationLabTimingFast) {
+          elAnimationLabTimingFast.textContent = animationLabTimingTierSummary(timingLadder.tiers.fast);
+        }
+        if (elAnimationLabTimingBalanced) {
+          elAnimationLabTimingBalanced.textContent = animationLabTimingTierSummary(timingLadder.tiers.balanced);
+        }
+        if (elAnimationLabTimingExpressive) {
+          elAnimationLabTimingExpressive.textContent = animationLabTimingTierSummary(timingLadder.tiers.expressive);
+        }
+        if (elAnimationLabTimingRecommendation) {
+          elAnimationLabTimingRecommendation.textContent = timingLadder.recommendation;
+        }
+        if (elAnimationLabTimingNote) {
+          elAnimationLabTimingNote.textContent = timingLadder.note;
+        }
+        if (elAnimationLabApplyTimingFast) {
+          elAnimationLabApplyTimingFast.disabled = !Object.keys(timingLadder.tiers.fast.patch).length;
+          elAnimationLabApplyTimingFast.textContent = elAnimationLabApplyTimingFast.disabled
+            ? "Fast Response Live"
+            : "Use Fast Response";
+        }
+        if (elAnimationLabApplyTimingBalanced) {
+          elAnimationLabApplyTimingBalanced.disabled = !Object.keys(timingLadder.tiers.balanced.patch).length;
+          elAnimationLabApplyTimingBalanced.textContent = elAnimationLabApplyTimingBalanced.disabled
+            ? "Balanced Response Live"
+            : "Use Balanced Response";
+        }
+        if (elAnimationLabApplyTimingExpressive) {
+          elAnimationLabApplyTimingExpressive.disabled = !Object.keys(timingLadder.tiers.expressive.patch).length;
+          elAnimationLabApplyTimingExpressive.textContent = elAnimationLabApplyTimingExpressive.disabled
+            ? "Expressive Pass Live"
+            : "Use Expressive Pass";
+        }
+        if (elAnimationLabApplyTimingRecommended) {
+          const recommendedTier = timingLadder.tiers[timingLadder.recommendedKey] || null;
+          const recommendedLive = Boolean(recommendedTier && !Object.keys(recommendedTier.patch).length);
+          elAnimationLabApplyTimingRecommended.disabled = !recommendedTier || recommendedLive;
+          elAnimationLabApplyTimingRecommended.textContent = !recommendedTier
+            ? "No Recommended Tier"
+            : recommendedLive
+              ? recommendedTier.name + " Already Live"
+              : "Use " + recommendedTier.name;
+        }
         elAnimationLabActiveWindow.textContent = animationLabActiveWindowSummary(values);
         elAnimationLabFirstMovement.textContent = animationLabFirstMovementSummary(values);
         elAnimationLabSettleBehavior.textContent = animationLabSettleBehaviorSummary(values);
@@ -16673,6 +16954,31 @@ translateY()	translateY(<length|percentage>)
         setSelectValueIfPresent(elAnimationLabDuration, patch.duration, elAnimationLabDuration.value);
         updateAnimationLabOutputs();
         setBuilderStatus("Animation Lab applied its suggested guardrail. " + recommendation.message);
+      }
+
+      function applyAnimationLabTimingTier(tierKey) {
+        const ladder = animationLabTimingLadder(animationLabPresetValues(), animationLabRiskAssessment(animationLabPresetValues()));
+        const tier = ladder.tiers[String(tierKey || "").trim()] || null;
+        if (!tier) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab could not find that timing tier.");
+          return;
+        }
+        if (!Object.keys(tier.patch).length) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab already matches " + tier.name + ".");
+          return;
+        }
+        setSelectValueIfPresent(elAnimationLabDuration, tier.duration, elAnimationLabDuration.value);
+        setSelectValueIfPresent(elAnimationLabDelay, tier.delay, elAnimationLabDelay.value);
+        setSelectValueIfPresent(elAnimationLabEasing, tier.easing, elAnimationLabEasing.value);
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab switched timing to " + tier.name + ".");
+      }
+
+      function applyAnimationLabRecommendedTimingTier() {
+        const ladder = animationLabTimingLadder(animationLabPresetValues(), animationLabRiskAssessment(animationLabPresetValues()));
+        applyAnimationLabTimingTier(ladder.recommendedKey);
       }
 
       function applyAnimationLabIntentPlan() {
@@ -23135,6 +23441,24 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabRestoreTiming.addEventListener("click", restoreAnimationLabPresetTiming);
       elAnimationLabRestoreBehavior.addEventListener("click", restoreAnimationLabPresetBehavior);
       elAnimationLabApplyGuardrail.addEventListener("click", applyAnimationLabGuardrail);
+      if (elAnimationLabApplyTimingFast) {
+        elAnimationLabApplyTimingFast.addEventListener("click", function () {
+          applyAnimationLabTimingTier("fast");
+        });
+      }
+      if (elAnimationLabApplyTimingBalanced) {
+        elAnimationLabApplyTimingBalanced.addEventListener("click", function () {
+          applyAnimationLabTimingTier("balanced");
+        });
+      }
+      if (elAnimationLabApplyTimingExpressive) {
+        elAnimationLabApplyTimingExpressive.addEventListener("click", function () {
+          applyAnimationLabTimingTier("expressive");
+        });
+      }
+      if (elAnimationLabApplyTimingRecommended) {
+        elAnimationLabApplyTimingRecommended.addEventListener("click", applyAnimationLabRecommendedTimingTier);
+      }
       elAnimationLabApplyIntent.addEventListener("click", applyAnimationLabIntentPlan);
       elAnimationLabSurfaceBestTarget.addEventListener("click", applyAnimationLabBestSurfaceTarget);
       elAnimationLabSurfaceCycleTop.addEventListener("click", cycleAnimationLabTopSurfaces);
