@@ -4040,9 +4040,36 @@
                   <label class="label">Portable Handoff Bundle</label>
                   <pre id="animation-lab-handoff-bundle"></pre>
                 </div>
+                <div class="row" style="margin-top:10px;">
+                  <label class="label" for="animation-lab-rollout-source">Rollout Packet Focus</label>
+                  <select id="animation-lab-rollout-source" title="Choose whether the rollout QA packet should center the saved keeper or the strongest alternate compare slot.">
+                    <option value="auto">Auto (Recommended)</option>
+                    <option value="keeper">Saved Keeper</option>
+                    <option value="alternate">Best Alternate</option>
+                  </select>
+                </div>
+                <div class="info-grid" style="margin-top:10px;">
+                  <div class="info-tile">
+                    <div class="label">Primary Packet</div>
+                    <div id="animation-lab-rollout-primary">The rollout packet will nominate a primary release route once the compare bench has a keeper.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Fallback Packet</div>
+                    <div id="animation-lab-rollout-fallback">Save a second compare slot to turn the rollout packet into a keeper-vs-alternate QA handoff.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">QA Delta</div>
+                    <div id="animation-lab-rollout-delta">Release, risk, and trigger deltas between the primary and fallback packets will be called out here.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Rollout QA Packet</label>
+                  <pre id="animation-lab-rollout-packet"></pre>
+                </div>
                 <div class="button-row" style="margin-top:10px;">
                   <button id="animation-lab-copy-handoff" type="button">Copy Release Brief</button>
                   <button id="animation-lab-copy-handoff-bundle" type="button">Copy Handoff Bundle</button>
+                  <button id="animation-lab-copy-rollout-packet" type="button">Copy Rollout Packet</button>
                 </div>
                 <div id="animation-lab-handoff-note" class="input-hint">This brief combines the compare keeper, review matrix, and surface-fit guidance into one reusable export block.</div>
               </div>
@@ -5762,8 +5789,14 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabHandoffBundleIncludes = document.getElementById("animation-lab-handoff-bundle-includes");
       const elAnimationLabHandoffBundleReady = document.getElementById("animation-lab-handoff-bundle-ready");
       const elAnimationLabHandoffBundle = document.getElementById("animation-lab-handoff-bundle");
+      const elAnimationLabRolloutSource = document.getElementById("animation-lab-rollout-source");
+      const elAnimationLabRolloutPrimary = document.getElementById("animation-lab-rollout-primary");
+      const elAnimationLabRolloutFallback = document.getElementById("animation-lab-rollout-fallback");
+      const elAnimationLabRolloutDelta = document.getElementById("animation-lab-rollout-delta");
+      const elAnimationLabRolloutPacket = document.getElementById("animation-lab-rollout-packet");
       const elAnimationLabCopyHandoff = document.getElementById("animation-lab-copy-handoff");
       const elAnimationLabCopyHandoffBundle = document.getElementById("animation-lab-copy-handoff-bundle");
+      const elAnimationLabCopyRolloutPacket = document.getElementById("animation-lab-copy-rollout-packet");
       const elAnimationLabHandoffNote = document.getElementById("animation-lab-handoff-note");
       const elAnimationLabSurfaceFit = document.getElementById("animation-lab-surface-fit");
       const elAnimationLabSurfaceBest = document.getElementById("animation-lab-surface-best");
@@ -13124,6 +13157,19 @@ translateY()	translateY(<length|percentage>)
         return sortAnimationLabCompareEntries(entries)[0] || null;
       }
 
+      function animationLabCompareAlternateEntry(entries, winner) {
+        const winnerKey = winner && winner.slotKey ? winner.slotKey : "";
+        return sortAnimationLabCompareEntries(entries).find(function (entry) {
+          return entry.slotKey !== winnerKey;
+        }) || null;
+      }
+
+      function animationLabRolloutPacketSourceValue() {
+        if (!elAnimationLabRolloutSource) return "auto";
+        const value = String(elAnimationLabRolloutSource.value || "auto").trim();
+        return value === "keeper" || value === "alternate" ? value : "auto";
+      }
+
       function animationLabCompareFieldValue(label, key, values) {
         const next = values && Object.prototype.hasOwnProperty.call(values, key) ? values[key] : "";
         if (key === "trigger") return animationLabTriggerLabel(next);
@@ -13400,6 +13446,117 @@ translateY()	translateY(<length|percentage>)
           includes: includes,
           readiness: readiness,
           bundle: lines.join("\n")
+        };
+      }
+
+      function animationLabRolloutPacketData(entries, anchorEntry, winner, values, bestReview, currentTarget, selector, handoff) {
+        const alternate = animationLabCompareAlternateEntry(entries, winner);
+        const sourceValue = animationLabRolloutPacketSourceValue();
+        let primary = winner;
+        let fallback = alternate;
+        if (sourceValue === "alternate" && alternate) {
+          primary = alternate;
+          fallback = winner;
+        } else if (!primary && alternate) {
+          primary = alternate;
+          fallback = null;
+        }
+
+        const primarySummary = primary
+          ? primary.slotTitle + " is the active rollout route at " + primary.releaseScore + "/100 (" + primary.risk.level + " risk, " + primary.surface.score + "/100 surface fit)."
+          : "No saved compare package yet. The rollout packet is still using the live draft only.";
+        const fallbackSummary = fallback
+          ? fallback.slotTitle + " is the fallback route at " + fallback.releaseScore + "/100. Keep it ready if the primary route stalls during QA."
+          : "No alternate compare slot is saved yet. Capture a second package to create a real rollback-ready fallback.";
+        let delta = "";
+
+        if (primary && fallback) {
+          const releaseDelta = primary.releaseScore - fallback.releaseScore;
+          const riskDelta = primary.risk.score - fallback.risk.score;
+          const surfaceDelta = primary.surface.score - fallback.surface.score;
+          const diffLine = animationLabCompareDiffLines(primary, fallback)[0] || "Motion settings are broadly aligned between the two packages.";
+          delta =
+            primary.slotTitle +
+            " vs " +
+            fallback.slotTitle +
+            ": release " +
+            (releaseDelta > 0 ? "+" : "") +
+            releaseDelta +
+            ", risk " +
+            (riskDelta > 0 ? "+" : "") +
+            riskDelta +
+            ", surface " +
+            (surfaceDelta > 0 ? "+" : "") +
+            surfaceDelta +
+            ". Biggest config shift: " +
+            diffLine;
+        } else if (primary) {
+          delta = "Only one saved route is available. Save another compare slot so rollout QA can compare a keeper against a fallback.";
+        } else {
+          delta = "Rollout QA is waiting for the first compare capture before it can score packet deltas.";
+        }
+
+        const reviewLine = bestReview
+          ? bestReview.label + " remains the strongest trigger review state (" + bestReview.score + "/100)."
+          : "Run the trigger review matrix once more to confirm the safest release state.";
+        const lines = [
+          "Animation Lab Rollout QA Packet",
+          "Focus: " + (primary ? primary.slotTitle : "Live Draft"),
+          "Target: " + currentTarget,
+          "Selector: " + selector,
+          "Rollout route: " + primarySummary,
+          "Fallback route: " + fallbackSummary,
+          "QA delta: " + delta,
+          "Trigger guidance: " + reviewLine,
+          "Export handoff: " + handoff.next,
+          ""
+        ];
+
+        if (primary) {
+          lines.push("=== Primary Package ===");
+          lines.push(
+            animationLabCompareWinnerPackageText(primary, selector, currentTarget, anchorEntry).replace(
+              /^Release keeper:/,
+              "Primary package:"
+            )
+          );
+          lines.push("");
+        } else {
+          lines.push("=== Current Live Draft ===");
+          lines.push(animationLabPackageCss(selector, values));
+          lines.push("");
+        }
+
+        if (fallback) {
+          lines.push("=== Fallback Package ===");
+          lines.push(
+            animationLabCompareWinnerPackageText(fallback, selector, currentTarget, anchorEntry).replace(
+              /^Release keeper:/,
+              "Fallback package:"
+            )
+          );
+          lines.push("");
+        }
+
+        lines.push("=== Rollout Checklist ===");
+        lines.push(primary
+          ? "1. Rehearse " + primary.slotTitle + " on " + currentTarget + " and confirm the live controls match before export."
+          : "1. Capture a compare slot so the rollout packet has a named release route.");
+        lines.push(fallback
+          ? "2. Keep " + fallback.slotTitle + " intact as the rollback candidate until production approval is complete."
+          : "2. Save a second compare slot so the packet includes a true fallback route.");
+        lines.push(bestReview
+          ? "3. Validate the " + bestReview.label + " trigger during QA, even if another state is currently loaded."
+          : "3. Run the trigger review matrix and lock the strongest state before rollout.");
+        lines.push("4. Verify reduced-motion and sequence behavior before you copy the final bundle.");
+        lines.push("5. Use the portable handoff bundle only after this packet reads clean and stable.");
+
+        return {
+          hasAlternate: Boolean(alternate),
+          primarySummary: primarySummary,
+          fallbackSummary: fallbackSummary,
+          delta: delta,
+          packet: lines.join("\n")
         };
       }
 
@@ -14196,8 +14353,20 @@ translateY()	translateY(<length|percentage>)
         const anatomy = animationLabKeyframeAnatomy(values);
         const packageCss = animationLabPackageCss(selector, values);
         const currentTarget = previewTargetLabel((elTarget.value || "card").trim());
+        if (elAnimationLabRolloutSource) {
+          const alternateOption = elAnimationLabRolloutSource.querySelector('option[value="alternate"]');
+          const hasAlternate = Boolean(animationLabCompareAlternateEntry(compareEntries, compareWinner));
+          if (!hasAlternate && animationLabRolloutPacketSourceValue() === "alternate") {
+            elAnimationLabRolloutSource.value = "auto";
+          }
+          if (alternateOption) {
+            alternateOption.disabled = !hasAlternate;
+            alternateOption.textContent = hasAlternate ? "Best Alternate" : "Best Alternate (Save Another Slot)";
+          }
+        }
         const handoff = animationLabReleaseHandoffData(compareAnchor, compareWinner, values, risk, surface, bestReview, currentTarget, selector);
         const handoffBundle = animationLabReleaseHandoffBundleData(handoff, compareWinner, values, sequence, selector);
+        const rolloutPacket = animationLabRolloutPacketData(compareEntries, compareAnchor, compareWinner, values, bestReview, currentTarget, selector, handoff);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         updateAnimationLabStage(values, risk, surface);
         elAnimationLabPresetIntent.textContent = brief.intent;
@@ -14312,8 +14481,26 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabHandoffBundleIncludes.textContent = handoffBundle.includes;
         elAnimationLabHandoffBundleReady.textContent = handoffBundle.readiness;
         elAnimationLabHandoffBundle.textContent = handoffBundle.bundle;
+        if (elAnimationLabRolloutPrimary) {
+          elAnimationLabRolloutPrimary.textContent = rolloutPacket.primarySummary;
+        }
+        if (elAnimationLabRolloutFallback) {
+          elAnimationLabRolloutFallback.textContent = rolloutPacket.fallbackSummary;
+        }
+        if (elAnimationLabRolloutDelta) {
+          elAnimationLabRolloutDelta.textContent = rolloutPacket.delta;
+        }
+        if (elAnimationLabRolloutPacket) {
+          elAnimationLabRolloutPacket.textContent = rolloutPacket.packet;
+        }
+        if (elAnimationLabCopyRolloutPacket) {
+          elAnimationLabCopyRolloutPacket.disabled = !compareEntries.length;
+          elAnimationLabCopyRolloutPacket.textContent = compareEntries.length ? "Copy Rollout Packet" : "Capture Compare Slot First";
+        }
         elAnimationLabHandoffNote.textContent = compareWinner
-          ? "This handoff now ships as both a brief and a fuller bundle with the saved keeper, explicit reduced-motion fallback, and any active sequence add-on."
+          ? (rolloutPacket.hasAlternate
+            ? "This handoff now ships as a brief, a fuller bundle, and a compare-ready rollout packet that can pivot between the keeper and the strongest alternate."
+            : "This handoff now ships as a brief, a fuller bundle, and a rollout packet. Save one more compare slot to add a real fallback route.")
           : "Capture at least one compare slot to turn this live-only summary into a keeper-backed handoff bundle.";
         elAnimationLabSurfaceFit.textContent = surface.fit;
         elAnimationLabSurfaceBest.textContent = surface.best;
@@ -20091,6 +20278,18 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      async function copyAnimationLabRolloutPacket() {
+        try {
+          await navigator.clipboard.writeText(elAnimationLabRolloutPacket.textContent);
+          elAnimationLabCopyRolloutPacket.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopyRolloutPacket.textContent = "Copy Rollout Packet"; }, 1200);
+          setBuilderStatus("Animation Lab rollout QA packet copied.");
+        } catch (err) {
+          elAnimationLabCopyRolloutPacket.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopyRolloutPacket.textContent = "Copy Rollout Packet"; }, 1200);
+        }
+      }
+
       function applyAnimationLabBestReviewToPreview() {
         const values = animationLabPresetValues();
         const bestReview = animationLabBestReviewEntry(animationLabTriggerReviewEntries(values));
@@ -21004,6 +21203,12 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabCopyReview.addEventListener("click", copyAnimationLabReviewSnapshot);
       elAnimationLabCopyHandoff.addEventListener("click", copyAnimationLabReleaseHandoff);
       elAnimationLabCopyHandoffBundle.addEventListener("click", copyAnimationLabReleaseHandoffBundle);
+      if (elAnimationLabRolloutSource) {
+        elAnimationLabRolloutSource.addEventListener("change", updateAnimationLabOutputs);
+      }
+      if (elAnimationLabCopyRolloutPacket) {
+        elAnimationLabCopyRolloutPacket.addEventListener("click", copyAnimationLabRolloutPacket);
+      }
       elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
       elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
       if (elAnimationLabCopyVariants) {
