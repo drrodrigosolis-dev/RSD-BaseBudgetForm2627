@@ -3959,6 +3959,29 @@
                     <div class="label">Next Move</div>
                     <div id="animation-lab-rehearsal-next">Save or generate at least one motion route to start rehearsing.</div>
                   </div>
+                  <div class="info-tile">
+                    <div class="label">Autoplay Pace</div>
+                    <div id="animation-lab-rehearsal-autoplay">Manual stepping is active until you start an autoplay pass.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Route Progress</div>
+                    <div id="animation-lab-rehearsal-progress">No runbook step has been loaded yet.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Pass Counter</div>
+                    <div id="animation-lab-rehearsal-pass">0 completed passes. Start an autoplay pass when the route is ready.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label" for="animation-lab-rehearsal-pace">Autoplay Delay</label>
+                  <div class="inline">
+                    <select id="animation-lab-rehearsal-pace" title="Choose how long the runbook waits before moving to the next queued step during autoplay.">
+                      <option value="900">900ms</option>
+                      <option value="1500" selected>1.5s</option>
+                      <option value="2400">2.4s</option>
+                      <option value="3200">3.2s</option>
+                    </select>
+                  </div>
                 </div>
                 <div class="row" style="margin-top:8px;">
                   <label class="label">Run Sheet</label>
@@ -3966,12 +3989,14 @@
                 </div>
                 <div class="button-row" style="margin-top:10px;">
                   <button id="animation-lab-rehearsal-sync" type="button">Sync Route</button>
+                  <button id="animation-lab-rehearsal-play" type="button">Start Autoplay</button>
+                  <button id="animation-lab-rehearsal-reset" type="button">Reset Route</button>
                   <button id="animation-lab-rehearsal-prev" type="button">Previous Step</button>
                   <button id="animation-lab-rehearsal-next-step" type="button">Next Step</button>
                   <button id="animation-lab-rehearsal-apply" type="button">Load Queued Step</button>
                   <button id="animation-lab-rehearsal-copy" type="button">Copy Run Sheet</button>
                 </div>
-                <div id="animation-lab-rehearsal-note" class="input-hint">Use this runbook to replay the same validation sequence instead of rebuilding the order from memory before every export pass.</div>
+                <div id="animation-lab-rehearsal-note" class="input-hint">Use this runbook to replay the same validation sequence instead of rebuilding the order from memory before every export pass. Autoplay can now walk the saved route at a fixed pace for hands-free review.</div>
               </div>
               <div class="help-box">
                 <div><strong>Motion Session Vault</strong></div>
@@ -6407,8 +6432,14 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabRehearsalStep = document.getElementById("animation-lab-rehearsal-step");
       const elAnimationLabRehearsalReady = document.getElementById("animation-lab-rehearsal-ready");
       const elAnimationLabRehearsalNext = document.getElementById("animation-lab-rehearsal-next");
+      const elAnimationLabRehearsalAutoplay = document.getElementById("animation-lab-rehearsal-autoplay");
+      const elAnimationLabRehearsalProgress = document.getElementById("animation-lab-rehearsal-progress");
+      const elAnimationLabRehearsalPass = document.getElementById("animation-lab-rehearsal-pass");
+      const elAnimationLabRehearsalPace = document.getElementById("animation-lab-rehearsal-pace");
       const elAnimationLabRehearsalReport = document.getElementById("animation-lab-rehearsal-report");
       const elAnimationLabRehearsalSync = document.getElementById("animation-lab-rehearsal-sync");
+      const elAnimationLabRehearsalPlay = document.getElementById("animation-lab-rehearsal-play");
+      const elAnimationLabRehearsalReset = document.getElementById("animation-lab-rehearsal-reset");
       const elAnimationLabRehearsalPrev = document.getElementById("animation-lab-rehearsal-prev");
       const elAnimationLabRehearsalNextStep = document.getElementById("animation-lab-rehearsal-next-step");
       const elAnimationLabRehearsalApply = document.getElementById("animation-lab-rehearsal-apply");
@@ -10063,7 +10094,11 @@ translateY()	translateY(<length|percentage>)
       let animationLabSessionSnapshot = null;
       let animationLabSessionReady = false;
       let animationLabSessionRestoreInProgress = false;
-      let animationLabRehearsalState = { source: "compare", activeIndex: 0 };
+      let animationLabRehearsalState = { source: "compare", activeIndex: 0, paceMs: 1500 };
+      let animationLabRehearsalTimer = null;
+      let animationLabRehearsalAutoplayActive = false;
+      let animationLabRehearsalAppliedIndex = -1;
+      let animationLabRehearsalPassCount = 0;
       let rollbackHistory = [];
       let importBundleStatusMessage = "No bundle imported in this session yet.";
       const builderMediaLayerMap = {
@@ -15605,9 +15640,12 @@ translateY()	translateY(<length|percentage>)
       function normalizeAnimationLabRehearsalState(state) {
         const source = String(state && state.source || "compare").trim();
         const parsedIndex = Number(state && state.activeIndex);
+        const parsedPace = Number(state && state.paceMs);
+        const pace = parsedPace >= 900 && parsedPace <= 3200 ? Math.round(parsedPace) : 1500;
         return {
           source: source === "forge" || source === "checkpoint" ? source : "compare",
-          activeIndex: Math.max(0, Math.round(Number.isFinite(parsedIndex) ? parsedIndex : 0))
+          activeIndex: Math.max(0, Math.round(Number.isFinite(parsedIndex) ? parsedIndex : 0)),
+          paceMs: pace
         };
       }
 
@@ -15731,6 +15769,8 @@ translateY()	translateY(<length|percentage>)
         animationLabSessionRestoreInProgress = true;
         try {
           stopPreviewTargetCycle(true);
+          stopAnimationLabRehearsalAutoplay();
+          resetAnimationLabRehearsalTracking();
           if (session.target) {
             elTarget.value = session.target;
           }
@@ -15760,6 +15800,9 @@ translateY()	translateY(<length|percentage>)
           }
           if (elAnimationLabRehearsalSource) {
             setSelectValueIfPresent(elAnimationLabRehearsalSource, animationLabRehearsalState.source, "compare");
+          }
+          if (elAnimationLabRehearsalPace) {
+            setSelectValueIfPresent(elAnimationLabRehearsalPace, String(animationLabRehearsalState.paceMs || 1500), "1500");
           }
           applyAnimationLabSequenceState(session.animationLabSequence);
           applyAnimationLabState(session.animationLab);
@@ -15795,6 +15838,8 @@ translateY()	translateY(<length|percentage>)
       }
 
       function clearAnimationLabSession() {
+        stopAnimationLabRehearsalAutoplay();
+        resetAnimationLabRehearsalTracking();
         try {
           localStorage.removeItem(ANIMATION_LAB_SESSION_STORAGE_KEY);
         } catch (err) {
@@ -16911,6 +16956,46 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function animationLabRehearsalPaceMs() {
+        const state = normalizeAnimationLabRehearsalState(animationLabRehearsalState);
+        return state.paceMs;
+      }
+
+      function setAnimationLabRehearsalPace(value, silent) {
+        const parsed = Number(value);
+        const paceMs = parsed >= 900 && parsed <= 3200 ? Math.round(parsed) : 1500;
+        animationLabRehearsalState.paceMs = paceMs;
+        if (elAnimationLabRehearsalPace) {
+          setSelectValueIfPresent(elAnimationLabRehearsalPace, String(paceMs), "1500");
+        }
+        if (animationLabRehearsalAutoplayActive) {
+          if (animationLabRehearsalTimer) {
+            clearTimeout(animationLabRehearsalTimer);
+          }
+          animationLabRehearsalTimer = setTimeout(runAnimationLabRehearsalAutoplayStep, paceMs);
+        }
+        updateAnimationLabOutputs();
+        if (!silent) {
+          setBuilderStatus("Animation Lab rehearsal autoplay pace set to " + formatAnimationLabDurationMs(paceMs) + ".");
+        }
+      }
+
+      function stopAnimationLabRehearsalAutoplay() {
+        if (animationLabRehearsalTimer) {
+          clearTimeout(animationLabRehearsalTimer);
+          animationLabRehearsalTimer = null;
+        }
+        animationLabRehearsalAutoplayActive = false;
+      }
+
+      function resetAnimationLabRehearsalTracking(options) {
+        const config = options || {};
+        animationLabRehearsalAppliedIndex = -1;
+        if (!config.keepPassCount) {
+          animationLabRehearsalPassCount = 0;
+        }
+      }
+
       function renderAnimationLabRehearsalPlanner() {
         if (
           !elAnimationLabRehearsalSource ||
@@ -16919,8 +17004,14 @@ translateY()	translateY(<length|percentage>)
           !elAnimationLabRehearsalStep ||
           !elAnimationLabRehearsalReady ||
           !elAnimationLabRehearsalNext ||
+          !elAnimationLabRehearsalAutoplay ||
+          !elAnimationLabRehearsalProgress ||
+          !elAnimationLabRehearsalPass ||
+          !elAnimationLabRehearsalPace ||
           !elAnimationLabRehearsalReport ||
           !elAnimationLabRehearsalSync ||
+          !elAnimationLabRehearsalPlay ||
+          !elAnimationLabRehearsalReset ||
           !elAnimationLabRehearsalPrev ||
           !elAnimationLabRehearsalNextStep ||
           !elAnimationLabRehearsalApply ||
@@ -16933,7 +17024,16 @@ translateY()	translateY(<length|percentage>)
         if ((elAnimationLabRehearsalSource.value || "compare").trim() !== plan.source) {
           setSelectValueIfPresent(elAnimationLabRehearsalSource, plan.source, "compare");
         }
+        if (elAnimationLabRehearsalPace.value !== String(animationLabRehearsalPaceMs())) {
+          setSelectValueIfPresent(elAnimationLabRehearsalPace, String(animationLabRehearsalPaceMs()), "1500");
+        }
+        if (!plan.steps.length && animationLabRehearsalAutoplayActive) {
+          stopAnimationLabRehearsalAutoplay();
+        }
         const activeStep = plan.activeStep;
+        const paceLabel = formatAnimationLabDurationMs(animationLabRehearsalPaceMs());
+        const hasApplied = animationLabRehearsalAppliedIndex >= 0 && animationLabRehearsalAppliedIndex < plan.steps.length;
+        const appliedStep = hasApplied ? plan.steps[animationLabRehearsalAppliedIndex] : null;
         elAnimationLabRehearsalCoverage.textContent = plan.coverage;
         elAnimationLabRehearsalStatus.textContent = activeStep
           ? activeStep.title + " is queued from " + plan.sourceLabel + "."
@@ -16943,8 +17043,22 @@ translateY()	translateY(<length|percentage>)
           : "0 / 0 | No route";
         elAnimationLabRehearsalReady.textContent = plan.readiness;
         elAnimationLabRehearsalNext.textContent = plan.nextAction;
+        elAnimationLabRehearsalAutoplay.textContent = plan.steps.length
+          ? (animationLabRehearsalAutoplayActive
+            ? "Autoplay is running at " + paceLabel + " per step."
+            : "Autoplay is paused. Next pass will wait " + paceLabel + " between steps.")
+          : "Build a route first, then autoplay can walk it at a fixed pace.";
+        elAnimationLabRehearsalProgress.textContent = appliedStep
+          ? "Last loaded: " + appliedStep.title + " (" + (animationLabRehearsalAppliedIndex + 1) + " / " + plan.steps.length + ")."
+          : "No runbook step has been loaded yet.";
+        elAnimationLabRehearsalPass.textContent = plan.steps.length
+          ? animationLabRehearsalPassCount + " completed pass" + (animationLabRehearsalPassCount === 1 ? "" : "es") + "."
+          : "0 completed passes. Start an autoplay pass when the route is ready.";
         elAnimationLabRehearsalReport.textContent = plan.report;
         elAnimationLabRehearsalSync.disabled = !plan.steps.length;
+        elAnimationLabRehearsalPlay.disabled = !plan.steps.length;
+        elAnimationLabRehearsalPlay.textContent = animationLabRehearsalAutoplayActive ? "Pause Autoplay" : "Start Autoplay";
+        elAnimationLabRehearsalReset.disabled = !plan.steps.length;
         elAnimationLabRehearsalPrev.disabled = !plan.steps.length || plan.activeIndex <= 0;
         elAnimationLabRehearsalNextStep.disabled = !plan.steps.length || plan.activeIndex >= plan.steps.length - 1;
         elAnimationLabRehearsalApply.disabled = !activeStep;
@@ -16958,9 +17072,11 @@ translateY()	translateY(<length|percentage>)
       }
 
       function setAnimationLabRehearsalSource(source, silent) {
-        const nextState = normalizeAnimationLabRehearsalState({ source: source, activeIndex: 0 });
+        stopAnimationLabRehearsalAutoplay();
+        const nextState = normalizeAnimationLabRehearsalState({ source: source, activeIndex: 0, paceMs: animationLabRehearsalPaceMs() });
         animationLabRehearsalState.source = nextState.source;
         animationLabRehearsalState.activeIndex = 0;
+        resetAnimationLabRehearsalTracking();
         if (elAnimationLabRehearsalSource) {
           setSelectValueIfPresent(elAnimationLabRehearsalSource, nextState.source, "compare");
         }
@@ -16971,21 +17087,25 @@ translateY()	translateY(<length|percentage>)
       }
 
       function syncAnimationLabRehearsalRoute() {
+        stopAnimationLabRehearsalAutoplay();
         const source = animationLabRehearsalSourceValue();
         const steps = animationLabRehearsalSteps(source);
         if (!steps.length) {
+          resetAnimationLabRehearsalTracking();
           updateAnimationLabOutputs();
           setBuilderStatus("Animation Lab needs at least one usable route step before it can sync the rehearsal runbook.");
           return;
         }
         animationLabRehearsalState.source = source;
         animationLabRehearsalState.activeIndex = animationLabRecommendedRehearsalIndex(source, steps);
+        resetAnimationLabRehearsalTracking();
         updateAnimationLabOutputs();
         const plan = animationLabRehearsalPlan();
         setBuilderStatus("Animation Lab queued " + (plan.activeStep ? plan.activeStep.title : "the first step") + " from " + plan.sourceLabel + ".");
       }
 
       function moveAnimationLabRehearsalStep(delta) {
+        stopAnimationLabRehearsalAutoplay();
         const plan = animationLabRehearsalPlan();
         if (!plan.steps.length) {
           updateAnimationLabOutputs();
@@ -17004,6 +17124,66 @@ translateY()	translateY(<length|percentage>)
         setBuilderStatus("Animation Lab queued rehearsal step " + (nextPlan.activeIndex + 1) + ": " + nextPlan.activeStep.title + ".");
       }
 
+      function resetAnimationLabRehearsalRoute() {
+        stopAnimationLabRehearsalAutoplay();
+        const plan = animationLabRehearsalPlan();
+        if (!plan.steps.length) {
+          resetAnimationLabRehearsalTracking();
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab does not have a rehearsal route to reset yet.");
+          return;
+        }
+        animationLabRehearsalState.activeIndex = 0;
+        resetAnimationLabRehearsalTracking();
+        updateAnimationLabOutputs();
+        const nextPlan = animationLabRehearsalPlan();
+        setBuilderStatus("Animation Lab reset the rehearsal route to " + nextPlan.activeStep.title + ".");
+      }
+
+      function runAnimationLabRehearsalAutoplayStep() {
+        const plan = animationLabRehearsalPlan();
+        const step = plan.activeStep;
+        if (!animationLabRehearsalAutoplayActive || !step) {
+          stopAnimationLabRehearsalAutoplay();
+          updateAnimationLabOutputs();
+          return;
+        }
+        loadQueuedAnimationLabRehearsalStep();
+        if (plan.activeIndex >= plan.steps.length - 1) {
+          stopAnimationLabRehearsalAutoplay();
+          animationLabRehearsalPassCount += 1;
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab completed a full " + plan.steps.length + "-step rehearsal pass.");
+          return;
+        }
+        animationLabRehearsalState.activeIndex = plan.activeIndex + 1;
+        updateAnimationLabOutputs();
+        animationLabRehearsalTimer = setTimeout(runAnimationLabRehearsalAutoplayStep, animationLabRehearsalPaceMs());
+      }
+
+      function toggleAnimationLabRehearsalAutoplay() {
+        const plan = animationLabRehearsalPlan();
+        if (!plan.steps.length) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab needs at least one rehearsal route step before autoplay can start.");
+          return;
+        }
+        if (animationLabRehearsalAutoplayActive) {
+          stopAnimationLabRehearsalAutoplay();
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab paused rehearsal autoplay.");
+          return;
+        }
+        if (animationLabRehearsalAppliedIndex >= plan.steps.length - 1 && plan.activeIndex >= plan.steps.length - 1) {
+          animationLabRehearsalState.activeIndex = 0;
+          animationLabRehearsalAppliedIndex = -1;
+        }
+        animationLabRehearsalAutoplayActive = true;
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab started rehearsal autoplay at " + formatAnimationLabDurationMs(animationLabRehearsalPaceMs()) + " per step.");
+        runAnimationLabRehearsalAutoplayStep();
+      }
+
       function loadQueuedAnimationLabRehearsalStep() {
         const plan = animationLabRehearsalPlan();
         const step = plan.activeStep;
@@ -17012,6 +17192,7 @@ translateY()	translateY(<length|percentage>)
           setBuilderStatus("Animation Lab does not have a queued rehearsal step yet.");
           return;
         }
+        animationLabRehearsalAppliedIndex = plan.activeIndex;
         if (step.source === "compare") {
           loadAnimationLabCompareSlot(step.itemKey);
           return;
@@ -25144,8 +25325,19 @@ translateY()	translateY(<length|percentage>)
           setAnimationLabRehearsalSource(elAnimationLabRehearsalSource.value);
         });
       }
+      if (elAnimationLabRehearsalPace) {
+        elAnimationLabRehearsalPace.addEventListener("change", function () {
+          setAnimationLabRehearsalPace(elAnimationLabRehearsalPace.value);
+        });
+      }
       if (elAnimationLabRehearsalSync) {
         elAnimationLabRehearsalSync.addEventListener("click", syncAnimationLabRehearsalRoute);
+      }
+      if (elAnimationLabRehearsalPlay) {
+        elAnimationLabRehearsalPlay.addEventListener("click", toggleAnimationLabRehearsalAutoplay);
+      }
+      if (elAnimationLabRehearsalReset) {
+        elAnimationLabRehearsalReset.addEventListener("click", resetAnimationLabRehearsalRoute);
       }
       if (elAnimationLabRehearsalPrev) {
         elAnimationLabRehearsalPrev.addEventListener("click", function () {
