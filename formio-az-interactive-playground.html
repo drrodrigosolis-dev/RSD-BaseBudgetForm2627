@@ -3713,6 +3713,14 @@
                     <div class="label">Live Frame</div>
                     <div id="animation-lab-checkpoint-live">Turn on Frame Inspect to tag compare captures with a frozen rehearsal frame.</div>
                   </div>
+                  <div class="info-tile">
+                    <div class="label">Coverage</div>
+                    <div id="animation-lab-checkpoint-coverage">0 / 3 stage checkpoints saved. Capture the defaults to cover the full first pass.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Replay Plan</div>
+                    <div id="animation-lab-checkpoint-plan">Auto Fill will save the default start, peak, and settle frames so the whole motion arc is documented in one step.</div>
+                  </div>
                 </div>
                 <div class="row" style="margin-top:8px;">
                   <label class="label" for="animation-lab-checkpoint-compare-slot">Send Saved Checkpoints To</label>
@@ -3724,6 +3732,11 @@
                     </select>
                   </div>
                 </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-checkpoint-capture-all" type="button">Auto Fill Default Frames</button>
+                  <button id="animation-lab-checkpoint-compare-all" type="button">Send Saved Set To Compare</button>
+                  <button id="animation-lab-checkpoint-clear-all" type="button">Clear Saved Frames</button>
+                </div>
                 <div id="animation-lab-checkpoint-bank" class="animation-lab-checkpoint-bank">
                   <div class="animation-lab-checkpoint-card" data-stage-checkpoint="start">
                     <div class="label">Start Cue</div>
@@ -3733,6 +3746,7 @@
                       <button data-stage-checkpoint-action="capture" data-stage-checkpoint-slot-key="start" type="button">Save Frame</button>
                       <button data-stage-checkpoint-action="load" data-stage-checkpoint-slot-key="start" type="button">Load Frame</button>
                       <button data-stage-checkpoint-action="compare" data-stage-checkpoint-slot-key="start" type="button">Send To Compare</button>
+                      <button data-stage-checkpoint-action="clear" data-stage-checkpoint-slot-key="start" type="button">Clear Frame</button>
                     </div>
                   </div>
                   <div class="animation-lab-checkpoint-card" data-stage-checkpoint="peak">
@@ -3743,6 +3757,7 @@
                       <button data-stage-checkpoint-action="capture" data-stage-checkpoint-slot-key="peak" type="button">Save Frame</button>
                       <button data-stage-checkpoint-action="load" data-stage-checkpoint-slot-key="peak" type="button">Load Frame</button>
                       <button data-stage-checkpoint-action="compare" data-stage-checkpoint-slot-key="peak" type="button">Send To Compare</button>
+                      <button data-stage-checkpoint-action="clear" data-stage-checkpoint-slot-key="peak" type="button">Clear Frame</button>
                     </div>
                   </div>
                   <div class="animation-lab-checkpoint-card" data-stage-checkpoint="settle">
@@ -3753,6 +3768,7 @@
                       <button data-stage-checkpoint-action="capture" data-stage-checkpoint-slot-key="settle" type="button">Save Frame</button>
                       <button data-stage-checkpoint-action="load" data-stage-checkpoint-slot-key="settle" type="button">Load Frame</button>
                       <button data-stage-checkpoint-action="compare" data-stage-checkpoint-slot-key="settle" type="button">Send To Compare</button>
+                      <button data-stage-checkpoint-action="clear" data-stage-checkpoint-slot-key="settle" type="button">Clear Frame</button>
                     </div>
                   </div>
                 </div>
@@ -5855,7 +5871,12 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabCheckpointStatus = document.getElementById("animation-lab-checkpoint-status");
       const elAnimationLabCheckpointRoute = document.getElementById("animation-lab-checkpoint-route");
       const elAnimationLabCheckpointLive = document.getElementById("animation-lab-checkpoint-live");
+      const elAnimationLabCheckpointCoverage = document.getElementById("animation-lab-checkpoint-coverage");
+      const elAnimationLabCheckpointPlan = document.getElementById("animation-lab-checkpoint-plan");
       const elAnimationLabCheckpointCompareSlot = document.getElementById("animation-lab-checkpoint-compare-slot");
+      const elAnimationLabCheckpointCaptureAll = document.getElementById("animation-lab-checkpoint-capture-all");
+      const elAnimationLabCheckpointCompareAll = document.getElementById("animation-lab-checkpoint-compare-all");
+      const elAnimationLabCheckpointClearAll = document.getElementById("animation-lab-checkpoint-clear-all");
       const elAnimationLabCheckpointBank = document.getElementById("animation-lab-checkpoint-bank");
       const elAnimationLabCoachSummary = document.getElementById("animation-lab-coach-summary");
       const elAnimationLabCoachStart = document.getElementById("animation-lab-coach-start");
@@ -12075,15 +12096,78 @@ translateY()	translateY(<length|percentage>)
         }
       }
 
+      function savedAnimationLabStageCheckpointKeys() {
+        return ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.filter(function (slotKey) {
+          return Boolean(animationLabStageCheckpoints[slotKey] && animationLabStageCheckpoints[slotKey].values);
+        });
+      }
+
+      function animationLabBulkCheckpointCompareRoute(startSlotKey) {
+        const startIndex = Math.max(0, ANIMATION_LAB_COMPARE_SLOT_ORDER.indexOf(startSlotKey));
+        return ANIMATION_LAB_COMPARE_SLOT_ORDER.map(function (_, index) {
+          return ANIMATION_LAB_COMPARE_SLOT_ORDER[(startIndex + index) % ANIMATION_LAB_COMPARE_SLOT_ORDER.length];
+        });
+      }
+
+      function animationLabStageCheckpointCoverageSummary(savedSlotKeys, routeSlotKey) {
+        const savedKeys = Array.isArray(savedSlotKeys) ? savedSlotKeys.slice() : [];
+        const missingKeys = ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.filter(function (slotKey) {
+          return savedKeys.indexOf(slotKey) === -1;
+        });
+        const totalSlots = ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.length;
+        const route = animationLabBulkCheckpointCompareRoute(routeSlotKey);
+        const rangeText = savedKeys.length > 1
+          ? animationLabStageCheckpointDefaultPercent(savedKeys[0]) + "% to " + animationLabStageCheckpointDefaultPercent(savedKeys[savedKeys.length - 1]) + "% of the first pass."
+          : savedKeys.length === 1
+            ? "around " + animationLabStageCheckpointDefaultPercent(savedKeys[0]) + "% of the first pass."
+            : "yet.";
+        const coverage = savedKeys.length
+          ? savedKeys.length + " / " + totalSlots + " stage checkpoints saved, covering " + rangeText
+          : "0 / " + totalSlots + " stage checkpoints saved. Capture the defaults to cover the full first pass.";
+
+        let plan = "Auto Fill will save the default start, peak, and settle frames so the whole motion arc is documented in one step.";
+        if (!missingKeys.length) {
+          plan =
+            "Checkpoint set is complete. Bulk send will map " +
+            animationLabStageCheckpointTitle("start") +
+            ", " +
+            animationLabStageCheckpointTitle("peak") +
+            ", then " +
+            animationLabStageCheckpointTitle("settle") +
+            " into " +
+            route.map(animationLabCompareSlotTitle).join(", ") +
+            ".";
+        } else if (missingKeys.length === 1) {
+          plan =
+            "Next best capture is " +
+            animationLabStageCheckpointTitle(missingKeys[0]) +
+            " at " +
+            animationLabStageCheckpointDefaultPercent(missingKeys[0]) +
+            "% so the rehearsal arc is fully covered.";
+        } else if (savedKeys.length) {
+          plan =
+            "Keep filling the missing arc: " +
+            missingKeys.map(function (slotKey) {
+              return animationLabStageCheckpointTitle(slotKey) + " (" + animationLabStageCheckpointDefaultPercent(slotKey) + "%)";
+            }).join(", ") +
+            ".";
+        }
+
+        return {
+          coverage: coverage,
+          plan: plan
+        };
+      }
+
       function renderAnimationLabStageCheckpointBank() {
         if (!elAnimationLabCheckpointBank) return;
 
         const liveMeta = currentAnimationLabStageCheckpointMeta(animationLabPresetValues());
-        const savedCount = ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.filter(function (slotKey) {
-          return Boolean(animationLabStageCheckpoints[slotKey] && animationLabStageCheckpoints[slotKey].values);
-        }).length;
+        const savedSlotKeys = savedAnimationLabStageCheckpointKeys();
+        const savedCount = savedSlotKeys.length;
         const routeSlotKey = elAnimationLabCheckpointCompareSlot ? (elAnimationLabCheckpointCompareSlot.value || "candidate").trim() : "candidate";
         const routeLabel = animationLabCompareSlotTitle(routeSlotKey);
+        const coverage = animationLabStageCheckpointCoverageSummary(savedSlotKeys, routeSlotKey);
 
         if (elAnimationLabCheckpointStatus) {
           elAnimationLabCheckpointStatus.textContent = savedCount
@@ -12091,12 +12175,34 @@ translateY()	translateY(<length|percentage>)
             : "No stage checkpoints saved yet.";
         }
         if (elAnimationLabCheckpointRoute) {
-          elAnimationLabCheckpointRoute.textContent = routeLabel + " is the current compare destination.";
+          elAnimationLabCheckpointRoute.textContent = routeLabel + " is the current compare destination. Bulk send starts here, then rotates through the remaining compare slots.";
         }
         if (elAnimationLabCheckpointLive) {
           elAnimationLabCheckpointLive.textContent = liveMeta
             ? liveMeta.label + " is live at " + liveMeta.percent + "% (" + formatAnimationLabStageMs(liveMeta.checkpointMs) + "). Compare captures will carry this frame tag."
             : "Turn on Frame Inspect to tag compare captures with a frozen rehearsal frame.";
+        }
+        if (elAnimationLabCheckpointCoverage) {
+          elAnimationLabCheckpointCoverage.textContent = coverage.coverage;
+        }
+        if (elAnimationLabCheckpointPlan) {
+          elAnimationLabCheckpointPlan.textContent = coverage.plan;
+        }
+        if (elAnimationLabCheckpointCaptureAll) {
+          elAnimationLabCheckpointCaptureAll.disabled = false;
+          elAnimationLabCheckpointCaptureAll.textContent = "Auto Fill Default Frames";
+        }
+        if (elAnimationLabCheckpointCompareAll) {
+          elAnimationLabCheckpointCompareAll.disabled = savedCount === 0;
+          elAnimationLabCheckpointCompareAll.textContent = savedCount
+            ? "Send Saved Set To Compare"
+            : "Save Frames Before Sending";
+        }
+        if (elAnimationLabCheckpointClearAll) {
+          elAnimationLabCheckpointClearAll.disabled = savedCount === 0;
+          elAnimationLabCheckpointClearAll.textContent = savedCount
+            ? "Clear Saved Frames"
+            : "No Saved Frames";
         }
 
         ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.forEach(function (slotKey) {
@@ -12107,6 +12213,7 @@ translateY()	translateY(<length|percentage>)
           const meta = card.querySelector("[data-stage-checkpoint-meta]");
           const loadBtn = card.querySelector('[data-stage-checkpoint-action="load"]');
           const compareBtn = card.querySelector('[data-stage-checkpoint-action="compare"]');
+          const clearBtn = card.querySelector('[data-stage-checkpoint-action="clear"]');
 
           card.classList.toggle("animation-lab-checkpoint-card-active", Boolean(slot && slot.values));
 
@@ -12119,6 +12226,7 @@ translateY()	translateY(<length|percentage>)
             }
             if (loadBtn) loadBtn.disabled = true;
             if (compareBtn) compareBtn.disabled = true;
+            if (clearBtn) clearBtn.disabled = true;
             return;
           }
 
@@ -12145,15 +12253,19 @@ translateY()	translateY(<length|percentage>)
           }
           if (loadBtn) loadBtn.disabled = false;
           if (compareBtn) compareBtn.disabled = false;
+          if (clearBtn) clearBtn.disabled = false;
         });
       }
 
-      function animationLabStageCheckpointSnapshot(slotKey) {
+      function animationLabStageCheckpointSnapshot(slotKey, options) {
+        const config = options && typeof options === "object" ? options : {};
         const values = animationLabPresetValues();
         const lensMode = String(elAnimationLabStageLens && elAnimationLabStageLens.value || "live").trim() || "live";
         const lens = animationLabStageLensConfig(values);
         const guide = animationLabStageGuide(lens.values);
-        const percent = Boolean(elAnimationLabStageFreeze && elAnimationLabStageFreeze.checked)
+        const percent = config.forceDefault
+          ? animationLabStageCheckpointDefaultPercent(slotKey)
+          : Boolean(elAnimationLabStageFreeze && elAnimationLabStageFreeze.checked)
           ? Math.max(0, Math.min(100, Number(elAnimationLabStageScrub && elAnimationLabStageScrub.value || 0)))
           : animationLabStageCheckpointDefaultPercent(slotKey);
         const scrub = animationLabStageScrubState(
@@ -12173,7 +12285,7 @@ translateY()	translateY(<length|percentage>)
         }
         const stageMeta = normalizeAnimationLabStageCheckpointMeta({
           label: animationLabStageCheckpointTitle(slotKey),
-          phase: scrub.enabled ? scrub.phase : phase,
+          phase: scrub.enabled && !config.forceDefault && scrub.percent === percent ? scrub.phase : phase,
           percent: percent,
           checkpointMs: checkpointMs,
           cue: scrub.enabled && scrub.percent === percent ? scrub.cue : "Saved " + animationLabStageCheckpointTitle(slotKey).toLowerCase() + " for repeatable rehearsal."
@@ -12193,6 +12305,14 @@ translateY()	translateY(<length|percentage>)
         animationLabStageCheckpoints[slotKey] = animationLabStageCheckpointSnapshot(slotKey);
         updateAnimationLabOutputs();
         setBuilderStatus("Animation Lab saved " + animationLabStageCheckpointTitle(slotKey) + " in the Stage Checkpoint Bank.");
+      }
+
+      function captureAllAnimationLabStageCheckpoints() {
+        ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.forEach(function (slotKey) {
+          animationLabStageCheckpoints[slotKey] = animationLabStageCheckpointSnapshot(slotKey, { forceDefault: true });
+        });
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab captured the default start, peak, and settle rehearsal frames.");
       }
 
       function loadAnimationLabStageCheckpoint(slotKey) {
@@ -12218,6 +12338,30 @@ translateY()	translateY(<length|percentage>)
         setBuilderStatus("Animation Lab restored " + animationLabStageCheckpointTitle(slotKey) + " into the live stage.");
       }
 
+      function clearAnimationLabStageCheckpoint(slotKey) {
+        if (ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.indexOf(slotKey) === -1) return;
+        if (!animationLabStageCheckpoints[slotKey] || !animationLabStageCheckpoints[slotKey].values) {
+          setBuilderStatus(animationLabStageCheckpointTitle(slotKey) + " is already empty.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        animationLabStageCheckpoints[slotKey] = null;
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab cleared " + animationLabStageCheckpointTitle(slotKey) + " from the Stage Checkpoint Bank.");
+      }
+
+      function clearAllAnimationLabStageCheckpoints() {
+        const savedCount = savedAnimationLabStageCheckpointKeys().length;
+        if (!savedCount) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab does not have any saved stage checkpoints to clear.");
+          return;
+        }
+        animationLabStageCheckpoints = createEmptyAnimationLabStageCheckpoints();
+        updateAnimationLabOutputs();
+        setBuilderStatus("Animation Lab cleared all saved stage checkpoints.");
+      }
+
       function sendAnimationLabStageCheckpointToCompare(slotKey) {
         if (ANIMATION_LAB_STAGE_CHECKPOINT_ORDER.indexOf(slotKey) === -1) return;
         const checkpoint = animationLabStageCheckpoints[slotKey];
@@ -12238,6 +12382,43 @@ translateY()	translateY(<length|percentage>)
         });
         updateAnimationLabOutputs();
         setBuilderStatus(animationLabStageCheckpointTitle(slotKey) + " was sent to " + animationLabCompareSlotTitle(compareSlotKey) + ".");
+      }
+
+      function sendAllAnimationLabStageCheckpointsToCompare() {
+        const savedSlotKeys = savedAnimationLabStageCheckpointKeys();
+        if (!savedSlotKeys.length) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Save at least one stage checkpoint before sending a full rehearsal set to the compare bench.");
+          return;
+        }
+        const compareSlotKey = elAnimationLabCheckpointCompareSlot ? (elAnimationLabCheckpointCompareSlot.value || "candidate").trim() : "candidate";
+        if (ANIMATION_LAB_COMPARE_SLOT_ORDER.indexOf(compareSlotKey) === -1) {
+          setBuilderStatus("Choose a valid compare destination before sending saved checkpoints.");
+          return;
+        }
+        const route = animationLabBulkCheckpointCompareRoute(compareSlotKey);
+        const destinations = [];
+        savedSlotKeys.forEach(function (slotKey, index) {
+          const checkpoint = animationLabStageCheckpoints[slotKey];
+          const destination = route[index];
+          if (!checkpoint || !checkpoint.values || !destination) return;
+          animationLabCompareSlots[destination] = cloneAnimationLabCompareSnapshot({
+            values: checkpoint.values,
+            sequence: checkpoint.sequence,
+            stageCheckpoint: normalizeAnimationLabStageCheckpointMeta(checkpoint.stageCheckpoint, animationLabStageCheckpointTitle(slotKey))
+          });
+          destinations.push(animationLabCompareSlotTitle(destination));
+        });
+        updateAnimationLabOutputs();
+        setBuilderStatus(
+          "Animation Lab sent " +
+          savedSlotKeys.length +
+          " saved stage checkpoint" +
+          (savedSlotKeys.length === 1 ? "" : "s") +
+          " into " +
+          destinations.join(", ") +
+          "."
+        );
       }
 
       function updateAnimationLabStage(values, risk, surface) {
@@ -21819,8 +22000,21 @@ translateY()	translateY(<length|percentage>)
           }
           if (action === "compare") {
             sendAnimationLabStageCheckpointToCompare(slotKey);
+            return;
+          }
+          if (action === "clear") {
+            clearAnimationLabStageCheckpoint(slotKey);
           }
         });
+      }
+      if (elAnimationLabCheckpointCaptureAll) {
+        elAnimationLabCheckpointCaptureAll.addEventListener("click", captureAllAnimationLabStageCheckpoints);
+      }
+      if (elAnimationLabCheckpointCompareAll) {
+        elAnimationLabCheckpointCompareAll.addEventListener("click", sendAllAnimationLabStageCheckpointsToCompare);
+      }
+      if (elAnimationLabCheckpointClearAll) {
+        elAnimationLabCheckpointClearAll.addEventListener("click", clearAllAnimationLabStageCheckpoints);
       }
       if (elAnimationLabCopyCompare) {
         elAnimationLabCopyCompare.addEventListener("click", copyAnimationLabCompareReport);
