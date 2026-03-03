@@ -3965,6 +3965,24 @@
                     <div id="animation-lab-variant-recommendation">The forge will recommend which variant to test next after it compares risk and target fit.</div>
                   </div>
                 </div>
+                <div class="info-grid" style="margin-top:10px;">
+                  <div class="info-tile">
+                    <div class="label">Bench Route</div>
+                    <div id="animation-lab-variant-route">Quiet QA, Launch Default, and Showcase Push can branch into the compare bench without replacing the live draft.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Live Match</div>
+                    <div id="animation-lab-variant-live-match">The forge will call out which branch already matches the live draft.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Recommended Slot</div>
+                    <div id="animation-lab-variant-recommended-slot">The forge will suggest which compare slot should receive the next promoted branch.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Bench Action</div>
+                    <div id="animation-lab-variant-bench-plan">Bulk benching will save all three forge branches into compare slots in one pass.</div>
+                  </div>
+                </div>
                 <div class="row" style="margin-top:8px;">
                   <label class="label">Variant Report</label>
                   <pre id="animation-lab-variant-report"></pre>
@@ -3973,6 +3991,11 @@
                   <button data-animation-variant-load="calm" type="button">Load Quiet QA</button>
                   <button data-animation-variant-load="balanced" type="button">Load Launch Default</button>
                   <button data-animation-variant-load="bold" type="button">Load Showcase Push</button>
+                  <button id="animation-lab-load-recommended-variant" type="button">Load Recommended Variant</button>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-bench-recommended" type="button">Bench Recommended Variant</button>
+                  <button id="animation-lab-bench-variants" type="button">Bench All Variants</button>
                   <button id="animation-lab-copy-variants" type="button">Copy Variant Report</button>
                 </div>
                 <div id="animation-lab-variant-note" class="input-hint">Use the forge to jump between a safer QA draft, a tuned default, and a higher-drama comparison pass before you overwrite compare slots.</div>
@@ -6014,7 +6037,14 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabVariantBalanced = document.getElementById("animation-lab-variant-balanced");
       const elAnimationLabVariantBold = document.getElementById("animation-lab-variant-bold");
       const elAnimationLabVariantRecommendation = document.getElementById("animation-lab-variant-recommendation");
+      const elAnimationLabVariantRoute = document.getElementById("animation-lab-variant-route");
+      const elAnimationLabVariantLiveMatch = document.getElementById("animation-lab-variant-live-match");
+      const elAnimationLabVariantRecommendedSlot = document.getElementById("animation-lab-variant-recommended-slot");
+      const elAnimationLabVariantBenchPlan = document.getElementById("animation-lab-variant-bench-plan");
       const elAnimationLabVariantReport = document.getElementById("animation-lab-variant-report");
+      const elAnimationLabLoadRecommendedVariant = document.getElementById("animation-lab-load-recommended-variant");
+      const elAnimationLabBenchRecommended = document.getElementById("animation-lab-bench-recommended");
+      const elAnimationLabBenchVariants = document.getElementById("animation-lab-bench-variants");
       const elAnimationLabCopyVariants = document.getElementById("animation-lab-copy-variants");
       const elAnimationLabVariantNote = document.getElementById("animation-lab-variant-note");
       const animationLabVariantLoadButtons = Array.from(document.querySelectorAll("[data-animation-variant-load]"));
@@ -15671,6 +15701,98 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function animationLabVariantBenchSlot(variantKey) {
+        if (variantKey === "calm") return "baseline";
+        if (variantKey === "balanced") return "candidate";
+        if (variantKey === "bold") return "stress";
+        return "candidate";
+      }
+
+      function animationLabVariantBenchRouteText() {
+        return [
+          "Quiet QA -> " + animationLabCompareSlotTitle(animationLabVariantBenchSlot("calm")),
+          "Launch Default -> " + animationLabCompareSlotTitle(animationLabVariantBenchSlot("balanced")),
+          "Showcase Push -> " + animationLabCompareSlotTitle(animationLabVariantBenchSlot("bold"))
+        ].join(" | ");
+      }
+
+      function saveAnimationLabVariantToCompare(variantKey, options) {
+        const config = options && typeof options === "object" ? options : {};
+        const forge = animationLabVariantForge(animationLabPresetValues());
+        const key = String(variantKey || "").trim();
+        const entry = forge.byKey[key] || null;
+        if (!entry) {
+          return null;
+        }
+        const slotKey = config.slotKey || animationLabVariantBenchSlot(key);
+        animationLabCompareSlots[slotKey] = cloneAnimationLabCompareSnapshot({
+          values: entry.values,
+          sequence: animationLabSequenceValues(),
+          stageCheckpoint: currentAnimationLabStageCheckpointMeta(entry.values)
+        });
+        return {
+          entry: entry,
+          slotKey: slotKey
+        };
+      }
+
+      function loadRecommendedAnimationLabVariant() {
+        const forge = animationLabVariantForge(animationLabPresetValues());
+        const entry = forge.byKey[forge.recommendedKey] || null;
+        if (!entry) {
+          setBuilderStatus("Animation Lab could not find the recommended forge variant.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        if (animationLabValuesMatchPreset(animationLabPresetValues(), entry.values)) {
+          setBuilderStatus("Animation Lab already matches the recommended " + entry.label + " forge variant.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        applyAnimationLabState(entry.values);
+        syncPreviewInteractionStateFromPseudo(entry.values.trigger);
+        flashActivePreviewPanel();
+        setBuilderStatus("Animation Lab loaded the recommended " + entry.label + " forge variant.");
+      }
+
+      function benchRecommendedAnimationLabVariant() {
+        const snapshot = saveAnimationLabVariantToCompare(animationLabVariantForge(animationLabPresetValues()).recommendedKey);
+        if (!snapshot) {
+          setBuilderStatus("Animation Lab could not bench the recommended forge variant.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        updateAnimationLabOutputs();
+        setBuilderStatus(
+          "Animation Lab benched " +
+          snapshot.entry.label +
+          " into " +
+          animationLabCompareSlotTitle(snapshot.slotKey) +
+          " without replacing the live draft."
+        );
+      }
+
+      function benchAllAnimationLabVariants() {
+        const saved = [];
+        ["calm", "balanced", "bold"].forEach(function (variantKey) {
+          const snapshot = saveAnimationLabVariantToCompare(variantKey);
+          if (snapshot) saved.push(snapshot);
+        });
+        if (!saved.length) {
+          setBuilderStatus("Animation Lab could not bench the forge variants.");
+          updateAnimationLabOutputs();
+          return;
+        }
+        updateAnimationLabOutputs();
+        setBuilderStatus(
+          "Animation Lab benched " +
+          saved.map(function (item) {
+            return item.entry.label + " -> " + animationLabCompareSlotTitle(item.slotKey);
+          }).join(", ") +
+          "."
+        );
+      }
+
       function updateAnimationLabOutputs() {
         const values = animationLabPresetValues();
         const sequence = animationLabSequenceValues();
@@ -15904,9 +16026,55 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabVariantBalanced.textContent = forge.byKey.balanced ? forge.byKey.balanced.tile : "Launch Default is unavailable right now.";
         elAnimationLabVariantBold.textContent = forge.byKey.bold ? forge.byKey.bold.tile : "Showcase Push is unavailable right now.";
         elAnimationLabVariantRecommendation.textContent = forge.recommendation;
+        if (elAnimationLabVariantRoute) {
+          elAnimationLabVariantRoute.textContent = animationLabVariantBenchRouteText() + ".";
+        }
+        if (elAnimationLabVariantLiveMatch) {
+          const liveMatch = forge.entries.find(function (entry) {
+            return animationLabValuesMatchPreset(values, entry.values);
+          }) || null;
+          elAnimationLabVariantLiveMatch.textContent = liveMatch
+            ? "Live controls already match " + liveMatch.label + ", so you can bench it without reloading anything."
+            : "Live controls are between the canned branches right now, so the forge can create three clean compare branches.";
+        }
+        if (elAnimationLabVariantRecommendedSlot) {
+          const recommendedEntry = forge.byKey[forge.recommendedKey] || null;
+          elAnimationLabVariantRecommendedSlot.textContent = recommendedEntry
+            ? recommendedEntry.label + " should land in " + animationLabCompareSlotTitle(animationLabVariantBenchSlot(forge.recommendedKey)) + " next."
+            : "The forge needs a usable branch before it can suggest a compare slot.";
+        }
+        if (elAnimationLabVariantBenchPlan) {
+          const hasBenchEntries = animationLabCompareEntries().length > 0;
+          elAnimationLabVariantBenchPlan.textContent = hasBenchEntries
+            ? "Bench All Variants will refresh all three compare slots using the current sequence plan and the current frozen frame tag."
+            : "Bench All Variants will seed the compare bench in one pass so you can review a baseline, keeper, and stress route immediately.";
+        }
         elAnimationLabVariantReport.textContent = forge.report;
+        if (elAnimationLabLoadRecommendedVariant) {
+          const recommendedEntry = forge.byKey[forge.recommendedKey] || null;
+          const alreadyMatched = Boolean(recommendedEntry && animationLabValuesMatchPreset(values, recommendedEntry.values));
+          elAnimationLabLoadRecommendedVariant.disabled = !recommendedEntry || alreadyMatched;
+          elAnimationLabLoadRecommendedVariant.textContent = !recommendedEntry
+            ? "No Recommendation Yet"
+            : alreadyMatched
+              ? "Recommended Variant Already Live"
+              : "Load " + recommendedEntry.label;
+        }
+        if (elAnimationLabBenchRecommended) {
+          const recommendedEntry = forge.byKey[forge.recommendedKey] || null;
+          elAnimationLabBenchRecommended.disabled = !recommendedEntry;
+          elAnimationLabBenchRecommended.textContent = recommendedEntry
+            ? "Bench " + recommendedEntry.label
+            : "Bench Recommended Variant";
+        }
+        if (elAnimationLabBenchVariants) {
+          elAnimationLabBenchVariants.disabled = !forge.entries.length;
+          elAnimationLabBenchVariants.textContent = forge.entries.length
+            ? "Bench All Variants"
+            : "Forge Unavailable";
+        }
         elAnimationLabVariantNote.textContent = forge.byKey[forge.recommendedKey] && animationLabValuesMatchPreset(values, forge.byKey[forge.recommendedKey].values)
-          ? "The recommended forge variant already matches the live controls. Capture it in the compare bench, or load another variant to create a deliberate branch."
+          ? "The recommended forge variant already matches the live controls. Bench it directly or load another branch to create a deliberate compare spread."
           : "Use the forge to branch the live motion into a QA-safe option, a launch default, or a showcase-weight comparison before promoting a winner.";
         elAnimationLabSequenceSummary.textContent = animationLabSequenceSummary(sequence, sequenceEntries);
         elAnimationLabSequenceWindow.textContent = animationLabSequenceWindowSummary(values, sequenceEntries);
@@ -22644,6 +22812,15 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
       if (elAnimationLabCopyVariants) {
         elAnimationLabCopyVariants.addEventListener("click", copyAnimationLabVariantReport);
+      }
+      if (elAnimationLabLoadRecommendedVariant) {
+        elAnimationLabLoadRecommendedVariant.addEventListener("click", loadRecommendedAnimationLabVariant);
+      }
+      if (elAnimationLabBenchRecommended) {
+        elAnimationLabBenchRecommended.addEventListener("click", benchRecommendedAnimationLabVariant);
+      }
+      if (elAnimationLabBenchVariants) {
+        elAnimationLabBenchVariants.addEventListener("click", benchAllAnimationLabVariants);
       }
       animationLabVariantLoadButtons.forEach(function (button) {
         button.addEventListener("click", function () {
