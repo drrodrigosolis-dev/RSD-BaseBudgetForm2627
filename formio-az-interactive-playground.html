@@ -4022,8 +4022,27 @@
                   <label class="label">Portable Release Brief</label>
                   <pre id="animation-lab-handoff-brief"></pre>
                 </div>
+                <div class="info-grid" style="margin-top:10px;">
+                  <div class="info-tile">
+                    <div class="label">Bundle Source</div>
+                    <div id="animation-lab-handoff-bundle-source">The bundle will call out whether it is packaging a saved keeper or the current live draft.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Included Payload</div>
+                    <div id="animation-lab-handoff-bundle-includes">Release brief, shipping CSS, reduced-motion fallback, and sequence coverage will be summarized here.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Bundle Readiness</div>
+                    <div id="animation-lab-handoff-bundle-ready">Save a compare slot to turn the bundle into a keeper-backed handoff packet.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Portable Handoff Bundle</label>
+                  <pre id="animation-lab-handoff-bundle"></pre>
+                </div>
                 <div class="button-row" style="margin-top:10px;">
                   <button id="animation-lab-copy-handoff" type="button">Copy Release Brief</button>
+                  <button id="animation-lab-copy-handoff-bundle" type="button">Copy Handoff Bundle</button>
                 </div>
                 <div id="animation-lab-handoff-note" class="input-hint">This brief combines the compare keeper, review matrix, and surface-fit guidance into one reusable export block.</div>
               </div>
@@ -4905,8 +4924,9 @@
           <p class="step-hint">Preview target receives current live styles and auto-applied class for fast visual validation.</p>
           <div class="row">
             <label class="label" for="target">Preview Target</label>
-            <select id="target" title="Choose which preview element receives current test styles.">
+            <select id="target" title="Choose which preview element receives current test styles, or apply them to every preview panel at once.">
               <option value="card">Card</option>
+              <option value="all">All Targets</option>
               <option value="input">Input</option>
               <option value="button">Button</option>
               <option value="image">Image</option>
@@ -5738,7 +5758,12 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabHandoffSurface = document.getElementById("animation-lab-handoff-surface");
       const elAnimationLabHandoffNext = document.getElementById("animation-lab-handoff-next");
       const elAnimationLabHandoffBrief = document.getElementById("animation-lab-handoff-brief");
+      const elAnimationLabHandoffBundleSource = document.getElementById("animation-lab-handoff-bundle-source");
+      const elAnimationLabHandoffBundleIncludes = document.getElementById("animation-lab-handoff-bundle-includes");
+      const elAnimationLabHandoffBundleReady = document.getElementById("animation-lab-handoff-bundle-ready");
+      const elAnimationLabHandoffBundle = document.getElementById("animation-lab-handoff-bundle");
       const elAnimationLabCopyHandoff = document.getElementById("animation-lab-copy-handoff");
+      const elAnimationLabCopyHandoffBundle = document.getElementById("animation-lab-copy-handoff-bundle");
       const elAnimationLabHandoffNote = document.getElementById("animation-lab-handoff-note");
       const elAnimationLabSurfaceFit = document.getElementById("animation-lab-surface-fit");
       const elAnimationLabSurfaceBest = document.getElementById("animation-lab-surface-best");
@@ -9962,7 +9987,7 @@ translateY()	translateY(<length|percentage>)
         elBuilderSelectorOverride.value = preset.selectorOverride || "";
         elBuilderVariableScope.value = preset.variableScope || (preset.baseSelector || defaultBase);
         elBuilderAutoApply.checked = preset.autoApply !== false;
-        if (preset.target && Object.prototype.hasOwnProperty.call(previewTargets, preset.target)) {
+        if (preset.target && isPreviewTargetKey(preset.target)) {
           elTarget.value = preset.target;
         }
         lastAutoBaseClass = sanitizeClassName(elBuilderClass.value);
@@ -10190,6 +10215,15 @@ translateY()	translateY(<length|percentage>)
       }
 
       function actualPreviewStateActive(key, target) {
+        if (!target && isAllPreviewTargetsSelected()) {
+          return activePreviewTargetKeys().some(function (targetKey) {
+            const state = previewActualStates[targetKey] || {};
+            if (key === "focus-visible") {
+              return Boolean(state["focus-visible"] || state.focus);
+            }
+            return Boolean(state[key]);
+          });
+        }
         const targetKey = previewKeyForElement(target || targetElement());
         const state = previewActualStates[targetKey] || {};
         if (key === "focus-visible") {
@@ -10209,6 +10243,16 @@ translateY()	translateY(<length|percentage>)
       }
 
       function actualStateSummaryForTarget(target) {
+        if (!target && isAllPreviewTargetsSelected()) {
+          const labels = [];
+          const keys = activePreviewTargetKeys();
+          if (keys.some(function (targetKey) { return Boolean(previewActualStates[targetKey] && previewActualStates[targetKey].hover); })) labels.push("Hover");
+          if (keys.some(function (targetKey) { return Boolean(previewActualStates[targetKey] && previewActualStates[targetKey].focus); })) labels.push("Focus");
+          if (keys.some(function (targetKey) { return Boolean(previewActualStates[targetKey] && previewActualStates[targetKey].active); })) labels.push("Active");
+          if (keys.some(function (targetKey) { return Boolean(previewActualStates[targetKey] && previewActualStates[targetKey].checked); })) labels.push("Checked");
+          if (!labels.length) return "none";
+          return labels.join(" + ");
+        }
         const targetKey = previewKeyForElement(target || targetElement());
         const state = previewActualStates[targetKey] || {};
         const labels = [];
@@ -10225,7 +10269,7 @@ translateY()	translateY(<length|percentage>)
         const simulatedText = simulated === "default"
           ? "Default"
           : ((PREVIEW_STATE_SELECTOR_MAP[simulated] && PREVIEW_STATE_SELECTOR_MAP[simulated].label) || simulated);
-        const actualText = actualStateSummaryForTarget(targetElement());
+        const actualText = actualStateSummaryForTarget();
         if (elPreviewSimulatedBadge) {
           elPreviewSimulatedBadge.textContent = "Simulator: " + simulatedText;
           elPreviewSimulatedBadge.classList.remove("preview-pill-neutral", "preview-pill-sim-active", "preview-pill-actual-active", "preview-pill-muted");
@@ -10256,7 +10300,7 @@ translateY()	translateY(<length|percentage>)
         const requiredState = stateKeyForPseudoSelector(pseudo);
         if (!requiredState) return false;
         const simulatedState = (elPreviewInteractionState.value || "default").trim() === requiredState;
-        const actualState = actualPreviewStateActive(requiredState, targetElement());
+        const actualState = actualPreviewStateActive(requiredState);
         return simulatedState || actualState;
       }
 
@@ -10963,6 +11007,7 @@ translateY()	translateY(<length|percentage>)
       }
 
       function previewTargetLabel(key) {
+        if (key === "all") return "All Targets";
         if (key === "card") return "Card";
         if (key === "input") return "Input";
         if (key === "button") return "Button";
@@ -12820,7 +12865,7 @@ translateY()	translateY(<length|percentage>)
         const selectorState = state.selectorState && typeof state.selectorState === "object" ? state.selectorState : {};
         return {
           savedAt: String(state.savedAt || "").trim(),
-          target: Object.prototype.hasOwnProperty.call(previewTargets, target) ? target : "",
+          target: isPreviewTargetKey(target) ? target : "",
           previewInteractionState:
             previewInteractionState === "default" || PREVIEW_STATE_SELECTOR_MAP[previewInteractionState]
               ? (previewInteractionState || "default")
@@ -13254,6 +13299,107 @@ translateY()	translateY(<length|percentage>)
           surface: surfacePlan,
           next: next,
           brief: lines.join("\n")
+        };
+      }
+
+      function animationLabSequenceAddonCss(values, sequence, entries) {
+        const motion = cloneAnimationLabValueState(values);
+        const plan = normalizeAnimationLabSequenceValueState(sequence);
+        const list = Array.isArray(entries) && entries.length ? entries : animationLabSequenceEntries(motion, plan);
+        if (plan.mode === "single" || !list.length) {
+          return "No sequence add-on is active. Single lead mode keeps the current selector only.";
+        }
+        const media = currentBuilderMediaQuery();
+        const blocks = list.map(function (entry) {
+          return animationLabRuleBlock(entry.selector, animationLabDeclarationsWithDelay(motion, entry.delayText));
+        });
+        if (media) {
+          return [
+            media + " {",
+            blocks.map(function (block) {
+              return block.split("\n").map(function (line) { return "  " + line; }).join("\n");
+            }).join("\n\n"),
+            "}"
+          ].join("\n");
+        }
+        return blocks.join("\n\n");
+      }
+
+      function animationLabReleaseHandoffBundleData(handoff, winner, values, sequence, selector) {
+        const snapshot = winner
+          ? cloneAnimationLabCompareSnapshot(winner)
+          : {
+              values: cloneAnimationLabValueState(values),
+              sequence: normalizeAnimationLabSequenceValueState(sequence)
+            };
+        const bundleValues = cloneAnimationLabValueState(snapshot.values);
+        const bundleSequence = normalizeAnimationLabSequenceValueState(snapshot.sequence);
+        const bundleEntries = animationLabSequenceEntries(bundleValues, bundleSequence);
+        const bundleRisk = animationLabRiskAssessment(bundleValues);
+        const bundleReview = animationLabBestReviewEntry(animationLabTriggerReviewEntries(bundleValues));
+        const source = winner
+          ? winner.slotTitle + " is powering this handoff bundle, so the packet reflects the saved keeper instead of any live drift."
+          : "No saved keeper yet, so the bundle is packaging the current live draft. Save a compare slot before treating it as a release checkpoint.";
+        const includes = [
+          "Release brief",
+          "shipping CSS package",
+          "reduced-motion fallback",
+          bundleSequence.mode === "single"
+            ? "single-selector motion snapshot"
+            : bundleEntries.length + "-step sequence add-on"
+        ].join(" | ");
+        let readiness = "";
+        if (winner) {
+          const liveDiff = animationLabCompareDiffLines(winner, currentAnimationLabCompareSnapshot());
+          if (liveDiff.length) {
+            readiness = "Keeper-backed, but live controls drift from the saved bundle. Reload the keeper before a final export pass if you want the UI to match the packet.";
+          } else if (bundleReview && !bundleReview.current) {
+            readiness = "Keeper is locked. Review still favors " + bundleReview.label + ", so test that state once more before shipping.";
+          } else {
+            readiness = "Keeper, review, and bundle are aligned enough for a portable handoff.";
+          }
+        } else {
+          readiness = "Live-only packet. Capture a baseline or candidate slot first so the handoff stops depending on unsaved controls.";
+        }
+
+        const lines = [
+          "Animation Lab Portable Handoff Bundle",
+          "Source: " + (winner ? winner.slotTitle : "Live Draft"),
+          "Selector: " + selector,
+          "Motion: " + animationLabShorthand(bundleValues),
+          "Risk: " + bundleRisk.level + " " + bundleRisk.score + "/100",
+          "Included: " + includes,
+          "",
+          "=== Release Brief ===",
+          handoff.brief,
+          "",
+          "=== Shipping CSS Package ===",
+          animationLabPackageCss(selector, bundleValues),
+          "",
+          "=== Reduced-Motion Fallback ===",
+          animationLabReducedMotionCss(selector),
+          "",
+          "=== Sequence Add-On ===",
+          animationLabSequenceAddonCss(bundleValues, bundleSequence, bundleEntries),
+          "",
+          "=== Final Check ===",
+          winner
+            ? "1. Keep " + (winner.slotTitle || "the saved keeper") + " protected until rollout is approved."
+            : "1. Capture a compare slot so this handoff has a named keeper.",
+          bundleReview
+            ? "2. Rehearse " + bundleReview.label + " once more on the preview target before release."
+            : "2. Run the trigger review matrix to confirm the strongest release state.",
+          bundleSequence.mode === "single"
+            ? "3. Sequence planner is in single lead mode, so no stagger add-on is required."
+            : "3. Apply the sequence add-on only where sibling timing should cascade in production.",
+          "4. Validate the reduced-motion fallback before sharing the packet."
+        ];
+
+        return {
+          source: source,
+          includes: includes,
+          readiness: readiness,
+          bundle: lines.join("\n")
         };
       }
 
@@ -14051,6 +14197,7 @@ translateY()	translateY(<length|percentage>)
         const packageCss = animationLabPackageCss(selector, values);
         const currentTarget = previewTargetLabel((elTarget.value || "card").trim());
         const handoff = animationLabReleaseHandoffData(compareAnchor, compareWinner, values, risk, surface, bestReview, currentTarget, selector);
+        const handoffBundle = animationLabReleaseHandoffBundleData(handoff, compareWinner, values, sequence, selector);
         const scopeText = media ? (" in " + ruleMediaLabel(media)) : " in base layer";
         updateAnimationLabStage(values, risk, surface);
         elAnimationLabPresetIntent.textContent = brief.intent;
@@ -14161,9 +14308,13 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabHandoffSurface.textContent = handoff.surface;
         elAnimationLabHandoffNext.textContent = handoff.next;
         elAnimationLabHandoffBrief.textContent = handoff.brief;
+        elAnimationLabHandoffBundleSource.textContent = handoffBundle.source;
+        elAnimationLabHandoffBundleIncludes.textContent = handoffBundle.includes;
+        elAnimationLabHandoffBundleReady.textContent = handoffBundle.readiness;
+        elAnimationLabHandoffBundle.textContent = handoffBundle.bundle;
         elAnimationLabHandoffNote.textContent = compareWinner
-          ? "This brief now packages the saved keeper, review recommendation, and surface shortlist into one export block."
-          : "Capture at least one compare slot to turn this live-only summary into a keeper-backed handoff brief.";
+          ? "This handoff now ships as both a brief and a fuller bundle with the saved keeper, explicit reduced-motion fallback, and any active sequence add-on."
+          : "Capture at least one compare slot to turn this live-only summary into a keeper-backed handoff bundle.";
         elAnimationLabSurfaceFit.textContent = surface.fit;
         elAnimationLabSurfaceBest.textContent = surface.best;
         elAnimationLabSurfaceCaution.textContent = surface.caution;
@@ -14912,7 +15063,7 @@ translateY()	translateY(<length|percentage>)
         builderVariables = Array.isArray(state.variables) ? state.variables.map(function (v) {
           return { scope: v.scope, name: v.name, value: v.value };
         }) : [];
-        if (state.target && Object.prototype.hasOwnProperty.call(previewTargets, state.target)) {
+        if (state.target && isPreviewTargetKey(state.target)) {
           elTarget.value = state.target;
         }
         syncPreviewSimulatorToActualIfEnabled(targetElement());
@@ -15257,7 +15408,7 @@ translateY()	translateY(<length|percentage>)
         applyBuilderState(preset.state);
         elPresetName.value = preset.name;
         const target = preset.state && preset.state.target ? preset.state.target : elTarget.value;
-        if (target && Object.prototype.hasOwnProperty.call(previewTargets, target)) {
+        if (target && isPreviewTargetKey(target)) {
           elTarget.value = target;
         }
         previewMode = "after";
@@ -17489,29 +17640,58 @@ translateY()	translateY(<length|percentage>)
         });
       }
 
+      function isPreviewTargetKey(key) {
+        const normalized = String(key || "").trim();
+        return normalized === "all" || Object.prototype.hasOwnProperty.call(previewTargets, normalized);
+      }
+
+      function isAllPreviewTargetsSelected() {
+        return (elTarget.value || "").trim() === "all";
+      }
+
+      function activePreviewTargetKeys() {
+        if (isAllPreviewTargetsSelected()) {
+          return Object.keys(previewTargets);
+        }
+        const current = (elTarget.value || "card").trim();
+        if (Object.prototype.hasOwnProperty.call(previewTargets, current)) {
+          return [current];
+        }
+        return ["card"];
+      }
+
+      function activePreviewTargetElements() {
+        return activePreviewTargetKeys().map(function (key) {
+          return previewTargets[key];
+        }).filter(function (target) {
+          return Boolean(target);
+        });
+      }
+
       function targetElement() {
         return previewTargets[elTarget.value] || previewCard;
       }
 
       function updatePreviewFocus() {
-        const current = elTarget.value || "card";
+        const current = (elTarget.value || "card").trim();
+        const allTargets = current === "all";
         const interaction = (elPreviewInteractionState.value || "default").trim();
         const interactionLabel = interaction === "default"
           ? "Default"
           : ((PREVIEW_STATE_SELECTOR_MAP[interaction] && PREVIEW_STATE_SELECTOR_MAP[interaction].label) || interaction);
         previewPanels.forEach(function (panel) {
           const key = panel.getAttribute("data-preview-key") || "";
-          const active = key === current;
-          const support = !active && previewSupportKeys.indexOf(key) >= 0;
+          const active = allTargets || key === current;
+          const support = !allTargets && !active && previewSupportKeys.indexOf(key) >= 0;
           panel.classList.toggle("preview-panel-active", active);
           panel.classList.toggle("preview-panel-support", support);
-          panel.classList.toggle("preview-panel-inactive", !active);
+          panel.classList.toggle("preview-panel-inactive", !(active || support));
         });
         updatePreviewStateBadges();
-        let helpText =
-          "Active preview target: " + previewTargetLabel(current) +
-          ". The highlighted panel receives the current styles. Interaction: " + interactionLabel + ".";
-        if (previewSupportKeys.length > 0) {
+        let helpText = allTargets
+          ? "Active preview target: All Targets. Every preview panel receives the current styles. Interaction: " + interactionLabel + "."
+          : "Active preview target: " + previewTargetLabel(current) + ". The highlighted panel receives the current styles. Interaction: " + interactionLabel + ".";
+        if (!allTargets && previewSupportKeys.length > 0) {
           helpText += " Support preview: " + previewSupportKeys.map(previewTargetLabel).join(", ") + ".";
           if (previewSupportReason) {
             helpText += " " + previewSupportReason;
@@ -17521,10 +17701,11 @@ translateY()	translateY(<length|percentage>)
       }
 
       function flashActivePreviewPanel() {
-        const current = elTarget.value || "card";
+        const current = (elTarget.value || "card").trim();
+        const allTargets = current === "all";
         previewPanels.forEach(function (panel) {
           panel.classList.remove("preview-panel-flash");
-          if (panel.getAttribute("data-preview-key") === current) {
+          if (allTargets || panel.getAttribute("data-preview-key") === current) {
             void panel.offsetWidth;
             panel.classList.add("preview-panel-flash");
           }
@@ -18242,7 +18423,7 @@ translateY()	translateY(<length|percentage>)
       }
 
       function renderDiffInspector(changes) {
-        elDiffTargetLabel.textContent = previewTargetLabel(elTarget.value);
+        elDiffTargetLabel.textContent = isAllPreviewTargetsSelected() ? "All Targets (Card reference)" : previewTargetLabel(elTarget.value);
         elDiffList.innerHTML = "";
         if (!changes.length) {
           elDiffChangeCount.textContent = "No visual differences detected between the baseline and the current preview.";
@@ -19603,7 +19784,15 @@ translateY()	translateY(<length|percentage>)
       }
 
       function applyBuilderClassToTarget() {
-        applyBuilderClassToElement(targetElement());
+        activePreviewTargetElements().forEach(function (target) {
+          applyBuilderClassToElement(target);
+        });
+      }
+
+      function applyPreviewInteractionStateToActiveTargets() {
+        activePreviewTargetElements().forEach(function (target) {
+          applyPreviewInteractionStateToElement(target);
+        });
       }
 
       function addRules(rules) {
@@ -19681,9 +19870,13 @@ translateY()	translateY(<length|percentage>)
         builderStyleTag.disabled = previewMode === "before";
         previewStateStyleTag.disabled = previewMode === "before";
         const target = targetElement();
+        const liveTargets = activePreviewTargetElements();
         const beforeMode = previewMode === "before";
         latestBuilderCandidate = null;
-        if (item && elCategory.value === "property") {
+        if (!liveTargets.length && target) {
+          liveTargets.push(target);
+        }
+        if (item && elCategory.value === "property" && !isAllPreviewTargetsSelected()) {
           const supportInfo = previewSupportInfoForProperty(item.name, target);
           previewSupportKeys = supportInfo.keys;
           previewSupportReason = supportInfo.reason;
@@ -19699,7 +19892,7 @@ translateY()	translateY(<length|percentage>)
           updateSelectionGuide(null);
           if (!beforeMode) {
             applyBuilderClassToTarget();
-            applyPreviewInteractionStateToElement(target);
+            applyPreviewInteractionStateToActiveTargets();
           }
           updateExportWizard();
           updateDiffInspector(null, {});
@@ -19710,7 +19903,11 @@ translateY()	translateY(<length|percentage>)
         const map = valuesMap();
 
         if (elCategory.value === "attribute") {
-          const attr = buildAttributeOutput(item, map, target);
+          let attr = null;
+          liveTargets.forEach(function (currentTarget, index) {
+            const result = buildAttributeOutput(item, map, currentTarget);
+            if (index === 0) attr = result;
+          });
           elLiveSyntax.textContent = "<div " + attr.syntax + ">...</div>";
           if (attr.attributeName === "style") {
             const styleRules = parseDeclarations(attr.styleValue);
@@ -19722,7 +19919,7 @@ translateY()	translateY(<length|percentage>)
             resetPreview();
           } else {
             applyBuilderClassToTarget();
-            applyPreviewInteractionStateToElement(target);
+            applyPreviewInteractionStateToActiveTargets();
           }
           updateItemBrief(item);
           updateSelectionGuide(item);
@@ -19733,14 +19930,18 @@ translateY()	translateY(<length|percentage>)
         }
 
         if (elCategory.value === "property") {
-          const decl = buildPropertyOutput(item, map, target);
+          let decl = "";
+          liveTargets.forEach(function (currentTarget, index) {
+            const currentDecl = buildPropertyOutput(item, map, currentTarget);
+            if (index === 0) decl = currentDecl;
+          });
           elLiveSyntax.textContent = ".demo-target {\n  " + decl + "\n}";
           latestBuilderCandidate = { kind: "single", rule: decl };
           if (beforeMode) {
             resetPreview();
           } else {
             applyBuilderClassToTarget();
-            applyPreviewInteractionStateToElement(target);
+            applyPreviewInteractionStateToActiveTargets();
           }
           updateItemBrief(item);
           updateSelectionGuide(item);
@@ -19750,7 +19951,11 @@ translateY()	translateY(<length|percentage>)
           return;
         }
 
-        const fn = buildFunctionOutput(item, map, target);
+        let fn = null;
+        liveTargets.forEach(function (currentTarget, index) {
+          const currentFn = buildFunctionOutput(item, map, currentTarget);
+          if (index === 0) fn = currentFn;
+        });
         elLiveSyntax.textContent = fn.call + "\n\n" + ".demo-target {\n  " + fn.declaration + "\n}";
         updateFunctionHelp(item, fn.call);
         latestBuilderCandidate = { kind: "single", rule: fn.declaration };
@@ -19758,7 +19963,7 @@ translateY()	translateY(<length|percentage>)
           resetPreview();
         } else {
           applyBuilderClassToTarget();
-          applyPreviewInteractionStateToElement(target);
+          applyPreviewInteractionStateToActiveTargets();
         }
         updateItemBrief(item);
         updateSelectionGuide(item);
@@ -19871,6 +20076,18 @@ translateY()	translateY(<length|percentage>)
         } catch (err) {
           elAnimationLabCopyHandoff.textContent = "Copy Failed";
           setTimeout(function () { elAnimationLabCopyHandoff.textContent = "Copy Release Brief"; }, 1200);
+        }
+      }
+
+      async function copyAnimationLabReleaseHandoffBundle() {
+        try {
+          await navigator.clipboard.writeText(elAnimationLabHandoffBundle.textContent);
+          elAnimationLabCopyHandoffBundle.textContent = "Copied";
+          setTimeout(function () { elAnimationLabCopyHandoffBundle.textContent = "Copy Handoff Bundle"; }, 1200);
+          setBuilderStatus("Animation Lab handoff bundle copied.");
+        } catch (err) {
+          elAnimationLabCopyHandoffBundle.textContent = "Copy Failed";
+          setTimeout(function () { elAnimationLabCopyHandoffBundle.textContent = "Copy Handoff Bundle"; }, 1200);
         }
       }
 
@@ -20786,6 +21003,7 @@ translateY()	translateY(<length|percentage>)
       elAnimationLabReviewLoadBest.addEventListener("click", applyAnimationLabBestReviewTrigger);
       elAnimationLabCopyReview.addEventListener("click", copyAnimationLabReviewSnapshot);
       elAnimationLabCopyHandoff.addEventListener("click", copyAnimationLabReleaseHandoff);
+      elAnimationLabCopyHandoffBundle.addEventListener("click", copyAnimationLabReleaseHandoffBundle);
       elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
       elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
       if (elAnimationLabCopyVariants) {
