@@ -4145,13 +4145,23 @@ opacity: 0;</textarea>
                     <div id="animation-lab-custom-property-span">The lab will list which CSS properties the custom draft is actually moving.</div>
                   </div>
                   <div class="info-tile">
+                    <div class="label">Edge Continuity</div>
+                    <div id="animation-lab-custom-edge-continuity">The lab will confirm whether every moving property is anchored in both the first and last visible frames.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Stop Hygiene</div>
+                    <div id="animation-lab-custom-stop-hygiene">Repeated properties inside one stop will be flagged here before export.</div>
+                  </div>
+                  <div class="info-tile">
                     <div class="label">Repair Plan</div>
                     <div id="animation-lab-custom-repair-plan">Use the recovery actions when the draft is missing edge frames or repeats the same marker more than once.</div>
                   </div>
                 </div>
                 <div class="button-row" style="margin-top:10px;">
                   <button id="animation-lab-custom-fill-edges" type="button">Fill Missing 0% / 100%</button>
+                  <button id="animation-lab-custom-balance-edges" type="button">Backfill Edge Properties</button>
                   <button id="animation-lab-custom-merge-markers" type="button">Merge Duplicate Markers</button>
+                  <button id="animation-lab-custom-dedupe-properties" type="button">Remove Repeated Properties</button>
                 </div>
                 <div id="animation-lab-custom-repair-note" class="input-hint">These repair actions only reshape the custom draft textarea. They do not change the built-in motion pack you are using as the intent baseline.</div>
                 <div id="animation-lab-custom-note" class="input-hint">The selected built-in keyframe still powers the Motion Pack brief and guardrails. The custom draft only overrides the live preview, exported keyframes block, and shipped animation name while enabled.</div>
@@ -6188,9 +6198,13 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabCustomCoverage = document.getElementById("animation-lab-custom-coverage");
       const elAnimationLabCustomMarkerHealth = document.getElementById("animation-lab-custom-marker-health");
       const elAnimationLabCustomPropertySpan = document.getElementById("animation-lab-custom-property-span");
+      const elAnimationLabCustomEdgeContinuity = document.getElementById("animation-lab-custom-edge-continuity");
+      const elAnimationLabCustomStopHygiene = document.getElementById("animation-lab-custom-stop-hygiene");
       const elAnimationLabCustomRepairPlan = document.getElementById("animation-lab-custom-repair-plan");
       const elAnimationLabCustomFillEdges = document.getElementById("animation-lab-custom-fill-edges");
+      const elAnimationLabCustomBalanceEdges = document.getElementById("animation-lab-custom-balance-edges");
       const elAnimationLabCustomMergeMarkers = document.getElementById("animation-lab-custom-merge-markers");
+      const elAnimationLabCustomDedupeProperties = document.getElementById("animation-lab-custom-dedupe-properties");
       const elAnimationLabCustomRepairNote = document.getElementById("animation-lab-custom-repair-note");
       const elAnimationLabCustomNote = document.getElementById("animation-lab-custom-note");
       const elAnimationLabAnatomyStops = document.getElementById("animation-lab-anatomy-stops");
@@ -10763,7 +10777,14 @@ translateY()	translateY(<length|percentage>)
         const selectorCounts = {};
         const selectorMeta = {};
         const propertyList = [];
+        const edgePropertyCoverage = {
+          "0%": [],
+          "100%": []
+        };
+        const duplicatePropertyStops = [];
         analysis.stops.forEach(function (stop) {
+          const propertySeen = {};
+          const duplicateProps = [];
           stop.selectors.forEach(function (selector) {
             const meta = animationLabNormalizedMarkerMeta(selector);
             if (!meta.key) return;
@@ -10773,10 +10794,31 @@ translateY()	translateY(<length|percentage>)
             }
           });
           stop.declarations.forEach(function (decl) {
+            const propertyKey = decl.property.toLowerCase();
+            if (propertySeen[propertyKey] && duplicateProps.indexOf(decl.property) < 0) {
+              duplicateProps.push(decl.property);
+            }
+            propertySeen[propertyKey] = true;
             if (propertyList.indexOf(decl.property) < 0) {
               propertyList.push(decl.property);
             }
+            if (stop.selectors.some(function (selector) {
+              return animationLabNormalizedMarkerMeta(selector).key === "0%";
+            }) && edgePropertyCoverage["0%"].indexOf(decl.property) < 0) {
+              edgePropertyCoverage["0%"].push(decl.property);
+            }
+            if (stop.selectors.some(function (selector) {
+              return animationLabNormalizedMarkerMeta(selector).key === "100%";
+            }) && edgePropertyCoverage["100%"].indexOf(decl.property) < 0) {
+              edgePropertyCoverage["100%"].push(decl.property);
+            }
           });
+          if (duplicateProps.length) {
+            duplicatePropertyStops.push({
+              markerText: stop.markerText,
+              properties: duplicateProps
+            });
+          }
         });
 
         const selectorKeys = Object.keys(selectorCounts);
@@ -10796,6 +10838,16 @@ translateY()	translateY(<length|percentage>)
         const missingEdges = [];
         if (!hasStart) missingEdges.push("0%");
         if (!hasEnd) missingEdges.push("100%");
+        const startMissingProperties = hasStart
+          ? propertyList.filter(function (property) {
+            return edgePropertyCoverage["0%"].indexOf(property) < 0;
+          })
+          : [];
+        const endMissingProperties = hasEnd
+          ? propertyList.filter(function (property) {
+            return edgePropertyCoverage["100%"].indexOf(property) < 0;
+          })
+          : [];
 
         let coverage = "No recoverable frame stops yet. Add or seed a stop before you export a custom motion.";
         if (analysis.stops.length) {
@@ -10841,6 +10893,37 @@ translateY()	translateY(<length|percentage>)
           ? propertyList.length + " moving propert" + (propertyList.length === 1 ? "y" : "ies") + ": " + propertyList.join(", ") + "."
           : "No valid declarations were parsed yet. Each stop needs at least one CSS declaration.";
 
+        let edgeContinuity = "Add explicit 0% and 100% markers before checking whether every moving property stays anchored at both edges.";
+        if (!analysis.stops.length) {
+          edgeContinuity = "No recoverable stops yet. Add a structured keyframe block before checking edge continuity.";
+        } else if (hasStart && hasEnd) {
+          if (!startMissingProperties.length && !endMissingProperties.length) {
+            edgeContinuity = "Every moving property is anchored in both the 0% and 100% frames, so the motion has stable edge states.";
+          } else {
+            const parts = [];
+            if (startMissingProperties.length) {
+              parts.push("0% is missing " + startMissingProperties.join(", "));
+            }
+            if (endMissingProperties.length) {
+              parts.push("100% is missing " + endMissingProperties.join(", "));
+            }
+            edgeContinuity = parts.join(". ") + ". Backfill edge properties if you want the first and last frames to declare every moving property.";
+          }
+        }
+
+        const stopHygiene = !analysis.stops.length
+          ? "No parsed stops yet. The lab needs at least one recoverable block before it can audit stop hygiene."
+          : (duplicatePropertyStops.length
+            ? duplicatePropertyStops.length +
+              " stop block" +
+              (duplicatePropertyStops.length === 1 ? "" : "s") +
+              " repeat the same property more than once: " +
+              duplicatePropertyStops.map(function (entry) {
+                return entry.markerText + " (" + entry.properties.join(", ") + ")";
+              }).join("; ") +
+              "."
+            : "Each recoverable stop declares each property once.");
+
         const repairNotes = [];
         if (!analysis.stops.length) {
           repairNotes.push("Seed from a built-in keyframe or load a stop template first.");
@@ -10850,6 +10933,12 @@ translateY()	translateY(<length|percentage>)
           }
           if (duplicateMarkers.length) {
             repairNotes.push("Merge repeated markers into one canonical stop before final tuning.");
+          }
+          if (hasStart && hasEnd && (startMissingProperties.length || endMissingProperties.length)) {
+            repairNotes.push("Backfill missing edge properties so 0% and 100% both anchor every moving property.");
+          }
+          if (duplicatePropertyStops.length) {
+            repairNotes.push("Remove repeated properties inside each stop so the export reads cleanly and the last declared value stays intentional.");
           }
           if (analysis.hasResidualText) {
             repairNotes.push("Normalize parsed stops to remove unmatched freeform text.");
@@ -10870,9 +10959,16 @@ translateY()	translateY(<length|percentage>)
           coverage: coverage,
           markerHealth: markerHealth,
           propertySpan: propertySpan,
+          edgeContinuity: edgeContinuity,
+          stopHygiene: stopHygiene,
           repairPlan: repairNotes.join(" "),
+          startMissingProperties: startMissingProperties,
+          endMissingProperties: endMissingProperties,
+          duplicatePropertyStops: duplicatePropertyStops,
           canFillEdges: Boolean(analysis.stops.length && missingEdges.length),
-          canMergeDuplicates: Boolean(duplicateMarkers.length)
+          canBalanceEdgeProperties: Boolean(analysis.stops.length && hasStart && hasEnd && (startMissingProperties.length || endMissingProperties.length)),
+          canMergeDuplicates: Boolean(duplicateMarkers.length),
+          canDeduplicateStopProperties: Boolean(duplicatePropertyStops.length)
         };
       }
 
@@ -14529,6 +14625,49 @@ translateY()	translateY(<length|percentage>)
         return stop;
       }
 
+      function animationLabCustomStopHasMarker(stop, key) {
+        const markerKey = String(key || "").trim();
+        return Boolean(stop && Array.isArray(stop.selectors) && stop.selectors.some(function (selector) {
+          return animationLabNormalizedMarkerMeta(selector).key === markerKey;
+        }));
+      }
+
+      function animationLabCustomStopDeclaration(stop, property) {
+        const propertyKey = String(property || "").trim().toLowerCase();
+        if (!propertyKey || !stop || !Array.isArray(stop.declarations)) return null;
+        for (let i = 0; i < stop.declarations.length; i++) {
+          const decl = stop.declarations[i];
+          if (String((decl && decl.property) || "").trim().toLowerCase() === propertyKey) {
+            return {
+              property: decl.property,
+              value: decl.value
+            };
+          }
+        }
+        return null;
+      }
+
+      function dedupeAnimationLabStopDeclarations(stop) {
+        const normalized = normalizeAnimationLabKeyframeStop(stop);
+        if (!normalized) return null;
+        const seen = {};
+        const deduped = [];
+        for (let i = normalized.declarations.length - 1; i >= 0; i--) {
+          const decl = normalized.declarations[i];
+          const propertyKey = String(decl.property || "").trim().toLowerCase();
+          if (!propertyKey || seen[propertyKey]) continue;
+          seen[propertyKey] = true;
+          deduped.unshift({
+            property: decl.property,
+            value: decl.value
+          });
+        }
+        return normalizeAnimationLabKeyframeStop({
+          selectors: normalized.selectors,
+          declarations: deduped
+        });
+      }
+
       function overwriteAnimationLabCustomStops(stops) {
         const nextBody = serializeAnimationLabKeyframeStops(stops);
         animationLabCustomKeyframeDraft = normalizeAnimationLabCustomKeyframeState({
@@ -14643,6 +14782,75 @@ translateY()	translateY(<length|percentage>)
         setBuilderStatus("Added explicit " + diagnostics.missingEdges.join(" and ") + " edge frame" + (diagnostics.missingEdges.length === 1 ? "" : "s") + " to the custom keyframe draft.");
       }
 
+      function balanceAnimationLabCustomEdgeProperties() {
+        const diagnostics = animationLabCustomDraftDiagnostics(animationLabCustomKeyframeDraft);
+        const stops = diagnostics.analysis.stops.slice();
+        if (!stops.length) {
+          setBuilderStatus("There are no recoverable stops yet. Seed or add a stop before balancing edge properties.");
+          return;
+        }
+        if (!diagnostics.hasStart || !diagnostics.hasEnd) {
+          setBuilderStatus("Add explicit 0% and 100% frames before backfilling edge properties.");
+          return;
+        }
+        if (!diagnostics.canBalanceEdgeProperties) {
+          setBuilderStatus("The custom draft already anchors every moving property in both edge frames.");
+          return;
+        }
+        const startIndex = stops.findIndex(function (stop) {
+          return animationLabCustomStopHasMarker(stop, "0%");
+        });
+        let endIndex = -1;
+        for (let i = stops.length - 1; i >= 0; i--) {
+          if (animationLabCustomStopHasMarker(stops[i], "100%")) {
+            endIndex = i;
+            break;
+          }
+        }
+        if (startIndex < 0 || endIndex < 0) {
+          setBuilderStatus("Animation Lab could not find both edge frames to backfill.");
+          return;
+        }
+        const startStop = normalizeAnimationLabKeyframeStop(stops[startIndex]);
+        const endStop = normalizeAnimationLabKeyframeStop(stops[endIndex]);
+        let added = 0;
+        diagnostics.startMissingProperties.forEach(function (property) {
+          const match = stops.find(function (stop) {
+            return Boolean(animationLabCustomStopDeclaration(stop, property));
+          });
+          const sourceDecl = animationLabCustomStopDeclaration(match, property);
+          if (!sourceDecl || animationLabCustomStopDeclaration(startStop, property)) return;
+          startStop.declarations.push(sourceDecl);
+          added += 1;
+        });
+        for (let i = stops.length - 1; i >= 0; i--) {
+          const stop = stops[i];
+          diagnostics.endMissingProperties.forEach(function (property) {
+            const sourceDecl = animationLabCustomStopDeclaration(stop, property);
+            if (!sourceDecl || animationLabCustomStopDeclaration(endStop, property)) return;
+            endStop.declarations.push(sourceDecl);
+            added += 1;
+          });
+        }
+        stops[startIndex] = normalizeAnimationLabKeyframeStop({
+          selectors: startStop.selectors,
+          declarations: startStop.declarations
+        });
+        stops[endIndex] = normalizeAnimationLabKeyframeStop({
+          selectors: endStop.selectors,
+          declarations: endStop.declarations
+        });
+        setAnimationLabCustomStopSelection(elAnimationLabCustomStopIndex ? elAnimationLabCustomStopIndex.value : 0);
+        overwriteAnimationLabCustomStops(stops);
+        setBuilderStatus(
+          "Backfilled " +
+          added +
+          " edge propert" +
+          (added === 1 ? "y" : "ies") +
+          " so the 0% and 100% frames both anchor the current motion."
+        );
+      }
+
       function mergeAnimationLabCustomDuplicateMarkers() {
         const diagnostics = animationLabCustomDraftDiagnostics(animationLabCustomKeyframeDraft);
         const stops = diagnostics.analysis.stops;
@@ -14701,6 +14909,29 @@ translateY()	translateY(<length|percentage>)
           " duplicate marker" +
           (diagnostics.duplicateMarkers.length === 1 ? "" : "s") +
           " into canonical single-selector stops."
+        );
+      }
+
+      function dedupeAnimationLabCustomStopProperties() {
+        const diagnostics = animationLabCustomDraftDiagnostics(animationLabCustomKeyframeDraft);
+        const stops = diagnostics.analysis.stops;
+        if (!stops.length) {
+          setBuilderStatus("There are no recoverable stops to clean yet.");
+          return;
+        }
+        if (!diagnostics.canDeduplicateStopProperties) {
+          setBuilderStatus("Each custom stop already declares each property only once.");
+          return;
+        }
+        const cleaned = stops.map(dedupeAnimationLabStopDeclarations).filter(Boolean);
+        setAnimationLabCustomStopSelection(elAnimationLabCustomStopIndex ? elAnimationLabCustomStopIndex.value : 0);
+        overwriteAnimationLabCustomStops(cleaned);
+        setBuilderStatus(
+          "Collapsed repeated properties in " +
+          diagnostics.duplicatePropertyStops.length +
+          " stop block" +
+          (diagnostics.duplicatePropertyStops.length === 1 ? "" : "s") +
+          " so the last declared value stays intentional."
         );
       }
 
@@ -16812,6 +17043,12 @@ translateY()	translateY(<length|percentage>)
         if (elAnimationLabCustomPropertySpan) {
           elAnimationLabCustomPropertySpan.textContent = customDiagnostics.propertySpan;
         }
+        if (elAnimationLabCustomEdgeContinuity) {
+          elAnimationLabCustomEdgeContinuity.textContent = customDiagnostics.edgeContinuity;
+        }
+        if (elAnimationLabCustomStopHygiene) {
+          elAnimationLabCustomStopHygiene.textContent = customDiagnostics.stopHygiene;
+        }
         if (elAnimationLabCustomRepairPlan) {
           elAnimationLabCustomRepairPlan.textContent = customDiagnostics.repairPlan;
         }
@@ -16821,16 +17058,28 @@ translateY()	translateY(<length|percentage>)
             ? "Fill Missing " + customDiagnostics.missingEdges.join(" + ")
             : "0% / 100% Already Covered";
         }
+        if (elAnimationLabCustomBalanceEdges) {
+          elAnimationLabCustomBalanceEdges.disabled = !customDiagnostics.canBalanceEdgeProperties;
+          elAnimationLabCustomBalanceEdges.textContent = customDiagnostics.canBalanceEdgeProperties
+            ? "Backfill " + (customDiagnostics.startMissingProperties.length + customDiagnostics.endMissingProperties.length) + " Edge Propert" + ((customDiagnostics.startMissingProperties.length + customDiagnostics.endMissingProperties.length) === 1 ? "y" : "ies")
+            : "Edge Properties Stable";
+        }
         if (elAnimationLabCustomMergeMarkers) {
           elAnimationLabCustomMergeMarkers.disabled = !customDiagnostics.canMergeDuplicates;
           elAnimationLabCustomMergeMarkers.textContent = customDiagnostics.canMergeDuplicates
             ? "Merge " + customDiagnostics.duplicateMarkers.length + " Duplicate Marker" + (customDiagnostics.duplicateMarkers.length === 1 ? "" : "s")
             : "No Duplicate Markers";
         }
+        if (elAnimationLabCustomDedupeProperties) {
+          elAnimationLabCustomDedupeProperties.disabled = !customDiagnostics.canDeduplicateStopProperties;
+          elAnimationLabCustomDedupeProperties.textContent = customDiagnostics.canDeduplicateStopProperties
+            ? "Clean " + customDiagnostics.duplicatePropertyStops.length + " Stop Block" + (customDiagnostics.duplicatePropertyStops.length === 1 ? "" : "s")
+            : "Stop Properties Clean";
+        }
         if (elAnimationLabCustomRepairNote) {
           elAnimationLabCustomRepairNote.textContent = customDiagnostics.analysis.hasResidualText
             ? "The draft still contains unmatched freeform text outside recoverable keyframe blocks. Use Normalize Parsed Stops after the repair actions if you want a fully canonical export body."
-            : "These repair actions only reshape the custom draft textarea. They do not change the built-in motion pack you are using as the intent baseline.";
+            : "These repair actions reshape only the custom draft textarea so edge anchors, markers, and stop declarations stay export-safe. They do not change the built-in motion pack you are using as the intent baseline.";
         }
         elAnimationLabAnatomyStops.textContent = anatomy.stopCount;
         elAnimationLabAnatomyProperties.textContent = anatomy.properties;
@@ -23852,8 +24101,14 @@ translateY()	translateY(<length|percentage>)
       if (elAnimationLabCustomFillEdges) {
         elAnimationLabCustomFillEdges.addEventListener("click", fillAnimationLabCustomKeyframeEdges);
       }
+      if (elAnimationLabCustomBalanceEdges) {
+        elAnimationLabCustomBalanceEdges.addEventListener("click", balanceAnimationLabCustomEdgeProperties);
+      }
       if (elAnimationLabCustomMergeMarkers) {
         elAnimationLabCustomMergeMarkers.addEventListener("click", mergeAnimationLabCustomDuplicateMarkers);
+      }
+      if (elAnimationLabCustomDedupeProperties) {
+        elAnimationLabCustomDedupeProperties.addEventListener("click", dedupeAnimationLabCustomStopProperties);
       }
       elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
       elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
