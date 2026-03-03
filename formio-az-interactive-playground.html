@@ -4284,6 +4284,57 @@ opacity: 0;</textarea>
                 </div>
               </div>
               <div class="help-box">
+                <div><strong>Rapid Trigger Stress Test</strong></div>
+                <p class="tiny">Pressure-test the current motion against repeated user input before you ship it. This simulates a quick burst of the same interaction so you can spot overlap, backlog, and delayed feedback early.</p>
+                <div class="builder-row">
+                  <div class="row">
+                    <label class="label" for="animation-lab-stress-bursts">Trigger Burst</label>
+                    <select id="animation-lab-stress-bursts" title="Choose how many repeated interactions should hit the same motion in quick succession.">
+                      <option value="2">2 triggers</option>
+                      <option value="3" selected>3 triggers</option>
+                      <option value="4">4 triggers</option>
+                      <option value="5">5 triggers</option>
+                    </select>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="animation-lab-stress-gap">Gap Between Triggers</label>
+                    <select id="animation-lab-stress-gap" title="Choose how quickly the repeated interactions arrive.">
+                      <option value="80ms">80ms</option>
+                      <option value="150ms" selected>150ms</option>
+                      <option value="250ms">250ms</option>
+                      <option value="400ms">400ms</option>
+                      <option value="700ms">700ms</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="info-grid">
+                  <div class="info-tile">
+                    <div class="label">Burst Window</div>
+                    <div id="animation-lab-stress-window">The lab will estimate how long a rapid interaction burst stays visibly active.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Overlap Risk</div>
+                    <div id="animation-lab-stress-overlap">Choose a burst pattern to see whether new triggers stack on top of the current cycle.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Recovery Cue</div>
+                    <div id="animation-lab-stress-recovery">The lab will explain when the surface fully settles after the final repeated trigger.</div>
+                  </div>
+                  <div class="info-tile">
+                    <div class="label">Release Decision</div>
+                    <div id="animation-lab-stress-decision">A shipping recommendation will appear here once the burst route is scored.</div>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:8px;">
+                  <label class="label">Stress Route</label>
+                  <pre id="animation-lab-stress-route"></pre>
+                </div>
+                <div class="button-row" style="margin-top:10px;">
+                  <button id="animation-lab-apply-stress-guardrail" type="button">Apply Stress Guardrail</button>
+                </div>
+                <div id="animation-lab-stress-note" class="input-hint">Use this when a hover, press, or repeated focus path might retrigger before the current cycle has finished.</div>
+              </div>
+              <div class="help-box">
                 <div><strong>Timing Ladder</strong></div>
                 <p class="tiny">Test three tempo tiers for the current motion without rebuilding the rest of the package. Each tier rewrites duration, delay, and easing together so timing stays coherent while the trigger, keyframes, and behavior remain intact.</p>
                 <div class="info-grid">
@@ -6236,6 +6287,15 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabFirstMovement = document.getElementById("animation-lab-first-movement");
       const elAnimationLabSettleBehavior = document.getElementById("animation-lab-settle-behavior");
       const elAnimationLabQaPrompt = document.getElementById("animation-lab-qa-prompt");
+      const elAnimationLabStressBursts = document.getElementById("animation-lab-stress-bursts");
+      const elAnimationLabStressGap = document.getElementById("animation-lab-stress-gap");
+      const elAnimationLabStressWindow = document.getElementById("animation-lab-stress-window");
+      const elAnimationLabStressOverlap = document.getElementById("animation-lab-stress-overlap");
+      const elAnimationLabStressRecovery = document.getElementById("animation-lab-stress-recovery");
+      const elAnimationLabStressDecision = document.getElementById("animation-lab-stress-decision");
+      const elAnimationLabStressRoute = document.getElementById("animation-lab-stress-route");
+      const elAnimationLabApplyStressGuardrail = document.getElementById("animation-lab-apply-stress-guardrail");
+      const elAnimationLabStressNote = document.getElementById("animation-lab-stress-note");
       const elAnimationLabTimeline = document.getElementById("animation-lab-timeline");
       const elAnimationLabChecklist = document.getElementById("animation-lab-checklist");
       const elAnimationLabExit = document.getElementById("animation-lab-exit");
@@ -12860,6 +12920,141 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function animationLabStressConfig() {
+        const bursts = Math.max(2, Math.min(5, Number(elAnimationLabStressBursts && elAnimationLabStressBursts.value) || 3));
+        const gap = String(elAnimationLabStressGap && elAnimationLabStressGap.value || "150ms").trim() || "150ms";
+        return {
+          bursts: bursts,
+          gap: gap,
+          gapMs: Math.max(0, parseAnimationLabTimeMs(gap))
+        };
+      }
+
+      function animationLabStressGuardrailPatch(values, config) {
+        const motion = cloneAnimationLabValueState(values);
+        const settings = config || animationLabStressConfig();
+        const patch = {};
+        const durationMs = Math.max(0, parseAnimationLabTimeMs(motion.duration));
+        const delayMs = Math.max(0, parseAnimationLabTimeMs(motion.delay));
+        const cycles = animationLabCycleCount(motion);
+        const practicalCycles = cycles === Infinity ? 2 : Math.max(1, Math.min(3, cycles));
+        const trigger = String(motion.trigger || "").trim();
+        const durationOptions = [
+          { value: "150ms", ms: 150 },
+          { value: "250ms", ms: 250 },
+          { value: "300ms", ms: 300 },
+          { value: "400ms", ms: 400 },
+          { value: "700ms", ms: 700 },
+          { value: "900ms", ms: 900 },
+          { value: "1.2s", ms: 1200 },
+          { value: "1.6s", ms: 1600 },
+          { value: "2s", ms: 2000 }
+        ];
+        const delayOptions = [
+          { value: "0s", ms: 0 },
+          { value: "80ms", ms: 80 },
+          { value: "150ms", ms: 150 },
+          { value: "250ms", ms: 250 },
+          { value: "400ms", ms: 400 },
+          { value: "700ms", ms: 700 }
+        ];
+        const fastResponseCap = Math.max(150, Math.min(settings.gapMs || durationMs || 250, 400));
+
+        if (delayMs > Math.max(0, settings.gapMs)) {
+          patch.delay = animationLabNearestTimeOption(Math.min(settings.gapMs, 80), delayOptions, "0s");
+        }
+        if (practicalCycles > 1 && (settings.gapMs < durationMs || delayMs > 0)) {
+          patch.iterations = trigger ? "1" : "2";
+        }
+        if (durationMs > fastResponseCap) {
+          patch.duration = animationLabNearestTimeOption(fastResponseCap, durationOptions, "250ms");
+        }
+        if (trigger === ":active" && delayMs > 0) {
+          patch.delay = "0s";
+        }
+        return patch;
+      }
+
+      function animationLabStressAssessment(values, risk) {
+        const motion = cloneAnimationLabValueState(values);
+        const config = animationLabStressConfig();
+        const play = String(motion.play || "running").trim();
+        const durationMs = Math.max(0, parseAnimationLabTimeMs(motion.duration));
+        const delayMs = Math.max(0, parseAnimationLabTimeMs(motion.delay));
+        const cycles = animationLabCycleCount(motion);
+        const practicalCycles = cycles === Infinity ? 2 : Math.max(1, Math.min(3, cycles));
+        const visibleCycleMs = durationMs * practicalCycles;
+        const oneRunMs = delayMs + visibleCycleMs;
+        const burstSpanMs = config.gapMs * Math.max(0, config.bursts - 1);
+        const settleAfterFinalMs = burstSpanMs + oneRunMs;
+        const overlapMs = Math.max(0, oneRunMs - config.gapMs);
+        const overlapPct = oneRunMs > 0 ? Math.round((overlapMs / oneRunMs) * 100) : 0;
+        const lateStart = delayMs > 0 && delayMs >= config.gapMs;
+        const riskSeed = risk && Number.isFinite(risk.score) ? risk.score : 0;
+        let score = Math.min(100, riskSeed);
+        if (play === "paused") score += 5;
+        if (cycles === Infinity) score += 30;
+        else if (cycles >= 3) score += 16;
+        else if (cycles >= 2) score += 8;
+        if (lateStart) score += 20;
+        else if (delayMs > 0) score += 8;
+        if (overlapPct >= 75) score += 28;
+        else if (overlapPct >= 45) score += 18;
+        else if (overlapPct >= 20) score += 10;
+        if (config.bursts >= 4) score += 6;
+        score = Math.max(0, Math.min(100, score));
+
+        let level = "Stable";
+        let decision = "Rapid re-triggers should stay readable with this motion package.";
+        if (play === "paused") {
+          level = "Staged";
+          decision = "Play State is paused, so the stress test is descriptive only until live playback resumes.";
+        } else if (score >= 80) {
+          level = "High";
+          decision = "High retrigger risk. New interactions are likely to pile onto a cycle that has not visibly settled yet.";
+        } else if (score >= 55) {
+          level = "Watch";
+          decision = "Moderate retrigger risk. Validate quick repeats on the exact target before promoting this motion.";
+        }
+
+        const routeLines = [];
+        for (let index = 0; index < config.bursts; index += 1) {
+          const triggerMs = config.gapMs * index;
+          const settleMs = triggerMs + oneRunMs;
+          routeLines.push(
+            "Trigger " + (index + 1) +
+            ": fire at " + formatAnimationLabDurationMs(triggerMs) +
+            ", clears near " + formatAnimationLabDurationMs(settleMs) +
+            "."
+          );
+        }
+        routeLines.push("Full burst settles near " + formatAnimationLabDurationMs(settleAfterFinalMs) + ".");
+
+        return {
+          config: config,
+          score: score,
+          level: level,
+          overlapPct: overlapPct,
+          lateStart: lateStart,
+          window: play === "paused"
+            ? "Paused state: no live movement starts until Play State is resumed."
+            : "A " + config.bursts + "-trigger burst spans " + formatAnimationLabDurationMs(burstSpanMs) + " and can keep the surface active for about " + formatAnimationLabDurationMs(settleAfterFinalMs) + ".",
+          overlap: play === "paused"
+            ? "Retrigger overlap is not visible while paused. Resume playback to validate actual stacking."
+            : overlapMs <= 0
+              ? "Each new trigger arrives after the previous visible run clears. Overlap risk is effectively 0%."
+              : "Each new trigger can land about " + formatAnimationLabDurationMs(overlapMs) + " before the prior run clears (" + overlapPct + "% overlap).",
+          recovery: play === "paused"
+            ? "Once playback resumes, the current delay and cycle count will determine the real recovery path."
+            : lateStart
+              ? "Delay is as long as or longer than the trigger gap, so repeated input can queue up before users see the first response."
+              : "After the final trigger, the surface still needs about " + formatAnimationLabDurationMs(oneRunMs) + " to fully settle.",
+          decision: decision,
+          route: routeLines.join("\n"),
+          patch: animationLabStressGuardrailPatch(motion, config)
+        };
+      }
+
       function animationLabCoachSummaryText(values) {
         const motionName = String(values && values.keyframes || DEFAULT_ANIMATION_PREVIEW.name).trim();
         const triggerLabel = animationLabTriggerLabel(values && values.trigger);
@@ -16952,6 +17147,7 @@ translateY()	translateY(<length|percentage>)
         const risk = animationLabRiskAssessment(values);
         const surface = animationLabSurfaceAssessment(values);
         const timingLadder = animationLabTimingLadder(values, risk);
+        const stress = animationLabStressAssessment(values, risk);
         const intent = animationLabIntentPlan(values);
         const forge = animationLabVariantForge(values);
         const sequencePreset = matchingAnimationLabSequencePreset(sequence);
@@ -17148,6 +17344,33 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabFirstMovement.textContent = animationLabFirstMovementSummary(values);
         elAnimationLabSettleBehavior.textContent = animationLabSettleBehaviorSummary(values);
         elAnimationLabQaPrompt.textContent = animationLabQaPrompt(values);
+        if (elAnimationLabStressWindow) {
+          elAnimationLabStressWindow.textContent = stress.window;
+        }
+        if (elAnimationLabStressOverlap) {
+          elAnimationLabStressOverlap.textContent = stress.score + "/100 (" + stress.level + "). " + stress.overlap;
+        }
+        if (elAnimationLabStressRecovery) {
+          elAnimationLabStressRecovery.textContent = stress.recovery;
+        }
+        if (elAnimationLabStressDecision) {
+          elAnimationLabStressDecision.textContent = stress.decision;
+        }
+        if (elAnimationLabStressRoute) {
+          elAnimationLabStressRoute.textContent = stress.route;
+        }
+        if (elAnimationLabApplyStressGuardrail) {
+          const stressGuardrailReady = Object.keys(stress.patch).length > 0;
+          elAnimationLabApplyStressGuardrail.disabled = !stressGuardrailReady;
+          elAnimationLabApplyStressGuardrail.textContent = stressGuardrailReady
+            ? "Apply Stress Guardrail"
+            : "Stress Guardrail Already Applied";
+        }
+        if (elAnimationLabStressNote) {
+          elAnimationLabStressNote.textContent = Object.keys(stress.patch).length
+            ? "The stress guardrail will trim delay, cycle count, or duration so repeated input stays visibly connected to the user's action."
+            : "This motion already fits the current rapid-trigger burst. Change the burst route if you want to pressure-test a harsher scenario.";
+        }
         elAnimationLabTimeline.textContent = animationLabTimelineSummary(values);
         elAnimationLabChecklist.textContent = animationLabChecklist(values, risk, surface);
         elAnimationLabExit.textContent = animationLabExitSummary(values);
@@ -17532,6 +17755,28 @@ translateY()	translateY(<length|percentage>)
         setSelectValueIfPresent(elAnimationLabDuration, patch.duration, elAnimationLabDuration.value);
         updateAnimationLabOutputs();
         setBuilderStatus("Animation Lab applied its suggested guardrail. " + recommendation.message);
+      }
+
+      function applyAnimationLabStressGuardrail() {
+        const values = animationLabPresetValues();
+        const stress = animationLabStressAssessment(values, animationLabRiskAssessment(values));
+        const patch = stress.patch || {};
+        if (!Object.keys(patch).length) {
+          updateAnimationLabOutputs();
+          setBuilderStatus("Animation Lab stress test did not need to change anything.");
+          return;
+        }
+        setSelectValueIfPresent(elAnimationLabIterations, patch.iterations, elAnimationLabIterations.value);
+        setSelectValueIfPresent(elAnimationLabDelay, patch.delay, elAnimationLabDelay.value);
+        setSelectValueIfPresent(elAnimationLabDuration, patch.duration, elAnimationLabDuration.value);
+        updateAnimationLabOutputs();
+        setBuilderStatus(
+          "Animation Lab applied a rapid-trigger guardrail for the " +
+          stress.config.bursts +
+          "-trigger / " +
+          stress.config.gap +
+          " burst path."
+        );
       }
 
       function applyAnimationLabTimingTier(tierKey) {
@@ -24015,10 +24260,20 @@ translateY()	translateY(<length|percentage>)
       if (elAnimationLabCheckpointCompareSlot) {
         elAnimationLabCheckpointCompareSlot.addEventListener("change", updateAnimationLabOutputs);
       }
+      [
+        elAnimationLabStressBursts,
+        elAnimationLabStressGap
+      ].forEach(function (el) {
+        if (!el) return;
+        el.addEventListener("change", updateAnimationLabOutputs);
+      });
       elAnimationLabRestorePreset.addEventListener("click", restoreAnimationLabFullPreset);
       elAnimationLabRestoreTiming.addEventListener("click", restoreAnimationLabPresetTiming);
       elAnimationLabRestoreBehavior.addEventListener("click", restoreAnimationLabPresetBehavior);
       elAnimationLabApplyGuardrail.addEventListener("click", applyAnimationLabGuardrail);
+      if (elAnimationLabApplyStressGuardrail) {
+        elAnimationLabApplyStressGuardrail.addEventListener("click", applyAnimationLabStressGuardrail);
+      }
       if (elAnimationLabApplyTimingFast) {
         elAnimationLabApplyTimingFast.addEventListener("click", function () {
           applyAnimationLabTimingTier("fast");
