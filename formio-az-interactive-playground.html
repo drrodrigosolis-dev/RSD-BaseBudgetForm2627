@@ -1329,6 +1329,31 @@
       margin: 0;
     }
 
+    .animation-lab-stage-scrub {
+      flex: 1 1 100%;
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .animation-lab-stage-scrub-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .animation-lab-stage-scrub-track {
+      width: 100%;
+      accent-color: #2b67c8;
+    }
+
+    .animation-lab-stage-scrub-track:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
     .animation-lab-stage-guide {
       display: grid;
       gap: 8px;
@@ -2511,6 +2536,10 @@
       color: #b9c9e8;
     }
 
+    body[data-theme-mode="dark"] .animation-lab-stage-scrub-track {
+      accent-color: #7cb0ff;
+    }
+
     body[data-theme-mode="dark"] .animation-lab-sequence-empty,
     body[data-theme-mode="dark"] .animation-lab-sequence-lane {
       border-color: #31415f;
@@ -3554,6 +3583,16 @@
                         <input id="animation-lab-stage-show-guide" type="checkbox" checked />
                         Show timing rail
                       </label>
+                      <div class="animation-lab-stage-scrub">
+                        <div class="animation-lab-stage-scrub-head">
+                          <label class="animation-lab-stage-toggle" for="animation-lab-stage-freeze">
+                            <input id="animation-lab-stage-freeze" type="checkbox" />
+                            Frame Inspect
+                          </label>
+                          <div id="animation-lab-stage-scrub-note" class="input-hint">Turn on Frame Inspect to freeze the mini stage at a specific checkpoint in the first pass.</div>
+                        </div>
+                        <input id="animation-lab-stage-scrub" class="animation-lab-stage-scrub-track" type="range" min="0" max="100" step="5" value="0" disabled title="Choose which point in the first visible cycle should be frozen on the mini stage." />
+                      </div>
                     </div>
                     <div id="animation-lab-stage-guide" class="animation-lab-stage-guide">
                       <div class="animation-lab-stage-rail" aria-hidden="true">
@@ -3575,6 +3614,14 @@
                       <div class="animation-lab-stage-metric">
                         <div class="label">Best Surface</div>
                         <div id="animation-lab-stage-surface">Surface fit guidance will appear here once the lab scores the preview targets.</div>
+                      </div>
+                      <div class="animation-lab-stage-metric">
+                        <div class="label">Frame Checkpoint</div>
+                        <div id="animation-lab-stage-frame">Live replay is active. Turn on Frame Inspect to freeze a checkpoint.</div>
+                      </div>
+                      <div class="animation-lab-stage-metric">
+                        <div class="label">Visible Cue</div>
+                        <div id="animation-lab-stage-frame-cue">The lab will explain what the frozen frame means once you start scrubbing.</div>
                       </div>
                     </div>
                   </div>
@@ -5682,6 +5729,9 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabStageTarget = document.getElementById("animation-lab-stage-target");
       const elAnimationLabStageLens = document.getElementById("animation-lab-stage-lens");
       const elAnimationLabStageShowGuide = document.getElementById("animation-lab-stage-show-guide");
+      const elAnimationLabStageFreeze = document.getElementById("animation-lab-stage-freeze");
+      const elAnimationLabStageScrub = document.getElementById("animation-lab-stage-scrub");
+      const elAnimationLabStageScrubNote = document.getElementById("animation-lab-stage-scrub-note");
       const elAnimationLabStageGuide = document.getElementById("animation-lab-stage-guide");
       const elAnimationLabStageDelayBar = document.getElementById("animation-lab-stage-delay-bar");
       const elAnimationLabStageActiveBar = document.getElementById("animation-lab-stage-active-bar");
@@ -5690,6 +5740,8 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabStageCycle = document.getElementById("animation-lab-stage-cycle");
       const elAnimationLabStageRisk = document.getElementById("animation-lab-stage-risk");
       const elAnimationLabStageSurface = document.getElementById("animation-lab-stage-surface");
+      const elAnimationLabStageFrame = document.getElementById("animation-lab-stage-frame");
+      const elAnimationLabStageFrameCue = document.getElementById("animation-lab-stage-frame-cue");
       const elAnimationLabCoachSummary = document.getElementById("animation-lab-coach-summary");
       const elAnimationLabCoachStart = document.getElementById("animation-lab-coach-start");
       const elAnimationLabCoachBehavior = document.getElementById("animation-lab-coach-behavior");
@@ -11836,10 +11888,55 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
+      function animationLabStageScrubState(values, guide) {
+        const enabled = Boolean(elAnimationLabStageFreeze && elAnimationLabStageFreeze.checked);
+        const rawPercent = elAnimationLabStageScrub ? Number(elAnimationLabStageScrub.value) : 0;
+        const percent = Math.max(0, Math.min(100, Number.isFinite(rawPercent) ? rawPercent : 0));
+        const totalMs = Math.max(guide.delayMs + guide.durationMs + guide.holdMs, 1);
+        const checkpointMs = Math.round((totalMs * percent) / 100);
+        const motionStartMs = guide.delayMs;
+        const motionEndMs = guide.delayMs + guide.durationMs;
+        let phase = "Live replay";
+        let cue = "The mini stage is replaying the full motion loop in real time.";
+
+        if (enabled) {
+          if (checkpointMs < motionStartMs) {
+            phase = "Delay window";
+            cue = "The first visible frame has not started yet. This is the waiting portion before the motion begins.";
+          } else if (checkpointMs < motionEndMs) {
+            const activeProgress = guide.durationMs > 0
+              ? Math.round(((checkpointMs - motionStartMs) / Math.max(guide.durationMs, 1)) * 100)
+              : 0;
+            phase = "Active motion";
+            cue = "The motion is about " + activeProgress + "% through its moving frames on the first pass.";
+          } else if (guide.holdMs > 0) {
+            phase = "Held end pose";
+            cue = "The movement is over and fill mode is keeping the end pose visible before the cycle resets.";
+          } else {
+            phase = "Cycle edge";
+            cue = "The first pass is essentially finished. This is the handoff point before the next cycle or reset.";
+          }
+        }
+
+        return {
+          enabled: enabled,
+          percent: percent,
+          totalMs: totalMs,
+          checkpointMs: checkpointMs,
+          effectiveDelayMs: guide.delayMs - checkpointMs,
+          phase: phase,
+          cue: cue,
+          summary: enabled
+            ? phase + " at " + percent + "% (" + formatAnimationLabStageMs(checkpointMs) + " into the first pass)."
+            : "Live replay is active. Turn on Frame Inspect to freeze a checkpoint."
+        };
+      }
+
       function updateAnimationLabStage(values, risk, surface) {
         const lens = animationLabStageLensConfig(values);
         const stageValues = lens.values;
         const guide = animationLabStageGuide(stageValues);
+        const scrub = animationLabStageScrubState(stageValues, guide);
 
         if (elAnimationLabCoachSummary) {
           elAnimationLabCoachSummary.textContent = animationLabCoachSummaryText(values);
@@ -11861,6 +11958,8 @@ translateY()	translateY(<length|percentage>)
         if (elAnimationLabStageNote) {
           if (values && values.reducedPreviewEnabled) {
             elAnimationLabStageNote.textContent = "Reduced-motion preview is active, so this mini stage intentionally suppresses movement while you review the calmer fallback.";
+          } else if (scrub.enabled) {
+            elAnimationLabStageNote.textContent = "Frame Inspect is freezing the mini stage on the " + scrub.phase.toLowerCase() + ". " + lens.note;
           } else if (String(values && values.play || "running").trim() === "paused") {
             elAnimationLabStageNote.textContent = "The lab is showing the staged setup, but the motion is paused. Switch Play State back to running to watch the object move.";
           } else {
@@ -11872,6 +11971,8 @@ translateY()	translateY(<length|percentage>)
           const currentTarget = previewTargetLabel((elTarget.value || "card").trim());
           if (values && values.reducedPreviewEnabled) {
             elAnimationLabStageCaption.textContent = "Reduced-motion mode is previewed here first. The live target remains " + currentTarget + ".";
+          } else if (scrub.enabled) {
+            elAnimationLabStageCaption.textContent = "The object is frozen " + formatAnimationLabStageMs(scrub.checkpointMs) + " into the " + lens.label.toLowerCase() + " pass so you can inspect the exact frame before retuning it.";
           } else {
             elAnimationLabStageCaption.textContent = "The object previews the " + lens.label.toLowerCase() + " version of this package, then you can validate it again on the live " + currentTarget + " preview.";
           }
@@ -11892,7 +11993,9 @@ translateY()	translateY(<length|percentage>)
           elAnimationLabStageHoldBar.style.width = guide.holdPct + "%";
         }
         if (elAnimationLabStageGuideCopy) {
-          elAnimationLabStageGuideCopy.textContent = guide.summary;
+          elAnimationLabStageGuideCopy.textContent = scrub.enabled
+            ? guide.summary + " Frame Inspect is parked at " + scrub.percent + "% (" + formatAnimationLabStageMs(scrub.checkpointMs) + ") in the " + scrub.phase.toLowerCase() + "."
+            : guide.summary;
         }
         if (elAnimationLabStageCycle) {
           elAnimationLabStageCycle.textContent = animationLabActiveWindowSummary(stageValues);
@@ -11905,10 +12008,31 @@ translateY()	translateY(<length|percentage>)
             ? surface.shortlist[0].targetLabel + " is currently the clearest fit (" + surface.shortlist[0].score + "/100)."
             : "Surface guidance is waiting for a valid preview target.";
         }
+        if (elAnimationLabStageFrame) {
+          elAnimationLabStageFrame.textContent = scrub.summary;
+        }
+        if (elAnimationLabStageFrameCue) {
+          elAnimationLabStageFrameCue.textContent = values && values.reducedPreviewEnabled
+            ? "Reduced-motion preview suppresses movement, so Frame Inspect is temporarily descriptive only."
+            : scrub.cue;
+        }
+        if (elAnimationLabStageScrub) {
+          elAnimationLabStageScrub.disabled = !scrub.enabled;
+        }
+        if (elAnimationLabStageScrubNote) {
+          if (values && values.reducedPreviewEnabled) {
+            elAnimationLabStageScrubNote.textContent = "Frame Inspect stays available for timing review, but reduced-motion preview keeps the object still on purpose.";
+          } else if (scrub.enabled) {
+            elAnimationLabStageScrubNote.textContent = "Scrub through the first pass to inspect the " + scrub.phase.toLowerCase() + " at exact checkpoints before you change timing.";
+          } else {
+            elAnimationLabStageScrubNote.textContent = "Turn on Frame Inspect to freeze the mini stage at a specific checkpoint in the first pass.";
+          }
+        }
 
         if (!elAnimationLabStageTarget) return;
         elAnimationLabStageTarget.classList.toggle("animation-lab-preview-target-reduced", Boolean(values && values.reducedPreviewEnabled));
         elAnimationLabStageTarget.style.animation = "none";
+        elAnimationLabStageTarget.style.animationDelay = "";
         elAnimationLabStageTarget.style.animationPlayState = "running";
         void elAnimationLabStageTarget.offsetWidth;
 
@@ -11917,6 +12041,11 @@ translateY()	translateY(<length|percentage>)
         }
 
         elAnimationLabStageTarget.style.animation = animationLabShorthand(stageValues || DEFAULT_ANIMATION_PREVIEW);
+        if (scrub.enabled) {
+          elAnimationLabStageTarget.style.animationDelay = scrub.effectiveDelayMs + "ms";
+          elAnimationLabStageTarget.style.animationPlayState = "paused";
+          return;
+        }
         elAnimationLabStageTarget.style.animationPlayState = String(stageValues && stageValues.play || "running").trim();
       }
 
@@ -21188,6 +21317,13 @@ translateY()	translateY(<length|percentage>)
       }
       if (elAnimationLabStageShowGuide) {
         elAnimationLabStageShowGuide.addEventListener("change", updateAnimationLabOutputs);
+      }
+      if (elAnimationLabStageFreeze) {
+        elAnimationLabStageFreeze.addEventListener("change", updateAnimationLabOutputs);
+      }
+      if (elAnimationLabStageScrub) {
+        elAnimationLabStageScrub.addEventListener("input", updateAnimationLabOutputs);
+        elAnimationLabStageScrub.addEventListener("change", updateAnimationLabOutputs);
       }
       elAnimationLabRestorePreset.addEventListener("click", restoreAnimationLabFullPreset);
       elAnimationLabRestoreTiming.addEventListener("click", restoreAnimationLabPresetTiming);
