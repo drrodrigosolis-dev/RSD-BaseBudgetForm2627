@@ -4025,6 +4025,20 @@
                   </div>
                   <div class="builder-row">
                     <div class="row">
+                      <label class="label" for="animation-lab-custom-stop-template">Stop Template</label>
+                      <select id="animation-lab-custom-stop-template" title="Load a reusable stop shape into the structured editor before adding or updating a stop."></select>
+                    </div>
+                    <div class="row">
+                      <label class="label">Recovery Actions</label>
+                      <div class="inline">
+                        <button id="animation-lab-custom-stop-template-load" type="button">Load Template Into Editor</button>
+                        <button id="animation-lab-custom-stop-normalize" type="button">Normalize Parsed Stops</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="animation-lab-custom-template-note" class="input-hint">Templates preload common motion anchors, and Normalize Parsed Stops rewrites recoverable blocks back into the lab's canonical layout.</div>
+                  <div class="builder-row">
+                    <div class="row">
                       <label class="label" for="animation-lab-custom-stop-index">Parsed Stops</label>
                       <select id="animation-lab-custom-stop-index" title="Choose a parsed keyframe stop from the current custom draft."></select>
                     </div>
@@ -6014,6 +6028,10 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabCustomClear = document.getElementById("animation-lab-custom-clear");
       const elAnimationLabCustomBody = document.getElementById("animation-lab-custom-body");
       const elAnimationLabCustomStopStatus = document.getElementById("animation-lab-custom-stop-status");
+      const elAnimationLabCustomStopTemplate = document.getElementById("animation-lab-custom-stop-template");
+      const elAnimationLabCustomStopTemplateLoad = document.getElementById("animation-lab-custom-stop-template-load");
+      const elAnimationLabCustomStopNormalize = document.getElementById("animation-lab-custom-stop-normalize");
+      const elAnimationLabCustomTemplateNote = document.getElementById("animation-lab-custom-template-note");
       const elAnimationLabCustomStopIndex = document.getElementById("animation-lab-custom-stop-index");
       const elAnimationLabCustomStopMarker = document.getElementById("animation-lab-custom-stop-marker");
       const elAnimationLabCustomStopDeclarations = document.getElementById("animation-lab-custom-stop-declarations");
@@ -7244,6 +7262,40 @@ translateY()	translateY(<length|percentage>)
           "60% { transform: translateY(-2px); opacity: 1; }\n" +
           "100% { transform: translateY(0); opacity: 1; }"
       };
+      const ANIMATION_LAB_CUSTOM_STOP_TEMPLATES = [
+        {
+          id: "entry-hidden",
+          name: "Entry Hidden",
+          markerText: "0%",
+          declarationText: "transform: translateY(18px);\nopacity: 0;",
+          note: "Use this as the starting pose for an entrance motion that begins offset and transparent."
+        },
+        {
+          id: "overshoot-peak",
+          name: "Overshoot Peak",
+          markerText: "60%",
+          declarationText: "transform: translateY(-2px);\nopacity: 1;",
+          note: "Use this as a mid-motion peak when the element should briefly overshoot before settling."
+        },
+        {
+          id: "settled-end",
+          name: "Settled End",
+          markerText: "100%",
+          declarationText: "transform: translateY(0);\nopacity: 1;",
+          note: "Use this as the resting end pose when the motion should finish in its final visible state."
+        },
+        {
+          id: "emphasis-pop",
+          name: "Emphasis Pop",
+          markerText: "50%",
+          declarationText: "transform: scale(1.04);\nfilter: brightness(1.06);",
+          note: "Use this for a brief attention peak when the motion needs a focused middle accent."
+        }
+      ];
+      const ANIMATION_LAB_CUSTOM_STOP_TEMPLATES_BY_ID = ANIMATION_LAB_CUSTOM_STOP_TEMPLATES.reduce(function (acc, template) {
+        acc[template.id] = template;
+        return acc;
+      }, {});
       const DEFAULT_ANIMATION_LAB_SEQUENCE = {
         mode: "chain",
         steps: "3",
@@ -10452,16 +10504,104 @@ translateY()	translateY(<length|percentage>)
         };
       }
 
-      function parseAnimationLabKeyframeStopsFromBody(body) {
-        if (!body) return [];
-        return String(body || "").split("\n").map(function (line) {
-          const match = String(line || "").trim().match(/^([^{}]+)\{([^{}]+)\}$/);
-          if (!match) return null;
-          return normalizeAnimationLabKeyframeStop({
+      function collectAnimationLabKeyframeStopsFromBody(body) {
+        const source = String(body || "");
+        if (!source) return [];
+        const blockPattern = /([^{}]+)\{([^{}]+)\}/g;
+        const stops = [];
+        let match = blockPattern.exec(source);
+        while (match) {
+          const normalized = normalizeAnimationLabKeyframeStop({
             markerText: match[1].trim(),
             declarationText: match[2].trim()
           });
-        }).filter(Boolean);
+          if (normalized) {
+            stops.push(normalized);
+          }
+          match = blockPattern.exec(source);
+        }
+        return stops;
+      }
+
+      function analyzeAnimationLabCustomKeyframeDraft(body) {
+        const source = String(body || "");
+        const stops = collectAnimationLabKeyframeStopsFromBody(source);
+        const canonicalBody = serializeAnimationLabKeyframeStops(stops);
+        const residualText = source.replace(/([^{}]+)\{([^{}]+)\}/g, " ").replace(/\s+/g, " ").trim();
+        const compactSource = source.replace(/\s+/g, " ").trim();
+        const compactCanonical = canonicalBody.replace(/\s+/g, " ").trim();
+        return {
+          stops: stops,
+          residualText: residualText,
+          hasResidualText: Boolean(residualText),
+          canNormalize: Boolean(stops.length) && (compactSource !== compactCanonical || Boolean(residualText))
+        };
+      }
+
+      function parseAnimationLabKeyframeStopsFromBody(body) {
+        return collectAnimationLabKeyframeStopsFromBody(body);
+      }
+
+      function selectedAnimationLabCustomStopTemplate() {
+        const id = String(elAnimationLabCustomStopTemplate ? elAnimationLabCustomStopTemplate.value : "").trim();
+        return ANIMATION_LAB_CUSTOM_STOP_TEMPLATES_BY_ID[id] || ANIMATION_LAB_CUSTOM_STOP_TEMPLATES[0] || null;
+      }
+
+      function updateAnimationLabCustomStopTemplateNote() {
+        if (!elAnimationLabCustomTemplateNote) return;
+        const template = selectedAnimationLabCustomStopTemplate();
+        elAnimationLabCustomTemplateNote.textContent = template
+          ? template.note + " Normalize Parsed Stops rewrites only the recoverable keyframe blocks into one-line lab syntax."
+          : "Templates preload common motion anchors, and Normalize Parsed Stops rewrites recoverable blocks back into the lab's canonical layout.";
+      }
+
+      function renderAnimationLabCustomStopTemplateOptions() {
+        if (!elAnimationLabCustomStopTemplate) return;
+        replaceSelectOptions(
+          elAnimationLabCustomStopTemplate,
+          ANIMATION_LAB_CUSTOM_STOP_TEMPLATES.map(function (template) {
+            return {
+              value: template.id,
+              label: template.name + " (" + template.markerText + ")"
+            };
+          }),
+          elAnimationLabCustomStopTemplate.value || ANIMATION_LAB_CUSTOM_STOP_TEMPLATES[0].id
+        );
+        updateAnimationLabCustomStopTemplateNote();
+      }
+
+      function loadAnimationLabCustomStopTemplateIntoEditor() {
+        const template = selectedAnimationLabCustomStopTemplate();
+        if (!template) {
+          setBuilderStatus("Choose a stop template before loading one into the structured editor.");
+          return;
+        }
+        if (elAnimationLabCustomStopMarker) {
+          elAnimationLabCustomStopMarker.value = template.markerText;
+        }
+        if (elAnimationLabCustomStopDeclarations) {
+          elAnimationLabCustomStopDeclarations.value = template.declarationText;
+        }
+        updateAnimationLabCustomStopTemplateNote();
+        setBuilderStatus("Loaded the " + template.name + " stop template into the structured editor.");
+      }
+
+      function normalizeAnimationLabCustomKeyframeDraftLayout() {
+        const analysis = analyzeAnimationLabCustomKeyframeDraft(animationLabCustomKeyframeDraft.body);
+        if (!analysis.stops.length) {
+          setBuilderStatus("There are no recoverable keyframe blocks to normalize yet.");
+          return;
+        }
+        if (!analysis.canNormalize) {
+          setBuilderStatus("The custom keyframe draft is already in the structured stop layout.");
+          return;
+        }
+        overwriteAnimationLabCustomStops(analysis.stops);
+        setBuilderStatus(
+          analysis.hasResidualText
+            ? "Normalized the custom draft into " + analysis.stops.length + " recoverable stop" + (analysis.stops.length === 1 ? "" : "s") + " and removed unmatched freeform text."
+            : "Normalized the custom draft into the lab's structured one-line stop layout."
+        );
       }
 
       function serializeAnimationLabKeyframeStops(stops) {
@@ -13762,7 +13902,8 @@ translateY()	translateY(<length|percentage>)
       function syncAnimationLabCustomKeyframeStopEditor() {
         if (!elAnimationLabCustomStopIndex || !elAnimationLabCustomStopMarker || !elAnimationLabCustomStopDeclarations) return;
         const draft = normalizeAnimationLabCustomKeyframeState(animationLabCustomKeyframeDraft);
-        const stops = parseAnimationLabKeyframeStopsFromBody(draft.body);
+        const analysis = analyzeAnimationLabCustomKeyframeDraft(draft.body);
+        const stops = analysis.stops;
         const preferredValue = String(
           elAnimationLabCustomStopIndex.dataset.preferredIndex ||
           elAnimationLabCustomStopIndex.value ||
@@ -13783,11 +13924,12 @@ translateY()	translateY(<length|percentage>)
           elAnimationLabCustomStopMarker.value = "";
           elAnimationLabCustomStopDeclarations.value = "";
           if (elAnimationLabCustomStopStatus) {
-            elAnimationLabCustomStopStatus.textContent = "The current draft could not be parsed into one-line stops yet. Each line should look like 0% { opacity: 0; }.";
+            elAnimationLabCustomStopStatus.textContent = "The current draft does not contain any recoverable keyframe blocks yet. Add lines like 0% { opacity: 0; } or load a stop template first.";
           }
           if (elAnimationLabCustomStopUpdate) elAnimationLabCustomStopUpdate.disabled = true;
           if (elAnimationLabCustomStopRemove) elAnimationLabCustomStopRemove.disabled = true;
           if (elAnimationLabCustomStopSort) elAnimationLabCustomStopSort.disabled = true;
+          if (elAnimationLabCustomStopNormalize) elAnimationLabCustomStopNormalize.disabled = true;
           return;
         }
 
@@ -13807,15 +13949,31 @@ translateY()	translateY(<length|percentage>)
         elAnimationLabCustomStopMarker.value = selected ? selected.markerText : "";
         elAnimationLabCustomStopDeclarations.value = selected ? selected.declarationText : "";
         if (elAnimationLabCustomStopStatus) {
-          elAnimationLabCustomStopStatus.textContent =
-            stops.length +
-            " parsed stop" +
-            (stops.length === 1 ? "" : "s") +
-            " ready for structured editing. Update one row at a time, then sort if you want the timeline normalized.";
+          if (analysis.hasResidualText) {
+            elAnimationLabCustomStopStatus.textContent =
+              "Recovered " +
+              stops.length +
+              " stop" +
+              (stops.length === 1 ? "" : "s") +
+              " from a mixed freeform draft. Normalize Parsed Stops will keep the recoverable blocks and remove unmatched text.";
+          } else if (analysis.canNormalize) {
+            elAnimationLabCustomStopStatus.textContent =
+              stops.length +
+              " parsed stop" +
+              (stops.length === 1 ? "" : "s") +
+              " ready for structured editing. Normalize Parsed Stops will rewrite the current spacing into the lab's canonical one-line layout.";
+          } else {
+            elAnimationLabCustomStopStatus.textContent =
+              stops.length +
+              " parsed stop" +
+              (stops.length === 1 ? "" : "s") +
+              " ready for structured editing. Update one row at a time, then sort if you want the timeline normalized.";
+          }
         }
         if (elAnimationLabCustomStopUpdate) elAnimationLabCustomStopUpdate.disabled = false;
         if (elAnimationLabCustomStopRemove) elAnimationLabCustomStopRemove.disabled = stops.length < 2;
         if (elAnimationLabCustomStopSort) elAnimationLabCustomStopSort.disabled = stops.length < 2;
+        if (elAnimationLabCustomStopNormalize) elAnimationLabCustomStopNormalize.disabled = !analysis.canNormalize;
       }
 
       function setAnimationLabCustomStopSelection(index) {
@@ -22461,6 +22619,12 @@ translateY()	translateY(<length|percentage>)
       if (elAnimationLabCustomStopIndex) {
         elAnimationLabCustomStopIndex.addEventListener("change", focusAnimationLabCustomStopFromSelection);
       }
+      if (elAnimationLabCustomStopTemplate) {
+        elAnimationLabCustomStopTemplate.addEventListener("change", updateAnimationLabCustomStopTemplateNote);
+      }
+      if (elAnimationLabCustomStopTemplateLoad) {
+        elAnimationLabCustomStopTemplateLoad.addEventListener("click", loadAnimationLabCustomStopTemplateIntoEditor);
+      }
       if (elAnimationLabCustomStopAdd) {
         elAnimationLabCustomStopAdd.addEventListener("click", addAnimationLabCustomKeyframeStop);
       }
@@ -22472,6 +22636,9 @@ translateY()	translateY(<length|percentage>)
       }
       if (elAnimationLabCustomStopSort) {
         elAnimationLabCustomStopSort.addEventListener("click", sortAnimationLabCustomKeyframeStops);
+      }
+      if (elAnimationLabCustomStopNormalize) {
+        elAnimationLabCustomStopNormalize.addEventListener("click", normalizeAnimationLabCustomKeyframeDraftLayout);
       }
       elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
       elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
@@ -22811,6 +22978,7 @@ translateY()	translateY(<length|percentage>)
       updatePreviewInteractionHelp();
       updatePreviewCycleUI();
       updateBuilderMediaControlVisibility();
+      renderAnimationLabCustomStopTemplateOptions();
       syncAnimationLabCustomKeyframeControls();
       renderAnimationLabPresetList();
       renderAnimationLabSequencePresetList();
