@@ -1556,6 +1556,28 @@
       word-break: break-word;
     }
 
+    .animation-lab-custom-stop-editor {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border: 1px solid #dbe4f6;
+      border-radius: 12px;
+      background: rgba(248, 251, 255, 0.9);
+      display: grid;
+      gap: 8px;
+    }
+
+    .animation-lab-custom-stop-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .animation-lab-custom-stop-textarea {
+      min-height: 60px;
+    }
+
     .recipe-steps {
       margin: 0;
       padding-left: 18px;
@@ -3996,6 +4018,34 @@
 60% { transform: translateY(-2px); opacity: 1; }
 100% { transform: translateY(0); opacity: 1; }</textarea>
                 </div>
+                <div class="animation-lab-custom-stop-editor">
+                  <div class="animation-lab-custom-stop-head">
+                    <strong>Structured Stop Editor</strong>
+                    <div id="animation-lab-custom-stop-status" class="tiny">The current draft will be parsed into editable stops here.</div>
+                  </div>
+                  <div class="builder-row">
+                    <div class="row">
+                      <label class="label" for="animation-lab-custom-stop-index">Parsed Stops</label>
+                      <select id="animation-lab-custom-stop-index" title="Choose a parsed keyframe stop from the current custom draft."></select>
+                    </div>
+                    <div class="row">
+                      <label class="label" for="animation-lab-custom-stop-marker">Stop Marker</label>
+                      <input id="animation-lab-custom-stop-marker" value="0%" placeholder="0%, 60%, to" title="Edit the selector marker for the selected stop. You can use percentages, from/to, or comma-separated markers." />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label class="label" for="animation-lab-custom-stop-declarations">Stop Declarations</label>
+                    <textarea id="animation-lab-custom-stop-declarations" class="animation-lab-custom-stop-textarea" spellcheck="false" title="Edit one stop at a time as declaration lines, for example: transform: translateY(18px); opacity: 0;">transform: translateY(18px);
+opacity: 0;</textarea>
+                  </div>
+                  <div class="button-row">
+                    <button id="animation-lab-custom-stop-add" type="button">Add Stop</button>
+                    <button id="animation-lab-custom-stop-update" type="button">Update Selected Stop</button>
+                    <button id="animation-lab-custom-stop-remove" type="button">Remove Selected Stop</button>
+                    <button id="animation-lab-custom-stop-sort" type="button">Sort Stops</button>
+                  </div>
+                  <div class="input-hint">Use this when the draft is easier to tune stop-by-stop than as raw text. The textarea above still stays in sync, so you can switch between structured edits and freeform edits at any time.</div>
+                </div>
                 <div id="animation-lab-custom-note" class="input-hint">The selected built-in keyframe still powers the Motion Pack brief and guardrails. The custom draft only overrides the live preview, exported keyframes block, and shipped animation name while enabled.</div>
               </div>
               <div class="help-box">
@@ -5963,6 +6013,14 @@ translateY()	translateY(<length|percentage>)
       const elAnimationLabCustomSeed = document.getElementById("animation-lab-custom-seed");
       const elAnimationLabCustomClear = document.getElementById("animation-lab-custom-clear");
       const elAnimationLabCustomBody = document.getElementById("animation-lab-custom-body");
+      const elAnimationLabCustomStopStatus = document.getElementById("animation-lab-custom-stop-status");
+      const elAnimationLabCustomStopIndex = document.getElementById("animation-lab-custom-stop-index");
+      const elAnimationLabCustomStopMarker = document.getElementById("animation-lab-custom-stop-marker");
+      const elAnimationLabCustomStopDeclarations = document.getElementById("animation-lab-custom-stop-declarations");
+      const elAnimationLabCustomStopAdd = document.getElementById("animation-lab-custom-stop-add");
+      const elAnimationLabCustomStopUpdate = document.getElementById("animation-lab-custom-stop-update");
+      const elAnimationLabCustomStopRemove = document.getElementById("animation-lab-custom-stop-remove");
+      const elAnimationLabCustomStopSort = document.getElementById("animation-lab-custom-stop-sort");
       const elAnimationLabCustomNote = document.getElementById("animation-lab-custom-note");
       const elAnimationLabAnatomyStops = document.getElementById("animation-lab-anatomy-stops");
       const elAnimationLabAnatomyProperties = document.getElementById("animation-lab-anatomy-properties");
@@ -10349,30 +10407,99 @@ translateY()	translateY(<length|percentage>)
         return "@keyframes " + name + " {\n  " + body.split("\n").join("\n  ") + "\n}";
       }
 
-      function parseBuiltInKeyframeStops(name, values) {
-        const body = animationLabKeyframeBody(name, values);
-        if (!body) return [];
-        return body.split("\n").map(function (line) {
-          const match = String(line || "").trim().match(/^([^{}]+)\{([^{}]+)\}$/);
-          if (!match) return null;
-          const selectors = match[1].split(",").map(function (part) {
-            return part.trim();
-          }).filter(Boolean);
-          const declarations = match[2].split(";").map(function (part) {
-            const trimmed = part.trim();
-            if (!trimmed) return null;
-            const idx = trimmed.indexOf(":");
-            if (idx < 0) return null;
-            return {
-              property: trimmed.slice(0, idx).trim(),
-              value: trimmed.slice(idx + 1).trim()
-            };
-          }).filter(Boolean);
+      function parseAnimationLabKeyframeDeclarationText(text) {
+        return String(text || "").split(";").map(function (part) {
+          const trimmed = part.trim();
+          if (!trimmed) return null;
+          const idx = trimmed.indexOf(":");
+          if (idx < 0) return null;
           return {
-            selectors: selectors,
-            declarations: declarations
+            property: trimmed.slice(0, idx).trim(),
+            value: trimmed.slice(idx + 1).trim()
           };
         }).filter(Boolean);
+      }
+
+      function normalizeAnimationLabKeyframeStop(stop) {
+        const source = stop && typeof stop === "object" ? stop : {};
+        const selectors = Array.isArray(source.selectors)
+          ? source.selectors.map(function (part) {
+            return String(part || "").trim();
+          }).filter(Boolean)
+          : String(source.markerText || "").split(",").map(function (part) {
+            return part.trim();
+          }).filter(Boolean);
+        const declarations = Array.isArray(source.declarations)
+          ? source.declarations.map(function (decl) {
+            if (!decl || typeof decl !== "object") return null;
+            const property = String(decl.property || "").trim();
+            const value = String(decl.value || "").trim();
+            if (!property || !value) return null;
+            return {
+              property: property,
+              value: value
+            };
+          }).filter(Boolean)
+          : parseAnimationLabKeyframeDeclarationText(source.declarationText);
+        if (!selectors.length || !declarations.length) return null;
+        return {
+          selectors: selectors,
+          declarations: declarations,
+          markerText: selectors.join(", "),
+          declarationText: declarations.map(function (decl) {
+            return decl.property + ": " + decl.value + ";";
+          }).join("\n")
+        };
+      }
+
+      function parseAnimationLabKeyframeStopsFromBody(body) {
+        if (!body) return [];
+        return String(body || "").split("\n").map(function (line) {
+          const match = String(line || "").trim().match(/^([^{}]+)\{([^{}]+)\}$/);
+          if (!match) return null;
+          return normalizeAnimationLabKeyframeStop({
+            markerText: match[1].trim(),
+            declarationText: match[2].trim()
+          });
+        }).filter(Boolean);
+      }
+
+      function serializeAnimationLabKeyframeStops(stops) {
+        const list = Array.isArray(stops) ? stops : [];
+        return list.map(function (stop) {
+          const normalized = normalizeAnimationLabKeyframeStop(stop);
+          if (!normalized) return "";
+          return normalized.markerText + " { " + normalized.declarations.map(function (decl) {
+            return decl.property + ": " + decl.value + ";";
+          }).join(" ") + " }";
+        }).filter(Boolean).join("\n");
+      }
+
+      function animationLabKeyframeStopSortValue(marker) {
+        const value = String(marker || "").trim().toLowerCase();
+        if (!value) return 1000;
+        if (value === "from") return 0;
+        if (value === "to") return 100;
+        const percent = value.match(/^(-?\d+(?:\.\d+)?)%$/);
+        if (percent) return Number(percent[1]);
+        return 1000;
+      }
+
+      function parseBuiltInKeyframeStops(name, values) {
+        const body = animationLabKeyframeBody(name, values);
+        return parseAnimationLabKeyframeStopsFromBody(body);
+      }
+
+      function animationLabMotionSourceLabel(values) {
+        const currentValues = values && typeof values === "object" ? values : animationLabPresetValues();
+        const builtInName = String(currentValues.keyframes || DEFAULT_ANIMATION_PREVIEW.name).trim();
+        const customDraft = animationLabCustomKeyframeState(currentValues);
+        if (!animationLabCustomKeyframeActive(currentValues)) {
+          return "Built-in " + builtInName;
+        }
+        const stops = parseAnimationLabKeyframeStopsFromBody(customDraft.body);
+        const stopCount = stops.length;
+        return "Custom " + customDraft.name + " (" + stopCount + " stop" + (stopCount === 1 ? "" : "s") + ", from " + builtInName + ")";
       }
 
       function animationLabKeyframeFamily(stops) {
@@ -13253,10 +13380,11 @@ translateY()	translateY(<length|percentage>)
       function animationLabPrimaryReviewSummary(values, risk, surface) {
         const trigger = animationLabTriggerLabel(values.trigger);
         const target = previewTargetLabel((elTarget.value || "card").trim());
+        const source = animationLabMotionSourceLabel(values);
         if (String(values.play || "running").trim() === "paused") {
-          return "Paused on " + target + ". Resume the " + trigger.toLowerCase() + " path before treating this as release-ready.";
+          return source + " is paused on " + target + ". Resume the " + trigger.toLowerCase() + " path before treating this as release-ready.";
         }
-        return trigger + " on " + target + " runs as a " + risk.level.toLowerCase() + "-risk path with a " + surface.verdict.toLowerCase() + ".";
+        return source + " on " + target + " runs as a " + risk.level.toLowerCase() + "-risk " + trigger.toLowerCase() + " path with a " + surface.verdict.toLowerCase() + ".";
       }
 
       function animationLabReducedReviewSummary(values, risk) {
@@ -13297,6 +13425,7 @@ translateY()	translateY(<length|percentage>)
         lines.push("Primary: " + animationLabPrimaryReviewSummary(values, risk, surface));
         lines.push("Reduced: " + animationLabReducedReviewSummary(values, risk));
         lines.push("Current target: " + previewTargetLabel((elTarget.value || "card").trim()) + " (" + surface.score + "/100 surface fit).");
+        lines.push("Motion source: " + animationLabMotionSourceLabel(values) + ".");
         if (bestReview) {
           lines.push(
             "Best review state: " +
@@ -13618,6 +13747,7 @@ translateY()	translateY(<length|percentage>)
         if (elAnimationLabCustomBody) {
           elAnimationLabCustomBody.value = draft.body;
         }
+        syncAnimationLabCustomKeyframeStopEditor();
       }
 
       function updateAnimationLabCustomKeyframeDraftFromControls() {
@@ -13627,6 +13757,165 @@ translateY()	translateY(<length|percentage>)
           body: elAnimationLabCustomBody ? elAnimationLabCustomBody.value : DEFAULT_ANIMATION_LAB_CUSTOM_KEYFRAMES.body
         });
         syncAnimationLabCustomKeyframeControls();
+      }
+
+      function syncAnimationLabCustomKeyframeStopEditor() {
+        if (!elAnimationLabCustomStopIndex || !elAnimationLabCustomStopMarker || !elAnimationLabCustomStopDeclarations) return;
+        const draft = normalizeAnimationLabCustomKeyframeState(animationLabCustomKeyframeDraft);
+        const stops = parseAnimationLabKeyframeStopsFromBody(draft.body);
+        const preferredValue = String(
+          elAnimationLabCustomStopIndex.dataset.preferredIndex ||
+          elAnimationLabCustomStopIndex.value ||
+          "0"
+        ).trim();
+        delete elAnimationLabCustomStopIndex.dataset.preferredIndex;
+
+        while (elAnimationLabCustomStopIndex.firstChild) {
+          elAnimationLabCustomStopIndex.removeChild(elAnimationLabCustomStopIndex.firstChild);
+        }
+
+        if (!stops.length) {
+          const emptyOption = document.createElement("option");
+          emptyOption.value = "0";
+          emptyOption.textContent = "No parsed stops yet";
+          elAnimationLabCustomStopIndex.appendChild(emptyOption);
+          elAnimationLabCustomStopIndex.disabled = true;
+          elAnimationLabCustomStopMarker.value = "";
+          elAnimationLabCustomStopDeclarations.value = "";
+          if (elAnimationLabCustomStopStatus) {
+            elAnimationLabCustomStopStatus.textContent = "The current draft could not be parsed into one-line stops yet. Each line should look like 0% { opacity: 0; }.";
+          }
+          if (elAnimationLabCustomStopUpdate) elAnimationLabCustomStopUpdate.disabled = true;
+          if (elAnimationLabCustomStopRemove) elAnimationLabCustomStopRemove.disabled = true;
+          if (elAnimationLabCustomStopSort) elAnimationLabCustomStopSort.disabled = true;
+          return;
+        }
+
+        stops.forEach(function (stop, index) {
+          const option = document.createElement("option");
+          option.value = String(index);
+          option.textContent = stop.markerText + " | " + stop.declarations.map(function (decl) {
+            return decl.property;
+          }).join(", ");
+          elAnimationLabCustomStopIndex.appendChild(option);
+        });
+
+        const numericIndex = Math.max(0, Math.min(stops.length - 1, Number.isFinite(Number(preferredValue)) ? Number(preferredValue) : 0));
+        const selected = stops[numericIndex] || stops[0];
+        elAnimationLabCustomStopIndex.disabled = false;
+        elAnimationLabCustomStopIndex.value = String(numericIndex);
+        elAnimationLabCustomStopMarker.value = selected ? selected.markerText : "";
+        elAnimationLabCustomStopDeclarations.value = selected ? selected.declarationText : "";
+        if (elAnimationLabCustomStopStatus) {
+          elAnimationLabCustomStopStatus.textContent =
+            stops.length +
+            " parsed stop" +
+            (stops.length === 1 ? "" : "s") +
+            " ready for structured editing. Update one row at a time, then sort if you want the timeline normalized.";
+        }
+        if (elAnimationLabCustomStopUpdate) elAnimationLabCustomStopUpdate.disabled = false;
+        if (elAnimationLabCustomStopRemove) elAnimationLabCustomStopRemove.disabled = stops.length < 2;
+        if (elAnimationLabCustomStopSort) elAnimationLabCustomStopSort.disabled = stops.length < 2;
+      }
+
+      function setAnimationLabCustomStopSelection(index) {
+        if (!elAnimationLabCustomStopIndex) return;
+        elAnimationLabCustomStopIndex.dataset.preferredIndex = String(Math.max(0, Number(index) || 0));
+      }
+
+      function animationLabCustomStopDraftFromEditor() {
+        const markerText = String(elAnimationLabCustomStopMarker ? elAnimationLabCustomStopMarker.value : "").trim();
+        const declarationText = String(elAnimationLabCustomStopDeclarations ? elAnimationLabCustomStopDeclarations.value : "").trim();
+        const stop = normalizeAnimationLabKeyframeStop({
+          markerText: markerText,
+          declarationText: declarationText
+        });
+        if (!stop) {
+          setBuilderStatus("Use a stop marker plus at least one valid declaration before saving a structured keyframe stop.");
+          return null;
+        }
+        return stop;
+      }
+
+      function overwriteAnimationLabCustomStops(stops) {
+        const nextBody = serializeAnimationLabKeyframeStops(stops);
+        animationLabCustomKeyframeDraft = normalizeAnimationLabCustomKeyframeState({
+          enabled: Boolean(elAnimationLabCustomEnabled && elAnimationLabCustomEnabled.checked),
+          name: elAnimationLabCustomName ? elAnimationLabCustomName.value : DEFAULT_ANIMATION_LAB_CUSTOM_KEYFRAMES.name,
+          body: nextBody || DEFAULT_ANIMATION_LAB_CUSTOM_KEYFRAMES.body
+        });
+        syncAnimationLabCustomKeyframeControls();
+        updateAnimationLabOutputs();
+      }
+
+      function focusAnimationLabCustomStopFromSelection() {
+        if (!elAnimationLabCustomStopIndex) return;
+        setAnimationLabCustomStopSelection(elAnimationLabCustomStopIndex.value);
+        syncAnimationLabCustomKeyframeStopEditor();
+      }
+
+      function addAnimationLabCustomKeyframeStop() {
+        const stop = animationLabCustomStopDraftFromEditor();
+        if (!stop) return;
+        const stops = parseAnimationLabKeyframeStopsFromBody(animationLabCustomKeyframeDraft.body);
+        stops.push(stop);
+        setAnimationLabCustomStopSelection(stops.length - 1);
+        overwriteAnimationLabCustomStops(stops);
+        setBuilderStatus("Added structured stop " + stop.markerText + " to the custom keyframe draft.");
+      }
+
+      function updateAnimationLabCustomKeyframeStop() {
+        const stop = animationLabCustomStopDraftFromEditor();
+        if (!stop) return;
+        const stops = parseAnimationLabKeyframeStopsFromBody(animationLabCustomKeyframeDraft.body);
+        if (!stops.length) {
+          setBuilderStatus("There is no parsed stop to update yet. Add a stop first.");
+          return;
+        }
+        const index = Math.max(0, Math.min(stops.length - 1, Number.isFinite(Number(elAnimationLabCustomStopIndex.value)) ? Number(elAnimationLabCustomStopIndex.value) : 0));
+        stops[index] = stop;
+        setAnimationLabCustomStopSelection(index);
+        overwriteAnimationLabCustomStops(stops);
+        setBuilderStatus("Updated structured stop " + stop.markerText + " in the custom keyframe draft.");
+      }
+
+      function removeAnimationLabCustomKeyframeStop() {
+        const stops = parseAnimationLabKeyframeStopsFromBody(animationLabCustomKeyframeDraft.body);
+        if (!stops.length) {
+          setBuilderStatus("There is no parsed stop to remove.");
+          return;
+        }
+        if (stops.length === 1) {
+          setBuilderStatus("Keep at least one stop in the custom draft. Use Reset Draft Template if you want to replace the whole motion.");
+          return;
+        }
+        const index = Math.max(0, Math.min(stops.length - 1, Number.isFinite(Number(elAnimationLabCustomStopIndex.value)) ? Number(elAnimationLabCustomStopIndex.value) : 0));
+        const removed = stops.splice(index, 1)[0];
+        setAnimationLabCustomStopSelection(Math.max(0, index - (index >= stops.length ? 1 : 0)));
+        overwriteAnimationLabCustomStops(stops);
+        setBuilderStatus("Removed structured stop " + (removed ? removed.markerText : "from the draft") + ".");
+      }
+
+      function sortAnimationLabCustomKeyframeStops() {
+        const stops = parseAnimationLabKeyframeStopsFromBody(animationLabCustomKeyframeDraft.body);
+        if (stops.length < 2) {
+          setBuilderStatus("The custom draft needs at least two parsed stops before sorting matters.");
+          return;
+        }
+        const selectedIndex = Math.max(0, Math.min(stops.length - 1, Number.isFinite(Number(elAnimationLabCustomStopIndex.value)) ? Number(elAnimationLabCustomStopIndex.value) : 0));
+        const selectedFingerprint = serializeAnimationLabKeyframeStops([stops[selectedIndex]]);
+        const sorted = stops.slice().sort(function (a, b) {
+          const aValue = Math.min.apply(null, a.selectors.map(animationLabKeyframeStopSortValue));
+          const bValue = Math.min.apply(null, b.selectors.map(animationLabKeyframeStopSortValue));
+          if (aValue !== bValue) return aValue - bValue;
+          return a.markerText.localeCompare(b.markerText);
+        });
+        const nextIndex = Math.max(0, sorted.findIndex(function (stop) {
+          return serializeAnimationLabKeyframeStops([stop]) === selectedFingerprint;
+        }));
+        setAnimationLabCustomStopSelection(nextIndex);
+        overwriteAnimationLabCustomStops(sorted);
+        setBuilderStatus("Structured custom keyframe stops were sorted into timeline order.");
       }
 
       function writeAnimationLabCustomKeyframesStyles(values) {
@@ -14014,7 +14303,8 @@ translateY()	translateY(<length|percentage>)
           surface: surface,
           releaseScore: releaseScore,
           presetLabel: preset ? preset.name : "Custom",
-          triggerLabel: triggerLabel
+          triggerLabel: triggerLabel,
+          motionSourceLabel: animationLabMotionSourceLabel(values)
         };
       }
 
@@ -14095,6 +14385,11 @@ translateY()	translateY(<length|percentage>)
           if (before === after) return;
           lines.push(field.label + ": " + before + " -> " + after);
         });
+        const beforeSource = animationLabMotionSourceLabel(base.values);
+        const afterSource = animationLabMotionSourceLabel(next.values);
+        if (beforeSource !== afterSource) {
+          lines.push("Motion Source: " + beforeSource + " -> " + afterSource);
+        }
         return lines;
       }
 
@@ -14129,6 +14424,7 @@ translateY()	translateY(<length|percentage>)
           "Selector: " + selector,
           "Target: " + currentTarget,
           "Trigger: " + entry.triggerLabel,
+          "Motion source: " + entry.motionSourceLabel,
           "Stage checkpoint: " + (entry.stageCheckpoint
             ? entry.stageCheckpoint.label + " at " + entry.stageCheckpoint.percent + "% (" + formatAnimationLabStageMs(entry.stageCheckpoint.checkpointMs) + ")"
             : "No frozen frame tag saved"),
@@ -14549,10 +14845,10 @@ translateY()	translateY(<length|percentage>)
             ? entry.stageCheckpoint.label + " @ " + entry.stageCheckpoint.percent + "%"
             : "No frame tag";
           if (status) {
-            status.textContent = entry.presetLabel + " | " + entry.triggerLabel + " | " + entry.values.keyframes;
+            status.textContent = entry.presetLabel + " | " + entry.triggerLabel + " | " + entry.motionSourceLabel;
           }
           if (meta) {
-            meta.textContent = "Release " + entry.releaseScore + "/100. " + riskText + ". Surface fit " + surfaceText + ". " + sequenceText + ". Frame: " + checkpointText + ".";
+            meta.textContent = "Release " + entry.releaseScore + "/100. " + riskText + ". Surface fit " + surfaceText + ". " + sequenceText + ". Motion: " + entry.motionSourceLabel + ". Frame: " + checkpointText + ".";
           }
           if (applyBtn) applyBtn.disabled = false;
           if (clearBtn) clearBtn.disabled = false;
@@ -14577,7 +14873,7 @@ translateY()	translateY(<length|percentage>)
             "/100 | " +
             entry.presetLabel +
             " | " +
-            entry.values.keyframes +
+            entry.motionSourceLabel +
             " | " +
             entry.triggerLabel +
             " | Frame " +
@@ -22161,6 +22457,21 @@ translateY()	translateY(<length|percentage>)
       }
       if (elAnimationLabCustomClear) {
         elAnimationLabCustomClear.addEventListener("click", clearAnimationLabCustomKeyframeDraft);
+      }
+      if (elAnimationLabCustomStopIndex) {
+        elAnimationLabCustomStopIndex.addEventListener("change", focusAnimationLabCustomStopFromSelection);
+      }
+      if (elAnimationLabCustomStopAdd) {
+        elAnimationLabCustomStopAdd.addEventListener("click", addAnimationLabCustomKeyframeStop);
+      }
+      if (elAnimationLabCustomStopUpdate) {
+        elAnimationLabCustomStopUpdate.addEventListener("click", updateAnimationLabCustomKeyframeStop);
+      }
+      if (elAnimationLabCustomStopRemove) {
+        elAnimationLabCustomStopRemove.addEventListener("click", removeAnimationLabCustomKeyframeStop);
+      }
+      if (elAnimationLabCustomStopSort) {
+        elAnimationLabCustomStopSort.addEventListener("click", sortAnimationLabCustomKeyframeStops);
       }
       elAnimationLabCopyAnatomy.addEventListener("click", copyAnimationLabAnatomyBrief);
       elAnimationLabCopySequence.addEventListener("click", copyAnimationLabSequenceCss);
