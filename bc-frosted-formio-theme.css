@@ -396,8 +396,8 @@
   opacity: 0;
   transform: scale(0.96);
   transition:
-    opacity 3000ms cubic-bezier(0.2, 0.85, 0.2, 1),
-    transform 3000ms cubic-bezier(0.2, 0.85, 0.2, 1);
+    opacity 2200ms cubic-bezier(0.2, 0.85, 0.2, 1),
+    transform 2200ms cubic-bezier(0.2, 0.85, 0.2, 1);
   background:
     radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.48), transparent 46%),
     linear-gradient(135deg, rgba(15, 94, 168, 0.4), rgba(27, 116, 134, 0.36), rgba(184, 131, 37, 0.34));
@@ -419,15 +419,26 @@
   over a fixed duration, independent of click length.
 */
 .formio-form .btn:not(:disabled):not([disabled]):active::after {
-  opacity: 0.98;
-  transform: scale(1.08);
-  transition: none;
+  opacity: 0.74;
+  transform: scale(1.04);
+  transition:
+    opacity 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .formio-form .btn:not(:disabled):not([disabled]):not(:active)::after {
   transition:
-    opacity 3000ms cubic-bezier(0.2, 0.85, 0.2, 1),
-    transform 3000ms cubic-bezier(0.2, 0.85, 0.2, 1);
+    opacity 2200ms cubic-bezier(0.2, 0.85, 0.2, 1),
+    transform 2200ms cubic-bezier(0.2, 0.85, 0.2, 1);
+}
+
+/*
+  Mouse/touch release pulse:
+  after click release (non-focus-visible focus), run a full fade-in/fade-out
+  sequence so the entrance is smooth instead of instantaneous.
+*/
+.formio-form .btn:not(:disabled):not([disabled]):focus:not(:focus-visible):not(:active)::after {
+  animation: bcBtnClickFadeInOut 1900ms cubic-bezier(0.2, 0.85, 0.2, 1) 1 both;
 }
 
 .formio-form .btn:focus,
@@ -993,6 +1004,23 @@
   to {
     transform: translateY(-2px) scale(1.01);
     filter: saturate(1.12) brightness(1.08);
+  }
+}
+
+@keyframes bcBtnClickFadeInOut {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  35% {
+    opacity: 0.92;
+    transform: scale(1.06);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.12);
   }
 }
 
