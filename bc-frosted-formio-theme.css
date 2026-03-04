@@ -1,7 +1,8 @@
 /*
   Ready for Form.io HTML injection:
-  Wrap this file's contents in <style>...</style> inside an HTML component.
-  This version assumes a separate HTML component exists with class="bc-fixed-bg".
+  Load this file via <link rel="stylesheet" ...> from your injector HTML component.
+  Decorative background is rendered by .formio-form::before.
+  A legacy .bc-fixed-bg element is neutralized below for backward compatibility.
 */
 
 .formio-form {
@@ -16,6 +17,7 @@
   --fio-bc-line: rgba(16, 40, 56, 0.12);
   --fio-bc-glass: rgba(255, 255, 255, 0.14);
   --fio-bc-glass-strong: rgba(255, 255, 255, 0.24);
+  --bc-bg-image: url("./images/background.jpg");
   --fio-bc-shadow:
     0 10px 20px rgba(8, 35, 55, 0.06),
     0 22px 44px rgba(8, 35, 55, 0.08);
@@ -27,7 +29,15 @@
 }
 
 .formio-form::before {
-  content: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--bc-bg-image);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .formio-form::after {
@@ -967,23 +977,25 @@
 }
 
 .bc-fixed-bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  /* Use a local file path like url("./images/background.jpg") when hosted with this CSS. */
-  --bc-bg-image: url("./images/background.jpg");
-  background-image: var(--bc-bg-image);
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: scroll;
+  /*
+    Legacy hook hard-disabled:
+    keep it visually inert even if an older injector still renders the element.
+  */
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: -999 !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  background: none !important;
 }
 
 /* Keep institutional headers above any decorative form background layer. */
-.elevation-20.gov-header.v-locale--is-ltr {
+.elevation-20.gov-header.v-locale--is-ltr,
+.gov-header {
   position: relative !important;
-  z-index: 10000 !important;
+  z-index: 2147483000 !important;
+  isolation: isolate !important;
 }
 
 /* Builder-only guard: disable decorative background layers when sidebar is present. */
@@ -991,6 +1003,16 @@ body:has(.builder-sidebar) .bc-fixed-bg,
 body:has(.builder-sidebar) .formio-form::before,
 body:has(.builder-sidebar) .formio-form::after {
   display: none !important;
+}
+
+/* Keep the builder toolbox above all decorative runtime layers. */
+.builder-sidebar,
+.builder-sidebar.builder-sidebar_scroll,
+.accordion.builder-sidebar,
+.accordion.builder-sidebar.builder-sidebar_scroll {
+  position: relative !important;
+  z-index: 2147482900 !important;
+  isolation: isolate !important;
 }
 
 /*
@@ -1973,12 +1995,15 @@ body:has(.builder-sidebar) .formio-form::after {
   --fio-bc-shadow: none;
 }
 
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked)::before,
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked)::after {
   content: none !important;
 }
 
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-fixed-bg {
-  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  background: none !important;
 }
 
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) *,
