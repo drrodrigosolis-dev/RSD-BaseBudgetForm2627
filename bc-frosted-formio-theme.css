@@ -395,6 +395,9 @@
   pointer-events: none;
   opacity: 0;
   transform: scale(0.96);
+  transition:
+    opacity 720ms cubic-bezier(0.2, 0.85, 0.2, 1),
+    transform 720ms cubic-bezier(0.2, 0.85, 0.2, 1);
   background:
     radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.48), transparent 46%),
     linear-gradient(135deg, rgba(15, 94, 168, 0.4), rgba(27, 116, 134, 0.36), rgba(184, 131, 37, 0.34));
@@ -413,17 +416,8 @@
 .formio-form .btn:not(:disabled):not([disabled]):active::after {
   opacity: 0.98;
   transform: scale(1.08);
-  animation: none;
-}
-
-/*
-  Fixed-duration click pop:
-  :active seeds the bright state immediately, then on mouse/touch release the
-  same element remains :focus:not(:focus-visible), which runs this animation
-  for a consistent duration independent of click length.
-*/
-.formio-form .btn:not(:disabled):not([disabled]):focus:not(:focus-visible)::after {
-  animation: bcBtnClickPopFixed 640ms cubic-bezier(0.2, 0.85, 0.2, 1) 1 both;
+  transition: none;
+  animation: bcBtnClickPopFixed 720ms cubic-bezier(0.2, 0.85, 0.2, 1) 1 both;
 }
 
 .formio-form .btn:focus,
