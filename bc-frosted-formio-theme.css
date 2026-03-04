@@ -20,6 +20,8 @@
     0 10px 20px rgba(8, 35, 55, 0.06),
     0 22px 44px rgba(8, 35, 55, 0.08);
   position: relative;
+  isolation: isolate;
+  background: transparent !important;
   padding: clamp(0.28rem, 0.7vw, 0.55rem) clamp(0.55rem, 1.25vw, 1rem);
   color: var(--fio-bc-text);
 }
@@ -965,9 +967,9 @@
 }
 
 .bc-fixed-bg {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: -999;
+  z-index: -1;
   pointer-events: none;
   /* Use a local file path like url("./images/background.jpg") when hosted with this CSS. */
   --bc-bg-image: url("./images/background.jpg");
@@ -975,7 +977,13 @@
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: fixed;
+  background-attachment: scroll;
+}
+
+/* Keep institutional headers above any decorative form background layer. */
+.elevation-20.gov-header.v-locale--is-ltr {
+  position: relative !important;
+  z-index: 10000 !important;
 }
 
 /* Builder-only guard: disable decorative background layers when sidebar is present. */
