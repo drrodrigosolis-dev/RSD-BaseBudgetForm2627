@@ -935,6 +935,33 @@ body:has(.builder-sidebar) .formio-form::after {
 }
 
 /*
+  Builder sidebar hard reset:
+  In builder mode, keep the left toolbox fully opaque and neutral so the
+  decorative runtime theme never bleeds through.
+*/
+.builder-sidebar,
+.builder-sidebar.builder-sidebar_scroll,
+.accordion.builder-sidebar,
+.accordion.builder-sidebar.builder-sidebar_scroll,
+.builder-sidebar .card,
+.builder-sidebar .card-header,
+.builder-sidebar .card-body,
+.builder-sidebar .accordion-item,
+.builder-sidebar .accordion-header,
+.builder-sidebar .accordion-button,
+.builder-sidebar .accordion-collapse,
+.builder-sidebar .btn,
+.builder-sidebar .form-control,
+.builder-sidebar .form-group {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border-color: rgba(31, 41, 55, 0.18) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/*
   Builder safeguard:
   The Form.io builder also renders form markup inside component edit dialogs.
   These resets strip custom theme styling from builder modal content entirely.
