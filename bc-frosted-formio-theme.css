@@ -805,6 +805,58 @@
   }
 }
 
+@keyframes bcSwitchThumbOn {
+  from {
+    transform: translate3d(0, -50%, 0);
+  }
+
+  to {
+    transform: translate3d(1.25rem, -50%, 0);
+  }
+}
+
+@keyframes bcSwitchThumbOff {
+  from {
+    transform: translate3d(1.25rem, -50%, 0);
+  }
+
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+@keyframes bcSwitchTrackOn {
+  from {
+    background: #e5e5ea;
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+      inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  }
+
+  to {
+    background: #34c759;
+    box-shadow:
+      inset 0 0 0 1px rgba(22, 120, 58, 0.12),
+      0 0 0 1px rgba(52, 199, 89, 0.12);
+  }
+}
+
+@keyframes bcSwitchTrackOff {
+  from {
+    background: #34c759;
+    box-shadow:
+      inset 0 0 0 1px rgba(22, 120, 58, 0.12),
+      0 0 0 1px rgba(52, 199, 89, 0.12);
+  }
+
+  to {
+    background: #e5e5ea;
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+      inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  }
+}
+
 @media (max-width: 767px) {
   .formio-form {
     padding: 0.24rem 0.44rem;
@@ -1810,7 +1862,7 @@ body:has(.builder-sidebar) .formio-form::after {
     inset 0 0 0 1px rgba(0, 0, 0, 0.08),
     inset 0 1px 1px rgba(255, 255, 255, 0.6);
   transform: translateY(-50%);
-  transition: background-color 220ms ease, box-shadow 220ms ease;
+  animation: none;
 }
 
 .formio-form .bc-readability-toggle .form-check-label::after,
@@ -1828,7 +1880,7 @@ body:has(.builder-sidebar) .formio-form::after {
     0 1px 2px rgba(0, 0, 0, 0.26),
     0 3px 8px rgba(0, 0, 0, 0.2);
   transform: translateY(-50%);
-  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
+  animation: none;
 }
 
 .formio-form .bc-readability-toggle .form-check-label:hover::before,
@@ -1852,12 +1904,31 @@ body:has(.builder-sidebar) .formio-form::after {
   box-shadow:
     inset 0 0 0 1px rgba(22, 120, 58, 0.12),
     0 0 0 1px rgba(52, 199, 89, 0.12);
+  animation: bcSwitchTrackOn 260ms cubic-bezier(0.22, 1, 0.36, 1) both !important;
 }
 
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check-label::after,
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .checkbox label::after,
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check > label::after {
-  transform: translate(1.25rem, -50%);
+  transform: translate3d(1.25rem, -50%, 0);
+  animation: bcSwitchThumbOn 260ms cubic-bezier(0.22, 1, 0.36, 1) both !important;
+}
+
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:not(:checked)) .form-check-label::before,
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:not(:checked)) .checkbox label::before,
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:not(:checked)) .form-check > label::before {
+  background: #e5e5ea;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  animation: bcSwitchTrackOff 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:not(:checked)) .form-check-label::after,
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:not(:checked)) .checkbox label::after,
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:not(:checked)) .form-check > label::after {
+  transform: translate3d(0, -50%, 0);
+  animation: bcSwitchThumbOff 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:focus-visible) .form-check-label::before,
@@ -1871,13 +1942,15 @@ body:has(.builder-sidebar) .formio-form::after {
 .formio-form .bc-readability-toggle .form-check-label:active::after,
 .formio-form .bc-readability-toggle .checkbox label:active::after,
 .formio-form .bc-readability-toggle .form-check > label:active::after {
-  transform: translateY(-50%) scale(0.94);
+  transform: translate3d(0, -50%, 0) scale(0.94) !important;
+  animation: none !important;
 }
 
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check-label:active::after,
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .checkbox label:active::after,
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check > label:active::after {
-  transform: translate(1.25rem, -50%) scale(0.94);
+  transform: translate3d(1.25rem, -50%, 0) scale(0.94) !important;
+  animation: none !important;
 }
 
 /*
@@ -1990,46 +2063,4 @@ body:has(.builder-sidebar) .formio-form::after {
   transform: none !important;
   background-position: 50% 50% !important;
   filter: none !important;
-}
-
-/* Keep iOS switch animation active even when readability mode disables transitions globally. */
-.formio-form .bc-readability-toggle .form-check-label,
-.formio-form .bc-readability-toggle .checkbox label,
-.formio-form .bc-readability-toggle .form-check > label {
-  transition: color 220ms ease !important;
-}
-
-.formio-form .bc-readability-toggle .form-check-label::before,
-.formio-form .bc-readability-toggle .checkbox label::before,
-.formio-form .bc-readability-toggle .form-check > label::before {
-  transition: background-color 220ms ease, box-shadow 220ms ease !important;
-}
-
-.formio-form .bc-readability-toggle .form-check-label::after,
-.formio-form .bc-readability-toggle .checkbox label::after,
-.formio-form .bc-readability-toggle .form-check > label::after {
-  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease !important;
-}
-
-/*
-  Readability mode sets transition:none !important with high specificity.
-  Re-apply switch transitions with equal/higher specificity so thumb sliding
-  remains animated while the rest of the form stays static.
-*/
-.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check-label,
-.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .checkbox label,
-.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check > label {
-  transition: color 220ms ease !important;
-}
-
-.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check-label::before,
-.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .checkbox label::before,
-.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check > label::before {
-  transition: background-color 220ms ease, box-shadow 220ms ease !important;
-}
-
-.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check-label::after,
-.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .checkbox label::after,
-.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check > label::after {
-  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease !important;
 }
