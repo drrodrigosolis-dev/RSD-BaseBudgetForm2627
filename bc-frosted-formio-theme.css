@@ -1,8 +1,7 @@
 /*
   Ready for Form.io HTML injection:
   Wrap this file's contents in <style>...</style> inside an HTML component.
-  Background now renders from .formio-form::before, so no separate .bc-fixed-bg
-  HTML component is required.
+  This version assumes a separate HTML component exists with class="bc-fixed-bg".
 */
 
 .formio-form {
@@ -17,35 +16,26 @@
   --fio-bc-line: rgba(16, 40, 56, 0.12);
   --fio-bc-glass: rgba(255, 255, 255, 0.96);
   --fio-bc-glass-strong: rgba(255, 255, 255, 0.995);
-  --bc-bg-image: url("./images/background.jpg");
   --fio-bc-shadow:
     0 10px 20px rgba(8, 35, 55, 0.06),
     0 22px 44px rgba(8, 35, 55, 0.08);
   position: relative;
-  z-index: 1;
-  isolation: isolate;
   padding: clamp(0.28rem, 0.7vw, 0.55rem) clamp(0.55rem, 1.25vw, 1rem);
   color: var(--fio-bc-text);
 }
 
 .formio-form::before {
   content: "";
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  background-image:
-    linear-gradient(rgba(8, 33, 58, 0.04), rgba(8, 33, 58, 0.1)),
-    var(--bc-bg-image);
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: scroll;
+  background: transparent;
 }
 
 .formio-form::after {
   content: "";
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
@@ -934,73 +924,19 @@
 }
 
 .bc-fixed-bg {
-  /* Legacy no-op: kept so older forms with this element do not break. */
-  display: none !important;
-}
-
-/* Never render decorative background layers inside Builder/editor surfaces. */
-.form-builder .bc-fixed-bg,
-.formio-builder .bc-fixed-bg,
-.builder-component-modal .bc-fixed-bg,
-.component-settings .bc-fixed-bg,
-.formio-dialog .bc-fixed-bg {
-  display: none !important;
-}
-
-.form-builder .formio-form::before,
-.form-builder .formio-form::after,
-.formio-builder .formio-form::before,
-.formio-builder .formio-form::after {
-  display: none !important;
-}
-
-/*
-  Builder shell fallback:
-  Some deployments do not expose .form-builder/.formio-builder on the outer root.
-  When the builder sidebar exists, force decorative background layers off and keep
-  the sidebar above all themed layers.
-*/
-body:has(.builder-sidebar) .formio-form::before,
-body:has(.builder-sidebar) .formio-form::after {
-  display: none !important;
-}
-
-body:has(.builder-sidebar) .formio-form {
-  z-index: auto !important;
-  isolation: auto !important;
-}
-
-.builder-sidebar,
-.accordion.builder-sidebar,
-.accordion.builder-sidebar.builder-sidebar_scroll {
-  position: relative !important;
-  z-index: 300000 !important;
-}
-
-/* Keep Builder toolbars/actions visible above themed component surfaces. */
-.form-builder .formio-component,
-.formio-builder .formio-component {
-  overflow: visible !important;
-}
-
-.form-builder .formio-component-actions,
-.form-builder .formio-component-editgrid.formio-component-actions,
-.formio-builder .formio-component-actions,
-.formio-builder .formio-component-editgrid.formio-component-actions {
-  position: relative !important;
-  z-index: 250 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-.form-builder .formio-component-panel,
-.form-builder .formio-component-triggerPanel,
-.formio-builder .formio-component-panel,
-.formio-builder .formio-component-triggerPanel {
-  position: relative !important;
-  z-index: 260 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
+  position: fixed;
+  inset: 0;
+  z-index: -999;
+  pointer-events: none;
+  /* Use a local file path like url("./images/background.jpg") when hosted with this CSS. */
+  --bc-bg-image: url("./images/background.jpg");
+  background-image:
+    linear-gradient(rgba(8, 33, 58, 0.04), rgba(8, 33, 58, 0.1)),
+    var(--bc-bg-image);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 /*
