@@ -12,10 +12,10 @@
   --fio-bc-text: #102838;
   --fio-bc-muted: #365466;
   --fio-bc-danger: #8b2538;
-  --fio-bc-border: rgba(255, 255, 255, 0.9);
+  --fio-bc-border: rgba(255, 255, 255, 0.56);
   --fio-bc-line: rgba(16, 40, 56, 0.12);
-  --fio-bc-glass: rgba(255, 255, 255, 0.96);
-  --fio-bc-glass-strong: rgba(255, 255, 255, 0.995);
+  --fio-bc-glass: rgba(255, 255, 255, 0.5);
+  --fio-bc-glass-strong: rgba(255, 255, 255, 0.66);
   --fio-bc-shadow:
     0 10px 20px rgba(8, 35, 55, 0.06),
     0 22px 44px rgba(8, 35, 55, 0.08);
@@ -68,14 +68,14 @@
   border: 1px solid var(--fio-bc-border);
   border-radius: 18px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.995), rgba(252, 254, 255, 0.97)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(248, 252, 255, 0.36)),
     var(--fio-bc-glass);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.72),
     inset 0 -1px 0 rgba(255, 255, 255, 0.28),
     var(--fio-bc-shadow);
-  backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
-  -webkit-backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
+  backdrop-filter: blur(14px) saturate(138%) brightness(108%);
+  -webkit-backdrop-filter: blur(14px) saturate(138%) brightness(108%);
   transition: box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
   animation: fioFadeUp 360ms ease both;
 }
@@ -210,7 +210,7 @@
     0 0 0 3px rgba(15, 94, 168, 0.14),
     0 8px 14px rgba(8, 35, 55, 0.05),
     0 14px 22px rgba(8, 35, 55, 0.04);
-  background: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.78);
   transform: translateY(-0.5px);
   outline: none;
 }
@@ -228,10 +228,10 @@
 .formio-form .choices__list[aria-expanded] {
   border: 1px solid var(--fio-bc-border);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.78);
   box-shadow: 0 14px 28px rgba(8, 35, 55, 0.12);
-  backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
-  -webkit-backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
+  backdrop-filter: blur(12px) saturate(135%) brightness(108%);
+  -webkit-backdrop-filter: blur(12px) saturate(135%) brightness(108%);
   animation: fioFadeUp 180ms ease both;
 }
 
@@ -244,7 +244,7 @@
   padding: 0.28rem 0.62rem;
   border: 1px solid rgba(255, 255, 255, 0.62);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.58);
   background-size: 180% 180%;
   background-position: 50% 50%;
   transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease, filter 160ms ease, background-position 220ms ease;
@@ -255,7 +255,7 @@
 }
 
 .formio-form .form-check:hover {
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255, 0.72);
   transform: translateY(-1px);
 }
 
@@ -345,7 +345,7 @@
   border: 1px solid transparent;
   border-radius: 999px;
   padding: 0.44rem 0.98rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.62);
   background-size: 180% 180%;
   background-position: 50% 50%;
   color: var(--fio-bc-text);
@@ -462,19 +462,19 @@
 .formio-form .btn-secondary,
 .formio-form .btn-default {
   border-color: rgba(255, 255, 255, 0.26);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.72);
   color: var(--fio-bc-text);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.62),
     0 6px 12px rgba(8, 35, 55, 0.05),
     0 12px 22px rgba(8, 35, 55, 0.06);
-  backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
-  -webkit-backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
+  backdrop-filter: blur(12px) saturate(132%) brightness(108%);
+  -webkit-backdrop-filter: blur(12px) saturate(132%) brightness(108%);
 }
 
 .formio-form .btn-secondary:hover,
 .formio-form .btn-default:hover {
-  background: rgba(255, 255, 255, 0.99);
+  background: rgba(255, 255, 255, 0.82);
   color: var(--fio-bc-text);
 }
 
@@ -624,7 +624,7 @@
 .formio-form .nav-tabs > li.active > a:focus,
 .formio-form .nav-tabs .active a {
   border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.6);
   color: var(--fio-bc-primary);
   box-shadow: 0 10px 20px rgba(8, 35, 55, 0.12);
 }
@@ -647,7 +647,7 @@
 .formio-form .signature-box {
   border: 1px dashed rgba(16, 40, 56, 0.18);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.6);
   transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
 }
 
@@ -655,7 +655,7 @@
 .formio-form .file-area:hover,
 .formio-form .signature-box:hover {
   border-color: rgba(15, 94, 168, 0.28);
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255, 0.72);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.62),
     0 8px 16px rgba(8, 35, 55, 0.05),
