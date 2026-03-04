@@ -2010,3 +2010,26 @@ body:has(.builder-sidebar) .formio-form::after {
 .formio-form .bc-readability-toggle .form-check > label::after {
   transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease !important;
 }
+
+/*
+  Readability mode sets transition:none !important with high specificity.
+  Re-apply switch transitions with equal/higher specificity so thumb sliding
+  remains animated while the rest of the form stays static.
+*/
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check-label,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .checkbox label,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check > label {
+  transition: color 220ms ease !important;
+}
+
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check-label::before,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .checkbox label::before,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check > label::before {
+  transition: background-color 220ms ease, box-shadow 220ms ease !important;
+}
+
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check-label::after,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .checkbox label::after,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-readability-toggle .form-check > label::after {
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease !important;
+}
