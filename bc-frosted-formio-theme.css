@@ -417,6 +417,15 @@
   opacity: 0.98;
   transform: scale(1.08);
   transition: none;
+  animation: none;
+}
+
+/*
+  Release-triggered click pop:
+  animation starts after press is released, so timing is fixed and independent
+  of how long the button stays in :active.
+*/
+.formio-form .btn:not(:disabled):not([disabled]):focus:not(:active)::after {
   animation: bcBtnClickPopFixed 720ms cubic-bezier(0.2, 0.85, 0.2, 1) 1 both;
 }
 
