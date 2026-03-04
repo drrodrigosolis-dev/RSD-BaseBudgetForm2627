@@ -1,0 +1,1917 @@
+/*
+  Ready for Form.io HTML injection:
+  Wrap this file's contents in <style>...</style> inside an HTML component.
+  This version assumes a separate HTML component exists with class="bc-fixed-bg".
+*/
+
+.formio-form {
+  --fio-bc-primary: #0f5ea8;
+  --fio-bc-secondary: #1b7486;
+  --fio-bc-forest: #245744;
+  --fio-bc-gold: #b88325;
+  --fio-bc-text: #102838;
+  --fio-bc-muted: #365466;
+  --fio-bc-danger: #8b2538;
+  --fio-bc-border: rgba(255, 255, 255, 0.9);
+  --fio-bc-line: rgba(16, 40, 56, 0.12);
+  --fio-bc-glass: rgba(255, 255, 255, 0.96);
+  --fio-bc-glass-strong: rgba(255, 255, 255, 0.995);
+  --fio-bc-shadow:
+    0 10px 20px rgba(8, 35, 55, 0.06),
+    0 22px 44px rgba(8, 35, 55, 0.08);
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  padding: clamp(0.28rem, 0.7vw, 0.55rem) clamp(0.55rem, 1.25vw, 1rem);
+  color: var(--fio-bc-text);
+}
+
+.formio-form::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: transparent;
+}
+
+.formio-form::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(247, 251, 253, 0.16)),
+    radial-gradient(circle at 80% 14%, rgba(255, 255, 255, 0.18), transparent 22%);
+}
+
+.formio-form,
+.formio-form p,
+.formio-form li,
+.formio-form .form-text,
+.formio-form .description,
+.formio-form .help-block {
+  line-height: 1.55;
+}
+
+.formio-form h1,
+.formio-form h2,
+.formio-form h3,
+.formio-form h4,
+.formio-form legend {
+  color: var(--fio-bc-text);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.formio-form .formio-component,
+.formio-form .form-group {
+  margin-bottom: 0.72rem;
+}
+
+.formio-form .formio-component:not(.formio-component-button):not(.formio-component-columns):not(.formio-component-column):not(.formio-component-content):not(.formio-component-htmlelement):not(.formio-component-hidden),
+.formio-form .panel,
+.formio-form .card,
+.formio-form .well,
+.formio-form .container-component,
+.formio-form fieldset,
+.formio-form .table-responsive,
+.formio-form .alert {
+  padding: clamp(0.34rem, 0.6vw, 0.5rem) clamp(0.62rem, 1vw, 0.9rem);
+  border: 1px solid var(--fio-bc-border);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.995), rgba(252, 254, 255, 0.97)),
+    var(--fio-bc-glass);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.28),
+    var(--fio-bc-shadow);
+  backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
+  -webkit-backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
+  transition: box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+  animation: fioFadeUp 360ms ease both;
+}
+
+.formio-form .panel,
+.formio-form .card,
+.formio-form .well,
+.formio-form .container-component,
+.formio-form fieldset {
+  overflow: visible;
+}
+
+.formio-form .card.card-body.bg-light.mb-3 {
+  min-height: 3.05rem;
+}
+
+.formio-form .panel,
+.formio-form .card,
+.formio-form .container-component,
+.formio-form fieldset {
+  position: relative;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.34),
+    0 12px 22px rgba(8, 35, 55, 0.06),
+    0 24px 46px rgba(8, 35, 55, 0.08);
+}
+
+.formio-form .panel::before,
+.formio-form .card::before,
+.formio-form .container-component::before,
+.formio-form fieldset::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.formio-form .well,
+.formio-form .table-responsive,
+.formio-form .alert {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.68),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.24),
+    0 8px 16px rgba(8, 35, 55, 0.045),
+    0 16px 28px rgba(8, 35, 55, 0.05);
+}
+
+.formio-form .control-label,
+.formio-form .form-label,
+.formio-form legend {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: var(--fio-bc-text);
+  font-size: 0.96rem;
+  font-weight: 600;
+}
+
+.formio-form .description,
+.formio-form .help-block,
+.formio-form .form-text {
+  margin-top: 0.45rem;
+  color: var(--fio-bc-muted);
+  font-size: 0.92rem;
+}
+
+.formio-form .form-control,
+.formio-form select.form-control,
+.formio-form textarea.form-control,
+.formio-form .choices__inner,
+.formio-form .form-control.flatpickr-input {
+  min-height: 2.85rem;
+  border: 1px solid rgba(16, 40, 56, 0.14);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(253, 254, 255, 0.985));
+  background-size: 180% 180%;
+  background-position: 50% 50%;
+  color: var(--fio-bc-text);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.22),
+    0 1px 2px rgba(8, 35, 55, 0.03),
+    0 8px 16px rgba(8, 35, 55, 0.04);
+  transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease, transform 140ms ease, filter 160ms ease, background-position 220ms ease;
+}
+
+.formio-form .form-control,
+.formio-form select.form-control,
+.formio-form textarea.form-control {
+  padding: 0.46rem 0.84rem;
+}
+
+.formio-form select.form-control,
+.formio-form .choices__inner,
+.formio-form textarea.form-control {
+  min-height: 3.05rem;
+}
+
+.formio-form select.form-control:hover,
+.formio-form .choices__inner:hover,
+.formio-form .form-control:hover,
+.formio-form textarea.form-control:hover {
+  transform: translateY(-0.5px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.24),
+    0 7px 14px rgba(8, 35, 55, 0.045);
+}
+
+.formio-form textarea.form-control {
+  resize: vertical;
+}
+
+.formio-form .form-control::placeholder,
+.formio-form textarea.form-control::placeholder {
+  color: #5c7788;
+  opacity: 1;
+}
+
+.formio-form .form-control:focus,
+.formio-form select.form-control:focus,
+.formio-form textarea.form-control:focus,
+.formio-form .choices.is-focused .choices__inner,
+.formio-form .choices.is-open .choices__inner {
+  border-color: rgba(15, 94, 168, 0.58);
+  box-shadow:
+    0 0 0 3px rgba(15, 94, 168, 0.14),
+    0 8px 14px rgba(8, 35, 55, 0.05),
+    0 14px 22px rgba(8, 35, 55, 0.04);
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-0.5px);
+  outline: none;
+}
+
+.formio-form .form-control[readonly],
+.formio-form .form-control:disabled,
+.formio-form .form-check-input:disabled,
+.formio-form .choices.is-disabled .choices__inner {
+  background: rgba(239, 245, 248, 0.72);
+  color: #617787;
+  cursor: not-allowed;
+}
+
+.formio-form .choices__list--dropdown,
+.formio-form .choices__list[aria-expanded] {
+  border: 1px solid var(--fio-bc-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 14px 28px rgba(8, 35, 55, 0.12);
+  backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
+  -webkit-backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
+  animation: fioFadeUp 180ms ease both;
+}
+
+.formio-form .choices__item--selectable.is-highlighted {
+  background: rgba(15, 94, 168, 0.12);
+  color: var(--fio-bc-text);
+}
+
+.formio-form .form-check {
+  padding: 0.28rem 0.62rem;
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  background-size: 180% 180%;
+  background-position: 50% 50%;
+  transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease, filter 160ms ease, background-position 220ms ease;
+}
+
+.formio-form .form-check + .form-check {
+  margin-top: 0.5rem;
+}
+
+.formio-form .form-check:hover {
+  background: rgba(255, 255, 255, 0.98);
+  transform: translateY(-1px);
+}
+
+.formio-form .formio-component-radio .form-check,
+.formio-form .formio-component-radio .form-check:hover {
+  padding: 0.08rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.formio-form .formio-component-simpleradioadvanced .form-check,
+.formio-form .formio-component-simpleradioadvanced .form-check:hover {
+  padding: 0.08rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.formio-form .formio-component-radio .form-check + .form-check {
+  margin-top: 0.2rem;
+}
+
+.formio-form .formio-component-simpleradioadvanced .form-check + .form-check {
+  margin-top: 0.2rem;
+}
+
+.formio-form .formio-component-radio .form-check-label,
+.formio-form .formio-component-radio label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--fio-bc-text);
+}
+
+.formio-form .formio-component-simpleradioadvanced .form-check-label,
+.formio-form .formio-component-simpleradioadvanced label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--fio-bc-text);
+}
+
+.formio-form .formio-component-radio .form-check-label.label-position-right,
+.formio-form .formio-component-simpleradioadvanced .form-check-label.label-position-right {
+  display: inline-flex;
+  width: 100%;
+  padding: 0.18rem 0.62rem 0.18rem 0.9rem;
+  margin-left: 0.14rem;
+  border-radius: 10px;
+}
+
+.formio-form .formio-component-radio .form-check-input[type="radio"],
+.formio-form .formio-component-simpleradioadvanced .form-check-input[type="radio"] {
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, filter 140ms ease;
+}
+
+.formio-form .formio-component-radio .form-check-input[type="radio"]:hover,
+.formio-form .formio-component-simpleradioadvanced .form-check-input[type="radio"]:hover {
+  transform: translateY(-0.5px) scale(1.02);
+  box-shadow:
+    0 0 0 2px rgba(15, 94, 168, 0.08),
+    0 4px 8px rgba(8, 35, 55, 0.05);
+}
+
+.formio-form .form-check-input {
+  width: 1.1rem;
+  height: 1.1rem;
+  float: left;
+  margin-left: 0.5em;
+  margin-top: 0.2rem;
+  accent-color: var(--fio-bc-primary);
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+
+.formio-form .form-check-input:focus {
+  box-shadow: 0 0 0 3px rgba(15, 94, 168, 0.18);
+  outline: none;
+}
+
+.formio-form .btn {
+  min-height: 44px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.44rem 0.98rem;
+  background: rgba(255, 255, 255, 0.9);
+  background-size: 180% 180%;
+  background-position: 50% 50%;
+  color: var(--fio-bc-text);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 6px 12px rgba(8, 35, 55, 0.06);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  opacity: 1;
+  transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease, border-color 140ms ease, filter 160ms ease, background-position 220ms ease;
+}
+
+.formio-form .btn:hover {
+  transform: translateY(-0.5px);
+}
+
+.formio-form .btn:focus,
+.formio-form .btn:focus-visible {
+  outline: 3px solid rgba(184, 131, 37, 0.3);
+  outline-offset: 2px;
+}
+
+.formio-form .form-control:focus,
+.formio-form select.form-control:focus,
+.formio-form textarea.form-control:focus,
+.formio-form .formio-component-simpletextareaadvanced textarea.form-control:focus,
+.formio-form .formio-choices:focus-within,
+.formio-form .formio-choices:has(.choices.is-open),
+.formio-form .formio-component-simpleselectadvanced .formio-choices:focus-within,
+.formio-form .formio-component-simpleselectadvanced .formio-choices:has(.choices.is-open),
+.formio-form .btn:focus,
+.formio-form .btn:active,
+.formio-form .fileSelector:active,
+.formio-form .fileSelector:focus-within,
+.formio-form .file-area:active,
+.formio-form .file-area:focus-within,
+.formio-form .signature-box:active,
+.formio-form .signature-box:focus-within {
+  position: relative;
+  animation: fioAuraBloom 560ms cubic-bezier(0.2, 0.8, 0.2, 1) 1;
+}
+
+.formio-form .form-check:has(.form-check-input:active),
+.formio-form .form-check-label:has(.form-check-input:active),
+.formio-form .checkbox label:has(.form-check-input:active),
+.formio-form .form-check > label:has(.form-check-input:active),
+.formio-form .bc-readability-toggle .form-check-label:has(input[type="checkbox"]:active),
+.formio-form .bc-readability-toggle .checkbox label:has(input[type="checkbox"]:active),
+.formio-form .bc-readability-toggle .form-check > label:has(input[type="checkbox"]:active),
+.formio-form .fileSelector:active,
+.formio-form .fileSelector:focus-within,
+.formio-form .file-area:active,
+.formio-form .file-area:focus-within,
+.formio-form .signature-box:active,
+.formio-form .signature-box:focus-within {
+  animation: fioAuraBloom 560ms cubic-bezier(0.2, 0.8, 0.2, 1) 1;
+}
+
+.formio-form .form-check-input:focus,
+.formio-form .form-check-input:active,
+.formio-form .form-check-input:checked,
+.formio-form .formio-component-radio .form-check-input[type="radio"]:checked,
+.formio-form .formio-component-simpleradioadvanced .form-check-input[type="radio"]:checked {
+  animation: fioControlBloom 560ms cubic-bezier(0.2, 0.8, 0.2, 1) 1;
+}
+
+.formio-form .btn-primary {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary));
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 8px 16px rgba(10, 44, 71, 0.12),
+    0 14px 26px rgba(10, 44, 71, 0.16);
+}
+
+.formio-form .btn-primary:hover,
+.formio-form .btn-primary:focus {
+  background: linear-gradient(135deg, #0d548f, #176878);
+  color: #ffffff;
+}
+
+.formio-form button.btn.btn-primary,
+.formio-form input.btn.btn-primary,
+.formio-form a.btn.btn-primary {
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary)) !important;
+  background-color: var(--fio-bc-primary) !important;
+  background-image: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary)) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.formio-form .btn.btn-primary:disabled,
+.formio-form .btn.btn-primary[disabled],
+.formio-form .btn.btn-primary.disabled,
+.formio-form .formio-component-button .btn.btn-primary:disabled,
+.formio-form .formio-component-button .btn.btn-primary[disabled],
+.formio-form .formio-component-submit .btn.btn-primary:disabled,
+.formio-form .formio-component-submit .btn.btn-primary[disabled] {
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: linear-gradient(135deg, #0f5ea8, #1b7486) !important;
+  background-color: #0f5ea8 !important;
+  background-image: linear-gradient(135deg, #0f5ea8, #1b7486) !important;
+  color: #ffffff !important;
+  opacity: 0.78 !important;
+  filter: saturate(0.92) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 6px 12px rgba(10, 44, 71, 0.1),
+    0 10px 18px rgba(10, 44, 71, 0.12) !important;
+}
+
+.formio-form .btn-secondary,
+.formio-form .btn-default {
+  border-color: rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--fio-bc-text);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    0 6px 12px rgba(8, 35, 55, 0.05),
+    0 12px 22px rgba(8, 35, 55, 0.06);
+  backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
+  -webkit-backdrop-filter: contrast(9%) blur(6px) brightness(167%) saturate(100%);
+}
+
+.formio-form .btn-secondary:hover,
+.formio-form .btn-default:hover {
+  background: rgba(255, 255, 255, 0.99);
+  color: var(--fio-bc-text);
+}
+
+.formio-form .btn-danger {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: linear-gradient(135deg, #9a2d41, var(--fio-bc-danger));
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 8px 16px rgba(80, 18, 31, 0.12),
+    0 14px 24px rgba(80, 18, 31, 0.14);
+}
+
+.formio-form .btn-success {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, #2f7d5d, #3f9b75);
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 8px 16px rgba(24, 74, 56, 0.12),
+    0 14px 24px rgba(24, 74, 56, 0.14);
+}
+
+.formio-form .btn-success:hover,
+.formio-form .btn-success:focus {
+  background: linear-gradient(135deg, #2a7154, #388b68);
+  color: #ffffff;
+}
+
+.formio-form .has-error .form-control,
+.formio-form .form-control.is-invalid,
+.formio-form .has-error .choices__inner,
+.formio-form .choices.is-invalid .choices__inner,
+.formio-form .form-control.input-error,
+.formio-form .form-control.error,
+.formio-form .choices.error .choices__inner,
+.formio-form .choices.has-error .choices__inner,
+.formio-form .form-group.has-error .form-control,
+.formio-form .form-group.is-invalid .form-control,
+.formio-form .formio-component.has-error .form-control,
+.formio-form .formio-component.is-invalid .form-control,
+.formio-form .formio-component.has-error .choices__inner,
+.formio-form .formio-component.is-invalid .choices__inner,
+.formio-form .is-invalid .form-control,
+.formio-form .has-error input,
+.formio-form .has-error select,
+.formio-form .has-error textarea,
+.formio-form input.is-invalid,
+.formio-form select.is-invalid,
+.formio-form textarea.is-invalid {
+  border-color: rgba(139, 37, 56, 0.56);
+  background:
+    linear-gradient(135deg, rgba(255, 248, 249, 0.98), rgba(255, 240, 243, 0.9), rgba(255, 246, 247, 0.98));
+  background-size: 180% 180%;
+  box-shadow:
+    0 0 0 3px rgba(185, 35, 58, 0.14),
+    0 0 14px rgba(185, 35, 58, 0.16),
+    0 8px 18px rgba(139, 37, 56, 0.08);
+  animation: fioErrorPulse 1.9s ease-in-out infinite, fioErrorTint 5.5s ease-in-out infinite;
+}
+
+.formio-form .invalid-feedback,
+.formio-form .help-block.text-danger,
+.formio-form .text-danger,
+.formio-form .error {
+  color: var(--fio-bc-danger);
+  font-weight: 600;
+}
+
+.formio-form .has-error.formio-component,
+.formio-form .formio-component.has-error,
+.formio-form .formio-component.is-invalid,
+.formio-form .form-group.has-error,
+.formio-form .form-group.is-invalid,
+.formio-form .formio-error-wrapper,
+.formio-form .has-error .card,
+.formio-form .has-error .panel,
+.formio-form .is-invalid .card,
+.formio-form .is-invalid .panel {
+  border-color: rgba(185, 35, 58, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.68),
+    0 0 0 1px rgba(185, 35, 58, 0.16),
+    0 0 18px rgba(185, 35, 58, 0.1),
+    0 10px 22px rgba(139, 37, 56, 0.06);
+  animation: fioErrorShellPulse 2.2s ease-in-out infinite, fioErrorAura 6s ease-in-out infinite;
+}
+
+.formio-form .alert-info {
+  border-color: rgba(15, 94, 168, 0.2);
+  color: var(--fio-bc-text);
+}
+
+.formio-form .alert-warning {
+  border-color: rgba(184, 131, 37, 0.2);
+  color: #66490f;
+}
+
+.formio-form .panel-title,
+.formio-form .card-title {
+  margin-bottom: 0.35rem;
+  color: var(--fio-bc-text);
+  font-weight: 700;
+}
+
+.formio-form .table,
+.formio-form .datagrid-table {
+  width: 100%;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+.formio-form .table th,
+.formio-form .table td,
+.formio-form .datagrid-table th,
+.formio-form .datagrid-table td {
+  border-color: var(--fio-bc-line);
+  padding: 0.8rem;
+  background: transparent;
+}
+
+.formio-form .table th,
+.formio-form .datagrid-table th {
+  background: rgba(15, 94, 168, 0.11);
+  color: var(--fio-bc-text);
+  font-weight: 600;
+}
+
+.formio-form .nav-tabs {
+  display: flex;
+  gap: 0.45rem;
+  border-bottom: 0;
+}
+
+.formio-form .nav-tabs > li > a,
+.formio-form .nav-tabs a {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.32);
+  color: var(--fio-bc-text);
+}
+
+.formio-form .nav-tabs > li.active > a,
+.formio-form .nav-tabs > li.active > a:hover,
+.formio-form .nav-tabs > li.active > a:focus,
+.formio-form .nav-tabs .active a {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--fio-bc-primary);
+  box-shadow: 0 10px 20px rgba(8, 35, 55, 0.12);
+}
+
+.formio-form .wizard-nav .step {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.34);
+  color: var(--fio-bc-text);
+}
+
+.formio-form .wizard-nav .step.active {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary));
+  color: #ffffff;
+}
+
+.formio-form .fileSelector,
+.formio-form .file-area,
+.formio-form .signature-box {
+  border: 1px dashed rgba(16, 40, 56, 0.18);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.formio-form .fileSelector:hover,
+.formio-form .file-area:hover,
+.formio-form .signature-box:hover {
+  border-color: rgba(15, 94, 168, 0.28);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    0 8px 16px rgba(8, 35, 55, 0.05),
+    0 14px 24px rgba(8, 35, 55, 0.06);
+}
+
+.formio-form a {
+  color: var(--fio-bc-primary);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.14em;
+}
+
+.formio-form a:hover,
+.formio-form a:focus {
+  color: #0c4a82;
+}
+
+@keyframes fioFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fioAuraBloom {
+  0% {
+    transform: scale(1);
+    background-position: 50% 50%;
+    box-shadow:
+      0 2px 6px rgba(8, 35, 55, 0.03),
+      0 0 0 0 rgba(15, 94, 168, 0),
+      0 0 0 0 rgba(117, 183, 236, 0);
+    filter: saturate(1) brightness(1);
+  }
+
+  45% {
+    transform: scale(1.006);
+    background-position: 52% 50%;
+    box-shadow:
+      0 8px 14px rgba(8, 35, 55, 0.05),
+      0 0 0 3px rgba(15, 94, 168, 0.1),
+      0 0 14px 4px rgba(117, 183, 236, 0.12),
+      0 0 24px 8px rgba(173, 220, 255, 0.07);
+    filter: saturate(1.02) brightness(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+    background-position: 50% 50%;
+    box-shadow:
+      0 2px 6px rgba(8, 35, 55, 0.03),
+      0 0 0 7px rgba(15, 94, 168, 0),
+      0 0 18px 8px rgba(117, 183, 236, 0),
+      0 0 28px 12px rgba(173, 220, 255, 0);
+    filter: saturate(1) brightness(1);
+  }
+}
+
+@keyframes fioControlBloom {
+  0% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 0 rgba(15, 94, 168, 0),
+      0 0 0 0 rgba(117, 183, 236, 0);
+    filter: saturate(1) brightness(1);
+  }
+
+  45% {
+    transform: scale(1.08);
+    box-shadow:
+      0 0 0 4px rgba(15, 94, 168, 0.13),
+      0 0 14px 5px rgba(117, 183, 236, 0.16);
+    filter: saturate(1.04) brightness(1.03);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 10px rgba(15, 94, 168, 0),
+      0 0 20px 10px rgba(117, 183, 236, 0);
+    filter: saturate(1) brightness(1);
+  }
+}
+
+@keyframes fioErrorPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 2px rgba(185, 35, 58, 0.1),
+      0 0 10px rgba(185, 35, 58, 0.1),
+      0 6px 14px rgba(139, 37, 56, 0.05);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 4px rgba(198, 48, 74, 0.16),
+      0 0 18px rgba(185, 35, 58, 0.2),
+      0 10px 24px rgba(139, 37, 56, 0.1);
+  }
+}
+
+@keyframes fioErrorShellPulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.68),
+      0 0 0 1px rgba(185, 35, 58, 0.12),
+      0 0 12px rgba(185, 35, 58, 0.07),
+      0 8px 18px rgba(139, 37, 56, 0.04);
+  }
+
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.72),
+      0 0 0 1px rgba(198, 48, 74, 0.2),
+      0 0 22px rgba(185, 35, 58, 0.12),
+      0 12px 26px rgba(139, 37, 56, 0.06);
+  }
+}
+
+@keyframes fioErrorTint {
+  0%,
+  100% {
+    background-position: 0% 50%;
+    border-color: rgba(139, 37, 56, 0.5);
+  }
+
+  50% {
+    background-position: 100% 50%;
+    border-color: rgba(198, 48, 74, 0.62);
+  }
+}
+
+@keyframes fioErrorAura {
+  0%,
+  100% {
+    border-color: rgba(185, 35, 58, 0.18);
+  }
+
+  50% {
+    border-color: rgba(198, 48, 74, 0.28);
+  }
+}
+
+@media (max-width: 767px) {
+  .formio-form {
+    padding: 0.24rem 0.44rem;
+  }
+
+  .formio-form .formio-component:not(.formio-component-button):not(.formio-component-columns):not(.formio-component-column):not(.formio-component-content):not(.formio-component-htmlelement):not(.formio-component-hidden),
+  .formio-form .panel,
+  .formio-form .card,
+  .formio-form .well,
+  .formio-form .container-component,
+  .formio-form fieldset,
+  .formio-form .table-responsive,
+  .formio-form .alert {
+    border-radius: 16px;
+    padding: 0.3rem 0.55rem;
+  }
+
+  .formio-form .btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .formio-form .formio-component:not(.formio-component-button):not(.formio-component-columns):not(.formio-component-column):not(.formio-component-content):not(.formio-component-htmlelement):not(.formio-component-hidden),
+  .formio-form .panel,
+  .formio-form .card,
+  .formio-form .well,
+  .formio-form .container-component,
+  .formio-form fieldset,
+  .formio-form .table-responsive,
+  .formio-form .alert,
+  .formio-form .choices__list--dropdown,
+  .formio-form .choices__list[aria-expanded] {
+    animation: none !important;
+  }
+
+  .formio-form .has-error .form-control,
+  .formio-form .form-control.is-invalid,
+  .formio-form .has-error .choices__inner,
+  .formio-form .choices.is-invalid .choices__inner,
+  .formio-form .form-control.input-error,
+  .formio-form .form-control.error,
+  .formio-form .choices.error .choices__inner,
+  .formio-form .choices.has-error .choices__inner,
+  .formio-form .form-group.has-error .form-control,
+  .formio-form .form-group.is-invalid .form-control,
+  .formio-form .formio-component.has-error .form-control,
+  .formio-form .formio-component.is-invalid .form-control,
+  .formio-form .formio-component.has-error .choices__inner,
+  .formio-form .formio-component.is-invalid .choices__inner,
+  .formio-form .is-invalid .form-control,
+  .formio-form .has-error input,
+  .formio-form .has-error select,
+  .formio-form .has-error textarea,
+  .formio-form input.is-invalid,
+  .formio-form select.is-invalid,
+  .formio-form textarea.is-invalid,
+  .formio-form .has-error.formio-component,
+  .formio-form .formio-component.has-error,
+  .formio-form .formio-component.is-invalid,
+  .formio-form .form-group.has-error,
+  .formio-form .form-group.is-invalid,
+  .formio-form .formio-error-wrapper,
+  .formio-form .has-error .card,
+  .formio-form .has-error .panel,
+  .formio-form .is-invalid .card,
+  .formio-form .is-invalid .panel {
+    animation: none !important;
+  }
+
+  .formio-form *,
+  .formio-form *::before,
+  .formio-form *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .formio-form::before,
+  .formio-form::after {
+    display: none;
+  }
+
+  .formio-form,
+  .formio-form .formio-component,
+  .formio-form .panel,
+  .formio-form .card,
+  .formio-form .well,
+  .formio-form .container-component,
+  .formio-form fieldset,
+  .formio-form .alert,
+  .formio-form .form-control,
+  .formio-form .choices__inner,
+  .formio-form .btn {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid ButtonText;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+.bc-fixed-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -999;
+  pointer-events: none;
+  /* Use a local file path like url("./images/background.jpg") when hosted with this CSS. */
+  --bc-bg-image: url("./images/background.jpg");
+  background-image:
+    linear-gradient(rgba(8, 33, 58, 0.04), rgba(8, 33, 58, 0.1)),
+    var(--bc-bg-image);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+/*
+  Builder safeguard:
+  The Form.io builder also renders form markup inside component edit dialogs.
+  These resets strip custom theme styling from builder modal content entirely.
+*/
+.builder-component-modal .component-edit-tabs .formio-form,
+.component-settings .component-edit-tabs .formio-form,
+.formio-dialog .component-edit-tabs .formio-form,
+.modal-open .component-edit-tabs .formio-form,
+.modal .component-edit-tabs .formio-form {
+  padding: 0 !important;
+  color: inherit !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.builder-component-modal .component-edit-tabs .formio-form *,
+.builder-component-modal .component-edit-tabs .formio-form *::before,
+.builder-component-modal .component-edit-tabs .formio-form *::after,
+.component-settings .component-edit-tabs .formio-form *,
+.component-settings .component-edit-tabs .formio-form *::before,
+.component-settings .component-edit-tabs .formio-form *::after,
+.formio-dialog .component-edit-tabs .formio-form *,
+.formio-dialog .component-edit-tabs .formio-form *::before,
+.formio-dialog .component-edit-tabs .formio-form *::after,
+.modal-open .component-edit-tabs .formio-form *,
+.modal-open .component-edit-tabs .formio-form *::before,
+.modal-open .component-edit-tabs .formio-form *::after,
+.modal .component-edit-tabs .formio-form *,
+.modal .component-edit-tabs .formio-form *::before,
+.modal .component-edit-tabs .formio-form *::after {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+}
+
+.builder-component-modal .component-edit-tabs .formio-form .formio-component,
+.builder-component-modal .component-edit-tabs .formio-form .form-group,
+.builder-component-modal .component-edit-tabs .formio-form .panel,
+.builder-component-modal .component-edit-tabs .formio-form .card,
+.builder-component-modal .component-edit-tabs .formio-form .well,
+.builder-component-modal .component-edit-tabs .formio-form .container-component,
+.builder-component-modal .component-edit-tabs .formio-form fieldset,
+.builder-component-modal .component-edit-tabs .formio-form .alert,
+.component-settings .component-edit-tabs .formio-form .formio-component,
+.component-settings .component-edit-tabs .formio-form .form-group,
+.component-settings .component-edit-tabs .formio-form .panel,
+.component-settings .component-edit-tabs .formio-form .card,
+.component-settings .component-edit-tabs .formio-form .well,
+.component-settings .component-edit-tabs .formio-form .container-component,
+.component-settings .component-edit-tabs .formio-form fieldset,
+.component-settings .component-edit-tabs .formio-form .alert,
+.formio-dialog .component-edit-tabs .formio-form .formio-component,
+.formio-dialog .component-edit-tabs .formio-form .form-group,
+.formio-dialog .component-edit-tabs .formio-form .panel,
+.formio-dialog .component-edit-tabs .formio-form .card,
+.formio-dialog .component-edit-tabs .formio-form .well,
+.formio-dialog .component-edit-tabs .formio-form .container-component,
+.formio-dialog .component-edit-tabs .formio-form fieldset,
+.formio-dialog .component-edit-tabs .formio-form .alert,
+.modal-open .component-edit-tabs .formio-form .formio-component,
+.modal-open .component-edit-tabs .formio-form .form-group,
+.modal-open .component-edit-tabs .formio-form .panel,
+.modal-open .component-edit-tabs .formio-form .card,
+.modal-open .component-edit-tabs .formio-form .well,
+.modal-open .component-edit-tabs .formio-form .container-component,
+.modal-open .component-edit-tabs .formio-form fieldset,
+.modal-open .component-edit-tabs .formio-form .alert,
+.modal .component-edit-tabs .formio-form .formio-component,
+.modal .component-edit-tabs .formio-form .form-group,
+.modal .component-edit-tabs .formio-form .panel,
+.modal .component-edit-tabs .formio-form .card,
+.modal .component-edit-tabs .formio-form .well,
+.modal .component-edit-tabs .formio-form .container-component,
+.modal .component-edit-tabs .formio-form fieldset,
+.modal .component-edit-tabs .formio-form .alert {
+  margin-bottom: 0.5rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.builder-component-modal .component-edit-tabs .formio-form .formio-component-content,
+.builder-component-modal .component-edit-tabs .formio-form .card-body,
+.builder-component-modal .component-edit-tabs .formio-form .card-header,
+.builder-component-modal .component-edit-tabs .formio-form .panel-body,
+.builder-component-modal .component-edit-tabs .formio-form .panel-heading,
+.builder-component-modal .component-edit-tabs .formio-form .tab-content,
+.builder-component-modal .component-edit-tabs .formio-form .tab-pane,
+.builder-component-modal .component-edit-tabs .formio-form .row,
+.builder-component-modal .component-edit-tabs .formio-form [class*="col-"],
+.component-settings .component-edit-tabs .formio-form .formio-component-content,
+.component-settings .component-edit-tabs .formio-form .card-body,
+.component-settings .component-edit-tabs .formio-form .card-header,
+.component-settings .component-edit-tabs .formio-form .panel-body,
+.component-settings .component-edit-tabs .formio-form .panel-heading,
+.component-settings .component-edit-tabs .formio-form .tab-content,
+.component-settings .component-edit-tabs .formio-form .tab-pane,
+.component-settings .component-edit-tabs .formio-form .row,
+.component-settings .component-edit-tabs .formio-form [class*="col-"],
+.formio-dialog .component-edit-tabs .formio-form .formio-component-content,
+.formio-dialog .component-edit-tabs .formio-form .card-body,
+.formio-dialog .component-edit-tabs .formio-form .card-header,
+.formio-dialog .component-edit-tabs .formio-form .panel-body,
+.formio-dialog .component-edit-tabs .formio-form .panel-heading,
+.formio-dialog .component-edit-tabs .formio-form .tab-content,
+.formio-dialog .component-edit-tabs .formio-form .tab-pane,
+.formio-dialog .component-edit-tabs .formio-form .row,
+.formio-dialog .component-edit-tabs .formio-form [class*="col-"],
+.modal-open .component-edit-tabs .formio-form .formio-component-content,
+.modal-open .component-edit-tabs .formio-form .card-body,
+.modal-open .component-edit-tabs .formio-form .card-header,
+.modal-open .component-edit-tabs .formio-form .panel-body,
+.modal-open .component-edit-tabs .formio-form .panel-heading,
+.modal-open .component-edit-tabs .formio-form .tab-content,
+.modal-open .component-edit-tabs .formio-form .tab-pane,
+.modal-open .component-edit-tabs .formio-form .row,
+.modal-open .component-edit-tabs .formio-form [class*="col-"],
+.modal .component-edit-tabs .formio-form .formio-component-content,
+.modal .component-edit-tabs .formio-form .card-body,
+.modal .component-edit-tabs .formio-form .card-header,
+.modal .component-edit-tabs .formio-form .panel-body,
+.modal .component-edit-tabs .formio-form .panel-heading,
+.modal .component-edit-tabs .formio-form .tab-content,
+.modal .component-edit-tabs .formio-form .tab-pane,
+.modal .component-edit-tabs .formio-form .row,
+.modal .component-edit-tabs .formio-form [class*="col-"] {
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.builder-component-modal .component-edit-tabs .formio-form .control-label,
+.builder-component-modal .component-edit-tabs .formio-form .form-label,
+.builder-component-modal .component-edit-tabs .formio-form legend,
+.builder-component-modal .component-edit-tabs .formio-form .description,
+.builder-component-modal .component-edit-tabs .formio-form .help-block,
+.builder-component-modal .component-edit-tabs .formio-form .form-text,
+.component-settings .component-edit-tabs .formio-form .control-label,
+.component-settings .component-edit-tabs .formio-form .form-label,
+.component-settings .component-edit-tabs .formio-form legend,
+.component-settings .component-edit-tabs .formio-form .description,
+.component-settings .component-edit-tabs .formio-form .help-block,
+.component-settings .component-edit-tabs .formio-form .form-text,
+.formio-dialog .component-edit-tabs .formio-form .control-label,
+.formio-dialog .component-edit-tabs .formio-form .form-label,
+.formio-dialog .component-edit-tabs .formio-form legend,
+.formio-dialog .component-edit-tabs .formio-form .description,
+.formio-dialog .component-edit-tabs .formio-form .help-block,
+.formio-dialog .component-edit-tabs .formio-form .form-text,
+.modal-open .component-edit-tabs .formio-form .control-label,
+.modal-open .component-edit-tabs .formio-form .form-label,
+.modal-open .component-edit-tabs .formio-form legend,
+.modal-open .component-edit-tabs .formio-form .description,
+.modal-open .component-edit-tabs .formio-form .help-block,
+.modal-open .component-edit-tabs .formio-form .form-text,
+.modal .component-edit-tabs .formio-form .control-label,
+.modal .component-edit-tabs .formio-form .form-label,
+.modal .component-edit-tabs .formio-form legend,
+.modal .component-edit-tabs .formio-form .description,
+.modal .component-edit-tabs .formio-form .help-block,
+.modal .component-edit-tabs .formio-form .form-text {
+  margin: 0 0 0.25rem 0 !important;
+  padding: 0 !important;
+  line-height: 1.35 !important;
+}
+
+.builder-component-modal .component-edit-tabs .formio-form .nav-tabs,
+.builder-component-modal .component-edit-tabs .formio-form .wizard-nav,
+.component-settings .component-edit-tabs .formio-form .nav-tabs,
+.component-settings .component-edit-tabs .formio-form .wizard-nav,
+.formio-dialog .component-edit-tabs .formio-form .nav-tabs,
+.formio-dialog .component-edit-tabs .formio-form .wizard-nav,
+.modal-open .component-edit-tabs .formio-form .nav-tabs,
+.modal-open .component-edit-tabs .formio-form .wizard-nav,
+.modal .component-edit-tabs .formio-form .nav-tabs,
+.modal .component-edit-tabs .formio-form .wizard-nav {
+  gap: 0 !important;
+  margin: 0 0 0.5rem 0 !important;
+  padding: 0 !important;
+}
+
+.builder-component-modal .component-edit-tabs .formio-form .form-control,
+.builder-component-modal .component-edit-tabs .formio-form select.form-control,
+.builder-component-modal .component-edit-tabs .formio-form textarea.form-control,
+.builder-component-modal .component-edit-tabs .formio-form .choices__inner,
+.builder-component-modal .component-edit-tabs .formio-form .choices__list--dropdown,
+.builder-component-modal .component-edit-tabs .formio-form .choices__list[aria-expanded],
+.component-settings .component-edit-tabs .formio-form .form-control,
+.component-settings .component-edit-tabs .formio-form select.form-control,
+.component-settings .component-edit-tabs .formio-form textarea.form-control,
+.component-settings .component-edit-tabs .formio-form .choices__inner,
+.component-settings .component-edit-tabs .formio-form .choices__list--dropdown,
+.component-settings .component-edit-tabs .formio-form .choices__list[aria-expanded],
+.formio-dialog .component-edit-tabs .formio-form .form-control,
+.formio-dialog .component-edit-tabs .formio-form select.form-control,
+.formio-dialog .component-edit-tabs .formio-form textarea.form-control,
+.formio-dialog .component-edit-tabs .formio-form .choices__inner,
+.formio-dialog .component-edit-tabs .formio-form .choices__list--dropdown,
+.formio-dialog .component-edit-tabs .formio-form .choices__list[aria-expanded],
+.modal-open .component-edit-tabs .formio-form .form-control,
+.modal-open .component-edit-tabs .formio-form select.form-control,
+.modal-open .component-edit-tabs .formio-form textarea.form-control,
+.modal-open .component-edit-tabs .formio-form .choices__inner,
+.modal-open .component-edit-tabs .formio-form .choices__list--dropdown,
+.modal-open .component-edit-tabs .formio-form .choices__list[aria-expanded],
+.modal .component-edit-tabs .formio-form .form-control,
+.modal .component-edit-tabs .formio-form select.form-control,
+.modal .component-edit-tabs .formio-form textarea.form-control,
+.modal .component-edit-tabs .formio-form .choices__inner,
+.modal .component-edit-tabs .formio-form .choices__list--dropdown,
+.modal .component-edit-tabs .formio-form .choices__list[aria-expanded] {
+  min-height: auto !important;
+  height: auto !important;
+  padding: 0.375rem 0.75rem !important;
+  line-height: 1.5 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 0.25rem !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+.builder-component-modal .component-edit-tabs .formio-form .btn,
+.builder-component-modal .component-edit-tabs .formio-form .nav-tabs a,
+.builder-component-modal .component-edit-tabs .formio-form .wizard-nav .step,
+.builder-component-modal .component-edit-tabs .formio-form .form-check,
+.builder-component-modal .component-edit-tabs .formio-form .card-header,
+.component-settings .component-edit-tabs .formio-form .btn,
+.component-settings .component-edit-tabs .formio-form .nav-tabs a,
+.component-settings .component-edit-tabs .formio-form .wizard-nav .step,
+.component-settings .component-edit-tabs .formio-form .form-check,
+.component-settings .component-edit-tabs .formio-form .card-header,
+.formio-dialog .component-edit-tabs .formio-form .btn,
+.formio-dialog .component-edit-tabs .formio-form .nav-tabs a,
+.formio-dialog .component-edit-tabs .formio-form .wizard-nav .step,
+.formio-dialog .component-edit-tabs .formio-form .form-check,
+.formio-dialog .component-edit-tabs .formio-form .card-header,
+.modal-open .component-edit-tabs .formio-form .btn,
+.modal-open .component-edit-tabs .formio-form .nav-tabs a,
+.modal-open .component-edit-tabs .formio-form .wizard-nav .step,
+.modal-open .component-edit-tabs .formio-form .form-check,
+.modal-open .component-edit-tabs .formio-form .card-header,
+.modal .component-edit-tabs .formio-form .btn,
+.modal .component-edit-tabs .formio-form .nav-tabs a,
+.modal .component-edit-tabs .formio-form .wizard-nav .step,
+.modal .component-edit-tabs .formio-form .form-check,
+.modal .component-edit-tabs .formio-form .card-header {
+  padding: 0.375rem 0.75rem !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 0.25rem !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+.builder-component-modal .component-edit-tabs .formio-form .form-check-input,
+.component-settings .component-edit-tabs .formio-form .form-check-input,
+.formio-dialog .component-edit-tabs .formio-form .form-check-input,
+.modal-open .component-edit-tabs .formio-form .form-check-input,
+.modal .component-edit-tabs .formio-form .form-check-input {
+  float: none !important;
+  margin-left: 0 !important;
+}
+
+.builder-component-modal .component-edit-tabs .formio-form .table,
+.builder-component-modal .component-edit-tabs .formio-form .datagrid-table,
+.component-settings .component-edit-tabs .formio-form .table,
+.component-settings .component-edit-tabs .formio-form .datagrid-table,
+.formio-dialog .component-edit-tabs .formio-form .table,
+.formio-dialog .component-edit-tabs .formio-form .datagrid-table,
+.modal-open .component-edit-tabs .formio-form .table,
+.modal-open .component-edit-tabs .formio-form .datagrid-table,
+.modal .component-edit-tabs .formio-form .table,
+.modal .component-edit-tabs .formio-form .datagrid-table {
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  background: transparent !important;
+}
+
+.builder-component-modal .component-edit-tabs .formio-form .table th,
+.builder-component-modal .component-edit-tabs .formio-form .table td,
+.builder-component-modal .component-edit-tabs .formio-form .datagrid-table th,
+.builder-component-modal .component-edit-tabs .formio-form .datagrid-table td,
+.component-settings .component-edit-tabs .formio-form .table th,
+.component-settings .component-edit-tabs .formio-form .table td,
+.component-settings .component-edit-tabs .formio-form .datagrid-table th,
+.component-settings .component-edit-tabs .formio-form .datagrid-table td,
+.formio-dialog .component-edit-tabs .formio-form .table th,
+.formio-dialog .component-edit-tabs .formio-form .table td,
+.formio-dialog .component-edit-tabs .formio-form .datagrid-table th,
+.formio-dialog .component-edit-tabs .formio-form .datagrid-table td,
+.modal-open .component-edit-tabs .formio-form .table th,
+.modal-open .component-edit-tabs .formio-form .table td,
+.modal-open .component-edit-tabs .formio-form .datagrid-table th,
+.modal-open .component-edit-tabs .formio-form .datagrid-table td,
+.modal .component-edit-tabs .formio-form .table th,
+.modal .component-edit-tabs .formio-form .table td,
+.modal .component-edit-tabs .formio-form .datagrid-table th,
+.modal .component-edit-tabs .formio-form .datagrid-table td {
+  padding: 0.375rem 0.5rem !important;
+  background: transparent !important;
+  color: inherit !important;
+}
+
+.builder-component-modal .formio-form .formio-component,
+.builder-component-modal .formio-form .form-group,
+.builder-component-modal .formio-form .card,
+.builder-component-modal .formio-form .card-body,
+.builder-component-modal .formio-form .panel,
+.builder-component-modal .formio-form .panel-body,
+.builder-component-modal .formio-form .tab-content,
+.builder-component-modal .formio-form .tab-pane,
+.component-settings .formio-form .formio-component,
+.component-settings .formio-form .form-group,
+.component-settings .formio-form .card,
+.component-settings .formio-form .card-body,
+.component-settings .formio-form .panel,
+.component-settings .formio-form .panel-body,
+.component-settings .formio-form .tab-content,
+.component-settings .formio-form .tab-pane,
+.formio-dialog .formio-form .formio-component,
+.formio-dialog .formio-form .form-group,
+.formio-dialog .formio-form .card,
+.formio-dialog .formio-form .card-body,
+.formio-dialog .formio-form .panel,
+.formio-dialog .formio-form .panel-body,
+.formio-dialog .formio-form .tab-content,
+.formio-dialog .formio-form .tab-pane,
+.modal-open .formio-form .formio-component,
+.modal-open .formio-form .form-group,
+.modal-open .formio-form .card,
+.modal-open .formio-form .card-body,
+.modal-open .formio-form .panel,
+.modal-open .formio-form .panel-body,
+.modal-open .formio-form .tab-content,
+.modal-open .formio-form .tab-pane,
+.modal .formio-form .formio-component,
+.modal .formio-form .form-group,
+.modal .formio-form .card,
+.modal .formio-form .card-body,
+.modal .formio-form .panel,
+.modal .formio-form .panel-body,
+.modal .formio-form .tab-content,
+.modal .formio-form .tab-pane {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.builder-component-modal .formio-component-panel,
+.builder-component-modal .formio-component-triggerPanel,
+.component-settings .formio-component-panel,
+.component-settings .formio-component-triggerPanel,
+.formio-dialog .formio-component-panel,
+.formio-dialog .formio-component-triggerPanel,
+.modal-open .formio-component-panel,
+.modal-open .formio-component-triggerPanel,
+.modal .formio-component-panel,
+.modal .formio-component-triggerPanel {
+  position: relative !important;
+  z-index: 40 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+.builder-component-modal .formio-component-panel > .card,
+.builder-component-modal .formio-component-triggerPanel > .card,
+.builder-component-modal .formio-component-panel .card-body,
+.builder-component-modal .formio-component-triggerPanel .card-body,
+.component-settings .formio-component-panel > .card,
+.component-settings .formio-component-triggerPanel > .card,
+.component-settings .formio-component-panel .card-body,
+.component-settings .formio-component-triggerPanel .card-body,
+.formio-dialog .formio-component-panel > .card,
+.formio-dialog .formio-component-triggerPanel > .card,
+.formio-dialog .formio-component-panel .card-body,
+.formio-dialog .formio-component-triggerPanel .card-body,
+.modal-open .formio-component-panel > .card,
+.modal-open .formio-component-triggerPanel > .card,
+.modal-open .formio-component-panel .card-body,
+.modal-open .formio-component-triggerPanel .card-body,
+.modal .formio-component-panel > .card,
+.modal .formio-component-triggerPanel > .card,
+.modal .formio-component-panel .card-body,
+.modal .formio-component-triggerPanel .card-body {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/*
+  Builder Semantic UI dropdown fix:
+  Some builder dialogs use Semantic UI dropdowns instead of Choices.
+  These need their own stacking/overflow restoration.
+*/
+.builder-component-modal .formio-form .ui.dropdown,
+.builder-component-modal .formio-form .ui.selection.dropdown,
+.component-settings .formio-form .ui.dropdown,
+.component-settings .formio-form .ui.selection.dropdown,
+.formio-dialog .formio-form .ui.dropdown,
+.formio-dialog .formio-form .ui.selection.dropdown,
+.modal-open .formio-form .ui.dropdown,
+.modal-open .formio-form .ui.selection.dropdown,
+.modal .formio-form .ui.dropdown,
+.modal .formio-form .ui.selection.dropdown {
+  position: relative !important;
+  overflow: visible !important;
+  min-height: auto !important;
+  z-index: auto !important;
+}
+
+.builder-component-modal .formio-form .ui.dropdown.active,
+.builder-component-modal .formio-form .ui.dropdown.visible,
+.builder-component-modal .formio-form .ui.selection.dropdown.active,
+.builder-component-modal .formio-form .ui.selection.dropdown.visible,
+.component-settings .formio-form .ui.dropdown.active,
+.component-settings .formio-form .ui.dropdown.visible,
+.component-settings .formio-form .ui.selection.dropdown.active,
+.component-settings .formio-form .ui.selection.dropdown.visible,
+.formio-dialog .formio-form .ui.dropdown.active,
+.formio-dialog .formio-form .ui.dropdown.visible,
+.formio-dialog .formio-form .ui.selection.dropdown.active,
+.formio-dialog .formio-form .ui.selection.dropdown.visible,
+.modal-open .formio-form .ui.dropdown.active,
+.modal-open .formio-form .ui.dropdown.visible,
+.modal-open .formio-form .ui.selection.dropdown.active,
+.modal-open .formio-form .ui.selection.dropdown.visible,
+.modal .formio-form .ui.dropdown.active,
+.modal .formio-form .ui.dropdown.visible,
+.modal .formio-form .ui.selection.dropdown.active,
+.modal .formio-form .ui.selection.dropdown.visible {
+  z-index: 10000 !important;
+}
+
+.builder-component-modal .formio-form .ui.dropdown .menu,
+.builder-component-modal .formio-form .ui.selection.dropdown .menu,
+.component-settings .formio-form .ui.dropdown .menu,
+.component-settings .formio-form .ui.selection.dropdown .menu,
+.formio-dialog .formio-form .ui.dropdown .menu,
+.formio-dialog .formio-form .ui.selection.dropdown .menu,
+.modal-open .formio-form .ui.dropdown .menu,
+.modal-open .formio-form .ui.selection.dropdown .menu,
+.modal .formio-form .ui.dropdown .menu,
+.modal .formio-form .ui.selection.dropdown .menu {
+  position: absolute !important;
+  top: calc(100% + 0.125rem) !important;
+  left: 0 !important;
+  right: auto !important;
+  min-width: 100% !important;
+  max-height: 16rem !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  z-index: 10001 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 0.25rem !important;
+  background: #ffffff !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12) !important;
+}
+
+.builder-component-modal .formio-form .ui.dropdown .menu > .item,
+.builder-component-modal .formio-form .ui.selection.dropdown .menu > .item,
+.component-settings .formio-form .ui.dropdown .menu > .item,
+.component-settings .formio-form .ui.selection.dropdown .menu > .item,
+.formio-dialog .formio-form .ui.dropdown .menu > .item,
+.formio-dialog .formio-form .ui.selection.dropdown .menu > .item,
+.modal-open .formio-form .ui.dropdown .menu > .item,
+.modal-open .formio-form .ui.selection.dropdown .menu > .item,
+.modal .formio-form .ui.dropdown .menu > .item,
+.modal .formio-form .ui.selection.dropdown .menu > .item {
+  padding: 0.375rem 0.75rem !important;
+  line-height: 1.35 !important;
+  white-space: normal !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+/*
+  Last-resort builder modal dropdown stack fix:
+  Some Semantic UI menus are mounted in a way that bypasses the .formio-form subtree.
+  Target the exact dropdown class directly while any modal is open.
+*/
+.modal-open .form-control.ui.fluid.selection.dropdown,
+.modal-open .ui.fluid.selection.dropdown,
+.modal-open .ui.selection.dropdown {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.modal-open .form-control.ui.fluid.selection.dropdown.active,
+.modal-open .form-control.ui.fluid.selection.dropdown.visible,
+.modal-open .ui.fluid.selection.dropdown.active,
+.modal-open .ui.fluid.selection.dropdown.visible,
+.modal-open .ui.selection.dropdown.active,
+.modal-open .ui.selection.dropdown.visible {
+  z-index: 200000 !important;
+}
+
+.modal-open .form-control.ui.fluid.selection.dropdown > .menu,
+.modal-open .ui.fluid.selection.dropdown > .menu,
+.modal-open .ui.selection.dropdown > .menu,
+.modal-open .form-control.ui.fluid.selection.dropdown .menu.transition.visible,
+.modal-open .ui.fluid.selection.dropdown .menu.transition.visible,
+.modal-open .ui.selection.dropdown .menu.transition.visible {
+  position: absolute !important;
+  top: calc(100% + 0.125rem) !important;
+  left: 0 !important;
+  right: auto !important;
+  min-width: 100% !important;
+  max-height: 16rem !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  z-index: 200001 !important;
+  display: block !important;
+}
+
+.modal-open {
+  overflow: hidden !important;
+}
+
+.modal-open .modal,
+.modal-open .formio-dialog {
+  overflow: hidden !important;
+}
+
+.modal-open .modal-dialog {
+  max-height: calc(100vh - 2rem) !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  overflow: visible !important;
+}
+
+.modal-open .modal-content,
+.modal-open .formio-dialog-content {
+  max-height: calc(100vh - 2rem) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+}
+
+.modal-open .modal-body {
+  overflow: visible !important;
+}
+
+.builder-component-modal .formio-component-actions,
+.builder-component-modal .formio-component-editgrid.formio-component-actions,
+.component-settings .formio-component-actions,
+.component-settings .formio-component-editgrid.formio-component-actions,
+.formio-dialog .formio-component-actions,
+.formio-dialog .formio-component-editgrid.formio-component-actions,
+.modal-open .formio-component-actions,
+.modal-open .formio-component-editgrid.formio-component-actions,
+.modal .formio-component-actions,
+.modal .formio-component-editgrid.formio-component-actions {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.builder-component-modal .col-form-label[ref="editgrid-actions-addRow"],
+.component-settings .col-form-label[ref="editgrid-actions-addRow"],
+.formio-dialog .col-form-label[ref="editgrid-actions-addRow"],
+.modal-open .col-form-label[ref="editgrid-actions-addRow"],
+.modal .col-form-label[ref="editgrid-actions-addRow"] {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.builder-component-modal .formio-component-actions .btn.btn-primary,
+.component-settings .formio-component-actions .btn.btn-primary,
+.formio-dialog .formio-component-actions .btn.btn-primary,
+.modal-open .formio-component-actions .btn.btn-primary,
+.modal .formio-component-actions .btn.btn-primary {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/*
+  Builder component layering:
+  The provided DOM shows the broken controls are Choices-based selects inside
+  .formio-component-select wrappers, while later sibling checkbox, textarea,
+  editgrid, and datamap components are overlapping them.
+  Keep select/tag components above those sibling blocks, without touching ACE.
+*/
+.builder-component-modal .formio-form .formio-component-select,
+.builder-component-modal .formio-form .formio-component-tags,
+.component-settings .formio-form .formio-component-select,
+.component-settings .formio-form .formio-component-tags,
+.formio-dialog .formio-form .formio-component-select,
+.formio-dialog .formio-form .formio-component-tags,
+.modal-open .formio-form .formio-component-select,
+.modal-open .formio-form .formio-component-tags,
+.modal .formio-form .formio-component-select,
+.modal .formio-form .formio-component-tags {
+  position: relative !important;
+  z-index: 2 !important;
+  overflow: visible !important;
+}
+
+.builder-component-modal .formio-form .formio-component-select:focus-within,
+.builder-component-modal .formio-form .formio-component-tags:focus-within,
+.component-settings .formio-form .formio-component-select:focus-within,
+.component-settings .formio-form .formio-component-tags:focus-within,
+.formio-dialog .formio-form .formio-component-select:focus-within,
+.formio-dialog .formio-form .formio-component-tags:focus-within,
+.modal-open .formio-form .formio-component-select:focus-within,
+.modal-open .formio-form .formio-component-tags:focus-within,
+.modal .formio-form .formio-component-select:focus-within,
+.modal .formio-form .formio-component-tags:focus-within {
+  z-index: 200 !important;
+}
+
+.builder-component-modal .formio-form .formio-component-select .choices,
+.builder-component-modal .formio-form .formio-component-select .choices__inner,
+.builder-component-modal .formio-form .formio-component-select .choices__list--single,
+.builder-component-modal .formio-form .formio-component-tags .choices,
+.builder-component-modal .formio-form .formio-component-tags .choices__inner,
+.builder-component-modal .formio-form .formio-component-tags .choices__list--single,
+.component-settings .formio-form .formio-component-select .choices,
+.component-settings .formio-form .formio-component-select .choices__inner,
+.component-settings .formio-form .formio-component-select .choices__list--single,
+.component-settings .formio-form .formio-component-tags .choices,
+.component-settings .formio-form .formio-component-tags .choices__inner,
+.component-settings .formio-form .formio-component-tags .choices__list--single,
+.formio-dialog .formio-form .formio-component-select .choices,
+.formio-dialog .formio-form .formio-component-select .choices__inner,
+.formio-dialog .formio-form .formio-component-select .choices__list--single,
+.formio-dialog .formio-form .formio-component-tags .choices,
+.formio-dialog .formio-form .formio-component-tags .choices__inner,
+.formio-dialog .formio-form .formio-component-tags .choices__list--single,
+.modal-open .formio-form .formio-component-select .choices,
+.modal-open .formio-form .formio-component-select .choices__inner,
+.modal-open .formio-form .formio-component-select .choices__list--single,
+.modal-open .formio-form .formio-component-tags .choices,
+.modal-open .formio-form .formio-component-tags .choices__inner,
+.modal-open .formio-form .formio-component-tags .choices__list--single,
+.modal .formio-form .formio-component-select .choices,
+.modal .formio-form .formio-component-select .choices__inner,
+.modal .formio-form .formio-component-select .choices__list--single,
+.modal .formio-form .formio-component-tags .choices,
+.modal .formio-form .formio-component-tags .choices__inner,
+.modal .formio-form .formio-component-tags .choices__list--single {
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 41 !important;
+}
+
+.builder-component-modal .formio-form .formio-component-select .choices.is-open,
+.builder-component-modal .formio-form .formio-component-select .choices__list--dropdown,
+.builder-component-modal .formio-form .formio-component-select .choices__list[aria-expanded],
+.builder-component-modal .formio-form .formio-component-tags .choices.is-open,
+.builder-component-modal .formio-form .formio-component-tags .choices__list--dropdown,
+.builder-component-modal .formio-form .formio-component-tags .choices__list[aria-expanded],
+.component-settings .formio-form .formio-component-select .choices.is-open,
+.component-settings .formio-form .formio-component-select .choices__list--dropdown,
+.component-settings .formio-form .formio-component-select .choices__list[aria-expanded],
+.component-settings .formio-form .formio-component-tags .choices.is-open,
+.component-settings .formio-form .formio-component-tags .choices__list--dropdown,
+.component-settings .formio-form .formio-component-tags .choices__list[aria-expanded],
+.formio-dialog .formio-form .formio-component-select .choices.is-open,
+.formio-dialog .formio-form .formio-component-select .choices__list--dropdown,
+.formio-dialog .formio-form .formio-component-select .choices__list[aria-expanded],
+.formio-dialog .formio-form .formio-component-tags .choices.is-open,
+.formio-dialog .formio-form .formio-component-tags .choices__list--dropdown,
+.formio-dialog .formio-form .formio-component-tags .choices__list[aria-expanded],
+.modal-open .formio-form .formio-component-select .choices.is-open,
+.modal-open .formio-form .formio-component-select .choices__list--dropdown,
+.modal-open .formio-form .formio-component-select .choices__list[aria-expanded],
+.modal-open .formio-form .formio-component-tags .choices.is-open,
+.modal-open .formio-form .formio-component-tags .choices__list--dropdown,
+.modal-open .formio-form .formio-component-tags .choices__list[aria-expanded],
+.modal .formio-form .formio-component-select .choices.is-open,
+.modal .formio-form .formio-component-select .choices__list--dropdown,
+.modal .formio-form .formio-component-select .choices__list[aria-expanded],
+.modal .formio-form .formio-component-tags .choices.is-open,
+.modal .formio-form .formio-component-tags .choices__list--dropdown,
+.modal .formio-form .formio-component-tags .choices__list[aria-expanded] {
+  z-index: 201 !important;
+}
+
+.builder-component-modal .formio-form .formio-component-checkbox,
+.builder-component-modal .formio-form .formio-component-textarea,
+.builder-component-modal .formio-form .formio-component-editgrid,
+.builder-component-modal .formio-form .formio-component-datagrid,
+.builder-component-modal .formio-form .formio-component-datamap,
+.component-settings .formio-form .formio-component-checkbox,
+.component-settings .formio-form .formio-component-textarea,
+.component-settings .formio-form .formio-component-editgrid,
+.component-settings .formio-form .formio-component-datagrid,
+.component-settings .formio-form .formio-component-datamap,
+.formio-dialog .formio-form .formio-component-checkbox,
+.formio-dialog .formio-form .formio-component-textarea,
+.formio-dialog .formio-form .formio-component-editgrid,
+.formio-dialog .formio-form .formio-component-datagrid,
+.formio-dialog .formio-form .formio-component-datamap,
+.modal-open .formio-form .formio-component-checkbox,
+.modal-open .formio-form .formio-component-textarea,
+.modal-open .formio-form .formio-component-editgrid,
+.modal-open .formio-form .formio-component-datagrid,
+.modal-open .formio-form .formio-component-datamap,
+.modal .formio-form .formio-component-checkbox,
+.modal .formio-form .formio-component-textarea,
+.modal .formio-form .formio-component-editgrid,
+.modal .formio-form .formio-component-datagrid,
+.modal .formio-form .formio-component-datamap {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/*
+  Builder preview button restore:
+  The builder reset intentionally neutralizes buttons inside modal forms so the
+  settings UI stays readable, but that also flattens the live preview pane on
+  the right. Restore the themed button appearance only inside the preview panel.
+*/
+.builder-component-modal .preview-panel .component-preview .formio-form .btn,
+.component-settings .preview-panel .component-preview .formio-form .btn,
+.formio-dialog .preview-panel .component-preview .formio-form .btn,
+.modal-open .preview-panel .component-preview .formio-form .btn,
+.modal .preview-panel .component-preview .formio-form .btn {
+  min-height: 44px !important;
+  border-radius: 999px !important;
+  padding: 0.44rem 0.98rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.builder-component-modal .preview-panel .component-preview .formio-form .btn.btn-primary,
+.builder-component-modal .preview-panel .component-preview .formio-form button.btn.btn-primary,
+.component-settings .preview-panel .component-preview .formio-form .btn.btn-primary,
+.component-settings .preview-panel .component-preview .formio-form button.btn.btn-primary,
+.formio-dialog .preview-panel .component-preview .formio-form .btn.btn-primary,
+.formio-dialog .preview-panel .component-preview .formio-form button.btn.btn-primary,
+.modal-open .preview-panel .component-preview .formio-form .btn.btn-primary,
+.modal-open .preview-panel .component-preview .formio-form button.btn.btn-primary,
+.modal .preview-panel .component-preview .formio-form .btn.btn-primary,
+.modal .preview-panel .component-preview .formio-form button.btn.btn-primary {
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary)) !important;
+  background-color: var(--fio-bc-primary) !important;
+  background-image: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary)) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 8px 16px rgba(10, 44, 71, 0.12),
+    0 14px 26px rgba(10, 44, 71, 0.16) !important;
+}
+
+.builder-component-modal .preview-panel .component-preview .formio-form .btn.btn-primary:disabled,
+.builder-component-modal .preview-panel .component-preview .formio-form .btn.btn-primary[disabled],
+.component-settings .preview-panel .component-preview .formio-form .btn.btn-primary:disabled,
+.component-settings .preview-panel .component-preview .formio-form .btn.btn-primary[disabled],
+.formio-dialog .preview-panel .component-preview .formio-form .btn.btn-primary:disabled,
+.formio-dialog .preview-panel .component-preview .formio-form .btn.btn-primary[disabled],
+.modal-open .preview-panel .component-preview .formio-form .btn.btn-primary:disabled,
+.modal-open .preview-panel .component-preview .formio-form .btn.btn-primary[disabled],
+.modal .preview-panel .component-preview .formio-form .btn.btn-primary:disabled,
+.modal .preview-panel .component-preview .formio-form .btn.btn-primary[disabled] {
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  background: linear-gradient(135deg, #0f5ea8, #1b7486) !important;
+  background-color: #0f5ea8 !important;
+  background-image: linear-gradient(135deg, #0f5ea8, #1b7486) !important;
+  color: #ffffff !important;
+  opacity: 0.86 !important;
+  filter: saturate(0.94) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 6px 12px rgba(10, 44, 71, 0.1),
+    0 10px 18px rgba(10, 44, 71, 0.12) !important;
+}
+
+/*
+  Readability toggle button styling:
+  Keep the control as a real checkbox for persistent state, but present it as a
+  pill button when the component has custom class "bc-readability-toggle".
+*/
+.formio-form .bc-readability-toggle {
+  display: inline-block;
+}
+
+.formio-form .bc-readability-toggle .form-check,
+.formio-form .bc-readability-toggle .checkbox {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.formio-form .bc-readability-toggle .form-check-input,
+.formio-form .bc-readability-toggle input[type="checkbox"] {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.formio-form .bc-readability-toggle .form-check-label,
+.formio-form .bc-readability-toggle .checkbox label,
+.formio-form .bc-readability-toggle .form-check > label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.6rem;
+  padding: 0.58rem 1rem;
+  border: 1px solid rgba(16, 40, 56, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--fio-bc-text);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    0 8px 16px rgba(8, 35, 55, 0.05);
+  cursor: pointer;
+  font-size: 0.94rem;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, background-color 140ms ease, color 140ms ease;
+}
+
+.formio-form .bc-readability-toggle .form-check-label:hover,
+.formio-form .bc-readability-toggle .checkbox label:hover,
+.formio-form .bc-readability-toggle .form-check > label:hover {
+  transform: translateY(-1px);
+  border-color: rgba(15, 94, 168, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 12px 20px rgba(8, 35, 55, 0.07);
+}
+
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check-label,
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .checkbox label,
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check > label {
+  border-color: rgba(15, 94, 168, 0.34);
+  background: rgba(15, 94, 168, 0.1);
+  color: #0d4f8a;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 10px 18px rgba(15, 94, 168, 0.08);
+}
+
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:focus-visible) .form-check-label,
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:focus-visible) .checkbox label,
+.formio-form .bc-readability-toggle:has(input[type="checkbox"]:focus-visible) .form-check > label {
+  outline: 0;
+  border-color: rgba(15, 94, 168, 0.5);
+  box-shadow:
+    0 0 0 4px rgba(15, 94, 168, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 10px 18px rgba(8, 35, 55, 0.06);
+}
+
+/*
+  Readability mode:
+  Add custom class "bc-readability-toggle" to the checkbox component that should
+  control background removal. When that checkbox is checked, decorative
+  background layers and frosted surfaces are flattened for higher contrast.
+*/
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) {
+  --fio-bc-border: rgba(16, 40, 56, 0.18);
+  --fio-bc-glass: #ffffff;
+  --fio-bc-glass-strong: #ffffff;
+  --fio-bc-shadow: none;
+}
+
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked)::after {
+  content: none !important;
+}
+
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-fixed-bg {
+  display: none !important;
+}
+
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) *,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) *::before,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .formio-component:not(.formio-component-button):not(.formio-component-columns):not(.formio-component-column):not(.formio-component-content):not(.formio-component-htmlelement):not(.formio-component-hidden),
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .panel,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .card,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .well,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .container-component,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) fieldset,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .table-responsive,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .alert,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-control,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) select.form-control,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) textarea.form-control,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices__inner,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices__list--dropdown,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices__list[aria-expanded] {
+  background: #ffffff !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: rgba(16, 40, 56, 0.14) !important;
+}
+
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-control,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) select.form-control,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) textarea.form-control,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices__inner,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .btn,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check-input,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check-label,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .checkbox label,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check > label,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .fileSelector,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .file-area,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .signature-box {
+  animation: none !important;
+  transition: none !important;
+  background-position: 50% 50% !important;
+  filter: none !important;
+}
+
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-control:hover,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-control:focus,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-control:active,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) select.form-control:hover,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) select.form-control:focus,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) select.form-control:active,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) textarea.form-control:hover,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) textarea.form-control:focus,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) textarea.form-control:active,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices__inner:hover,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices__inner:active,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices.is-focused .choices__inner,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices.is-open .choices__inner,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .btn:hover,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .btn:focus,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .btn:active,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check:hover,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check:active,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check:has(.form-check-input:focus),
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check:has(.form-check-input:active),
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check-label:active,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check-label:has(.form-check-input:focus),
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .checkbox label:active,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .checkbox label:has(.form-check-input:focus),
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check > label:active,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check > label:has(.form-check-input:focus),
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check-input:hover,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check-input:focus,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check-input:active,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-check-input:checked,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .formio-component-radio .form-check-input[type="radio"]:hover,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .formio-component-radio .form-check-input[type="radio"]:checked,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .formio-component-simpleradioadvanced .form-check-input[type="radio"]:hover,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .formio-component-simpleradioadvanced .form-check-input[type="radio"]:checked,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices.is-focused .choices__inner,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices.is-open .choices__inner,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .fileSelector:focus-within,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .file-area:focus-within,
+.formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .signature-box:focus-within {
+  transform: none !important;
+  background-position: 50% 50% !important;
+  filter: none !important;
+}
