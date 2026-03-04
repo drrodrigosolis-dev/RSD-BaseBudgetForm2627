@@ -941,6 +941,32 @@
   background-attachment: fixed;
 }
 
+/* Keep the fixed background behind interactive form content deterministically. */
+.formio-form > .bc-fixed-bg {
+  z-index: 0;
+}
+
+.formio-form > :not(.bc-fixed-bg) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Never render decorative background layers inside Builder/editor surfaces. */
+.form-builder .bc-fixed-bg,
+.formio-builder .bc-fixed-bg,
+.builder-component-modal .bc-fixed-bg,
+.component-settings .bc-fixed-bg,
+.formio-dialog .bc-fixed-bg {
+  display: none !important;
+}
+
+.form-builder .formio-form::before,
+.form-builder .formio-form::after,
+.formio-builder .formio-form::before,
+.formio-builder .formio-form::after {
+  display: none !important;
+}
+
 /*
   Builder safeguard:
   The Form.io builder also renders form markup inside component edit dialogs.
