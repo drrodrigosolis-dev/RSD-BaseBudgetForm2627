@@ -25,23 +25,11 @@
 }
 
 .formio-form::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background: transparent;
+  content: none;
 }
 
 .formio-form::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(247, 251, 253, 0.16)),
-    radial-gradient(circle at 80% 14%, rgba(255, 255, 255, 0.18), transparent 22%);
+  content: none;
 }
 
 .formio-form,
