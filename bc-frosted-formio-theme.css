@@ -12,10 +12,10 @@
   --fio-bc-text: #102838;
   --fio-bc-muted: #365466;
   --fio-bc-danger: #8b2538;
-  --fio-bc-border: rgba(255, 255, 255, 0.56);
+  --fio-bc-border: rgba(255, 255, 255, 0.42);
   --fio-bc-line: rgba(16, 40, 56, 0.12);
-  --fio-bc-glass: rgba(255, 255, 255, 0.5);
-  --fio-bc-glass-strong: rgba(255, 255, 255, 0.66);
+  --fio-bc-glass: rgba(255, 255, 255, 0.26);
+  --fio-bc-glass-strong: rgba(255, 255, 255, 0.38);
   --fio-bc-shadow:
     0 10px 20px rgba(8, 35, 55, 0.06),
     0 22px 44px rgba(8, 35, 55, 0.08);
@@ -68,14 +68,14 @@
   border: 1px solid var(--fio-bc-border);
   border-radius: 18px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(248, 252, 255, 0.36)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(248, 252, 255, 0.16)),
     var(--fio-bc-glass);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.72),
     inset 0 -1px 0 rgba(255, 255, 255, 0.28),
     var(--fio-bc-shadow);
-  backdrop-filter: blur(14px) saturate(138%) brightness(108%);
-  -webkit-backdrop-filter: blur(14px) saturate(138%) brightness(108%);
+  backdrop-filter: blur(18px) saturate(145%) brightness(105%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%) brightness(105%);
   transition: box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
   animation: fioFadeUp 360ms ease both;
 }
@@ -155,7 +155,7 @@
   border: 1px solid rgba(16, 40, 56, 0.14);
   border-radius: 12px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(253, 254, 255, 0.985));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.56), rgba(253, 254, 255, 0.32));
   background-size: 180% 180%;
   background-position: 50% 50%;
   color: var(--fio-bc-text);
@@ -164,6 +164,8 @@
     inset 0 -1px 0 rgba(255, 255, 255, 0.22),
     0 1px 2px rgba(8, 35, 55, 0.03),
     0 8px 16px rgba(8, 35, 55, 0.04);
+  backdrop-filter: blur(9px) saturate(132%) brightness(106%);
+  -webkit-backdrop-filter: blur(9px) saturate(132%) brightness(106%);
   transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease, transform 140ms ease, filter 160ms ease, background-position 220ms ease;
 }
 
@@ -210,7 +212,7 @@
     0 0 0 3px rgba(15, 94, 168, 0.14),
     0 8px 14px rgba(8, 35, 55, 0.05),
     0 14px 22px rgba(8, 35, 55, 0.04);
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.62);
   transform: translateY(-0.5px);
   outline: none;
 }
@@ -228,10 +230,10 @@
 .formio-form .choices__list[aria-expanded] {
   border: 1px solid var(--fio-bc-border);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.66);
   box-shadow: 0 14px 28px rgba(8, 35, 55, 0.12);
-  backdrop-filter: blur(12px) saturate(135%) brightness(108%);
-  -webkit-backdrop-filter: blur(12px) saturate(135%) brightness(108%);
+  backdrop-filter: blur(14px) saturate(136%) brightness(106%);
+  -webkit-backdrop-filter: blur(14px) saturate(136%) brightness(106%);
   animation: fioFadeUp 180ms ease both;
 }
 
@@ -244,7 +246,7 @@
   padding: 0.28rem 0.62rem;
   border: 1px solid rgba(255, 255, 255, 0.62);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.58);
+  background: rgba(255, 255, 255, 0.48);
   background-size: 180% 180%;
   background-position: 50% 50%;
   transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease, filter 160ms ease, background-position 220ms ease;
@@ -255,7 +257,7 @@
 }
 
 .formio-form .form-check:hover {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.58);
   transform: translateY(-1px);
 }
 
@@ -345,7 +347,7 @@
   border: 1px solid transparent;
   border-radius: 999px;
   padding: 0.44rem 0.98rem;
-  background: rgba(255, 255, 255, 0.62);
+  background: rgba(255, 255, 255, 0.5);
   background-size: 180% 180%;
   background-position: 50% 50%;
   color: var(--fio-bc-text);
@@ -462,7 +464,7 @@
 .formio-form .btn-secondary,
 .formio-form .btn-default {
   border-color: rgba(255, 255, 255, 0.26);
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.56);
   color: var(--fio-bc-text);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.62),
@@ -474,7 +476,7 @@
 
 .formio-form .btn-secondary:hover,
 .formio-form .btn-default:hover {
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.64);
   color: var(--fio-bc-text);
 }
 
@@ -647,7 +649,7 @@
 .formio-form .signature-box {
   border: 1px dashed rgba(16, 40, 56, 0.18);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.52);
   transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
 }
 
@@ -655,7 +657,7 @@
 .formio-form .file-area:hover,
 .formio-form .signature-box:hover {
   border-color: rgba(15, 94, 168, 0.28);
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.62);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.62),
     0 8px 16px rgba(8, 35, 55, 0.05),
@@ -971,7 +973,7 @@
   /* Use a local file path like url("./images/background.jpg") when hosted with this CSS. */
   --bc-bg-image: url("./images/background.jpg");
   background-image:
-    linear-gradient(rgba(8, 33, 58, 0.04), rgba(8, 33, 58, 0.1)),
+    linear-gradient(rgba(8, 33, 58, 0.015), rgba(8, 33, 58, 0.05)),
     var(--bc-bg-image);
   background-position: center center;
   background-repeat: no-repeat;
