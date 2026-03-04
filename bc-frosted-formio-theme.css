@@ -396,9 +396,9 @@
   opacity: 0;
   transform: scale(0.96);
   background:
-    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.32), transparent 44%),
-    linear-gradient(135deg, rgba(15, 94, 168, 0.26), rgba(27, 116, 134, 0.24), rgba(184, 131, 37, 0.22));
-  mix-blend-mode: screen;
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.48), transparent 46%),
+    linear-gradient(135deg, rgba(15, 94, 168, 0.4), rgba(27, 116, 134, 0.36), rgba(184, 131, 37, 0.34));
+  mix-blend-mode: normal;
 }
 
 .formio-form .btn:hover {
@@ -411,7 +411,7 @@
 }
 
 .formio-form .btn:not(:disabled):not([disabled]):active::after {
-  animation: bcBtnClickPop 260ms cubic-bezier(0.2, 0.85, 0.2, 1) both;
+  animation: bcBtnClickPop 420ms cubic-bezier(0.2, 0.85, 0.2, 1) both;
 }
 
 .formio-form .btn:focus,
@@ -487,37 +487,32 @@
   background: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary)) !important;
   background-color: var(--fio-bc-primary) !important;
   background-image: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary)) !important;
+  background-size: 220% 220% !important;
+  background-position: 0% 50% !important;
   color: #ffffff !important;
   opacity: 1 !important;
-}
-
-.formio-form .formio-component-submit .btn.btn-primary,
-.formio-form button.btn.btn-primary[type="submit"],
-.formio-form input.btn.btn-primary[type="submit"] {
-  background-size: 200% 200% !important;
-  background-position: 0% 50% !important;
   will-change: transform, box-shadow, filter, background-position;
 }
 
-.formio-form .formio-component-submit .btn.btn-primary:hover,
-.formio-form .formio-component-submit .btn.btn-primary:focus-visible,
-.formio-form button.btn.btn-primary[type="submit"]:hover,
-.formio-form button.btn.btn-primary[type="submit"]:focus-visible,
-.formio-form input.btn.btn-primary[type="submit"]:hover,
-.formio-form input.btn.btn-primary[type="submit"]:focus-visible {
+.formio-form .btn.btn-primary:not(:disabled):not([disabled]):hover,
+.formio-form .btn.btn-primary:not(:disabled):not([disabled]):focus-visible,
+.formio-form .formio-component-submit .btn.btn-primary:not(:disabled):not([disabled]):hover,
+.formio-form .formio-component-submit .btn.btn-primary:not(:disabled):not([disabled]):focus-visible,
+.formio-form .formio-component-button .btn.btn-primary:not(:disabled):not([disabled]):hover,
+.formio-form .formio-component-button .btn.btn-primary:not(:disabled):not([disabled]):focus-visible {
   transform: translateY(-2px) scale(1.01);
   background-position: 100% 50% !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.24),
-    0 12px 24px rgba(10, 44, 71, 0.16),
-    0 18px 30px rgba(10, 44, 71, 0.2) !important;
-  filter: saturate(1.1) brightness(1.06);
-  animation: bcSubmitHoverPulse 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    0 13px 26px rgba(10, 44, 71, 0.18),
+    0 20px 34px rgba(10, 44, 71, 0.22) !important;
+  filter: saturate(1.12) brightness(1.08);
+  animation: bcPrimaryHoverPulse 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.formio-form .formio-component-submit .btn.btn-primary:active,
-.formio-form button.btn.btn-primary[type="submit"]:active,
-.formio-form input.btn.btn-primary[type="submit"]:active {
+.formio-form .btn.btn-primary:not(:disabled):not([disabled]):active,
+.formio-form .formio-component-submit .btn.btn-primary:not(:disabled):not([disabled]):active,
+.formio-form .formio-component-button .btn.btn-primary:not(:disabled):not([disabled]):active {
   transform: translateY(0) scale(0.995);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
@@ -944,37 +939,37 @@
   }
 }
 
-@keyframes bcSubmitHoverPulse {
+@keyframes bcPrimaryHoverPulse {
   from {
     transform: translateY(-0.5px) scale(1);
     filter: saturate(1) brightness(1);
   }
 
   60% {
-    transform: translateY(-2.6px) scale(1.012);
-    filter: saturate(1.12) brightness(1.08);
+    transform: translateY(-2.8px) scale(1.014);
+    filter: saturate(1.15) brightness(1.1);
   }
 
   to {
     transform: translateY(-2px) scale(1.01);
-    filter: saturate(1.1) brightness(1.06);
+    filter: saturate(1.12) brightness(1.08);
   }
 }
 
 @keyframes bcBtnClickPop {
   0% {
     opacity: 0;
-    transform: scale(0.96);
+    transform: scale(0.92);
   }
 
-  40% {
-    opacity: 0.9;
-    transform: scale(1.02);
+  45% {
+    opacity: 0.98;
+    transform: scale(1.04);
   }
 
   100% {
     opacity: 0;
-    transform: scale(1.06);
+    transform: scale(1.12);
   }
 }
 
