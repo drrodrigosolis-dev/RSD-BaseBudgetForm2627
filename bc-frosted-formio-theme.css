@@ -939,6 +939,13 @@
   background-attachment: fixed;
 }
 
+/* Builder-only guard: disable decorative background layers when sidebar is present. */
+body:has(.builder-sidebar) .bc-fixed-bg,
+body:has(.builder-sidebar) .formio-form::before,
+body:has(.builder-sidebar) .formio-form::after {
+  display: none !important;
+}
+
 /*
   Builder safeguard:
   The Form.io builder also renders form markup inside component edit dialogs.
