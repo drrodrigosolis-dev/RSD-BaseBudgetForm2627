@@ -954,6 +954,32 @@
   display: none !important;
 }
 
+/* Keep Builder toolbars/actions visible above themed component surfaces. */
+.form-builder .formio-component,
+.formio-builder .formio-component {
+  overflow: visible !important;
+}
+
+.form-builder .formio-component-actions,
+.form-builder .formio-component-editgrid.formio-component-actions,
+.formio-builder .formio-component-actions,
+.formio-builder .formio-component-editgrid.formio-component-actions {
+  position: relative !important;
+  z-index: 250 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.form-builder .formio-component-panel,
+.form-builder .formio-component-triggerPanel,
+.formio-builder .formio-component-panel,
+.formio-builder .formio-component-triggerPanel {
+  position: relative !important;
+  z-index: 260 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 /*
   Builder safeguard:
   The Form.io builder also renders form markup inside component edit dialogs.
