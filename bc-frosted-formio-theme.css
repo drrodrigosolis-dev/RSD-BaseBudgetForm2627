@@ -395,6 +395,9 @@
   pointer-events: none;
   opacity: 0;
   transform: scale(0.96);
+  transition:
+    opacity 1200ms cubic-bezier(0.2, 0.85, 0.2, 1),
+    transform 1200ms cubic-bezier(0.2, 0.85, 0.2, 1);
   background:
     radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.48), transparent 46%),
     linear-gradient(135deg, rgba(15, 94, 168, 0.4), rgba(27, 116, 134, 0.36), rgba(184, 131, 37, 0.34));
@@ -411,11 +414,20 @@
 }
 
 /*
-  JS toggles .bc-click-pop on click, so this pop timeline is fixed and
-  independent of click/press duration.
+  CSS-only fixed release pop:
+  On press, jump to bright state immediately; on release, always fade/expand
+  over a fixed duration, independent of click length.
 */
-.formio-form .btn:not(:disabled):not([disabled]).bc-click-pop::after {
-  animation: bcBtnClickPopFixed 900ms cubic-bezier(0.2, 0.85, 0.2, 1) 1 both;
+.formio-form .btn:not(:disabled):not([disabled]):active::after {
+  opacity: 0.98;
+  transform: scale(1.08);
+  transition: none;
+}
+
+.formio-form .btn:not(:disabled):not([disabled]):not(:active)::after {
+  transition:
+    opacity 1200ms cubic-bezier(0.2, 0.85, 0.2, 1),
+    transform 1200ms cubic-bezier(0.2, 0.85, 0.2, 1);
 }
 
 .formio-form .btn:focus,
@@ -981,23 +993,6 @@
   to {
     transform: translateY(-2px) scale(1.01);
     filter: saturate(1.12) brightness(1.08);
-  }
-}
-
-@keyframes bcBtnClickPopFixed {
-  0% {
-    opacity: 0.98;
-    transform: scale(1.08);
-  }
-
-  45% {
-    opacity: 0.82;
-    transform: scale(1.11);
-  }
-
-  100% {
-    opacity: 0;
-    transform: scale(1.15);
   }
 }
 
