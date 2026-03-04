@@ -954,6 +954,29 @@
   display: none !important;
 }
 
+/*
+  Builder shell fallback:
+  Some deployments do not expose .form-builder/.formio-builder on the outer root.
+  When the builder sidebar exists, force decorative background layers off and keep
+  the sidebar above all themed layers.
+*/
+body:has(.builder-sidebar) .formio-form::before,
+body:has(.builder-sidebar) .formio-form::after {
+  display: none !important;
+}
+
+body:has(.builder-sidebar) .formio-form {
+  z-index: auto !important;
+  isolation: auto !important;
+}
+
+.builder-sidebar,
+.accordion.builder-sidebar,
+.accordion.builder-sidebar.builder-sidebar_scroll {
+  position: relative !important;
+  z-index: 300000 !important;
+}
+
 /* Keep Builder toolbars/actions visible above themed component surfaces. */
 .form-builder .formio-component,
 .formio-builder .formio-component {
