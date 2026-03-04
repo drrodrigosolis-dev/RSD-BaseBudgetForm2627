@@ -1,7 +1,8 @@
 /*
   Ready for Form.io HTML injection:
   Wrap this file's contents in <style>...</style> inside an HTML component.
-  This version assumes a separate HTML component exists with class="bc-fixed-bg".
+  Background now renders from .formio-form::before, so no separate .bc-fixed-bg
+  HTML component is required.
 */
 
 .formio-form {
@@ -16,6 +17,7 @@
   --fio-bc-line: rgba(16, 40, 56, 0.12);
   --fio-bc-glass: rgba(255, 255, 255, 0.96);
   --fio-bc-glass-strong: rgba(255, 255, 255, 0.995);
+  --bc-bg-image: url("./images/background.jpg");
   --fio-bc-shadow:
     0 10px 20px rgba(8, 35, 55, 0.06),
     0 22px 44px rgba(8, 35, 55, 0.08);
@@ -32,7 +34,13 @@
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  background: transparent;
+  background-image:
+    linear-gradient(rgba(8, 33, 58, 0.04), rgba(8, 33, 58, 0.1)),
+    var(--bc-bg-image);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 .formio-form::after {
@@ -926,29 +934,8 @@
 }
 
 .bc-fixed-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -999;
-  pointer-events: none;
-  /* Use a local file path like url("./images/background.jpg") when hosted with this CSS. */
-  --bc-bg-image: url("./images/background.jpg");
-  background-image:
-    linear-gradient(rgba(8, 33, 58, 0.04), rgba(8, 33, 58, 0.1)),
-    var(--bc-bg-image);
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-}
-
-/* Keep the fixed background behind interactive form content deterministically. */
-.formio-form > .bc-fixed-bg {
-  z-index: 0;
-}
-
-.formio-form > :not(.bc-fixed-bg) {
-  position: relative;
-  z-index: 1;
+  /* Legacy no-op: kept so older forms with this element do not break. */
+  display: none !important;
 }
 
 /* Never render decorative background layers inside Builder/editor surfaces. */
