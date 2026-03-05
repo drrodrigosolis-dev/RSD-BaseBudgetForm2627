@@ -2402,3 +2402,34 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
     brightness(var(--bc-frost-lite-brightness))
     contrast(var(--bc-frost-lite-contrast)) !important;
 }
+
+/*
+  Last-resort runtime override:
+  some Form.io renderers emit description/help text with extra utility classes or
+  different wrappers. Keep all hover-note content readable on the dark note panel.
+*/
+.formio-form .formio-component.hover-note:hover .form-text,
+.formio-form .formio-component.hover-note:hover .description,
+.formio-form .formio-component.hover-note:hover .help-block,
+.formio-form .formio-component.hover-note:hover .text-muted,
+.formio-form .formio-component.hover-note:hover small,
+.formio-form .formio-component.hover-note:hover p,
+.formio-form .formio-component.hover-note:hover span,
+.formio-form .formio-component.hover-note:hover a,
+.formio-form .formio-component.hover-note:focus-within .form-text,
+.formio-form .formio-component.hover-note:focus-within .description,
+.formio-form .formio-component.hover-note:focus-within .help-block,
+.formio-form .formio-component.hover-note:focus-within .text-muted,
+.formio-form .formio-component.hover-note:focus-within small,
+.formio-form .formio-component.hover-note:focus-within p,
+.formio-form .formio-component.hover-note:focus-within span,
+.formio-form .formio-component.hover-note:focus-within a,
+.formio-form .formio-component.hover-note:hover .form-text *,
+.formio-form .formio-component.hover-note:hover .description *,
+.formio-form .formio-component.hover-note:hover .help-block *,
+.formio-form .formio-component.hover-note:focus-within .form-text *,
+.formio-form .formio-component.hover-note:focus-within .description *,
+.formio-form .formio-component.hover-note:focus-within .help-block * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
