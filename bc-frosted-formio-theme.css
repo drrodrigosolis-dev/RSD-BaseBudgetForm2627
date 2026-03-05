@@ -199,7 +199,7 @@
   min-height: auto !important;
   border-radius: 8px;
   border: 1px solid rgba(16, 40, 56, 0.2);
-  background: rgba(20, 30, 40, 0.72);
+  background: rgba(20, 30, 40, 0.62);
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.22);
@@ -210,38 +210,26 @@
   -webkit-backdrop-filter: blur(6px) saturate(112%);
   z-index: 12;
   opacity: 0;
-  visibility: hidden;
   pointer-events: none;
-  transform: translateX(-7px) translateY(3px) scaleX(0.965);
+  transform: translateX(-4px) translateY(2px);
   transform-origin: left center;
-  filter: blur(4px);
-  -webkit-clip-path: inset(0 100% 0 0 round 8px);
-  clip-path: inset(0 100% 0 0 round 8px);
-  will-change: opacity, transform, filter, clip-path;
+  will-change: opacity, transform;
   transition:
-    opacity 150ms ease,
-    transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    filter 260ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    clip-path 280ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    visibility 0ms linear 260ms;
+    opacity 160ms ease,
+    transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .formio-form .formio-component.hover-note > .form-text.text-muted,
 .formio-form .formio-component.hover-note > .form-text.text-muted .text-muted {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
-  opacity: 1 !important;
 }
 
 .formio-form .formio-component.hover-note:hover > .form-text.text-muted,
 .formio-form .formio-component.hover-note:focus-within > .form-text.text-muted {
   opacity: 1;
-  visibility: visible;
-  transform: translateX(0) translateY(0) scaleX(1);
-  filter: blur(0);
-  -webkit-clip-path: inset(0 0 0 0 round 8px);
-  clip-path: inset(0 0 0 0 round 8px);
-  transition-delay: var(--bc-hover-note-idle-delay);
+  transform: translateX(0) translateY(0);
+  transition-delay: var(--bc-hover-note-idle-delay), var(--bc-hover-note-idle-delay);
 }
 
 .formio-form .form-control,
@@ -2405,7 +2393,6 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form .formio-component.hover-note:focus-within > .form-text.text-muted .text-muted {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
-  opacity: 1 !important;
 }
 
 /*
@@ -2433,14 +2420,11 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 */
 .formio-form .formio-component.hover-note > .form-text.text-muted {
   transition:
-    opacity 150ms ease,
-    transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    filter 260ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    clip-path 280ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    visibility 0ms linear 260ms !important;
+    opacity 160ms ease,
+    transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1) !important;
 }
 
 .formio-form .formio-component.hover-note:hover > .form-text.text-muted,
 .formio-form .formio-component.hover-note:focus-within > .form-text.text-muted {
-  transition-delay: var(--bc-hover-note-idle-delay) !important;
+  transition-delay: var(--bc-hover-note-idle-delay), var(--bc-hover-note-idle-delay) !important;
 }
