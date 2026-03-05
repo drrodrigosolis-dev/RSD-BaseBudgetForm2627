@@ -214,12 +214,10 @@
 }
 
 .formio-form .formio-component.hover-note > .form-text.text-muted,
-.formio-form .formio-component.hover-note > .form-text.text-muted * {
+.formio-form .formio-component.hover-note > .form-text.text-muted .text-muted {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   opacity: 1 !important;
-  --bs-secondary-color: #ffffff !important;
-  --v-medium-emphasis-opacity: 1 !important;
 }
 
 .formio-form .formio-component.hover-note:hover > .form-text.text-muted,
@@ -2387,11 +2385,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 */
 .formio-form .formio-component.hover-note:hover > .form-text.text-muted,
 .formio-form .formio-component.hover-note:focus-within > .form-text.text-muted,
-.formio-form .formio-component.hover-note:hover > .form-text.text-muted *,
-.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted * {
+.formio-form .formio-component.hover-note:hover > .form-text.text-muted .text-muted,
+.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted .text-muted {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   opacity: 1 !important;
-  --bs-secondary-color: #ffffff !important;
-  --v-medium-emphasis-opacity: 1 !important;
 }
