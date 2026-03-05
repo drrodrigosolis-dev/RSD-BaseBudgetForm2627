@@ -232,6 +232,65 @@
   transition-delay: var(--bc-hover-note-idle-delay), var(--bc-hover-note-idle-delay);
 }
 
+/*
+  Keep built-in Form.io question-mark tooltips independent from hover-note styling.
+  Form.io renders these either as Bootstrap tooltips or as .formio-tooltip__body blocks.
+*/
+.formio-form .fa.fa-question-circle.text-muted,
+.formio-form .fa.fa-question-circle-o.text-muted,
+.formio-form .formio-tooltip__trigger.text-muted {
+  color: rgba(16, 40, 56, 0.56) !important;
+  -webkit-text-fill-color: rgba(16, 40, 56, 0.56) !important;
+}
+
+.formio-form .formio-tooltip__body,
+.form-wrapper .formio-tooltip__body,
+.component-preview .formio-tooltip__body,
+.tooltip,
+.tooltip .tooltip-inner {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.formio-form .formio-tooltip__body,
+.form-wrapper .formio-tooltip__body,
+.component-preview .formio-tooltip__body,
+.tooltip {
+  background: rgba(20, 30, 40, 0.96) !important;
+  border-color: rgba(16, 40, 56, 0.24) !important;
+}
+
+.tooltip {
+  --bs-tooltip-color: #ffffff;
+  --bs-tooltip-bg: rgba(20, 30, 40, 0.96);
+}
+
+.tooltip .tooltip-inner {
+  background: rgba(20, 30, 40, 0.96) !important;
+  border: 1px solid rgba(16, 40, 56, 0.24);
+  box-shadow: 0 10px 20px rgba(8, 35, 55, 0.22);
+}
+
+.bs-tooltip-top .tooltip-arrow::before,
+.bs-tooltip-auto[data-popper-placement^="top"] .tooltip-arrow::before {
+  border-top-color: rgba(20, 30, 40, 0.96) !important;
+}
+
+.bs-tooltip-end .tooltip-arrow::before,
+.bs-tooltip-auto[data-popper-placement^="right"] .tooltip-arrow::before {
+  border-right-color: rgba(20, 30, 40, 0.96) !important;
+}
+
+.bs-tooltip-bottom .tooltip-arrow::before,
+.bs-tooltip-auto[data-popper-placement^="bottom"] .tooltip-arrow::before {
+  border-bottom-color: rgba(20, 30, 40, 0.96) !important;
+}
+
+.bs-tooltip-start .tooltip-arrow::before,
+.bs-tooltip-auto[data-popper-placement^="left"] .tooltip-arrow::before {
+  border-left-color: rgba(20, 30, 40, 0.96) !important;
+}
+
 .formio-form .form-control,
 .formio-form select.form-control,
 .formio-form textarea.form-control,
