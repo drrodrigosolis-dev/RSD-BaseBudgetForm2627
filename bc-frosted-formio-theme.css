@@ -187,7 +187,6 @@
 .formio-form .formio-component.hover-note {
   position: relative;
   --bc-hover-note-idle-delay: 220ms;
-  --bc-hover-note-reveal-duration: 300ms;
 }
 
 .formio-form .formio-component.hover-note > .form-text.text-muted {
@@ -200,13 +199,15 @@
   min-height: auto !important;
   border-radius: 8px;
   border: 1px solid rgba(16, 40, 56, 0.2);
-  background: rgba(20, 30, 40, 0.86);
+  background: rgba(20, 30, 40, 0.72);
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.22);
   font-size: 0.78rem;
   line-height: 1.35;
   box-shadow: 0 10px 20px rgba(8, 35, 55, 0.22);
+  backdrop-filter: blur(6px) saturate(112%);
+  -webkit-backdrop-filter: blur(6px) saturate(112%);
   z-index: 12;
   opacity: 0;
   visibility: hidden;
@@ -241,31 +242,6 @@
   -webkit-clip-path: inset(0 0 0 0 round 8px);
   clip-path: inset(0 0 0 0 round 8px);
   transition-delay: var(--bc-hover-note-idle-delay);
-  animation: bc-hover-note-reveal var(--bc-hover-note-reveal-duration) cubic-bezier(0.2, 0.7, 0.2, 1) var(--bc-hover-note-idle-delay) both;
-}
-
-@keyframes bc-hover-note-reveal {
-  0% {
-    opacity: 0;
-    transform: translateX(-8px) translateY(3px) scaleX(0.95);
-    filter: blur(5px);
-    -webkit-clip-path: inset(0 100% 0 0 round 8px);
-    clip-path: inset(0 100% 0 0 round 8px);
-  }
-  62% {
-    opacity: 1;
-    transform: translateX(0) translateY(0) scaleX(1);
-    filter: blur(1px);
-    -webkit-clip-path: inset(0 8% 0 0 round 8px);
-    clip-path: inset(0 8% 0 0 round 8px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0) translateY(0) scaleX(1);
-    filter: blur(0);
-    -webkit-clip-path: inset(0 0 0 0 round 8px);
-    clip-path: inset(0 0 0 0 round 8px);
-  }
 }
 
 .formio-form .form-control,
@@ -2451,9 +2427,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 }
 
 /*
-  Final animation lock:
-  keep hover-note reveal active even when global readability/reduced-motion
-  helper rules set transition/animation to none on all descendants.
+  Final motion lock:
+  keep hover-note reveal transition active even when global readability helpers
+  set transition/animation to none on descendants.
 */
 .formio-form .formio-component.hover-note > .form-text.text-muted {
   transition:
@@ -2467,5 +2443,4 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form .formio-component.hover-note:hover > .form-text.text-muted,
 .formio-form .formio-component.hover-note:focus-within > .form-text.text-muted {
   transition-delay: var(--bc-hover-note-idle-delay) !important;
-  animation: bc-hover-note-reveal var(--bc-hover-note-reveal-duration) cubic-bezier(0.2, 0.7, 0.2, 1) var(--bc-hover-note-idle-delay) both !important;
 }
