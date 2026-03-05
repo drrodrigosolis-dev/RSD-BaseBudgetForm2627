@@ -190,13 +190,15 @@
 
 .formio-form .formio-component.hover-note .form-text,
 .formio-form .formio-component.hover-note .description,
-.formio-form .formio-component.hover-note .help-block {
+.formio-form .formio-component.hover-note .help-block,
+.formio-form .formio-component.hover-note .v-input__details {
   position: absolute;
   left: 0;
   bottom: calc(100% + 6px);
   margin-top: 0;
   max-width: min(20rem, 92vw);
   padding: 0.42rem 0.56rem;
+  min-height: auto !important;
   border-radius: 8px;
   border: 1px solid rgba(16, 40, 56, 0.2);
   background: rgba(20, 30, 40, 0.96);
@@ -216,9 +218,14 @@
 
 .formio-form .formio-component.hover-note .form-text *,
 .formio-form .formio-component.hover-note .description *,
-.formio-form .formio-component.hover-note .help-block * {
+.formio-form .formio-component.hover-note .help-block *,
+.formio-form .formio-component.hover-note .v-input__details *,
+.formio-form .formio-component.hover-note .v-input__details .v-messages,
+.formio-form .formio-component.hover-note .v-input__details .v-messages__message,
+.formio-form .formio-component.hover-note .v-input__details > .v-icon {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
 }
 
 .formio-form .formio-component.hover-note:hover,
@@ -228,25 +235,32 @@
 .formio-form .formio-component.hover-note:hover .form-text,
 .formio-form .formio-component.hover-note:hover .description,
 .formio-form .formio-component.hover-note:hover .help-block,
+.formio-form .formio-component.hover-note:hover .v-input__details,
 .formio-form .formio-component.hover-note:focus-within .form-text,
 .formio-form .formio-component.hover-note:focus-within .description,
 .formio-form .formio-component.hover-note:focus-within .help-block,
+.formio-form .formio-component.hover-note:focus-within .v-input__details,
 .formio-form .formio-component.hover-note:hover .form-text *,
 .formio-form .formio-component.hover-note:hover .description *,
 .formio-form .formio-component.hover-note:hover .help-block *,
+.formio-form .formio-component.hover-note:hover .v-input__details *,
 .formio-form .formio-component.hover-note:focus-within .form-text *,
 .formio-form .formio-component.hover-note:focus-within .description *,
-.formio-form .formio-component.hover-note:focus-within .help-block * {
+.formio-form .formio-component.hover-note:focus-within .help-block *,
+.formio-form .formio-component.hover-note:focus-within .v-input__details * {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
 }
 
 .formio-form .formio-component.hover-note:hover .form-text,
 .formio-form .formio-component.hover-note:hover .description,
 .formio-form .formio-component.hover-note:hover .help-block,
+.formio-form .formio-component.hover-note:hover .v-input__details,
 .formio-form .formio-component.hover-note:focus-within .form-text,
 .formio-form .formio-component.hover-note:focus-within .description,
-.formio-form .formio-component.hover-note:focus-within .help-block {
+.formio-form .formio-component.hover-note:focus-within .help-block,
+.formio-form .formio-component.hover-note:focus-within .v-input__details {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -2411,7 +2425,10 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form .formio-component.hover-note:hover .form-text,
 .formio-form .formio-component.hover-note:hover .description,
 .formio-form .formio-component.hover-note:hover .help-block,
+.formio-form .formio-component.hover-note:hover .v-input__details,
 .formio-form .formio-component.hover-note:hover .text-muted,
+.formio-form .formio-component.hover-note:hover .v-messages,
+.formio-form .formio-component.hover-note:hover .v-messages__message,
 .formio-form .formio-component.hover-note:hover small,
 .formio-form .formio-component.hover-note:hover p,
 .formio-form .formio-component.hover-note:hover span,
@@ -2419,7 +2436,10 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form .formio-component.hover-note:focus-within .form-text,
 .formio-form .formio-component.hover-note:focus-within .description,
 .formio-form .formio-component.hover-note:focus-within .help-block,
+.formio-form .formio-component.hover-note:focus-within .v-input__details,
 .formio-form .formio-component.hover-note:focus-within .text-muted,
+.formio-form .formio-component.hover-note:focus-within .v-messages,
+.formio-form .formio-component.hover-note:focus-within .v-messages__message,
 .formio-form .formio-component.hover-note:focus-within small,
 .formio-form .formio-component.hover-note:focus-within p,
 .formio-form .formio-component.hover-note:focus-within span,
@@ -2427,9 +2447,12 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form .formio-component.hover-note:hover .form-text *,
 .formio-form .formio-component.hover-note:hover .description *,
 .formio-form .formio-component.hover-note:hover .help-block *,
+.formio-form .formio-component.hover-note:hover .v-input__details *,
 .formio-form .formio-component.hover-note:focus-within .form-text *,
 .formio-form .formio-component.hover-note:focus-within .description *,
-.formio-form .formio-component.hover-note:focus-within .help-block * {
+.formio-form .formio-component.hover-note:focus-within .help-block *,
+.formio-form .formio-component.hover-note:focus-within .v-input__details * {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
 }
