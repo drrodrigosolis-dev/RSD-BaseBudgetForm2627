@@ -188,7 +188,7 @@
   position: relative;
 }
 
-.formio-form .formio-component.hover-note .form-text.text-muted {
+.formio-form .formio-component.hover-note > .form-text.text-muted {
   position: absolute;
   left: 0;
   bottom: calc(100% + 6px);
@@ -213,8 +213,8 @@
   transition: opacity 140ms ease, transform 140ms ease, visibility 0ms linear 140ms;
 }
 
-.formio-form .formio-component.hover-note .form-text.text-muted,
-.formio-form .formio-component.hover-note .form-text.text-muted * {
+.formio-form .formio-component.hover-note > .form-text.text-muted,
+.formio-form .formio-component.hover-note > .form-text.text-muted * {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   opacity: 1 !important;
@@ -222,8 +222,8 @@
   --v-medium-emphasis-opacity: 1 !important;
 }
 
-.formio-form .formio-component.hover-note:hover .form-text.text-muted,
-.formio-form .formio-component.hover-note:focus-within .form-text.text-muted {
+.formio-form .formio-component.hover-note:hover > .form-text.text-muted,
+.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -2385,10 +2385,10 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   some Form.io renderers emit description/help text with extra utility classes or
   different wrappers. Keep all hover-note content readable on the dark note panel.
 */
-.formio-form .formio-component.hover-note:hover .form-text.text-muted,
-.formio-form .formio-component.hover-note:focus-within .form-text.text-muted,
-.formio-form .formio-component.hover-note:hover .form-text.text-muted *,
-.formio-form .formio-component.hover-note:focus-within .form-text.text-muted * {
+.formio-form .formio-component.hover-note:hover > .form-text.text-muted,
+.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted,
+.formio-form .formio-component.hover-note:hover > .form-text.text-muted *,
+.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted * {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   opacity: 1 !important;
