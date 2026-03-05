@@ -1368,7 +1368,6 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .component-edit-tabs .formio-form *::after {
   animation: none !important;
   transition: none !important;
-  transform: none !important;
   filter: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -1563,6 +1562,21 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   border-radius: 0.25rem !important;
   background: #ffffff !important;
   color: #000000 !important;
+}
+
+/*
+  Builder editor readability:
+  Ensure long textarea content remains visible in modal edit dialogs, even when
+  users paste long unbroken tokens or JSON/CSS snippets.
+*/
+.builder-component-modal .component-edit-tabs .formio-form textarea.form-control,
+.component-settings .component-edit-tabs .formio-form textarea.form-control,
+.formio-dialog .component-edit-tabs .formio-form textarea.form-control,
+.modal-open .component-edit-tabs .formio-form textarea.form-control,
+.modal .component-edit-tabs .formio-form textarea.form-control {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .btn,
