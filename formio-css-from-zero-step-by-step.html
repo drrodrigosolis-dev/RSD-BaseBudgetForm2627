@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form.io CSS From Zero - Step-by-Step Guide</title>
+  <style>
+    :root {
+      --bg: #f3f6fc;
+      --card: #ffffff;
+      --line: #d4ddef;
+      --ink: #20273d;
+      --muted: #586180;
+      --accent: #175fc7;
+      --code-bg: #0f1530;
+      --code-ink: #eef3ff;
+      --ok: #16653b;
+      --warn: #8a4208;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Noto Sans", Arial, sans-serif;
+      line-height: 1.46;
+      color: var(--ink);
+      background: radial-gradient(circle at top right, #e8efff, var(--bg) 55%);
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 22px;
+    }
+
+    .hero,
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .hero {
+      background: linear-gradient(140deg, #fafdff, #eef4ff);
+      border-color: #cddaf4;
+    }
+
+    h1 { margin: 0 0 8px; font-size: 1.65rem; }
+    h2 { margin: 0 0 10px; font-size: 1.22rem; }
+    h3 { margin: 10px 0 8px; font-size: 1.02rem; }
+
+    p { margin: 0 0 10px; }
+    ol, ul { margin: 0 0 10px 18px; }
+
+    a { color: var(--accent); }
+
+    pre {
+      margin: 10px 0;
+      background: var(--code-bg);
+      color: var(--code-ink);
+      border: 1px solid #273966;
+      border-radius: 10px;
+      padding: 11px;
+      overflow-x: auto;
+      font-size: 0.84rem;
+    }
+
+    code {
+      font-family: Menlo, Consolas, "Liberation Mono", monospace;
+      background: #ebf1ff;
+      color: #1b2f5a;
+      border-radius: 4px;
+      padding: 1px 4px;
+    }
+
+    .ok,
+    .warn {
+      border-left: 4px solid;
+      border-radius: 8px;
+      padding: 10px 11px;
+      margin: 10px 0;
+      font-size: 0.92rem;
+    }
+
+    .ok {
+      border-color: #1d8b53;
+      background: #eefaf2;
+      color: #10492b;
+    }
+
+    .warn {
+      border-color: #d07212;
+      background: #fff6eb;
+      color: #6b3407;
+    }
+
+    .step {
+      border: 1px solid #d5deef;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .checklist {
+      columns: 2;
+      column-gap: 26px;
+    }
+
+    .footer {
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    @media (max-width: 840px) {
+      .checklist { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <h1>Form.io CSS From Zero: Step-by-Step Guide</h1>
+      <p>
+        This guide assumes no prior CSS/Form.io experience. Follow it in order and you will create a stylesheet,
+        inject it safely into Form.io, and apply it to your form.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>What You Will Build</h2>
+      <ol>
+        <li>A scoped stylesheet that only affects one form.</li>
+        <li>A Form.io HTML component that injects that stylesheet.</li>
+        <li>Optional HTML Attributes class hooks for targeted styling.</li>
+        <li>A repeatable testing checklist for preview and production.</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Step 1) Prepare Your Form Wrapper Scope</h2>
+      <div class="step">
+        <h3>Goal</h3>
+        <p>Create one unique class or ID to avoid styling all forms by accident.</p>
+        <h3>Action</h3>
+        <ol>
+          <li>Open your form in Form.io Builder.</li>
+          <li>Find the top-level layout/container (or first parent container).</li>
+          <li>In <code>Layout -&gt; HTML Attributes</code>, add: <code>class="onboarding-theme"</code>.</li>
+        </ol>
+        <pre><code>&lt;!-- Scope target you will use in CSS --&gt;
+.onboarding-theme .form-control { ... }</code></pre>
+      </div>
+      <div class="warn">
+        If your environment supports IDs for the top wrapper, you can use <code>id="onboardingTheme"</code> and target
+        <code>#onboardingTheme ...</code>. Do not use both unless intentional.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Step 2) Create A Starter CSS Stylesheet</h2>
+      <div class="step">
+        <h3>Goal</h3>
+        <p>Start with a safe baseline that affects labels, inputs, errors, and buttons.</p>
+        <h3>Action</h3>
+        <ol>
+          <li>Create a local text file named <code>formio-theme.css</code> (optional but recommended).</li>
+          <li>Paste this starter CSS.</li>
+        </ol>
+        <pre><code>/* Scope everything */
+.onboarding-theme {
+  --fio-primary: #1f5fbd;
+  --fio-border: #c7d4ee;
+  --fio-danger: #bd1f37;
+}
+
+.onboarding-theme .formio-component,
+.onboarding-theme .form-group {
+  margin-bottom: 12px;
+}
+
+.onboarding-theme .control-label,
+.onboarding-theme .form-label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #23365f;
+}
+
+.onboarding-theme .form-control {
+  border: 1px solid var(--fio-border);
+  border-radius: 9px;
+  padding: 8px 10px;
+}
+
+.onboarding-theme .form-control:focus {
+  border-color: var(--fio-primary);
+  box-shadow: 0 0 0 3px rgba(31,95,189,.20);
+  outline: none;
+}
+
+.onboarding-theme .has-error .form-control,
+.onboarding-theme .form-control.is-invalid {
+  border-color: var(--fio-danger);
+  background: #fff5f7;
+}
+
+.onboarding-theme .invalid-feedback,
+.onboarding-theme .help-block.text-danger {
+  color: var(--fio-danger);
+}
+
+.onboarding-theme .btn-primary {
+  background: var(--fio-primary);
+  border-color: var(--fio-primary);
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Step 3) Inject The CSS In Form.io</h2>
+      <div class="step">
+        <h3>Goal</h3>
+        <p>Load your CSS into the form using an HTML component.</p>
+        <h3>Action</h3>
+        <ol>
+          <li>Add an <strong>HTML</strong> component near the top of the form.</li>
+          <li>Open the component settings.</li>
+          <li>In the content area, wrap your CSS in a <code>&lt;style&gt;</code> tag.</li>
+        </ol>
+        <pre><code>&lt;style&gt;
+.onboarding-theme .form-control {
+  border-radius: 9px;
+}
+
+.onboarding-theme .btn-primary {
+  background: #1f5fbd;
+  border-color: #1f5fbd;
+}
+&lt;/style&gt;</code></pre>
+      </div>
+      <div class="ok">
+        Keep one HTML component dedicated to CSS. This makes maintenance much easier.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Step 4) Add Optional Component-Level Hooks (HTML Attributes)</h2>
+      <div class="step">
+        <h3>Goal</h3>
+        <p>Tag specific components so you can style only those elements.</p>
+        <h3>Action</h3>
+        <ol>
+          <li>Open a specific component (example: Email field).</li>
+          <li>Go to <code>Layout -&gt; HTML Attributes</code>.</li>
+          <li>Add class: <code>class="field-email-main"</code>.</li>
+          <li>Use CSS selector: <code>.onboarding-theme .field-email-main .form-control { ... }</code>.</li>
+        </ol>
+        <pre><code>/* Only this field */
+.onboarding-theme .field-email-main .form-control {
+  background: #f7fbff;
+  border-color: #9fc2ff;
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Step 5) Add Visual Effects (Optional)</h2>
+      <div class="step">
+        <h3>Goal</h3>
+        <p>Apply gradients, blur, shadows, display layouts, backdrop-filter, and animations correctly.</p>
+        <pre><code>/* Gradient */
+.onboarding-theme .panel {
+  background-image: linear-gradient(120deg, #f7fbff, #e7f0ff);
+}
+
+/* Box shadow */
+.onboarding-theme .panel {
+  box-shadow: 0 10px 22px 0 rgba(25,52,102,.14);
+}
+
+/* Filter blur on element */
+.onboarding-theme .some-preview {
+  filter: blur(1.2px);
+}
+
+/* Backdrop filter (needs transparency) */
+.onboarding-theme .glass {
+  background: rgba(255,255,255,.45);
+  backdrop-filter: blur(8px) saturate(130%);
+  -webkit-backdrop-filter: blur(8px) saturate(130%);
+}
+
+/* Display layout */
+.onboarding-theme .row-tools {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Animation */
+.onboarding-theme .attention {
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}</code></pre>
+      </div>
+      <div class="warn">
+        Animations and pseudo-classes cannot be fully managed with inline styles alone. Use class hooks + injected CSS.
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Step 6) Test In The Correct Order</h2>
+      <div class="step">
+        <h3>Action Checklist</h3>
+        <ul class="checklist">
+          <li>Builder preview looks correct.</li>
+          <li>Embedded/runtime app also looks correct.</li>
+          <li>Required field errors still visible.</li>
+          <li>Keyboard focus ring visible (Tab key).</li>
+          <li>Mobile width tested (around 360px).</li>
+          <li>Buttons and DataGrid actions still clickable.</li>
+          <li>No style leaks into other forms.</li>
+          <li>Disabled and read-only states are legible.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Step 7) Troubleshooting</h2>
+      <div class="step">
+        <h3>Problem: CSS does nothing</h3>
+        <ol>
+          <li>Confirm the HTML component actually contains <code>&lt;style&gt;...&lt;/style&gt;</code>.</li>
+          <li>Confirm your wrapper class exists in rendered HTML.</li>
+          <li>Increase specificity: <code>.onboarding-theme .formio-component-email .form-control</code>.</li>
+          <li>Use <code>!important</code> only for hard conflicts.</li>
+        </ol>
+
+        <h3>Problem: Backdrop blur not visible</h3>
+        <ol>
+          <li>Ensure background uses alpha (example <code>rgba(..., .45)</code>).</li>
+          <li>Ensure there is visual content behind the element.</li>
+        </ol>
+
+        <h3>Problem: Animations not running</h3>
+        <ol>
+          <li>Verify matching <code>@keyframes</code> name exists.</li>
+          <li>Check if <code>prefers-reduced-motion</code> media query disables motion.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Production Template (Copy-Paste)</h2>
+      <pre><code>&lt;style&gt;
+/* 1) Scope */
+.onboarding-theme {
+  --fio-primary: #1f5fbd;
+  --fio-border: #c7d4ee;
+  --fio-danger: #bd1f37;
+}
+
+/* 2) Inputs */
+.onboarding-theme .form-control {
+  border: 1px solid var(--fio-border);
+  border-radius: 9px;
+  padding: 8px 10px;
+}
+
+.onboarding-theme .form-control:focus {
+  border-color: var(--fio-primary);
+  box-shadow: 0 0 0 3px rgba(31,95,189,.20);
+  outline: none;
+}
+
+/* 3) Errors */
+.onboarding-theme .has-error .form-control,
+.onboarding-theme .form-control.is-invalid {
+  border-color: var(--fio-danger);
+}
+
+/* 4) Buttons */
+.onboarding-theme .btn-primary {
+  background: var(--fio-primary);
+  border-color: var(--fio-primary);
+}
+
+/* 5) Accessibility: reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-theme * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+&lt;/style&gt;</code></pre>
+      <p class="footer">
+        Recommended process: update local CSS first, then paste final version into the HTML component.
+      </p>
+    </section>
+  </div>
+</body>
+</html>

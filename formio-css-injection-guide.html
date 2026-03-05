@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form.io CSS Injection Quick Reference</title>
+  <style>
+    :root {
+      --doc-bg: #f4f6fb;
+      --doc-card: #ffffff;
+      --doc-border: #d9deea;
+      --doc-ink: #20263a;
+      --doc-subtle: #56607a;
+      --doc-accent: #1257c9;
+      --doc-code: #0d1224;
+      --doc-code-ink: #eef3ff;
+      --doc-ok: #166439;
+      --doc-warn: #8a3c06;
+      --doc-danger: #8f101f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Noto Sans", Arial, sans-serif;
+      color: var(--doc-ink);
+      background: radial-gradient(circle at top right, #e7eeff 0, var(--doc-bg) 45%), var(--doc-bg);
+      line-height: 1.45;
+    }
+
+    a {
+      color: var(--doc-accent);
+    }
+
+    .page {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(140deg, #f9fbff, #eef4ff);
+      border: 1px solid #cfd8f0;
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 1.7rem;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #2a3551;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--doc-card);
+      border: 1px solid var(--doc-border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .toc {
+      position: sticky;
+      top: 12px;
+      max-height: calc(100vh - 24px);
+      overflow: auto;
+    }
+
+    .toc h2,
+    .content h2,
+    .content h3 {
+      margin-top: 0;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .toc li {
+      margin: 8px 0;
+    }
+
+    .toc a {
+      text-decoration: none;
+      color: #223256;
+      font-size: 0.95rem;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    .note,
+    .warn,
+    .danger {
+      border-left: 4px solid;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 0.93rem;
+    }
+
+    .note {
+      background: #eef8f1;
+      border-color: #2c8b57;
+      color: #11482b;
+    }
+
+    .warn {
+      background: #fff6eb;
+      border-color: #d96d0d;
+      color: #6b3205;
+    }
+
+    .danger {
+      background: #fff0f2;
+      border-color: #cf1f3a;
+      color: #6e1020;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.92rem;
+      background: #fff;
+    }
+
+    th,
+    td {
+      text-align: left;
+      border: 1px solid #d8dfef;
+      padding: 8px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f4f7ff;
+      font-weight: 700;
+    }
+
+    code {
+      font-family: Menlo, Consolas, "Liberation Mono", monospace;
+      background: #edf1fb;
+      padding: 1px 4px;
+      border-radius: 4px;
+      color: #1b2850;
+    }
+
+    pre {
+      margin: 10px 0;
+      background: var(--doc-code);
+      color: var(--doc-code-ink);
+      padding: 12px;
+      border-radius: 10px;
+      overflow-x: auto;
+      border: 1px solid #25345f;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .controls button {
+      border: 1px solid #bac7e5;
+      background: #f5f8ff;
+      color: #203154;
+      padding: 7px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.87rem;
+    }
+
+    .controls button:hover {
+      background: #eaf0ff;
+    }
+
+    .demo-wrap {
+      border: 1px solid #d3dcee;
+      border-radius: 12px;
+      padding: 16px;
+      background: linear-gradient(180deg, #fbfdff, #f2f6ff);
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    .pill {
+      display: inline-block;
+      border-radius: 999px;
+      background: #e8efff;
+      color: #1d3470;
+      border: 1px solid #bfd0ff;
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      margin-right: 6px;
+    }
+
+    .footer {
+      font-size: 0.88rem;
+      color: var(--doc-subtle);
+    }
+
+    .atomic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .atomic-card {
+      border: 1px solid #d4deef;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px;
+      min-height: 124px;
+    }
+
+    .atomic-card h4 {
+      margin: 0 0 8px;
+      font-size: 0.88rem;
+      color: #26365d;
+    }
+
+    .atomic-preview {
+      border: 1px solid #c8d5ef;
+      border-radius: 8px;
+      background: #f8fbff;
+      min-height: 70px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #2d406d;
+      font-size: 0.82rem;
+      overflow: hidden;
+    }
+
+    .atomic-preview.band {
+      background: linear-gradient(115deg, #edf4ff, #f8fbff 35%, #eaf2ff 65%, #edf4ff);
+      background-size: 180% 180%;
+    }
+
+    .atomic-display-inline {
+      display: inline-block;
+      padding: 4px 7px;
+      border: 1px solid #c7d4ee;
+      border-radius: 6px;
+      background: #f2f7ff;
+      margin: 0 2px;
+    }
+
+    .atomic-flex {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .atomic-flex span,
+    .atomic-grid-preview span {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: #d6e4ff;
+      border: 1px solid #b8caef;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: #284173;
+    }
+
+    .atomic-grid-preview {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      width: 100%;
+      max-width: 130px;
+      margin: 0 auto;
+    }
+
+    .glass-backdrop {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(45, 110, 210, 0.25), transparent 40%),
+        radial-gradient(circle at 80% 75%, rgba(44, 183, 134, 0.25), transparent 45%),
+        linear-gradient(115deg, #f4f7ff, #e9f0ff);
+      border: 1px solid #cad8f3;
+      border-radius: 10px;
+      padding: 12px;
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .glass-panel {
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.42);
+      backdrop-filter: blur(8px) saturate(130%);
+      -webkit-backdrop-filter: blur(8px) saturate(130%);
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: #1f3564;
+    }
+
+    .hover-lift {
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .hover-lift:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(26, 52, 100, 0.16);
+    }
+
+    .anim-box {
+      border-radius: 8px;
+      border: 1px solid #b9ccf2;
+      background: #eaf2ff;
+      width: 68px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 6px auto 0;
+      color: #264077;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .anim-fade-in { animation: fioFadeIn 1.2s ease-in-out infinite alternate; }
+    .anim-slide-up { animation: fioSlideUp 1.1s ease-in-out infinite alternate; }
+    .anim-pulse { animation: fioPulse 1.2s ease-in-out infinite; }
+    .anim-glow { animation: fioGlow 1.3s ease-in-out infinite alternate; }
+    .anim-rotate { animation: fioRotate 1.8s linear infinite; }
+    .anim-shake { animation: fioShake 1.4s ease-in-out infinite; }
+    .anim-float { animation: fioFloat 1.4s ease-in-out infinite alternate; }
+    .anim-gradient {
+      animation: fioGradientShift 2.2s ease infinite;
+      background: linear-gradient(120deg, #b3d0ff, #d0b8ff, #9fe3d4, #b3d0ff);
+      background-size: 250% 250%;
+    }
+
+    @keyframes fioFadeIn {
+      from { opacity: 0.35; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fioSlideUp {
+      from { transform: translateY(8px); opacity: 0.55; }
+      to { transform: translateY(-2px); opacity: 1; }
+    }
+
+    @keyframes fioPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    @keyframes fioGlow {
+      from { box-shadow: 0 0 0 rgba(33, 93, 184, 0); }
+      to { box-shadow: 0 0 16px rgba(33, 93, 184, 0.55); }
+    }
+
+    @keyframes fioRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fioShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-2px); }
+      40% { transform: translateX(2px); }
+      60% { transform: translateX(-2px); }
+      80% { transform: translateX(2px); }
+    }
+
+    @keyframes fioFloat {
+      from { transform: translateY(0); }
+      to { transform: translateY(-5px); }
+    }
+
+    @keyframes fioGradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 980px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+        max-height: none;
+      }
+    }
+
+    /* ------------------------------------------------------------ */
+    /* Form.io-like base structure for demo rendering               */
+    /* ------------------------------------------------------------ */
+
+    .formio-form {
+      --fio-font: "Segoe UI", sans-serif;
+      --fio-bg: #ffffff;
+      --fio-panel-bg: #f8faff;
+      --fio-text: #1d2740;
+      --fio-subtle: #54607d;
+      --fio-border: #cbd5ea;
+      --fio-primary: #215db8;
+      --fio-focus: #215db8;
+      --fio-danger: #bb2238;
+      --fio-radius: 8px;
+      --fio-gap-y: 14px;
+      --fio-label-size: 0.93rem;
+      --fio-input-size: 0.95rem;
+      --fio-shadow-focus: 0 0 0 3px rgba(33, 93, 184, 0.22);
+      --fio-btn-radius: 8px;
+      --fio-table-header: #edf3ff;
+      font-family: var(--fio-font);
+      color: var(--fio-text);
+      background: var(--fio-bg);
+      border: 1px solid #d4deef;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .formio-form h3,
+    .formio-form h4 {
+      margin: 0 0 12px;
+    }
+
+    .formio-form .form-group,
+    .formio-form .formio-component {
+      margin-bottom: var(--fio-gap-y);
+    }
+
+    .formio-form .control-label,
+    .formio-form .form-label {
+      display: block;
+      margin: 0 0 6px;
+      color: #27345b;
+      font-size: var(--fio-label-size);
+      font-weight: 600;
+    }
+
+    .formio-form .form-control,
+    .formio-form select.form-control,
+    .formio-form textarea.form-control {
+      width: 100%;
+      display: block;
+      min-height: 38px;
+      padding: 8px 11px;
+      border: 1px solid var(--fio-border);
+      border-radius: var(--fio-radius);
+      color: var(--fio-text);
+      background: #ffffff;
+      font-size: var(--fio-input-size);
+      transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+
+    .formio-form textarea.form-control {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .formio-form .form-control:focus {
+      border-color: var(--fio-focus);
+      box-shadow: var(--fio-shadow-focus);
+      outline: 0;
+    }
+
+    .formio-form .form-control[readonly] {
+      background: #f4f7ff;
+      color: #445078;
+    }
+
+    .formio-form .form-control:disabled,
+    .formio-form .form-check-input:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+      background: #f2f4fa;
+    }
+
+    .formio-form .description,
+    .formio-form .help-block,
+    .formio-form .form-text {
+      margin: 5px 0 0;
+      color: var(--fio-subtle);
+      font-size: 0.82rem;
+    }
+
+    .formio-form .error,
+    .formio-form .invalid-feedback,
+    .formio-form .help-block.text-danger,
+    .formio-form .has-error .help-block {
+      color: var(--fio-danger);
+      font-size: 0.82rem;
+      margin-top: 5px;
+      display: block;
+    }
+
+    .formio-form .has-error .form-control,
+    .formio-form .form-control.is-invalid {
+      border-color: var(--fio-danger);
+      background: #fff6f7;
+    }
+
+    .formio-form .btn {
+      display: inline-block;
+      border: 1px solid transparent;
+      padding: 8px 12px;
+      border-radius: var(--fio-btn-radius);
+      font-size: 0.89rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .formio-form .btn-primary {
+      background: var(--fio-primary);
+      color: #fff;
+    }
+
+    .formio-form .btn-secondary {
+      background: #eaf0ff;
+      color: #1b3d7f;
+      border-color: #c6d3f3;
+    }
+
+    .formio-form .btn-danger {
+      background: #f7dce0;
+      color: #7d1124;
+      border-color: #e4aeb8;
+    }
+
+    .formio-form .form-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin: 6px 0;
+    }
+
+    .formio-form .form-check-input {
+      margin-top: 3px;
+    }
+
+    .formio-form .panel,
+    .formio-form .card,
+    .formio-form .well,
+    .formio-form .container-component {
+      border: 1px solid #d5dff0;
+      border-radius: 10px;
+      background: var(--fio-panel-bg);
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+
+    .formio-form .panel .panel-title,
+    .formio-form .card .card-title {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: #1e2c4f;
+    }
+
+    .formio-form .table,
+    .formio-form .datagrid-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.87rem;
+    }
+
+    .formio-form .table th,
+    .formio-form .table td,
+    .formio-form .datagrid-table th,
+    .formio-form .datagrid-table td {
+      border: 1px solid #d4def0;
+      padding: 6px;
+      text-align: left;
+    }
+
+    .formio-form .table th,
+    .formio-form .datagrid-table th {
+      background: var(--fio-table-header);
+    }
+
+    .formio-form .nav-tabs {
+      list-style: none;
+      display: flex;
+      gap: 8px;
+      padding: 0;
+      margin: 0 0 10px;
+      border-bottom: 1px solid #d6def1;
+    }
+
+    .formio-form .nav-tabs a {
+      text-decoration: none;
+      display: inline-block;
+      padding: 7px 9px;
+      border-radius: 8px 8px 0 0;
+      border: 1px solid transparent;
+      color: #325088;
+      font-size: 0.87rem;
+    }
+
+    .formio-form .nav-tabs .active a {
+      background: #f0f5ff;
+      border-color: #c8d5f1;
+      border-bottom-color: #f0f5ff;
+      color: #193873;
+      font-weight: 700;
+    }
+
+    .formio-form .wizard-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .formio-form .wizard-nav .step {
+      border: 1px solid #cad6ee;
+      background: #f6f9ff;
+      color: #274886;
+      padding: 7px;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      text-align: center;
+    }
+
+    .formio-form .wizard-nav .step.active {
+      background: #215db8;
+      color: #fff;
+      border-color: #215db8;
+      font-weight: 700;
+    }
+
+    .formio-form .file-area {
+      border: 2px dashed #bccae8;
+      border-radius: 9px;
+      padding: 11px;
+      background: #f8fbff;
+      text-align: center;
+      color: #3b4f7f;
+      font-size: 0.86rem;
+    }
+
+    .formio-form .signature-box {
+      border: 1px solid #cfd9ef;
+      border-radius: 8px;
+      height: 90px;
+      background: repeating-linear-gradient(45deg, #f8fbff, #f8fbff 6px, #f0f5ff 6px, #f0f5ff 12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #58678d;
+      font-size: 0.84rem;
+    }
+
+    .formio-form .alert {
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.85rem;
+      border: 1px solid;
+      margin-bottom: 10px;
+    }
+
+    .formio-form .alert-info {
+      background: #e8f2ff;
+      border-color: #bdd4f5;
+      color: #184383;
+    }
+
+    .formio-form .alert-warning {
+      background: #fff4e8;
+      border-color: #f3cfac;
+      color: #8f4f0e;
+    }
+
+    .formio-form.fio-density-compact {
+      --fio-gap-y: 8px;
+      --fio-label-size: 0.85rem;
+      --fio-input-size: 0.88rem;
+      --fio-radius: 6px;
+    }
+
+    .formio-form.fio-skin-clean {
+      --fio-bg: #ffffff;
+      --fio-panel-bg: #ffffff;
+      --fio-border: #d8d8dc;
+      --fio-primary: #2b2b30;
+      --fio-focus: #2b2b30;
+      --fio-table-header: #f7f7f8;
+      --fio-shadow-focus: 0 0 0 3px rgba(34, 34, 36, 0.18);
+    }
+
+    .formio-form.fio-skin-clean .panel,
+    .formio-form.fio-skin-clean .card,
+    .formio-form.fio-skin-clean .well {
+      box-shadow: 0 2px 6px rgba(25, 26, 35, 0.05);
+    }
+
+    .formio-form.fio-contrast {
+      --fio-bg: #0f1727;
+      --fio-panel-bg: #17213a;
+      --fio-text: #f6f8ff;
+      --fio-subtle: #c9d1e7;
+      --fio-border: #65729b;
+      --fio-primary: #ffb341;
+      --fio-focus: #ffb341;
+      --fio-danger: #ff8ca0;
+      --fio-table-header: #1b2946;
+      --fio-shadow-focus: 0 0 0 3px rgba(255, 179, 65, 0.35);
+    }
+
+    .formio-form.fio-contrast .control-label,
+    .formio-form.fio-contrast .form-label {
+      color: #f2f5ff;
+    }
+
+    .formio-form.fio-contrast .form-control,
+    .formio-form.fio-contrast select.form-control,
+    .formio-form.fio-contrast textarea.form-control {
+      background: #0d1424;
+      color: #f6f8ff;
+    }
+
+    .formio-form.fio-contrast .form-control::placeholder {
+      color: #b3bdd9;
+    }
+
+    .formio-form.fio-contrast .panel,
+    .formio-form.fio-contrast .card,
+    .formio-form.fio-contrast .well {
+      border-color: #65739d;
+    }
+
+    .formio-form.fio-contrast .btn-secondary {
+      background: #263555;
+      color: #f4f7ff;
+      border-color: #6b7ba5;
+    }
+
+    .formio-form.fio-contrast .btn-danger {
+      background: #5b1f2d;
+      color: #ffdce3;
+      border-color: #9f4e61;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <h1>Form.io CSS Injection Quick Reference (Comprehensive)</h1>
+      <p>
+        This guide is designed for restricted Form.io licenses where you style forms by injecting CSS via an HTML component
+        (or by attaching classes and targeting them from CSS). It includes a selector map, full component coverage, state styling,
+        and copy-paste snippets.
+      </p>
+    </section>
+
+    <div class="grid">
+      <aside class="card toc">
+        <h2>Contents</h2>
+        <ul>
+          <li><a href="#scope">1) Scope And Injection Points</a></li>
+          <li><a href="#selector-map">2) Selector Map (Common Form.io DOM)</a></li>
+          <li><a href="#starter">3) Starter Scoped CSS Template</a></li>
+          <li><a href="#live">4) Live Demo Form</a></li>
+          <li><a href="#snippets">5) Snippet Library By Category</a></li>
+          <li><a href="#atomic-props">6) Atomic CSS Property Reference</a></li>
+          <li><a href="#matrix">7) Component Coverage Matrix</a></li>
+          <li><a href="#specificity">8) Specificity / !important / Sanitization</a></li>
+          <li><a href="#checklist">9) QA Checklist</a></li>
+        </ul>
+      </aside>
+
+      <main class="content">
+        <section id="scope" class="card">
+          <h2>1) Scope And Injection Points</h2>
+          <p>
+            In restricted setups, this is usually the safest pattern: place one HTML component near the top of the form with a
+            <code>&lt;style&gt;</code> block, and scope every rule to a unique wrapper class or ID so styles do not leak to other forms.
+          </p>
+
+          <pre><code>&lt;!-- Form.io HTML component content --&gt;
+&lt;style&gt;
+/* Scope to one form wrapper class or id */
+#onboardingForm .form-control {
+  border-radius: 10px;
+}
+
+#onboardingForm .btn-primary {
+  background: #0f4fa8;
+  border-color: #0f4fa8;
+}
+&lt;/style&gt;</code></pre>
+
+          <div class="note">
+            Recommended workflow: add a custom class in Layout/HTML attributes (example: <code>onboarding-theme</code>) and target
+            <code>.onboarding-theme ...</code> selectors from the injected stylesheet.
+          </div>
+
+          <div class="warn">
+            Sanitization can remove style tags or attributes in some deployments. Always verify in the final runtime app (not only in builder preview).
+          </div>
+        </section>
+
+        <section id="selector-map" class="card">
+          <h2>2) Selector Map (Common Form.io DOM)</h2>
+          <p>
+            Form.io DOM differs by renderer version/theme (Bootstrap 3/4/5). Treat these selectors as the practical superset and adjust with devtools.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Area</th>
+                <th>Typical Selectors</th>
+                <th>What You Can Tweak</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Form root</td>
+                <td><code>.formio-form</code>, custom wrapper class/id</td>
+                <td>Global font, CSS variables/tokens, base spacing</td>
+              </tr>
+              <tr>
+                <td>Component wrapper</td>
+                <td><code>.formio-component</code>, <code>.form-group</code>, <code>.formio-component-*</code></td>
+                <td>Margins, backgrounds, borders, section cards</td>
+              </tr>
+              <tr>
+                <td>Labels</td>
+                <td><code>.control-label</code>, <code>.form-label</code>, <code>label</code></td>
+                <td>Weight, color, casing, spacing</td>
+              </tr>
+              <tr>
+                <td>Inputs</td>
+                <td><code>.form-control</code>, <code>input</code>, <code>select</code>, <code>textarea</code></td>
+                <td>Radius, borders, padding, focus ring, placeholder</td>
+              </tr>
+              <tr>
+                <td>Help text</td>
+                <td><code>.help-block</code>, <code>.description</code>, <code>.form-text</code></td>
+                <td>Size, color, spacing, emphasis</td>
+              </tr>
+              <tr>
+                <td>Validation</td>
+                <td><code>.has-error</code>, <code>.is-invalid</code>, <code>.invalid-feedback</code>, <code>.text-danger</code></td>
+                <td>Error border, error message style, invalid background</td>
+              </tr>
+              <tr>
+                <td>Buttons</td>
+                <td><code>.btn</code>, <code>.btn-primary</code>, <code>.btn-secondary</code>, <code>.btn-danger</code></td>
+                <td>Color system, size, shape, hover/active states</td>
+              </tr>
+              <tr>
+                <td>Containers</td>
+                <td><code>.panel</code>, <code>.card</code>, <code>.well</code>, <code>.container-component</code>, <code>fieldset</code></td>
+                <td>Section cards, title bars, grouping visuals</td>
+              </tr>
+              <tr>
+                <td>DataGrid/EditGrid</td>
+                <td><code>.datagrid-table</code>, <code>table</code>, row/action button wrappers</td>
+                <td>Table header, zebra rows, action buttons, compact spacing</td>
+              </tr>
+              <tr>
+                <td>Tabs/Wizard</td>
+                <td><code>.nav-tabs</code>, <code>.tab-pane</code>, wizard nav wrappers</td>
+                <td>Active tab state, nav shape, step indicators</td>
+              </tr>
+              <tr>
+                <td>File/Signature</td>
+                <td><code>.fileSelector</code>, drop zones, signature canvas wrappers</td>
+                <td>Dropzone borders, hint text, signature panel</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="starter" class="card">
+          <h2>3) Starter Scoped CSS Template</h2>
+          <p>Use this as your baseline in the HTML component style block:</p>
+
+          <pre><code>&lt;style&gt;
+/* 1) Scope */
+#myFormTheme {
+  --fio-font: "Segoe UI", sans-serif;
+  --fio-primary: #1e56b7;
+  --fio-border: #c9d4ea;
+  --fio-radius: 8px;
+  --fio-danger: #c1263b;
+}
+
+/* 2) Base text and spacing */
+#myFormTheme .formio-component,
+#myFormTheme .form-group {
+  margin-bottom: 12px;
+}
+
+#myFormTheme .control-label,
+#myFormTheme .form-label {
+  font: 600 0.93rem/1.3 var(--fio-font);
+  margin-bottom: 6px;
+}
+
+/* 3) Inputs */
+#myFormTheme .form-control {
+  border: 1px solid var(--fio-border);
+  border-radius: var(--fio-radius);
+  padding: 8px 10px;
+}
+
+#myFormTheme .form-control:focus {
+  border-color: var(--fio-primary);
+  box-shadow: 0 0 0 3px rgba(30, 86, 183, 0.2);
+  outline: none;
+}
+
+/* 4) Validation */
+#myFormTheme .has-error .form-control,
+#myFormTheme .form-control.is-invalid {
+  border-color: var(--fio-danger);
+  background: #fff5f7;
+}
+
+#myFormTheme .invalid-feedback,
+#myFormTheme .help-block.text-danger {
+  color: var(--fio-danger);
+}
+
+/* 5) Buttons */
+#myFormTheme .btn-primary {
+  background: var(--fio-primary);
+  border-color: var(--fio-primary);
+  color: #fff;
+}
+&lt;/style&gt;</code></pre>
+        </section>
+
+        <section id="live" class="card">
+          <h2>4) Live Demo Form (Toggle Styling Concepts)</h2>
+          <p>
+            This mini form mimics Form.io markup and lets you preview major styling vectors.
+          </p>
+
+          <div class="controls">
+            <button type="button" onclick="setTheme('brand')">Brand Skin</button>
+            <button type="button" onclick="setTheme('clean')">Clean Skin</button>
+            <button type="button" onclick="setTheme('contrast')">High Contrast</button>
+            <button type="button" onclick="toggleCompact()">Toggle Compact Density</button>
+          </div>
+
+          <div class="demo-wrap">
+            <form id="demoForm" class="formio-form fio-skin-brand" action="javascript:void(0)">
+              <div class="alert alert-info">This alert simulates form-level guidance content.</div>
+
+              <div class="wizard-nav">
+                <div class="step active">Step 1: Applicant</div>
+                <div class="step">Step 2: Details</div>
+                <div class="step">Step 3: Review</div>
+              </div>
+
+              <ul class="nav-tabs">
+                <li class="active"><a href="javascript:void(0)">Profile</a></li>
+                <li><a href="javascript:void(0)">Address</a></li>
+                <li><a href="javascript:void(0)">Supporting Docs</a></li>
+              </ul>
+
+              <div class="panel formio-component formio-component-panel">
+                <h4 class="panel-title">Contact Information</h4>
+
+                <div class="form-group formio-component formio-component-textfield">
+                  <label class="control-label" for="nameInput">Full Name <span class="pill">Required</span></label>
+                  <input id="nameInput" class="form-control" placeholder="Jane Doe" />
+                  <p class="help-block">Shown on your official application record.</p>
+                </div>
+
+                <div class="mini-grid">
+                  <div class="form-group formio-component formio-component-email has-error">
+                    <label class="control-label" for="emailInput">Email</label>
+                    <input id="emailInput" class="form-control is-invalid" placeholder="name@company.com" value="invalid-email" />
+                    <span class="help-block text-danger">Please enter a valid email format.</span>
+                  </div>
+
+                  <div class="form-group formio-component formio-component-phoneNumber">
+                    <label class="control-label" for="phoneInput">Phone Number</label>
+                    <input id="phoneInput" class="form-control" placeholder="(555) 123-4567" />
+                    <p class="description">US format preferred.</p>
+                  </div>
+                </div>
+
+                <div class="form-group formio-component formio-component-textarea">
+                  <label class="control-label" for="bio">Short Bio</label>
+                  <textarea id="bio" class="form-control" placeholder="Tell us about your background..."></textarea>
+                </div>
+
+                <div class="form-group formio-component formio-component-select">
+                  <label class="control-label" for="dept">Department</label>
+                  <select id="dept" class="form-control">
+                    <option>Choose one...</option>
+                    <option>Finance</option>
+                    <option>Operations</option>
+                    <option>HR</option>
+                  </select>
+                </div>
+
+                <div class="form-check formio-component formio-component-checkbox">
+                  <input id="consent" class="form-check-input" type="checkbox" />
+                  <label for="consent">I confirm the submitted data is accurate.</label>
+                </div>
+
+                <div class="form-check formio-component formio-component-checkbox">
+                  <input id="disabledOpt" class="form-check-input" type="checkbox" disabled />
+                  <label for="disabledOpt">Disabled option example</label>
+                </div>
+              </div>
+
+              <div class="card formio-component formio-component-datagrid">
+                <h4 class="card-title">Employment History (DataGrid-like)</h4>
+                <table class="datagrid-table">
+                  <thead>
+                    <tr>
+                      <th>Employer</th>
+                      <th>Role</th>
+                      <th>Years</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Northwind</td>
+                      <td>Analyst</td>
+                      <td>3</td>
+                      <td><button class="btn btn-danger" type="button">Remove</button></td>
+                    </tr>
+                    <tr>
+                      <td>Contoso</td>
+                      <td>Lead</td>
+                      <td>2</td>
+                      <td><button class="btn btn-danger" type="button">Remove</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p style="margin-top:8px;"><button class="btn btn-secondary" type="button">Add Another Row</button></p>
+              </div>
+
+              <div class="well formio-component formio-component-file">
+                <h4 class="panel-title">Attachments (File Component)</h4>
+                <div class="file-area">Drop files here or click to upload</div>
+              </div>
+
+              <div class="well formio-component formio-component-signature">
+                <h4 class="panel-title">Signature</h4>
+                <div class="signature-box">Signature canvas placeholder</div>
+              </div>
+
+              <div class="form-group formio-component formio-component-textfield">
+                <label class="control-label" for="readonlyField">Read-only Example</label>
+                <input id="readonlyField" class="form-control" value="Generated by workflow" readonly />
+              </div>
+
+              <div class="alert alert-warning">Warning style can be used for policy or compliance notes.</div>
+
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-primary" type="button">Submit</button>
+                <button class="btn btn-secondary" type="button">Save Draft</button>
+                <button class="btn btn-danger" type="button">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section id="snippets" class="card">
+          <h2>5) Snippet Library By Category</h2>
+
+          <h3>5.1 Typography And Vertical Rhythm</h3>
+          <pre><code>#myFormTheme {
+  --fio-font: "Source Sans 3", Arial, sans-serif;
+}
+
+#myFormTheme,
+#myFormTheme .form-control {
+  font-family: var(--fio-font);
+}
+
+#myFormTheme .formio-component { margin-bottom: 10px; }
+#myFormTheme .control-label { letter-spacing: 0.01em; text-transform: none; }</code></pre>
+
+          <h3>5.2 Input Styling (Text, Number, Date, Select, Textarea)</h3>
+          <pre><code>#myFormTheme .form-control {
+  border: 1px solid #c5d2ea;
+  border-radius: 10px;
+  min-height: 40px;
+  padding: 9px 12px;
+  background: #fff;
+}
+
+#myFormTheme textarea.form-control { min-height: 110px; }
+
+#myFormTheme .form-control:focus {
+  border-color: #1559be;
+  box-shadow: 0 0 0 3px rgba(21, 89, 190, 0.22);
+}</code></pre>
+
+          <h3>5.3 Checkbox / Radio / Selectboxes</h3>
+          <pre><code>#myFormTheme .form-check {
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+#myFormTheme .form-check:hover {
+  background: #f4f8ff;
+}
+
+#myFormTheme .form-check-input {
+  accent-color: #1b62c6;
+}</code></pre>
+
+          <h3>5.4 Validation And Error Surface</h3>
+          <pre><code>#myFormTheme .has-error .form-control,
+#myFormTheme .form-control.is-invalid {
+  border-color: #c3243b;
+  background: #fff5f7;
+}
+
+#myFormTheme .invalid-feedback,
+#myFormTheme .help-block.text-danger {
+  color: #9e1027;
+  font-weight: 600;
+}
+
+#myFormTheme .has-error {
+  padding: 8px;
+  border-left: 3px solid #c3243b;
+  background: #fff8f9;
+  border-radius: 8px;
+}</code></pre>
+
+          <h3>5.5 Buttons, Submit Row, Action Emphasis</h3>
+          <pre><code>#myFormTheme .btn {
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 600;
+}
+
+#myFormTheme .btn-primary {
+  background: #0f57b8;
+  border-color: #0f57b8;
+  color: #fff;
+}
+
+#myFormTheme .btn-secondary {
+  background: #e8f0ff;
+  border-color: #bfd0f1;
+  color: #19458c;
+}</code></pre>
+
+          <h3>5.6 Panel / Container / Fieldset / Well</h3>
+          <pre><code>#myFormTheme .panel,
+#myFormTheme .card,
+#myFormTheme .well,
+#myFormTheme fieldset {
+  border: 1px solid #ced8ee;
+  border-radius: 12px;
+  padding: 12px;
+  background: #f8fbff;
+}
+
+#myFormTheme legend,
+#myFormTheme .panel-title,
+#myFormTheme .card-title {
+  font-size: 1rem;
+  color: #1f3563;
+  margin-bottom: 10px;
+}</code></pre>
+
+          <h3>5.7 DataGrid / EditGrid Table Treatment</h3>
+          <pre><code>#myFormTheme .datagrid-table,
+#myFormTheme table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#myFormTheme .datagrid-table th,
+#myFormTheme .datagrid-table td {
+  border: 1px solid #d3ddf0;
+  padding: 7px;
+}
+
+#myFormTheme .datagrid-table thead th {
+  background: #edf3ff;
+}
+
+#myFormTheme .datagrid-table tbody tr:nth-child(even) {
+  background: #f9fbff;
+}</code></pre>
+
+          <h3>5.8 Tabs And Wizard Navigation</h3>
+          <pre><code>#myFormTheme .nav-tabs a {
+  border-radius: 10px 10px 0 0;
+  border: 1px solid transparent;
+  color: #2a4f92;
+}
+
+#myFormTheme .nav-tabs .active a {
+  background: #f0f5ff;
+  border-color: #c9d7f2;
+  font-weight: 700;
+}
+
+#myFormTheme .wizard-nav .step.active {
+  background: #1f5fbd;
+  color: #fff;
+}</code></pre>
+
+          <h3>5.9 File Upload And Signature</h3>
+          <pre><code>#myFormTheme .file-area,
+#myFormTheme .fileSelector {
+  border: 2px dashed #b9c9e9;
+  border-radius: 10px;
+  background: #f7fbff;
+  padding: 10px;
+}
+
+#myFormTheme .signature-box,
+#myFormTheme .signature-pad {
+  border: 1px solid #c8d4eb;
+  border-radius: 10px;
+  background: #fff;
+}</code></pre>
+
+          <h3>5.10 Read-only / Disabled / Hidden States</h3>
+          <pre><code>#myFormTheme .form-control[readonly] {
+  background: #f3f6ff;
+  color: #4a5778;
+}
+
+#myFormTheme .form-control:disabled,
+#myFormTheme .btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+#myFormTheme .is-hidden,
+#myFormTheme [hidden] {
+  display: none !important;
+}</code></pre>
+
+          <h3>5.11 Compact Mode (One-Class Density Switch)</h3>
+          <pre><code>#myFormTheme.fio-compact .formio-component { margin-bottom: 7px; }
+#myFormTheme.fio-compact .control-label { margin-bottom: 3px; font-size: 0.84rem; }
+#myFormTheme.fio-compact .form-control { min-height: 34px; padding: 6px 9px; font-size: 0.86rem; }</code></pre>
+
+          <h3>5.12 High Contrast Accessibility Mode</h3>
+          <pre><code>#myFormTheme.fio-contrast {
+  background: #0f1625;
+  color: #f6f8ff;
+}
+
+#myFormTheme.fio-contrast .form-control {
+  background: #0a1120;
+  color: #fff;
+  border-color: #6b7ea6;
+}
+
+#myFormTheme.fio-contrast .btn-primary {
+  background: #ffbe4f;
+  border-color: #ffbe4f;
+  color: #221300;
+}</code></pre>
+        </section>
+
+        <section id="atomic-props" class="card">
+          <h2>6) Atomic CSS Property Reference (A-Z Dictionary)</h2>
+          <p>
+            This section is fully disaggregated and alphabetized. Each row isolates one property with explicit syntax and a single example.
+          </p>
+
+          <h3>6.1 Fast Syntax For Surface And Effect Properties</h3>
+          <pre><code>/* Gradient */
+background-image: linear-gradient(&lt;angle&gt;, &lt;color-stop-1&gt;, &lt;color-stop-2&gt;, ...);
+background-image: radial-gradient(&lt;shape&gt; at &lt;x y&gt;, &lt;color-stop-1&gt;, &lt;color-stop-2&gt;, ...);
+
+/* Blur/filter (on the element itself) */
+filter: blur(&lt;radius&gt;);
+filter: blur(1.2px) brightness(1.03) contrast(1.05);
+
+/* Box shadow */
+box-shadow: &lt;offset-x&gt; &lt;offset-y&gt; &lt;blur-radius&gt; &lt;spread-radius&gt; &lt;color&gt;;
+box-shadow: 0 10px 22px 0 rgba(25,52,102,0.18);
+
+/* Display */
+display: block | inline | inline-block | flex | grid | none;
+
+/* Backdrop filter (needs transparency to be visible) */
+background: rgba(255,255,255,0.42);
+backdrop-filter: blur(8px) saturate(130%);
+-webkit-backdrop-filter: blur(8px) saturate(130%);
+
+/* Animation shorthand */
+animation: &lt;name&gt; &lt;duration&gt; &lt;timing-function&gt; &lt;delay&gt; &lt;iteration-count&gt; &lt;direction&gt; &lt;fill-mode&gt;;
+animation: fioPulse 1.2s ease-in-out 0s infinite alternate both;</code></pre>
+
+          <h3>6.2 CSS Property Dictionary (Strict Alphabetical Order)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Syntax Template</th>
+                <th>Atomic Example</th>
+                <th>What It Controls</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>accent-color</code></td><td><code>accent-color: &lt;color&gt;;</code></td><td><code>accent-color: #1b62c6;</code></td><td>Native checkbox/radio/range accent</td></tr>
+              <tr><td><code>align-content</code></td><td><code>align-content: &lt;value&gt;;</code></td><td><code>align-content: start;</code></td><td>Multi-row flex/grid track packing</td></tr>
+              <tr><td><code>align-items</code></td><td><code>align-items: &lt;value&gt;;</code></td><td><code>align-items: center;</code></td><td>Cross-axis alignment in flex/grid</td></tr>
+              <tr><td><code>align-self</code></td><td><code>align-self: &lt;value&gt;;</code></td><td><code>align-self: stretch;</code></td><td>Single-item alignment override</td></tr>
+              <tr><td><code>animation</code></td><td><code>animation: &lt;name&gt; &lt;duration&gt; ...;</code></td><td><code>animation: fioPulse 1.2s ease-in-out infinite;</code></td><td>Animation shorthand</td></tr>
+              <tr><td><code>animation-delay</code></td><td><code>animation-delay: &lt;time&gt;;</code></td><td><code>animation-delay: .2s;</code></td><td>Animation start wait</td></tr>
+              <tr><td><code>animation-direction</code></td><td><code>animation-direction: &lt;value&gt;;</code></td><td><code>animation-direction: alternate;</code></td><td>Playback direction</td></tr>
+              <tr><td><code>animation-duration</code></td><td><code>animation-duration: &lt;time&gt;;</code></td><td><code>animation-duration: 1.3s;</code></td><td>Animation cycle length</td></tr>
+              <tr><td><code>animation-fill-mode</code></td><td><code>animation-fill-mode: &lt;value&gt;;</code></td><td><code>animation-fill-mode: both;</code></td><td>Before/after keyframe application</td></tr>
+              <tr><td><code>animation-iteration-count</code></td><td><code>animation-iteration-count: &lt;number|infinite&gt;;</code></td><td><code>animation-iteration-count: infinite;</code></td><td>Loop count</td></tr>
+              <tr><td><code>animation-name</code></td><td><code>animation-name: &lt;keyframes-name&gt;;</code></td><td><code>animation-name: fioGlow;</code></td><td>Selected keyframes</td></tr>
+              <tr><td><code>animation-play-state</code></td><td><code>animation-play-state: running|paused;</code></td><td><code>animation-play-state: paused;</code></td><td>Pause/resume animation</td></tr>
+              <tr><td><code>animation-timing-function</code></td><td><code>animation-timing-function: &lt;easing&gt;;</code></td><td><code>animation-timing-function: ease-in-out;</code></td><td>Animation pacing</td></tr>
+              <tr><td><code>backdrop-filter</code></td><td><code>backdrop-filter: &lt;filter-list&gt;;</code></td><td><code>backdrop-filter: blur(8px) saturate(130%);</code></td><td>Effect behind translucent element</td></tr>
+              <tr><td><code>background</code></td><td><code>background: &lt;shorthand&gt;;</code></td><td><code>background: #f8fbff;</code></td><td>Background shorthand</td></tr>
+              <tr><td><code>background-attachment</code></td><td><code>background-attachment: scroll|fixed|local;</code></td><td><code>background-attachment: local;</code></td><td>Background scroll behavior</td></tr>
+              <tr><td><code>background-clip</code></td><td><code>background-clip: border-box|padding-box|content-box;</code></td><td><code>background-clip: padding-box;</code></td><td>Background paint area</td></tr>
+              <tr><td><code>background-color</code></td><td><code>background-color: &lt;color&gt;;</code></td><td><code>background-color: #f4f8ff;</code></td><td>Solid background color</td></tr>
+              <tr><td><code>background-image</code></td><td><code>background-image: &lt;image&gt;;</code></td><td><code>background-image: linear-gradient(120deg,#eef4ff,#d9e7ff);</code></td><td>Gradient/image layer</td></tr>
+              <tr><td><code>background-origin</code></td><td><code>background-origin: border-box|padding-box|content-box;</code></td><td><code>background-origin: border-box;</code></td><td>Background positioning box</td></tr>
+              <tr><td><code>background-position</code></td><td><code>background-position: &lt;x&gt; &lt;y&gt;;</code></td><td><code>background-position: center center;</code></td><td>Background anchor point</td></tr>
+              <tr><td><code>background-repeat</code></td><td><code>background-repeat: repeat|no-repeat|repeat-x|repeat-y;</code></td><td><code>background-repeat: no-repeat;</code></td><td>Tiling behavior</td></tr>
+              <tr><td><code>background-size</code></td><td><code>background-size: auto|cover|contain|&lt;length&gt;;</code></td><td><code>background-size: cover;</code></td><td>Background scaling</td></tr>
+              <tr><td><code>block-size</code></td><td><code>block-size: &lt;length|percentage&gt;;</code></td><td><code>block-size: 44px;</code></td><td>Logical height</td></tr>
+              <tr><td><code>border</code></td><td><code>border: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>border: 1px solid #cad6ef;</code></td><td>Border shorthand</td></tr>
+              <tr><td><code>border-bottom</code></td><td><code>border-bottom: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>border-bottom: 2px solid #bfcdf0;</code></td><td>Bottom edge border</td></tr>
+              <tr><td><code>border-bottom-left-radius</code></td><td><code>border-bottom-left-radius: &lt;radius&gt;;</code></td><td><code>border-bottom-left-radius: 10px;</code></td><td>Bottom-left corner round</td></tr>
+              <tr><td><code>border-bottom-right-radius</code></td><td><code>border-bottom-right-radius: &lt;radius&gt;;</code></td><td><code>border-bottom-right-radius: 10px;</code></td><td>Bottom-right corner round</td></tr>
+              <tr><td><code>border-color</code></td><td><code>border-color: &lt;color&gt;;</code></td><td><code>border-color: #c5d2ea;</code></td><td>Border color all sides</td></tr>
+              <tr><td><code>border-left</code></td><td><code>border-left: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>border-left: 3px solid #1f5fbd;</code></td><td>Left edge accent</td></tr>
+              <tr><td><code>border-radius</code></td><td><code>border-radius: &lt;radius&gt;;</code></td><td><code>border-radius: 10px;</code></td><td>Corner rounding</td></tr>
+              <tr><td><code>border-right</code></td><td><code>border-right: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>border-right: 1px solid #cad6ef;</code></td><td>Right edge border</td></tr>
+              <tr><td><code>border-style</code></td><td><code>border-style: solid|dashed|dotted|none;</code></td><td><code>border-style: dashed;</code></td><td>Border line style</td></tr>
+              <tr><td><code>border-top</code></td><td><code>border-top: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>border-top: 1px solid #cad6ef;</code></td><td>Top edge border</td></tr>
+              <tr><td><code>border-top-left-radius</code></td><td><code>border-top-left-radius: &lt;radius&gt;;</code></td><td><code>border-top-left-radius: 10px;</code></td><td>Top-left corner round</td></tr>
+              <tr><td><code>border-top-right-radius</code></td><td><code>border-top-right-radius: &lt;radius&gt;;</code></td><td><code>border-top-right-radius: 10px;</code></td><td>Top-right corner round</td></tr>
+              <tr><td><code>border-width</code></td><td><code>border-width: &lt;length&gt;;</code></td><td><code>border-width: 1px;</code></td><td>Border thickness</td></tr>
+              <tr><td><code>bottom</code></td><td><code>bottom: &lt;length|percentage|auto&gt;;</code></td><td><code>bottom: 0;</code></td><td>Bottom offset (positioned)</td></tr>
+              <tr><td><code>box-shadow</code></td><td><code>box-shadow: &lt;x&gt; &lt;y&gt; &lt;blur&gt; &lt;spread&gt; &lt;color&gt;;</code></td><td><code>box-shadow: 0 10px 22px 0 rgba(25,52,102,.18);</code></td><td>Drop shadow/elevation</td></tr>
+              <tr><td><code>box-sizing</code></td><td><code>box-sizing: content-box|border-box;</code></td><td><code>box-sizing: border-box;</code></td><td>Width/height calculation model</td></tr>
+              <tr><td><code>caret-color</code></td><td><code>caret-color: &lt;color&gt;;</code></td><td><code>caret-color: #1f5fbd;</code></td><td>Text cursor color</td></tr>
+              <tr><td><code>clear</code></td><td><code>clear: none|left|right|both;</code></td><td><code>clear: both;</code></td><td>Float clearance</td></tr>
+              <tr><td><code>color</code></td><td><code>color: &lt;color&gt;;</code></td><td><code>color: #1d2c52;</code></td><td>Text color</td></tr>
+              <tr><td><code>column-gap</code></td><td><code>column-gap: &lt;length&gt;;</code></td><td><code>column-gap: 12px;</code></td><td>Gap between columns</td></tr>
+              <tr><td><code>cursor</code></td><td><code>cursor: &lt;value&gt;;</code></td><td><code>cursor: pointer;</code></td><td>Pointer style</td></tr>
+              <tr><td><code>direction</code></td><td><code>direction: ltr|rtl;</code></td><td><code>direction: ltr;</code></td><td>Text flow direction</td></tr>
+              <tr><td><code>display</code></td><td><code>display: &lt;layout-mode&gt;;</code></td><td><code>display: flex;</code></td><td>Element formatting context</td></tr>
+              <tr><td><code>filter</code></td><td><code>filter: &lt;filter-list&gt;;</code></td><td><code>filter: blur(1.2px);</code></td><td>Visual effects on element</td></tr>
+              <tr><td><code>flex</code></td><td><code>flex: &lt;grow&gt; &lt;shrink&gt; &lt;basis&gt;;</code></td><td><code>flex: 1 1 auto;</code></td><td>Flex item sizing shorthand</td></tr>
+              <tr><td><code>flex-basis</code></td><td><code>flex-basis: &lt;length|percentage|auto&gt;;</code></td><td><code>flex-basis: 220px;</code></td><td>Initial flex item size</td></tr>
+              <tr><td><code>flex-direction</code></td><td><code>flex-direction: row|column|row-reverse|column-reverse;</code></td><td><code>flex-direction: column;</code></td><td>Main axis direction</td></tr>
+              <tr><td><code>flex-grow</code></td><td><code>flex-grow: &lt;number&gt;;</code></td><td><code>flex-grow: 1;</code></td><td>Growth factor</td></tr>
+              <tr><td><code>flex-shrink</code></td><td><code>flex-shrink: &lt;number&gt;;</code></td><td><code>flex-shrink: 0;</code></td><td>Shrink factor</td></tr>
+              <tr><td><code>flex-wrap</code></td><td><code>flex-wrap: nowrap|wrap|wrap-reverse;</code></td><td><code>flex-wrap: wrap;</code></td><td>Wrap behavior</td></tr>
+              <tr><td><code>font-family</code></td><td><code>font-family: &lt;family-list&gt;;</code></td><td><code>font-family: "Segoe UI", Arial, sans-serif;</code></td><td>Typeface stack</td></tr>
+              <tr><td><code>font-size</code></td><td><code>font-size: &lt;length|percentage&gt;;</code></td><td><code>font-size: .92rem;</code></td><td>Text size</td></tr>
+              <tr><td><code>font-style</code></td><td><code>font-style: normal|italic|oblique;</code></td><td><code>font-style: italic;</code></td><td>Text slant style</td></tr>
+              <tr><td><code>font-weight</code></td><td><code>font-weight: &lt;value&gt;;</code></td><td><code>font-weight: 600;</code></td><td>Text weight</td></tr>
+              <tr><td><code>gap</code></td><td><code>gap: &lt;row-gap&gt; &lt;column-gap&gt;;</code></td><td><code>gap: 10px;</code></td><td>Flex/grid spacing</td></tr>
+              <tr><td><code>grid-auto-flow</code></td><td><code>grid-auto-flow: row|column|dense;</code></td><td><code>grid-auto-flow: row;</code></td><td>Auto-placement direction</td></tr>
+              <tr><td><code>grid-column</code></td><td><code>grid-column: &lt;start&gt; / &lt;end&gt;;</code></td><td><code>grid-column: 1 / span 2;</code></td><td>Column track span</td></tr>
+              <tr><td><code>grid-row</code></td><td><code>grid-row: &lt;start&gt; / &lt;end&gt;;</code></td><td><code>grid-row: 1 / span 1;</code></td><td>Row track span</td></tr>
+              <tr><td><code>grid-template-columns</code></td><td><code>grid-template-columns: &lt;track-list&gt;;</code></td><td><code>grid-template-columns: 1fr 1fr;</code></td><td>Grid column tracks</td></tr>
+              <tr><td><code>grid-template-rows</code></td><td><code>grid-template-rows: &lt;track-list&gt;;</code></td><td><code>grid-template-rows: auto auto;</code></td><td>Grid row tracks</td></tr>
+              <tr><td><code>height</code></td><td><code>height: &lt;length|percentage|auto&gt;;</code></td><td><code>height: 42px;</code></td><td>Element height</td></tr>
+              <tr><td><code>inset</code></td><td><code>inset: &lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;;</code></td><td><code>inset: 0;</code></td><td>Shorthand for top/right/bottom/left</td></tr>
+              <tr><td><code>justify-content</code></td><td><code>justify-content: &lt;value&gt;;</code></td><td><code>justify-content: space-between;</code></td><td>Main-axis distribution</td></tr>
+              <tr><td><code>left</code></td><td><code>left: &lt;length|percentage|auto&gt;;</code></td><td><code>left: 0;</code></td><td>Left offset (positioned)</td></tr>
+              <tr><td><code>letter-spacing</code></td><td><code>letter-spacing: &lt;length&gt;;</code></td><td><code>letter-spacing: .01em;</code></td><td>Character spacing</td></tr>
+              <tr><td><code>line-height</code></td><td><code>line-height: &lt;number|length|percentage&gt;;</code></td><td><code>line-height: 1.45;</code></td><td>Line box height</td></tr>
+              <tr><td><code>margin</code></td><td><code>margin: &lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;;</code></td><td><code>margin: 0 0 12px 0;</code></td><td>Outer spacing shorthand</td></tr>
+              <tr><td><code>margin-bottom</code></td><td><code>margin-bottom: &lt;length|percentage|auto&gt;;</code></td><td><code>margin-bottom: 12px;</code></td><td>Bottom outer spacing</td></tr>
+              <tr><td><code>margin-left</code></td><td><code>margin-left: &lt;length|percentage|auto&gt;;</code></td><td><code>margin-left: 8px;</code></td><td>Left outer spacing</td></tr>
+              <tr><td><code>margin-right</code></td><td><code>margin-right: &lt;length|percentage|auto&gt;;</code></td><td><code>margin-right: 8px;</code></td><td>Right outer spacing</td></tr>
+              <tr><td><code>margin-top</code></td><td><code>margin-top: &lt;length|percentage|auto&gt;;</code></td><td><code>margin-top: 8px;</code></td><td>Top outer spacing</td></tr>
+              <tr><td><code>max-height</code></td><td><code>max-height: &lt;length|percentage|none&gt;;</code></td><td><code>max-height: 320px;</code></td><td>Height cap</td></tr>
+              <tr><td><code>max-width</code></td><td><code>max-width: &lt;length|percentage|none&gt;;</code></td><td><code>max-width: 360px;</code></td><td>Width cap</td></tr>
+              <tr><td><code>min-height</code></td><td><code>min-height: &lt;length|percentage&gt;;</code></td><td><code>min-height: 40px;</code></td><td>Minimum height</td></tr>
+              <tr><td><code>min-width</code></td><td><code>min-width: &lt;length|percentage&gt;;</code></td><td><code>min-width: 180px;</code></td><td>Minimum width</td></tr>
+              <tr><td><code>opacity</code></td><td><code>opacity: &lt;number&gt;;</code></td><td><code>opacity: .82;</code></td><td>Element transparency</td></tr>
+              <tr><td><code>outline</code></td><td><code>outline: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td><td><code>outline: 2px solid #1f5fbd;</code></td><td>Focus/outline stroke</td></tr>
+              <tr><td><code>outline-offset</code></td><td><code>outline-offset: &lt;length&gt;;</code></td><td><code>outline-offset: 2px;</code></td><td>Space between element and outline</td></tr>
+              <tr><td><code>overflow</code></td><td><code>overflow: visible|hidden|auto|scroll;</code></td><td><code>overflow: auto;</code></td><td>Overall overflow behavior</td></tr>
+              <tr><td><code>overflow-x</code></td><td><code>overflow-x: visible|hidden|auto|scroll;</code></td><td><code>overflow-x: auto;</code></td><td>Horizontal overflow behavior</td></tr>
+              <tr><td><code>overflow-y</code></td><td><code>overflow-y: visible|hidden|auto|scroll;</code></td><td><code>overflow-y: auto;</code></td><td>Vertical overflow behavior</td></tr>
+              <tr><td><code>padding</code></td><td><code>padding: &lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;;</code></td><td><code>padding: 10px 12px;</code></td><td>Inner spacing shorthand</td></tr>
+              <tr><td><code>padding-bottom</code></td><td><code>padding-bottom: &lt;length|percentage&gt;;</code></td><td><code>padding-bottom: 10px;</code></td><td>Bottom inner spacing</td></tr>
+              <tr><td><code>padding-left</code></td><td><code>padding-left: &lt;length|percentage&gt;;</code></td><td><code>padding-left: 12px;</code></td><td>Left inner spacing</td></tr>
+              <tr><td><code>padding-right</code></td><td><code>padding-right: &lt;length|percentage&gt;;</code></td><td><code>padding-right: 12px;</code></td><td>Right inner spacing</td></tr>
+              <tr><td><code>padding-top</code></td><td><code>padding-top: &lt;length|percentage&gt;;</code></td><td><code>padding-top: 10px;</code></td><td>Top inner spacing</td></tr>
+              <tr><td><code>perspective</code></td><td><code>perspective: &lt;length|none&gt;;</code></td><td><code>perspective: 900px;</code></td><td>3D depth perspective</td></tr>
+              <tr><td><code>pointer-events</code></td><td><code>pointer-events: auto|none;</code></td><td><code>pointer-events: none;</code></td><td>Pointer interaction control</td></tr>
+              <tr><td><code>position</code></td><td><code>position: static|relative|absolute|fixed|sticky;</code></td><td><code>position: relative;</code></td><td>Positioning scheme</td></tr>
+              <tr><td><code>right</code></td><td><code>right: &lt;length|percentage|auto&gt;;</code></td><td><code>right: 0;</code></td><td>Right offset (positioned)</td></tr>
+              <tr><td><code>row-gap</code></td><td><code>row-gap: &lt;length&gt;;</code></td><td><code>row-gap: 10px;</code></td><td>Vertical gap in grid/flex</td></tr>
+              <tr><td><code>text-align</code></td><td><code>text-align: left|center|right|justify;</code></td><td><code>text-align: left;</code></td><td>Inline content alignment</td></tr>
+              <tr><td><code>text-overflow</code></td><td><code>text-overflow: clip|ellipsis;</code></td><td><code>text-overflow: ellipsis;</code></td><td>Clipped text marker</td></tr>
+              <tr><td><code>text-transform</code></td><td><code>text-transform: none|uppercase|lowercase|capitalize;</code></td><td><code>text-transform: none;</code></td><td>Case transformation</td></tr>
+              <tr><td><code>top</code></td><td><code>top: &lt;length|percentage|auto&gt;;</code></td><td><code>top: 0;</code></td><td>Top offset (positioned)</td></tr>
+              <tr><td><code>transform</code></td><td><code>transform: &lt;transform-list&gt;;</code></td><td><code>transform: translateY(-2px);</code></td><td>2D/3D transform</td></tr>
+              <tr><td><code>transform-origin</code></td><td><code>transform-origin: &lt;x&gt; &lt;y&gt; [&lt;z&gt;];</code></td><td><code>transform-origin: center center;</code></td><td>Transform pivot point</td></tr>
+              <tr><td><code>transition</code></td><td><code>transition: &lt;property&gt; &lt;duration&gt; &lt;easing&gt; &lt;delay&gt;;</code></td><td><code>transition: all 180ms ease;</code></td><td>Transition shorthand</td></tr>
+              <tr><td><code>transition-delay</code></td><td><code>transition-delay: &lt;time&gt;;</code></td><td><code>transition-delay: 50ms;</code></td><td>Transition start delay</td></tr>
+              <tr><td><code>transition-duration</code></td><td><code>transition-duration: &lt;time&gt;;</code></td><td><code>transition-duration: 180ms;</code></td><td>Transition length</td></tr>
+              <tr><td><code>transition-property</code></td><td><code>transition-property: &lt;property-list&gt;;</code></td><td><code>transition-property: box-shadow, transform;</code></td><td>Which properties animate</td></tr>
+              <tr><td><code>transition-timing-function</code></td><td><code>transition-timing-function: &lt;easing&gt;;</code></td><td><code>transition-timing-function: ease-in-out;</code></td><td>Transition pacing</td></tr>
+              <tr><td><code>visibility</code></td><td><code>visibility: visible|hidden|collapse;</code></td><td><code>visibility: hidden;</code></td><td>Visibility without reflow</td></tr>
+              <tr><td><code>white-space</code></td><td><code>white-space: normal|nowrap|pre|pre-wrap;</code></td><td><code>white-space: nowrap;</code></td><td>Line wrap behavior</td></tr>
+              <tr><td><code>width</code></td><td><code>width: &lt;length|percentage|auto&gt;;</code></td><td><code>width: 100%;</code></td><td>Element width</td></tr>
+              <tr><td><code>word-break</code></td><td><code>word-break: normal|break-all|keep-all|break-word;</code></td><td><code>word-break: break-word;</code></td><td>Long-token line breaking</td></tr>
+              <tr><td><code>z-index</code></td><td><code>z-index: &lt;integer|auto&gt;;</code></td><td><code>z-index: 4;</code></td><td>Stacking order</td></tr>
+            </tbody>
+          </table>
+
+          <h3>6.3 Independent Visual Property Demos</h3>
+          <div class="atomic-grid">
+            <div class="atomic-card">
+              <h4><code>background-image</code> (linear gradient)</h4>
+              <div class="atomic-preview" style="background-image:linear-gradient(120deg,#eaf2ff,#cfe0ff);">syntax: <code>background-image: linear-gradient(...);</code></div>
+            </div>
+            <div class="atomic-card">
+              <h4><code>background-image</code> (radial gradient)</h4>
+              <div class="atomic-preview" style="background-image:radial-gradient(circle at 25% 30%,#dbe9ff,#f8fbff 60%);">syntax: <code>background-image: radial-gradient(...);</code></div>
+            </div>
+            <div class="atomic-card">
+              <h4><code>box-shadow</code></h4>
+              <div class="atomic-preview" style="box-shadow:0 10px 20px rgba(25,52,102,.18);">syntax: <code>box-shadow: x y blur spread color;</code></div>
+            </div>
+            <div class="atomic-card">
+              <h4><code>filter: blur()</code></h4>
+              <div class="atomic-preview band" style="filter:blur(1.2px);">syntax: <code>filter: blur(1.2px);</code></div>
+            </div>
+            <div class="atomic-card">
+              <h4><code>backdrop-filter</code></h4>
+              <div class="glass-backdrop"><div class="glass-panel">syntax: <code>backdrop-filter: blur(8px);</code></div></div>
+            </div>
+            <div class="atomic-card">
+              <h4><code>display</code></h4>
+              <div class="atomic-preview atomic-flex"><span>flex</span><span>grid</span><span>block</span></div>
+            </div>
+          </div>
+
+          <h3>6.4 Animation Types (Atomic)</h3>
+          <div class="atomic-grid">
+            <div class="atomic-card"><h4>Fade In</h4><code>animation: fioFadeIn 1.2s ease-in-out infinite alternate;</code><div class="anim-box anim-fade-in">Fade</div></div>
+            <div class="atomic-card"><h4>Slide Up</h4><code>animation: fioSlideUp 1.1s ease-in-out infinite alternate;</code><div class="anim-box anim-slide-up">Slide</div></div>
+            <div class="atomic-card"><h4>Pulse</h4><code>animation: fioPulse 1.2s ease-in-out infinite;</code><div class="anim-box anim-pulse">Pulse</div></div>
+            <div class="atomic-card"><h4>Glow</h4><code>animation: fioGlow 1.3s ease-in-out infinite alternate;</code><div class="anim-box anim-glow">Glow</div></div>
+            <div class="atomic-card"><h4>Rotate</h4><code>animation: fioRotate 1.8s linear infinite;</code><div class="anim-box anim-rotate">Spin</div></div>
+            <div class="atomic-card"><h4>Shake</h4><code>animation: fioShake 1.4s ease-in-out infinite;</code><div class="anim-box anim-shake">Shake</div></div>
+            <div class="atomic-card"><h4>Float</h4><code>animation: fioFloat 1.4s ease-in-out infinite alternate;</code><div class="anim-box anim-float">Float</div></div>
+            <div class="atomic-card"><h4>Gradient Shift</h4><code>animation: fioGradientShift 2.2s ease infinite;</code><div class="anim-box anim-gradient">Flow</div></div>
+          </div>
+
+          <pre><code>/* Strict atomic testing pattern: one property per rule */
+#myFormTheme .demo-a { background-image: linear-gradient(140deg, #f9fbff, #edf3ff); }
+#myFormTheme .demo-b { box-shadow: 0 8px 18px rgba(19, 47, 98, 0.2); }
+#myFormTheme .demo-c { backdrop-filter: blur(8px) saturate(120%); }
+#myFormTheme .demo-d { display: grid; }
+
+/* Motion safety */
+@media (prefers-reduced-motion: reduce) {
+  #myFormTheme * {
+    animation: none !important;
+    transition: none !important;
+  }
+}</code></pre>
+        </section>
+
+        <section id="matrix" class="card">
+          <h2>7) Component Coverage Matrix</h2>
+          <p>Use this matrix when auditing your form style completeness.</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Form.io Component Family</th>
+                <th>Primary Targets</th>
+                <th>Common Tweaks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TextField / Email / Phone / URL / Password / Number</td>
+                <td><code>.formio-component-textfield .form-control</code> (and equivalent component class)</td>
+                <td>Border, radius, focus, invalid, placeholder, read-only</td>
+              </tr>
+              <tr>
+                <td>TextArea</td>
+                <td><code>.formio-component-textarea textarea</code></td>
+                <td>Height, resize, line-height</td>
+              </tr>
+              <tr>
+                <td>Date/Time/Day</td>
+                <td><code>.formio-component-datetime input</code>, pickers/popovers</td>
+                <td>Input skin, calendar icon area, popover panel styles</td>
+              </tr>
+              <tr>
+                <td>Select / SelectBoxes / Radio / Checkbox</td>
+                <td><code>.form-check</code>, <code>select.form-control</code>, choice wrappers</td>
+                <td>Option spacing, selected accent, group backgrounds</td>
+              </tr>
+              <tr>
+                <td>File</td>
+                <td>drop zone wrappers and upload list rows</td>
+                <td>Drag area border, file row spacing, remove icon color</td>
+              </tr>
+              <tr>
+                <td>Signature</td>
+                <td>signature pad/canvas wrapper</td>
+                <td>Border, background, action button styling</td>
+              </tr>
+              <tr>
+                <td>Content / HTML</td>
+                <td>component wrapper + embedded tags</td>
+                <td>Headings, callouts, legal text blocks</td>
+              </tr>
+              <tr>
+                <td>Container / Fieldset / Panel / Well</td>
+                <td><code>.panel</code>, <code>.card</code>, <code>fieldset</code></td>
+                <td>Section visual hierarchy and grouping</td>
+              </tr>
+              <tr>
+                <td>Columns / Table Layout</td>
+                <td>column wrappers, cell wrappers</td>
+                <td>Gaps, responsive collapse spacing, cell borders</td>
+              </tr>
+              <tr>
+                <td>DataGrid / EditGrid</td>
+                <td>table/list wrappers, add/remove controls</td>
+                <td>Row zebra, header style, row actions, density mode</td>
+              </tr>
+              <tr>
+                <td>Nested Form</td>
+                <td>nested form root wrapper</td>
+                <td>Secondary border/background to differentiate nesting</td>
+              </tr>
+              <tr>
+                <td>Tabs / Wizard</td>
+                <td>tab nav / wizard step wrappers</td>
+                <td>Active state emphasis and progress cues</td>
+              </tr>
+              <tr>
+                <td>Button</td>
+                <td><code>.btn*</code> classes</td>
+                <td>Primary/secondary/destructive system consistency</td>
+              </tr>
+              <tr>
+                <td>Hidden</td>
+                <td>component wrappers with hidden classes/attrs</td>
+                <td>Usually no visual styling required</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="specificity" class="card">
+          <h2>8) Specificity / !important / Sanitization</h2>
+
+          <h3>Specificity Strategy</h3>
+          <ol>
+            <li>Always scope first: <code>#myFormTheme .form-control</code> over plain <code>.form-control</code>.</li>
+            <li>Prefer component-specific selectors: <code>.formio-component-email .form-control</code>.</li>
+            <li>Use <code>!important</code> only for third-party inline styles or unavoidable renderer conflicts.</li>
+          </ol>
+
+          <h3>Safe <code>!important</code> Example</h3>
+          <pre><code>#myFormTheme .form-control[readonly] {
+  background: #eff4ff !important;
+}</code></pre>
+
+          <h3>Sanitization / Runtime Validation</h3>
+          <ul>
+            <li>Confirm that <code>&lt;style&gt;</code> survives save + render + deployment pipeline.</li>
+            <li>If stripped, fallback to external app-level stylesheet or class-only hooks.</li>
+            <li>Test builder preview and embedded runtime separately; DOM wrappers may differ.</li>
+          </ul>
+
+          <div class="danger">
+            Avoid global selectors like <code>input { ... }</code> unless they are scoped. Unscoped CSS is the most common cause of cross-form breakage.
+          </div>
+        </section>
+
+        <section id="checklist" class="card">
+          <h2>9) QA Checklist</h2>
+          <ol>
+            <li>Desktop + mobile widths tested (at least 360px and 1280px).</li>
+            <li>Focus visibility tested with keyboard only (Tab/Shift+Tab).</li>
+            <li>Error states tested with required + invalid values.</li>
+            <li>Disabled and read-only state legibility checked.</li>
+            <li>DataGrid/EditGrid add/remove controls visually consistent.</li>
+            <li>Tabs/Wizard active state clearly distinguishable.</li>
+            <li>Color contrast validated for text/buttons/errors.</li>
+            <li>No CSS leakage to other forms/pages from missing scope.</li>
+          </ol>
+          <p class="footer">
+            Tip: keep a small "theme token" section at the top of your style block and avoid hard-coded colors spread across rules.
+          </p>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const form = document.getElementById("demoForm");
+      window.setTheme = function (kind) {
+        form.classList.remove("fio-skin-clean", "fio-contrast");
+        if (kind === "clean") {
+          form.classList.add("fio-skin-clean");
+          return;
+        }
+        if (kind === "contrast") {
+          form.classList.add("fio-contrast");
+          return;
+        }
+      };
+
+      window.toggleCompact = function () {
+        form.classList.toggle("fio-density-compact");
+      };
+    })();
+  </script>
+</body>
+</html>
