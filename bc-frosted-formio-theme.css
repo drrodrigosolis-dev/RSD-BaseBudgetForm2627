@@ -2391,3 +2391,21 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   -webkit-text-fill-color: #ffffff !important;
   opacity: 1 !important;
 }
+
+/*
+  Guardrail: prevent any runtime/global hover rule from turning full component text
+  white. Keep normal content black, then re-apply white only to the tooltip note.
+*/
+.formio-form .formio-component.hover-note:hover *,
+.formio-form .formio-component.hover-note:focus-within * {
+  color: var(--fio-bc-text) !important;
+  -webkit-text-fill-color: var(--fio-bc-text) !important;
+}
+
+.formio-form .formio-component.hover-note:hover > .form-text.text-muted,
+.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted,
+.formio-form .formio-component.hover-note:hover > .form-text.text-muted *,
+.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
