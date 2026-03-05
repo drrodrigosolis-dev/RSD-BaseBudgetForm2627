@@ -228,72 +228,34 @@
   opacity: 1 !important;
 }
 
-.formio-form .formio-component.hover-note:hover,
-.formio-form .formio-component.hover-note:focus-within,
-.formio-form .formio-component.hover-note:hover a,
-.formio-form .formio-component.hover-note:focus-within a,
-.formio-form .formio-component.hover-note:hover .form-text,
-.formio-form .formio-component.hover-note:hover .description,
-.formio-form .formio-component.hover-note:hover .help-block,
-.formio-form .formio-component.hover-note:hover .v-input__details,
-.formio-form .formio-component.hover-note:focus-within .form-text,
-.formio-form .formio-component.hover-note:focus-within .description,
-.formio-form .formio-component.hover-note:focus-within .help-block,
-.formio-form .formio-component.hover-note:focus-within .v-input__details,
-.formio-form .formio-component.hover-note:hover .form-text *,
-.formio-form .formio-component.hover-note:hover .description *,
-.formio-form .formio-component.hover-note:hover .help-block *,
-.formio-form .formio-component.hover-note:hover .v-input__details *,
-.formio-form .formio-component.hover-note:focus-within .form-text *,
-.formio-form .formio-component.hover-note:focus-within .description *,
-.formio-form .formio-component.hover-note:focus-within .help-block *,
-.formio-form .formio-component.hover-note:focus-within .v-input__details * {
+.formio-form .formio-component.hover-note .form-text.text-muted,
+.formio-form .formio-component.hover-note .description.text-muted,
+.formio-form .formio-component.hover-note .help-block.text-muted,
+.formio-form .formio-component.hover-note .v-input__details,
+.formio-form .formio-component.hover-note .v-messages,
+.formio-form .formio-component.hover-note .v-messages__message,
+.formio-component.hover-note .form-text.text-muted,
+.formio-component.hover-note .description.text-muted,
+.formio-component.hover-note .help-block.text-muted {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   opacity: 1 !important;
-}
-
-/*
-  Bootstrap/Vuetify fallback:
-  some runtime descriptions render as `.form-text.text-muted`, where the visible
-  color comes from `--bs-secondary-color` and message opacity tokens instead of
-  the direct `color` declaration we override above.
-*/
-.formio-form .formio-component.hover-note,
-.formio-form .formio-component.hover-note .form-text.text-muted,
-.formio-form .formio-component.hover-note:hover,
-.formio-form .formio-component.hover-note:focus-within,
-.formio-form .formio-component.hover-note:hover .form-text.text-muted,
-.formio-form .formio-component.hover-note:focus-within .form-text.text-muted {
   --bs-secondary-color: #ffffff !important;
   --v-medium-emphasis-opacity: 1 !important;
 }
 
-.formio-form .formio-component.hover-note .form-text.text-muted,
 .formio-form .formio-component.hover-note .form-text.text-muted *,
-.formio-form .formio-component.hover-note:hover .form-text.text-muted,
-.formio-form .formio-component.hover-note:hover .form-text.text-muted *,
-.formio-form .formio-component.hover-note:focus-within .form-text.text-muted,
-.formio-form .formio-component.hover-note:focus-within .form-text.text-muted * {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  opacity: 1 !important;
-}
-
-/*
-  Unscoped runtime override:
-  keep the exact selector that was confirmed to work in the browser console.
-*/
-.formio-component.hover-note .form-text.text-muted,
+.formio-form .formio-component.hover-note .description.text-muted *,
+.formio-form .formio-component.hover-note .help-block.text-muted *,
+.formio-form .formio-component.hover-note .v-input__details *,
+.formio-form .formio-component.hover-note .v-messages *,
+.formio-form .formio-component.hover-note .v-messages__message *,
 .formio-component.hover-note .form-text.text-muted *,
-.formio-component.hover-note:hover .form-text.text-muted,
-.formio-component.hover-note:hover .form-text.text-muted *,
-.formio-component.hover-note:focus-within .form-text.text-muted,
-.formio-component.hover-note:focus-within .form-text.text-muted * {
+.formio-component.hover-note .description.text-muted *,
+.formio-component.hover-note .help-block.text-muted * {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   opacity: 1 !important;
-  --bs-secondary-color: #ffffff !important;
 }
 
 .formio-form .formio-component.hover-note:hover .form-text,
@@ -2465,37 +2427,29 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   some Form.io renderers emit description/help text with extra utility classes or
   different wrappers. Keep all hover-note content readable on the dark note panel.
 */
-.formio-form .formio-component.hover-note:hover .form-text,
-.formio-form .formio-component.hover-note:hover .description,
-.formio-form .formio-component.hover-note:hover .help-block,
+.formio-form .formio-component.hover-note:hover .form-text.text-muted,
+.formio-form .formio-component.hover-note:hover .description.text-muted,
+.formio-form .formio-component.hover-note:hover .help-block.text-muted,
 .formio-form .formio-component.hover-note:hover .v-input__details,
-.formio-form .formio-component.hover-note:hover .text-muted,
 .formio-form .formio-component.hover-note:hover .v-messages,
 .formio-form .formio-component.hover-note:hover .v-messages__message,
-.formio-form .formio-component.hover-note:hover small,
-.formio-form .formio-component.hover-note:hover p,
-.formio-form .formio-component.hover-note:hover span,
-.formio-form .formio-component.hover-note:hover a,
-.formio-form .formio-component.hover-note:focus-within .form-text,
-.formio-form .formio-component.hover-note:focus-within .description,
-.formio-form .formio-component.hover-note:focus-within .help-block,
+.formio-form .formio-component.hover-note:focus-within .form-text.text-muted,
+.formio-form .formio-component.hover-note:focus-within .description.text-muted,
+.formio-form .formio-component.hover-note:focus-within .help-block.text-muted,
 .formio-form .formio-component.hover-note:focus-within .v-input__details,
-.formio-form .formio-component.hover-note:focus-within .text-muted,
 .formio-form .formio-component.hover-note:focus-within .v-messages,
 .formio-form .formio-component.hover-note:focus-within .v-messages__message,
-.formio-form .formio-component.hover-note:focus-within small,
-.formio-form .formio-component.hover-note:focus-within p,
-.formio-form .formio-component.hover-note:focus-within span,
-.formio-form .formio-component.hover-note:focus-within a,
-.formio-form .formio-component.hover-note:hover .form-text *,
-.formio-form .formio-component.hover-note:hover .description *,
-.formio-form .formio-component.hover-note:hover .help-block *,
+.formio-form .formio-component.hover-note:hover .form-text.text-muted *,
+.formio-form .formio-component.hover-note:hover .description.text-muted *,
+.formio-form .formio-component.hover-note:hover .help-block.text-muted *,
 .formio-form .formio-component.hover-note:hover .v-input__details *,
-.formio-form .formio-component.hover-note:focus-within .form-text *,
-.formio-form .formio-component.hover-note:focus-within .description *,
-.formio-form .formio-component.hover-note:focus-within .help-block *,
+.formio-form .formio-component.hover-note:focus-within .form-text.text-muted *,
+.formio-form .formio-component.hover-note:focus-within .description.text-muted *,
+.formio-form .formio-component.hover-note:focus-within .help-block.text-muted *,
 .formio-form .formio-component.hover-note:focus-within .v-input__details * {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   opacity: 1 !important;
+  --bs-secondary-color: #ffffff !important;
+  --v-medium-emphasis-opacity: 1 !important;
 }
