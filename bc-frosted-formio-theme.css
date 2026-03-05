@@ -32,7 +32,7 @@
   --fio-bc-muted: #000000;
   --fio-bc-danger: #8b2538;
   --fio-bc-font-family: "Trebuchet MS", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --fio-bc-font-weight: 600;
+  --fio-bc-font-weight: 500;
   --fio-bc-border: rgba(255, 255, 255, 0.5);
   --fio-bc-line: rgba(16, 40, 56, 0.12);
   --fio-bc-glass: rgba(255, 255, 255, 0.38);
@@ -188,7 +188,9 @@
   position: relative;
 }
 
-.formio-form .formio-component.hover-note .form-text {
+.formio-form .formio-component.hover-note .form-text,
+.formio-form .formio-component.hover-note .description,
+.formio-form .formio-component.hover-note .help-block {
   position: absolute;
   left: 0;
   bottom: calc(100% + 6px);
@@ -198,7 +200,7 @@
   border-radius: 8px;
   border: 1px solid rgba(16, 40, 56, 0.2);
   background: rgba(20, 30, 40, 0.96);
-  color: #ffffff;
+  color: #ffffff !important;
   font-size: 0.78rem;
   line-height: 1.35;
   box-shadow: 0 10px 20px rgba(8, 35, 55, 0.22);
@@ -210,8 +212,18 @@
   transition: opacity 140ms ease, transform 140ms ease, visibility 0ms linear 140ms;
 }
 
+.formio-form .formio-component.hover-note .form-text *,
+.formio-form .formio-component.hover-note .description *,
+.formio-form .formio-component.hover-note .help-block * {
+  color: #ffffff !important;
+}
+
 .formio-form .formio-component.hover-note:hover .form-text,
-.formio-form .formio-component.hover-note:focus-within .form-text {
+.formio-form .formio-component.hover-note:hover .description,
+.formio-form .formio-component.hover-note:hover .help-block,
+.formio-form .formio-component.hover-note:focus-within .form-text,
+.formio-form .formio-component.hover-note:focus-within .description,
+.formio-form .formio-component.hover-note:focus-within .help-block {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
