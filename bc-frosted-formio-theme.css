@@ -280,6 +280,22 @@
   opacity: 1 !important;
 }
 
+/*
+  Unscoped runtime override:
+  keep the exact selector that was confirmed to work in the browser console.
+*/
+.formio-component.hover-note .form-text.text-muted,
+.formio-component.hover-note .form-text.text-muted *,
+.formio-component.hover-note:hover .form-text.text-muted,
+.formio-component.hover-note:hover .form-text.text-muted *,
+.formio-component.hover-note:focus-within .form-text.text-muted,
+.formio-component.hover-note:focus-within .form-text.text-muted * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+  --bs-secondary-color: #ffffff !important;
+}
+
 .formio-form .formio-component.hover-note:hover .form-text,
 .formio-form .formio-component.hover-note:hover .description,
 .formio-form .formio-component.hover-note:hover .help-block,
