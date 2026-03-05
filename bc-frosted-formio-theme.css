@@ -201,6 +201,8 @@
   border: 1px solid rgba(16, 40, 56, 0.2);
   background: rgba(20, 30, 40, 0.96);
   color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.22);
   font-size: 0.78rem;
   line-height: 1.35;
   box-shadow: 0 10px 20px rgba(8, 35, 55, 0.22);
@@ -216,6 +218,27 @@
 .formio-form .formio-component.hover-note .description *,
 .formio-form .formio-component.hover-note .help-block * {
   color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.formio-form .formio-component.hover-note:hover,
+.formio-form .formio-component.hover-note:focus-within,
+.formio-form .formio-component.hover-note:hover a,
+.formio-form .formio-component.hover-note:focus-within a,
+.formio-form .formio-component.hover-note:hover .form-text,
+.formio-form .formio-component.hover-note:hover .description,
+.formio-form .formio-component.hover-note:hover .help-block,
+.formio-form .formio-component.hover-note:focus-within .form-text,
+.formio-form .formio-component.hover-note:focus-within .description,
+.formio-form .formio-component.hover-note:focus-within .help-block,
+.formio-form .formio-component.hover-note:hover .form-text *,
+.formio-form .formio-component.hover-note:hover .description *,
+.formio-form .formio-component.hover-note:hover .help-block *,
+.formio-form .formio-component.hover-note:focus-within .form-text *,
+.formio-form .formio-component.hover-note:focus-within .description *,
+.formio-form .formio-component.hover-note:focus-within .help-block * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 .formio-form .formio-component.hover-note:hover .form-text,
