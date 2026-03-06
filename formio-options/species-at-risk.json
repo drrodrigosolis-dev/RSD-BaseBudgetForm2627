@@ -12,7 +12,7 @@
     "value": "both"
   },
   {
-    "label": "Other *Explain in NOTES",
-    "value": "otherExplainInNotes"
+    "label": "Other",
+    "value": "other"
   }
 ]
