@@ -2437,24 +2437,28 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   [class^="bc-frost-bright-"],
   [class*=" bc-frost-bright-"]
 ) {
-  --bc-frost-lite-rgb: 255, 255, 255;
+  --bc-frost-lite-tone-h: 0deg;
+  --bc-frost-lite-tone-s: 0%;
+  --bc-frost-lite-tone-l: 100%;
   --bc-frost-lite-alpha-top: 0.12;
   --bc-frost-lite-alpha-bottom: 0.04;
   --bc-frost-lite-alpha-surface: 0.08;
   --bc-frost-lite-alpha-border: 0.24;
-  --bc-frost-lite-top: rgba(var(--bc-frost-lite-rgb), var(--bc-frost-lite-alpha-top));
-  --bc-frost-lite-bottom: rgba(var(--bc-frost-lite-rgb), var(--bc-frost-lite-alpha-bottom));
-  --bc-frost-lite-surface: rgba(var(--bc-frost-lite-rgb), var(--bc-frost-lite-alpha-surface));
-  --bc-frost-lite-border: rgba(var(--bc-frost-lite-rgb), var(--bc-frost-lite-alpha-border));
+  --bc-frost-lite-top: hsl(var(--bc-frost-lite-tone-h) var(--bc-frost-lite-tone-s) var(--bc-frost-lite-tone-l) / var(--bc-frost-lite-alpha-top));
+  --bc-frost-lite-bottom: hsl(var(--bc-frost-lite-tone-h) var(--bc-frost-lite-tone-s) var(--bc-frost-lite-tone-l) / var(--bc-frost-lite-alpha-bottom));
+  --bc-frost-lite-surface: hsl(var(--bc-frost-lite-tone-h) var(--bc-frost-lite-tone-s) var(--bc-frost-lite-tone-l) / var(--bc-frost-lite-alpha-surface));
+  --bc-frost-lite-border: hsl(var(--bc-frost-lite-tone-h) var(--bc-frost-lite-tone-s) var(--bc-frost-lite-tone-l) / var(--bc-frost-lite-alpha-border));
   --bc-frost-lite-blur: 8px;
-  --bc-frost-lite-sat: 112%;
+  --bc-frost-lite-backdrop-sat: 100%;
   --bc-frost-lite-brightness: 104%;
   --bc-frost-lite-contrast: 94%;
 }
 
 .bc-frost-lite {
-  --bc-frost-lite-rgb: 255, 255, 255;
-  --bc-frost-lite-sat: 104%;
+  --bc-frost-lite-tone-h: 0deg;
+  --bc-frost-lite-tone-s: 0%;
+  --bc-frost-lite-tone-l: 100%;
+  --bc-frost-lite-backdrop-sat: 100%;
   --bc-frost-lite-brightness: 106%;
   --bc-frost-lite-contrast: 92%;
 }
@@ -2488,96 +2492,99 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   --bc-frost-lite-alpha-bottom: 0.08;
   --bc-frost-lite-alpha-surface: 0.14;
   --bc-frost-lite-alpha-border: 0.32;
-  --bc-frost-lite-sat: 132%;
+  --bc-frost-lite-tone-s: 92%;
+  --bc-frost-lite-tone-l: 80%;
 }
 
 .bc-frost-lite-ice {
-  --bc-frost-lite-rgb: 165, 235, 255;
+  --bc-frost-lite-tone-h: 196deg;
 }
 
 .bc-frost-lite-aqua {
-  --bc-frost-lite-rgb: 119, 245, 234;
+  --bc-frost-lite-tone-h: 174deg;
 }
 
 .bc-frost-lite-mint {
-  --bc-frost-lite-rgb: 165, 242, 192;
+  --bc-frost-lite-tone-h: 146deg;
 }
 
 .bc-frost-lite-lime {
-  --bc-frost-lite-rgb: 214, 242, 145;
+  --bc-frost-lite-tone-h: 80deg;
 }
 
 .bc-frost-lite-sun {
-  --bc-frost-lite-rgb: 255, 226, 136;
+  --bc-frost-lite-tone-h: 46deg;
 }
 
 .bc-frost-lite-peach {
-  --bc-frost-lite-rgb: 255, 203, 160;
+  --bc-frost-lite-tone-h: 28deg;
 }
 
 .bc-frost-lite-coral {
-  --bc-frost-lite-rgb: 255, 162, 156;
+  --bc-frost-lite-tone-h: 8deg;
 }
 
 .bc-frost-lite-rose {
-  --bc-frost-lite-rgb: 255, 173, 209;
+  --bc-frost-lite-tone-h: 336deg;
 }
 
 .bc-frost-lite-lilac {
-  --bc-frost-lite-rgb: 220, 186, 255;
+  --bc-frost-lite-tone-h: 272deg;
 }
 
 .bc-frost-lite-violet {
-  --bc-frost-lite-rgb: 187, 182, 255;
+  --bc-frost-lite-tone-h: 244deg;
 }
 
 .bc-frost-lite-sky {
-  --bc-frost-lite-rgb: 154, 204, 255;
+  --bc-frost-lite-tone-h: 210deg;
 }
 
 .bc-frost-lite-steel {
-  --bc-frost-lite-rgb: 178, 199, 220;
+  --bc-frost-lite-tone-h: 210deg;
+  --bc-frost-lite-tone-s: 24%;
+  --bc-frost-lite-tone-l: 78%;
 }
 
 /* Additional tone classes. */
 .bc-frost-lite-teal {
-  --bc-frost-lite-rgb: 111, 226, 218;
+  --bc-frost-lite-tone-h: 171deg;
 }
 
 .bc-frost-lite-emerald {
-  --bc-frost-lite-rgb: 126, 226, 164;
+  --bc-frost-lite-tone-h: 152deg;
 }
 
 .bc-frost-lite-leaf {
-  --bc-frost-lite-rgb: 170, 221, 124;
+  --bc-frost-lite-tone-h: 96deg;
 }
 
 .bc-frost-lite-amber {
-  --bc-frost-lite-rgb: 255, 204, 112;
+  --bc-frost-lite-tone-h: 40deg;
 }
 
 .bc-frost-lite-apricot {
-  --bc-frost-lite-rgb: 255, 186, 136;
+  --bc-frost-lite-tone-h: 30deg;
 }
 
 .bc-frost-lite-salmon {
-  --bc-frost-lite-rgb: 255, 151, 138;
+  --bc-frost-lite-tone-h: 12deg;
 }
 
 .bc-frost-lite-magenta {
-  --bc-frost-lite-rgb: 244, 154, 223;
+  --bc-frost-lite-tone-h: 318deg;
 }
 
 .bc-frost-lite-orchid {
-  --bc-frost-lite-rgb: 212, 169, 255;
+  --bc-frost-lite-tone-h: 285deg;
 }
 
 .bc-frost-lite-indigo {
-  --bc-frost-lite-rgb: 165, 173, 255;
+  --bc-frost-lite-tone-h: 236deg;
 }
 
 .bc-frost-lite-arctic {
-  --bc-frost-lite-rgb: 147, 224, 255;
+  --bc-frost-lite-tone-h: 198deg;
 }
 
 /* Fine-grain alpha utilities (0% to 10%). */
@@ -2715,26 +2722,26 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   --bc-frost-lite-alpha-border: 0.68;
 }
 
-/* Saturation utilities for tone classes (or any frost surface). */
-.bc-frost-sat-00 { --bc-frost-lite-sat: 0%; }
-.bc-frost-sat-05 { --bc-frost-lite-sat: 5%; }
-.bc-frost-sat-10 { --bc-frost-lite-sat: 10%; }
-.bc-frost-sat-20 { --bc-frost-lite-sat: 20%; }
-.bc-frost-sat-30 { --bc-frost-lite-sat: 30%; }
-.bc-frost-sat-40 { --bc-frost-lite-sat: 40%; }
-.bc-frost-sat-50 { --bc-frost-lite-sat: 50%; }
-.bc-frost-sat-60 { --bc-frost-lite-sat: 60%; }
-.bc-frost-sat-70 { --bc-frost-lite-sat: 70%; }
-.bc-frost-sat-80 { --bc-frost-lite-sat: 80%; }
-.bc-frost-sat-90 { --bc-frost-lite-sat: 90%; }
-.bc-frost-sat-100 { --bc-frost-lite-sat: 100%; }
-.bc-frost-sat-110 { --bc-frost-lite-sat: 110%; }
-.bc-frost-sat-120 { --bc-frost-lite-sat: 120%; }
-.bc-frost-sat-130 { --bc-frost-lite-sat: 130%; }
-.bc-frost-sat-140 { --bc-frost-lite-sat: 140%; }
-.bc-frost-sat-150 { --bc-frost-lite-sat: 150%; }
-.bc-frost-sat-160 { --bc-frost-lite-sat: 160%; }
-.bc-frost-sat-170 { --bc-frost-lite-sat: 170%; }
+/* Saturation utilities for tint color only (does not touch backdrop image). */
+.bc-frost-sat-00 { --bc-frost-lite-tone-s: 0%; }
+.bc-frost-sat-05 { --bc-frost-lite-tone-s: 5%; }
+.bc-frost-sat-10 { --bc-frost-lite-tone-s: 10%; }
+.bc-frost-sat-20 { --bc-frost-lite-tone-s: 20%; }
+.bc-frost-sat-30 { --bc-frost-lite-tone-s: 30%; }
+.bc-frost-sat-40 { --bc-frost-lite-tone-s: 40%; }
+.bc-frost-sat-50 { --bc-frost-lite-tone-s: 50%; }
+.bc-frost-sat-60 { --bc-frost-lite-tone-s: 60%; }
+.bc-frost-sat-70 { --bc-frost-lite-tone-s: 70%; }
+.bc-frost-sat-80 { --bc-frost-lite-tone-s: 80%; }
+.bc-frost-sat-90 { --bc-frost-lite-tone-s: 90%; }
+.bc-frost-sat-100 { --bc-frost-lite-tone-s: 100%; }
+.bc-frost-sat-110 { --bc-frost-lite-tone-s: 110%; }
+.bc-frost-sat-120 { --bc-frost-lite-tone-s: 120%; }
+.bc-frost-sat-130 { --bc-frost-lite-tone-s: 130%; }
+.bc-frost-sat-140 { --bc-frost-lite-tone-s: 140%; }
+.bc-frost-sat-150 { --bc-frost-lite-tone-s: 150%; }
+.bc-frost-sat-160 { --bc-frost-lite-tone-s: 160%; }
+.bc-frost-sat-170 { --bc-frost-lite-tone-s: 170%; }
 
 /* Brightness utilities for frost surfaces. */
 .bc-frost-bright-00 { --bc-frost-lite-brightness: 0%; }
@@ -2797,12 +2804,12 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
     0 3px 8px rgba(8, 35, 55, 0.022);
   backdrop-filter:
     blur(var(--bc-frost-lite-blur))
-    saturate(var(--bc-frost-lite-sat))
+    saturate(var(--bc-frost-lite-backdrop-sat))
     brightness(var(--bc-frost-lite-brightness))
     contrast(var(--bc-frost-lite-contrast));
   -webkit-backdrop-filter:
     blur(var(--bc-frost-lite-blur))
-    saturate(var(--bc-frost-lite-sat))
+    saturate(var(--bc-frost-lite-backdrop-sat))
     brightness(var(--bc-frost-lite-brightness))
     contrast(var(--bc-frost-lite-contrast));
 }
