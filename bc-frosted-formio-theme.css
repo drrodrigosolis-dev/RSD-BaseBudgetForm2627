@@ -15,7 +15,7 @@
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: scroll;
+  background-attachment: fixed;
   background-color: transparent;
 }
 
@@ -35,8 +35,8 @@
   --fio-bc-font-weight: 500;
   --fio-bc-border: rgba(255, 255, 255, 0.5);
   --fio-bc-line: rgba(16, 40, 56, 0.12);
-  --fio-bc-glass: rgba(255, 255, 255, 0.38);
-  --fio-bc-glass-strong: rgba(255, 255, 255, 0.56);
+  --fio-bc-glass: rgba(255, 255, 255, 0.16);
+  --fio-bc-glass-strong: rgba(255, 255, 255, 0.26);
   --bc-bg-image: url("./images/background.jpg");
   --fio-bc-shadow:
     0 8px 18px rgba(8, 35, 55, 0.045),
@@ -105,7 +105,7 @@
   border: 1px solid var(--fio-bc-border);
   border-radius: 18px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.48), rgba(248, 252, 255, 0.24)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(248, 252, 255, 0.08)),
     var(--fio-bc-glass);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.36),
@@ -2423,108 +2423,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 /*
   Utility class: ultra-light frost for stacked containers.
   Standalone class (no parent selector dependency).
-  Add `bc-frost-lite` in a component's "Custom CSS Class" field.
-  Optional per-component overrides via style/attributes:
-  --bc-frost-lite-top, --bc-frost-lite-bottom, --bc-frost-lite-surface,
-  --bc-frost-lite-border, --bc-frost-lite-blur, --bc-frost-lite-sat,
-  --bc-frost-lite-brightness, --bc-frost-lite-contrast.
+  Add one of the frost classes in a component's "Custom CSS Class" field.
+  Combine a tone class with an alpha class to control both color and transparency.
 */
-.bc-frost-lite {
-  --bc-frost-lite-top: rgba(255, 255, 255, 0.075);
-  --bc-frost-lite-bottom: rgba(255, 255, 255, 0.025);
-  --bc-frost-lite-surface: rgba(255, 255, 255, 0.05);
-  --bc-frost-lite-border: rgba(255, 255, 255, 0.2);
-  --bc-frost-lite-blur: 8px;
-  --bc-frost-lite-sat: 104%;
-  --bc-frost-lite-brightness: 106%;
-  --bc-frost-lite-contrast: 92%;
-}
-
-/* Frost lite hue variants: assign one class in Custom CSS Class for a subtle tint. */
-.bc-frost-lite-ice {
-  --bc-frost-lite-top: rgba(163, 236, 255, 0.11);
-  --bc-frost-lite-bottom: rgba(163, 236, 255, 0.045);
-  --bc-frost-lite-surface: rgba(163, 236, 255, 0.08);
-  --bc-frost-lite-border: rgba(190, 244, 255, 0.26);
-}
-
-.bc-frost-lite-aqua {
-  --bc-frost-lite-top: rgba(128, 255, 241, 0.1);
-  --bc-frost-lite-bottom: rgba(128, 255, 241, 0.04);
-  --bc-frost-lite-surface: rgba(128, 255, 241, 0.075);
-  --bc-frost-lite-border: rgba(177, 255, 246, 0.24);
-}
-
-.bc-frost-lite-mint {
-  --bc-frost-lite-top: rgba(172, 255, 200, 0.105);
-  --bc-frost-lite-bottom: rgba(172, 255, 200, 0.04);
-  --bc-frost-lite-surface: rgba(172, 255, 200, 0.078);
-  --bc-frost-lite-border: rgba(204, 255, 222, 0.25);
-}
-
-.bc-frost-lite-lime {
-  --bc-frost-lite-top: rgba(222, 255, 170, 0.105);
-  --bc-frost-lite-bottom: rgba(222, 255, 170, 0.042);
-  --bc-frost-lite-surface: rgba(222, 255, 170, 0.078);
-  --bc-frost-lite-border: rgba(236, 255, 198, 0.25);
-}
-
-.bc-frost-lite-sun {
-  --bc-frost-lite-top: rgba(255, 236, 160, 0.105);
-  --bc-frost-lite-bottom: rgba(255, 236, 160, 0.042);
-  --bc-frost-lite-surface: rgba(255, 236, 160, 0.078);
-  --bc-frost-lite-border: rgba(255, 243, 190, 0.25);
-}
-
-.bc-frost-lite-peach {
-  --bc-frost-lite-top: rgba(255, 212, 184, 0.105);
-  --bc-frost-lite-bottom: rgba(255, 212, 184, 0.043);
-  --bc-frost-lite-surface: rgba(255, 212, 184, 0.079);
-  --bc-frost-lite-border: rgba(255, 229, 211, 0.25);
-}
-
-.bc-frost-lite-coral {
-  --bc-frost-lite-top: rgba(255, 174, 167, 0.105);
-  --bc-frost-lite-bottom: rgba(255, 174, 167, 0.043);
-  --bc-frost-lite-surface: rgba(255, 174, 167, 0.078);
-  --bc-frost-lite-border: rgba(255, 205, 201, 0.25);
-}
-
-.bc-frost-lite-rose {
-  --bc-frost-lite-top: rgba(255, 184, 219, 0.105);
-  --bc-frost-lite-bottom: rgba(255, 184, 219, 0.043);
-  --bc-frost-lite-surface: rgba(255, 184, 219, 0.078);
-  --bc-frost-lite-border: rgba(255, 214, 234, 0.25);
-}
-
-.bc-frost-lite-lilac {
-  --bc-frost-lite-top: rgba(225, 195, 255, 0.105);
-  --bc-frost-lite-bottom: rgba(225, 195, 255, 0.043);
-  --bc-frost-lite-surface: rgba(225, 195, 255, 0.078);
-  --bc-frost-lite-border: rgba(238, 220, 255, 0.25);
-}
-
-.bc-frost-lite-violet {
-  --bc-frost-lite-top: rgba(196, 192, 255, 0.105);
-  --bc-frost-lite-bottom: rgba(196, 192, 255, 0.043);
-  --bc-frost-lite-surface: rgba(196, 192, 255, 0.078);
-  --bc-frost-lite-border: rgba(217, 214, 255, 0.25);
-}
-
-.bc-frost-lite-sky {
-  --bc-frost-lite-top: rgba(170, 213, 255, 0.105);
-  --bc-frost-lite-bottom: rgba(170, 213, 255, 0.043);
-  --bc-frost-lite-surface: rgba(170, 213, 255, 0.078);
-  --bc-frost-lite-border: rgba(202, 228, 255, 0.25);
-}
-
-.bc-frost-lite-steel {
-  --bc-frost-lite-top: rgba(192, 210, 226, 0.105);
-  --bc-frost-lite-bottom: rgba(192, 210, 226, 0.043);
-  --bc-frost-lite-surface: rgba(192, 210, 226, 0.078);
-  --bc-frost-lite-border: rgba(214, 226, 238, 0.25);
-}
-
 .bc-frost-lite,
 .bc-frost-lite-ice,
 .bc-frost-lite-aqua,
@@ -2538,97 +2439,244 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .bc-frost-lite-violet,
 .bc-frost-lite-sky,
 .bc-frost-lite-steel,
-.bc-frost-lite > .panel,
-.bc-frost-lite-ice > .panel,
-.bc-frost-lite-aqua > .panel,
-.bc-frost-lite-mint > .panel,
-.bc-frost-lite-lime > .panel,
-.bc-frost-lite-sun > .panel,
-.bc-frost-lite-peach > .panel,
-.bc-frost-lite-coral > .panel,
-.bc-frost-lite-rose > .panel,
-.bc-frost-lite-lilac > .panel,
-.bc-frost-lite-violet > .panel,
-.bc-frost-lite-sky > .panel,
-.bc-frost-lite-steel > .panel,
-.bc-frost-lite > .card,
-.bc-frost-lite-ice > .card,
-.bc-frost-lite-aqua > .card,
-.bc-frost-lite-mint > .card,
-.bc-frost-lite-lime > .card,
-.bc-frost-lite-sun > .card,
-.bc-frost-lite-peach > .card,
-.bc-frost-lite-coral > .card,
-.bc-frost-lite-rose > .card,
-.bc-frost-lite-lilac > .card,
-.bc-frost-lite-violet > .card,
-.bc-frost-lite-sky > .card,
-.bc-frost-lite-steel > .card,
-.bc-frost-lite > .well,
-.bc-frost-lite-ice > .well,
-.bc-frost-lite-aqua > .well,
-.bc-frost-lite-mint > .well,
-.bc-frost-lite-lime > .well,
-.bc-frost-lite-sun > .well,
-.bc-frost-lite-peach > .well,
-.bc-frost-lite-coral > .well,
-.bc-frost-lite-rose > .well,
-.bc-frost-lite-lilac > .well,
-.bc-frost-lite-violet > .well,
-.bc-frost-lite-sky > .well,
-.bc-frost-lite-steel > .well,
-.bc-frost-lite > .container-component,
-.bc-frost-lite-ice > .container-component,
-.bc-frost-lite-aqua > .container-component,
-.bc-frost-lite-mint > .container-component,
-.bc-frost-lite-lime > .container-component,
-.bc-frost-lite-sun > .container-component,
-.bc-frost-lite-peach > .container-component,
-.bc-frost-lite-coral > .container-component,
-.bc-frost-lite-rose > .container-component,
-.bc-frost-lite-lilac > .container-component,
-.bc-frost-lite-violet > .container-component,
-.bc-frost-lite-sky > .container-component,
-.bc-frost-lite-steel > .container-component,
-.bc-frost-lite > fieldset,
-.bc-frost-lite-ice > fieldset,
-.bc-frost-lite-aqua > fieldset,
-.bc-frost-lite-mint > fieldset,
-.bc-frost-lite-lime > fieldset,
-.bc-frost-lite-sun > fieldset,
-.bc-frost-lite-peach > fieldset,
-.bc-frost-lite-coral > fieldset,
-.bc-frost-lite-rose > fieldset,
-.bc-frost-lite-lilac > fieldset,
-.bc-frost-lite-violet > fieldset,
-.bc-frost-lite-sky > fieldset,
-.bc-frost-lite-steel > fieldset,
-.bc-frost-lite > .table-responsive,
-.bc-frost-lite-ice > .table-responsive,
-.bc-frost-lite-aqua > .table-responsive,
-.bc-frost-lite-mint > .table-responsive,
-.bc-frost-lite-lime > .table-responsive,
-.bc-frost-lite-sun > .table-responsive,
-.bc-frost-lite-peach > .table-responsive,
-.bc-frost-lite-coral > .table-responsive,
-.bc-frost-lite-rose > .table-responsive,
-.bc-frost-lite-lilac > .table-responsive,
-.bc-frost-lite-violet > .table-responsive,
-.bc-frost-lite-sky > .table-responsive,
-.bc-frost-lite-steel > .table-responsive,
-.bc-frost-lite > .alert,
-.bc-frost-lite-ice > .alert,
-.bc-frost-lite-aqua > .alert,
-.bc-frost-lite-mint > .alert,
-.bc-frost-lite-lime > .alert,
-.bc-frost-lite-sun > .alert,
-.bc-frost-lite-peach > .alert,
-.bc-frost-lite-coral > .alert,
-.bc-frost-lite-rose > .alert,
-.bc-frost-lite-lilac > .alert,
-.bc-frost-lite-violet > .alert,
-.bc-frost-lite-sky > .alert,
-.bc-frost-lite-steel > .alert {
+.bc-frost-alpha-00,
+.bc-frost-alpha-05,
+.bc-frost-alpha-10,
+.bc-frost-alpha-15,
+.bc-frost-alpha-20,
+.bc-frost-alpha-25,
+.bc-frost-alpha-30,
+.bc-frost-alpha-35,
+.bc-frost-alpha-40,
+.bc-frost-alpha-45,
+.bc-frost-alpha-50 {
+  --bc-frost-lite-rgb: 255, 255, 255;
+  --bc-frost-lite-alpha-top: 0.12;
+  --bc-frost-lite-alpha-bottom: 0.04;
+  --bc-frost-lite-alpha-surface: 0.08;
+  --bc-frost-lite-alpha-border: 0.24;
+  --bc-frost-lite-top: rgba(var(--bc-frost-lite-rgb), var(--bc-frost-lite-alpha-top));
+  --bc-frost-lite-bottom: rgba(var(--bc-frost-lite-rgb), var(--bc-frost-lite-alpha-bottom));
+  --bc-frost-lite-surface: rgba(var(--bc-frost-lite-rgb), var(--bc-frost-lite-alpha-surface));
+  --bc-frost-lite-border: rgba(var(--bc-frost-lite-rgb), var(--bc-frost-lite-alpha-border));
+  --bc-frost-lite-blur: 8px;
+  --bc-frost-lite-sat: 112%;
+  --bc-frost-lite-brightness: 104%;
+  --bc-frost-lite-contrast: 94%;
+}
+
+.bc-frost-lite {
+  --bc-frost-lite-rgb: 255, 255, 255;
+  --bc-frost-lite-sat: 104%;
+  --bc-frost-lite-brightness: 106%;
+  --bc-frost-lite-contrast: 92%;
+}
+
+/* Frost lite hue variants with stronger visible tint. */
+.bc-frost-lite-ice,
+.bc-frost-lite-aqua,
+.bc-frost-lite-mint,
+.bc-frost-lite-lime,
+.bc-frost-lite-sun,
+.bc-frost-lite-peach,
+.bc-frost-lite-coral,
+.bc-frost-lite-rose,
+.bc-frost-lite-lilac,
+.bc-frost-lite-violet,
+.bc-frost-lite-sky,
+.bc-frost-lite-steel {
+  --bc-frost-lite-alpha-top: 0.2;
+  --bc-frost-lite-alpha-bottom: 0.08;
+  --bc-frost-lite-alpha-surface: 0.14;
+  --bc-frost-lite-alpha-border: 0.32;
+  --bc-frost-lite-sat: 132%;
+}
+
+.bc-frost-lite-ice {
+  --bc-frost-lite-rgb: 165, 235, 255;
+}
+
+.bc-frost-lite-aqua {
+  --bc-frost-lite-rgb: 119, 245, 234;
+}
+
+.bc-frost-lite-mint {
+  --bc-frost-lite-rgb: 165, 242, 192;
+}
+
+.bc-frost-lite-lime {
+  --bc-frost-lite-rgb: 214, 242, 145;
+}
+
+.bc-frost-lite-sun {
+  --bc-frost-lite-rgb: 255, 226, 136;
+}
+
+.bc-frost-lite-peach {
+  --bc-frost-lite-rgb: 255, 203, 160;
+}
+
+.bc-frost-lite-coral {
+  --bc-frost-lite-rgb: 255, 162, 156;
+}
+
+.bc-frost-lite-rose {
+  --bc-frost-lite-rgb: 255, 173, 209;
+}
+
+.bc-frost-lite-lilac {
+  --bc-frost-lite-rgb: 220, 186, 255;
+}
+
+.bc-frost-lite-violet {
+  --bc-frost-lite-rgb: 187, 182, 255;
+}
+
+.bc-frost-lite-sky {
+  --bc-frost-lite-rgb: 154, 204, 255;
+}
+
+.bc-frost-lite-steel {
+  --bc-frost-lite-rgb: 178, 199, 220;
+}
+
+.bc-frost-alpha-00 {
+  --bc-frost-lite-alpha-top: 0;
+  --bc-frost-lite-alpha-bottom: 0;
+  --bc-frost-lite-alpha-surface: 0;
+  --bc-frost-lite-alpha-border: 0;
+}
+
+.bc-frost-alpha-05 {
+  --bc-frost-lite-alpha-top: 0.11;
+  --bc-frost-lite-alpha-bottom: 0.02;
+  --bc-frost-lite-alpha-surface: 0.05;
+  --bc-frost-lite-alpha-border: 0.23;
+}
+
+.bc-frost-alpha-10 {
+  --bc-frost-lite-alpha-top: 0.16;
+  --bc-frost-lite-alpha-bottom: 0.05;
+  --bc-frost-lite-alpha-surface: 0.1;
+  --bc-frost-lite-alpha-border: 0.28;
+}
+
+.bc-frost-alpha-15 {
+  --bc-frost-lite-alpha-top: 0.21;
+  --bc-frost-lite-alpha-bottom: 0.07;
+  --bc-frost-lite-alpha-surface: 0.15;
+  --bc-frost-lite-alpha-border: 0.33;
+}
+
+.bc-frost-alpha-20 {
+  --bc-frost-lite-alpha-top: 0.26;
+  --bc-frost-lite-alpha-bottom: 0.09;
+  --bc-frost-lite-alpha-surface: 0.2;
+  --bc-frost-lite-alpha-border: 0.38;
+}
+
+.bc-frost-alpha-25 {
+  --bc-frost-lite-alpha-top: 0.31;
+  --bc-frost-lite-alpha-bottom: 0.11;
+  --bc-frost-lite-alpha-surface: 0.25;
+  --bc-frost-lite-alpha-border: 0.43;
+}
+
+.bc-frost-alpha-30 {
+  --bc-frost-lite-alpha-top: 0.36;
+  --bc-frost-lite-alpha-bottom: 0.14;
+  --bc-frost-lite-alpha-surface: 0.3;
+  --bc-frost-lite-alpha-border: 0.48;
+}
+
+.bc-frost-alpha-35 {
+  --bc-frost-lite-alpha-top: 0.41;
+  --bc-frost-lite-alpha-bottom: 0.16;
+  --bc-frost-lite-alpha-surface: 0.35;
+  --bc-frost-lite-alpha-border: 0.53;
+}
+
+.bc-frost-alpha-40 {
+  --bc-frost-lite-alpha-top: 0.46;
+  --bc-frost-lite-alpha-bottom: 0.18;
+  --bc-frost-lite-alpha-surface: 0.4;
+  --bc-frost-lite-alpha-border: 0.58;
+}
+
+.bc-frost-alpha-45 {
+  --bc-frost-lite-alpha-top: 0.51;
+  --bc-frost-lite-alpha-bottom: 0.2;
+  --bc-frost-lite-alpha-surface: 0.45;
+  --bc-frost-lite-alpha-border: 0.63;
+}
+
+.bc-frost-alpha-50 {
+  --bc-frost-lite-alpha-top: 0.56;
+  --bc-frost-lite-alpha-bottom: 0.22;
+  --bc-frost-lite-alpha-surface: 0.5;
+  --bc-frost-lite-alpha-border: 0.68;
+}
+
+:is(
+  .bc-frost-lite,
+  .bc-frost-lite-ice,
+  .bc-frost-lite-aqua,
+  .bc-frost-lite-mint,
+  .bc-frost-lite-lime,
+  .bc-frost-lite-sun,
+  .bc-frost-lite-peach,
+  .bc-frost-lite-coral,
+  .bc-frost-lite-rose,
+  .bc-frost-lite-lilac,
+  .bc-frost-lite-violet,
+  .bc-frost-lite-sky,
+  .bc-frost-lite-steel,
+  .bc-frost-alpha-00,
+  .bc-frost-alpha-05,
+  .bc-frost-alpha-10,
+  .bc-frost-alpha-15,
+  .bc-frost-alpha-20,
+  .bc-frost-alpha-25,
+  .bc-frost-alpha-30,
+  .bc-frost-alpha-35,
+  .bc-frost-alpha-40,
+  .bc-frost-alpha-45,
+  .bc-frost-alpha-50
+),
+:is(
+  .bc-frost-lite,
+  .bc-frost-lite-ice,
+  .bc-frost-lite-aqua,
+  .bc-frost-lite-mint,
+  .bc-frost-lite-lime,
+  .bc-frost-lite-sun,
+  .bc-frost-lite-peach,
+  .bc-frost-lite-coral,
+  .bc-frost-lite-rose,
+  .bc-frost-lite-lilac,
+  .bc-frost-lite-violet,
+  .bc-frost-lite-sky,
+  .bc-frost-lite-steel,
+  .bc-frost-alpha-00,
+  .bc-frost-alpha-05,
+  .bc-frost-alpha-10,
+  .bc-frost-alpha-15,
+  .bc-frost-alpha-20,
+  .bc-frost-alpha-25,
+  .bc-frost-alpha-30,
+  .bc-frost-alpha-35,
+  .bc-frost-alpha-40,
+  .bc-frost-alpha-45,
+  .bc-frost-alpha-50
+) :is(
+  .panel,
+  .card,
+  .well,
+  .container-component,
+  fieldset,
+  .table-responsive,
+  .alert
+) {
   border-color: var(--bc-frost-lite-border);
   background:
     linear-gradient(180deg, var(--bc-frost-lite-top), var(--bc-frost-lite-bottom));
