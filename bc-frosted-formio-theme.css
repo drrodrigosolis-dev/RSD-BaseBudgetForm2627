@@ -16,11 +16,11 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: scroll;
-  background-color: transparent !important;
+  background-color: transparent;
 }
 
 .v-main.app .v-main__wrap {
-  background: transparent !important;
+  background: transparent;
 }
 
 .formio-form {
@@ -43,7 +43,7 @@
     0 18px 36px rgba(8, 35, 55, 0.055);
   position: relative;
   isolation: isolate;
-  background: transparent !important;
+  background: transparent;
   padding: clamp(0.28rem, 0.7vw, 0.55rem) clamp(0.55rem, 1.25vw, 1rem);
   font-family: var(--fio-bc-font-family);
   font-weight: var(--fio-bc-font-weight);
@@ -196,12 +196,12 @@
   margin-top: 0;
   max-width: min(20rem, 92vw);
   padding: 0.42rem 0.56rem;
-  min-height: auto !important;
+  min-height: auto;
   border-radius: 8px;
   border: 1px solid rgba(16, 40, 56, 0.2);
   background: rgba(20, 30, 40, 0.62);
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.22);
   font-size: 0.78rem;
   line-height: 1.35;
@@ -221,8 +221,8 @@
 
 .formio-form .formio-component.hover-note > .form-text.text-muted,
 .formio-form .formio-component.hover-note > .form-text.text-muted .text-muted {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
 }
 
 .formio-form .formio-component.hover-note:hover > .form-text.text-muted,
@@ -239,8 +239,8 @@
 .formio-form .fa.fa-question-circle.text-muted,
 .formio-form .fa.fa-question-circle-o.text-muted,
 .formio-form .formio-tooltip__trigger.text-muted {
-  color: rgba(16, 40, 56, 0.56) !important;
-  -webkit-text-fill-color: rgba(16, 40, 56, 0.56) !important;
+  color: rgba(16, 40, 56, 0.56);
+  -webkit-text-fill-color: rgba(16, 40, 56, 0.56);
 }
 
 .formio-form .formio-tooltip__body,
@@ -248,16 +248,16 @@
 .component-preview .formio-tooltip__body,
 .tooltip,
 .tooltip .tooltip-inner {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
 }
 
 .formio-form .formio-tooltip__body,
 .form-wrapper .formio-tooltip__body,
 .component-preview .formio-tooltip__body,
 .tooltip {
-  background: rgba(20, 30, 40, 0.96) !important;
-  border-color: rgba(16, 40, 56, 0.24) !important;
+  background: rgba(20, 30, 40, 0.96);
+  border-color: rgba(16, 40, 56, 0.24);
 }
 
 .tooltip {
@@ -266,29 +266,29 @@
 }
 
 .tooltip .tooltip-inner {
-  background: rgba(20, 30, 40, 0.96) !important;
+  background: rgba(20, 30, 40, 0.96);
   border: 1px solid rgba(16, 40, 56, 0.24);
   box-shadow: 0 10px 20px rgba(8, 35, 55, 0.22);
 }
 
 .bs-tooltip-top .tooltip-arrow::before,
 .bs-tooltip-auto[data-popper-placement^="top"] .tooltip-arrow::before {
-  border-top-color: rgba(20, 30, 40, 0.96) !important;
+  border-top-color: rgba(20, 30, 40, 0.96);
 }
 
 .bs-tooltip-end .tooltip-arrow::before,
 .bs-tooltip-auto[data-popper-placement^="right"] .tooltip-arrow::before {
-  border-right-color: rgba(20, 30, 40, 0.96) !important;
+  border-right-color: rgba(20, 30, 40, 0.96);
 }
 
 .bs-tooltip-bottom .tooltip-arrow::before,
 .bs-tooltip-auto[data-popper-placement^="bottom"] .tooltip-arrow::before {
-  border-bottom-color: rgba(20, 30, 40, 0.96) !important;
+  border-bottom-color: rgba(20, 30, 40, 0.96);
 }
 
 .bs-tooltip-start .tooltip-arrow::before,
 .bs-tooltip-auto[data-popper-placement^="left"] .tooltip-arrow::before {
-  border-left-color: rgba(20, 30, 40, 0.96) !important;
+  border-left-color: rgba(20, 30, 40, 0.96);
 }
 
 .formio-form .form-control,
@@ -635,14 +635,14 @@
 .formio-form button.btn.btn-primary,
 .formio-form input.btn.btn-primary,
 .formio-form a.btn.btn-primary {
-  border-color: rgba(255, 255, 255, 0.16) !important;
-  background: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary)) !important;
-  background-color: var(--fio-bc-primary) !important;
-  background-image: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary)) !important;
-  background-size: 220% 220% !important;
-  background-position: 0% 50% !important;
-  color: #ffffff !important;
-  opacity: 1 !important;
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary));
+  background-color: var(--fio-bc-primary);
+  background-image: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary));
+  background-size: 220% 220%;
+  background-position: 0% 50%;
+  color: #ffffff;
+  opacity: 1;
   will-change: transform, box-shadow, filter, background-position;
 }
 
@@ -653,11 +653,11 @@
 .formio-form .formio-component-button .btn.btn-primary:not(:disabled):not([disabled]):hover,
 .formio-form .formio-component-button .btn.btn-primary:not(:disabled):not([disabled]):focus-visible {
   transform: translateY(-2px) scale(1.01);
-  background-position: 100% 50% !important;
+  background-position: 100% 50%;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.24),
     0 13px 26px rgba(10, 44, 71, 0.18),
-    0 20px 34px rgba(10, 44, 71, 0.22) !important;
+    0 20px 34px rgba(10, 44, 71, 0.22);
   filter: saturate(1.12) brightness(1.08);
   animation: bcPrimaryHoverPulse 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -669,15 +669,15 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 7px 14px rgba(10, 44, 71, 0.12),
-    0 11px 20px rgba(10, 44, 71, 0.14) !important;
+    0 11px 20px rgba(10, 44, 71, 0.14);
   filter: saturate(1.03) brightness(1.02);
 }
 
 .formio-form .formio-component-submit .btn:not(:disabled):not([disabled]),
 .formio-form button.btn[type="submit"]:not(:disabled):not([disabled]),
 .formio-form input.btn[type="submit"]:not(:disabled):not([disabled]) {
-  background-size: 220% 220% !important;
-  background-position: 0% 50% !important;
+  background-size: 220% 220%;
+  background-position: 0% 50%;
   will-change: transform, box-shadow, filter, background-position;
 }
 
@@ -687,14 +687,14 @@
 .formio-form button.btn[type="submit"]:not(:disabled):not([disabled]):focus-visible,
 .formio-form input.btn[type="submit"]:not(:disabled):not([disabled]):hover,
 .formio-form input.btn[type="submit"]:not(:disabled):not([disabled]):focus-visible {
-  transform: translateY(-2px) scale(1.01) !important;
-  background-position: 100% 50% !important;
+  transform: translateY(-2px) scale(1.01);
+  background-position: 100% 50%;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.24),
     0 13px 26px rgba(10, 44, 71, 0.18),
-    0 20px 34px rgba(10, 44, 71, 0.22) !important;
-  filter: saturate(1.12) brightness(1.08) !important;
-  animation: bcPrimaryHoverPulse 520ms cubic-bezier(0.22, 1, 0.36, 1) both !important;
+    0 20px 34px rgba(10, 44, 71, 0.22);
+  filter: saturate(1.12) brightness(1.08);
+  animation: bcPrimaryHoverPulse 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .formio-form .btn.btn-primary:disabled,
@@ -704,17 +704,17 @@
 .formio-form .formio-component-button .btn.btn-primary[disabled],
 .formio-form .formio-component-submit .btn.btn-primary:disabled,
 .formio-form .formio-component-submit .btn.btn-primary[disabled] {
-  border-color: rgba(255, 255, 255, 0.16) !important;
-  background: linear-gradient(135deg, #0f5ea8, #1b7486) !important;
-  background-color: #0f5ea8 !important;
-  background-image: linear-gradient(135deg, #0f5ea8, #1b7486) !important;
-  color: #ffffff !important;
-  opacity: 0.78 !important;
-  filter: saturate(0.92) !important;
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, #0f5ea8, #1b7486);
+  background-color: #0f5ea8;
+  background-image: linear-gradient(135deg, #0f5ea8, #1b7486);
+  color: #ffffff;
+  opacity: 0.78;
+  filter: saturate(0.92);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
     0 6px 12px rgba(10, 44, 71, 0.1),
-    0 10px 18px rgba(10, 44, 71, 0.12) !important;
+    0 10px 18px rgba(10, 44, 71, 0.12);
 }
 
 .formio-form .btn-secondary,
@@ -1182,7 +1182,7 @@
   .formio-form .alert,
   .formio-form .choices__list--dropdown,
   .formio-form .choices__list[aria-expanded] {
-    animation: none !important;
+    animation: none;
   }
 
   .formio-form .has-error .form-control,
@@ -1216,16 +1216,16 @@
   .formio-form .has-error .panel,
   .formio-form .is-invalid .card,
   .formio-form .is-invalid .panel {
-    animation: none !important;
+    animation: none;
   }
 
   .formio-form *,
   .formio-form *::before,
   .formio-form *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
   }
 }
 
@@ -1260,40 +1260,40 @@
     Legacy hook hard-disabled:
     keep it visually inert even if an older injector still renders the element.
   */
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: -999 !important;
-  pointer-events: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  background: none !important;
+  position: fixed;
+  inset: 0;
+  z-index: -999;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  background: none;
 }
 
 /* Keep institutional headers above any decorative form background layer. */
 .elevation-20.gov-header.v-locale--is-ltr,
 .gov-header {
-  position: relative !important;
-  z-index: 60 !important;
-  isolation: isolate !important;
+  position: relative;
+  z-index: 60;
+  isolation: isolate;
 }
 
 /* Builder-only guard: disable decorative background layers when sidebar is present. */
 body:has(.builder-sidebar) .v-main.app {
-  background-image: none !important;
+  background-image: none;
 }
 
 body:has(.builder-sidebar) .bc-fixed-bg,
 body:has(.builder-sidebar) .formio-form::before,
 body:has(.builder-sidebar) .formio-form::after {
-  display: none !important;
+  display: none;
 }
 
 /* Keep the builder toolbox above all decorative runtime layers. */
 .builder-sidebar,
 .accordion.builder-sidebar {
-  position: relative !important;
-  z-index: 80 !important;
-  isolation: isolate !important;
+  position: relative;
+  z-index: 80;
+  isolation: isolate;
 }
 
 /*
@@ -1302,13 +1302,13 @@ body:has(.builder-sidebar) .formio-form::after {
 */
 .builder-sidebar.builder-sidebar_scroll,
 .accordion.builder-sidebar.builder-sidebar_scroll {
-  position: sticky !important;
-  top: var(--bc-builder-toolbar-top, 12px) !important;
-  align-self: flex-start !important;
-  max-height: calc(100vh - var(--bc-builder-toolbar-top, 12px) - 12px) !important;
-  overflow-y: auto !important;
-  z-index: 80 !important;
-  isolation: isolate !important;
+  position: sticky;
+  top: var(--bc-builder-toolbar-top, 12px);
+  align-self: flex-start;
+  max-height: calc(100vh - var(--bc-builder-toolbar-top, 12px) - 12px);
+  overflow-y: auto;
+  z-index: 80;
+  isolation: isolate;
 }
 
 /* During modal editing, modal/backdrop should sit above the builder toolbox. */
@@ -1316,7 +1316,7 @@ body.modal-open .builder-sidebar,
 body.modal-open .builder-sidebar.builder-sidebar_scroll,
 body.modal-open .accordion.builder-sidebar,
 body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
-  z-index: 20 !important;
+  z-index: 20;
 }
 
 /*
@@ -1338,12 +1338,12 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .builder-sidebar .btn,
 .builder-sidebar .form-control,
 .builder-sidebar .form-group {
-  background: #ffffff !important;
-  color: #000000 !important;
-  border-color: rgba(31, 41, 55, 0.18) !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  background: #ffffff;
+  color: #000000;
+  border-color: rgba(31, 41, 55, 0.18);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 /*
@@ -1356,12 +1356,12 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-dialog .component-edit-tabs .formio-form,
 .modal-open .component-edit-tabs .formio-form,
 .modal .component-edit-tabs .formio-form {
-  padding: 0 !important;
-  color: inherit !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form *,
@@ -1379,15 +1379,15 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .component-edit-tabs .formio-form *,
 .modal .component-edit-tabs .formio-form *::before,
 .modal .component-edit-tabs .formio-form *::after {
-  animation: none !important;
-  transition: none !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: none !important;
-  text-shadow: none !important;
-  background-image: none !important;
-  border-radius: 0 !important;
+  animation: none;
+  transition: none;
+  filter: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  text-shadow: none;
+  background-image: none;
+  border-radius: 0;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .formio-component,
@@ -1430,11 +1430,11 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .component-edit-tabs .formio-form .container-component,
 .modal .component-edit-tabs .formio-form fieldset,
 .modal .component-edit-tabs .formio-form .alert {
-  margin-bottom: 0.5rem !important;
-  padding: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .formio-component-content,
@@ -1482,9 +1482,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .component-edit-tabs .formio-form .tab-pane,
 .modal .component-edit-tabs .formio-form .row,
 .modal .component-edit-tabs .formio-form [class*="col-"] {
-  margin: 0 !important;
-  padding: 0 !important;
-  gap: 0 !important;
+  margin: 0;
+  padding: 0;
+  gap: 0;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .control-label,
@@ -1517,9 +1517,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .component-edit-tabs .formio-form .description,
 .modal .component-edit-tabs .formio-form .help-block,
 .modal .component-edit-tabs .formio-form .form-text {
-  margin: 0 0 0.25rem 0 !important;
-  padding: 0 !important;
-  line-height: 1.35 !important;
+  margin: 0 0 0.25rem 0;
+  padding: 0;
+  line-height: 1.35;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .nav-tabs,
@@ -1532,9 +1532,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .component-edit-tabs .formio-form .wizard-nav,
 .modal .component-edit-tabs .formio-form .nav-tabs,
 .modal .component-edit-tabs .formio-form .wizard-nav {
-  gap: 0 !important;
-  margin: 0 0 0.5rem 0 !important;
-  padding: 0 !important;
+  gap: 0;
+  margin: 0 0 0.5rem 0;
+  padding: 0;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .form-control,
@@ -1567,14 +1567,14 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .component-edit-tabs .formio-form .choices__inner,
 .modal .component-edit-tabs .formio-form .choices__list--dropdown,
 .modal .component-edit-tabs .formio-form .choices__list[aria-expanded] {
-  min-height: auto !important;
-  height: auto !important;
-  padding: 0.375rem 0.75rem !important;
-  line-height: 1.5 !important;
-  border: 1px solid #cbd5e1 !important;
-  border-radius: 0.25rem !important;
-  background: #ffffff !important;
-  color: #000000 !important;
+  min-height: auto;
+  height: auto;
+  padding: 0.375rem 0.75rem;
+  line-height: 1.5;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+  background: #ffffff;
+  color: #000000;
 }
 
 /*
@@ -1587,9 +1587,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-dialog .component-edit-tabs .formio-form textarea.form-control,
 .modal-open .component-edit-tabs .formio-form textarea.form-control,
 .modal .component-edit-tabs .formio-form textarea.form-control {
-  white-space: pre-wrap !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .btn,
@@ -1617,11 +1617,11 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .component-edit-tabs .formio-form .wizard-nav .step,
 .modal .component-edit-tabs .formio-form .form-check,
 .modal .component-edit-tabs .formio-form .card-header {
-  padding: 0.375rem 0.75rem !important;
-  border: 1px solid #cbd5e1 !important;
-  border-radius: 0.25rem !important;
-  background: #ffffff !important;
-  color: #000000 !important;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+  background: #ffffff;
+  color: #000000;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .form-check-input,
@@ -1629,8 +1629,8 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-dialog .component-edit-tabs .formio-form .form-check-input,
 .modal-open .component-edit-tabs .formio-form .form-check-input,
 .modal .component-edit-tabs .formio-form .form-check-input {
-  float: none !important;
-  margin-left: 0 !important;
+  float: none;
+  margin-left: 0;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .table,
@@ -1643,9 +1643,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .component-edit-tabs .formio-form .datagrid-table,
 .modal .component-edit-tabs .formio-form .table,
 .modal .component-edit-tabs .formio-form .datagrid-table {
-  border-collapse: collapse !important;
-  border-spacing: 0 !important;
-  background: transparent !important;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background: transparent;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .table th,
@@ -1668,9 +1668,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .component-edit-tabs .formio-form .table td,
 .modal .component-edit-tabs .formio-form .datagrid-table th,
 .modal .component-edit-tabs .formio-form .datagrid-table td {
-  padding: 0.375rem 0.5rem !important;
-  background: transparent !important;
-  color: inherit !important;
+  padding: 0.375rem 0.5rem;
+  background: transparent;
+  color: inherit;
 }
 
 .builder-component-modal .formio-form .formio-component,
@@ -1713,8 +1713,8 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .formio-form .panel-body,
 .modal .formio-form .tab-content,
 .modal .formio-form .tab-pane {
-  position: relative !important;
-  overflow: visible !important;
+  position: relative;
+  overflow: visible;
 }
 
 .builder-component-modal .formio-component-panel,
@@ -1727,11 +1727,11 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .formio-component-triggerPanel,
 .modal .formio-component-panel,
 .modal .formio-component-triggerPanel {
-  position: relative !important;
-  z-index: 40 !important;
-  height: auto !important;
-  min-height: 0 !important;
-  overflow: visible !important;
+  position: relative;
+  z-index: 40;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
 }
 
 .builder-component-modal .formio-component-panel > .card,
@@ -1754,10 +1754,10 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .formio-component-triggerPanel > .card,
 .modal .formio-component-panel .card-body,
 .modal .formio-component-triggerPanel .card-body {
-  height: auto !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  overflow: visible !important;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
 }
 
 /*
@@ -1775,10 +1775,10 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .formio-form .ui.selection.dropdown,
 .modal .formio-form .ui.dropdown,
 .modal .formio-form .ui.selection.dropdown {
-  position: relative !important;
-  overflow: visible !important;
-  min-height: auto !important;
-  z-index: auto !important;
+  position: relative;
+  overflow: visible;
+  min-height: auto;
+  z-index: auto;
 }
 
 .builder-component-modal .formio-form .ui.dropdown.active,
@@ -1801,7 +1801,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .formio-form .ui.dropdown.visible,
 .modal .formio-form .ui.selection.dropdown.active,
 .modal .formio-form .ui.selection.dropdown.visible {
-  z-index: 10000 !important;
+  z-index: 10000;
 }
 
 .builder-component-modal .formio-form .ui.dropdown .menu,
@@ -1814,19 +1814,19 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .formio-form .ui.selection.dropdown .menu,
 .modal .formio-form .ui.dropdown .menu,
 .modal .formio-form .ui.selection.dropdown .menu {
-  position: absolute !important;
-  top: calc(100% + 0.125rem) !important;
-  left: 0 !important;
-  right: auto !important;
-  min-width: 100% !important;
-  max-height: 16rem !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  z-index: 10001 !important;
-  border: 1px solid #cbd5e1 !important;
-  border-radius: 0.25rem !important;
-  background: #ffffff !important;
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12) !important;
+  position: absolute;
+  top: calc(100% + 0.125rem);
+  left: 0;
+  right: auto;
+  min-width: 100%;
+  max-height: 16rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 10001;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
 }
 
 .builder-component-modal .formio-form .ui.dropdown .menu > .item,
@@ -1839,11 +1839,11 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .formio-form .ui.selection.dropdown .menu > .item,
 .modal .formio-form .ui.dropdown .menu > .item,
 .modal .formio-form .ui.selection.dropdown .menu > .item {
-  padding: 0.375rem 0.75rem !important;
-  line-height: 1.35 !important;
-  white-space: normal !important;
-  background: #ffffff !important;
-  color: #000000 !important;
+  padding: 0.375rem 0.75rem;
+  line-height: 1.35;
+  white-space: normal;
+  background: #ffffff;
+  color: #000000;
 }
 
 /*
@@ -1854,8 +1854,8 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .form-control.ui.fluid.selection.dropdown,
 .modal-open .ui.fluid.selection.dropdown,
 .modal-open .ui.selection.dropdown {
-  position: relative !important;
-  overflow: visible !important;
+  position: relative;
+  overflow: visible;
 }
 
 .modal-open .form-control.ui.fluid.selection.dropdown.active,
@@ -1864,7 +1864,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .ui.fluid.selection.dropdown.visible,
 .modal-open .ui.selection.dropdown.active,
 .modal-open .ui.selection.dropdown.visible {
-  z-index: 200000 !important;
+  z-index: 200000;
 }
 
 .modal-open .form-control.ui.fluid.selection.dropdown > .menu,
@@ -1873,44 +1873,44 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .form-control.ui.fluid.selection.dropdown .menu.transition.visible,
 .modal-open .ui.fluid.selection.dropdown .menu.transition.visible,
 .modal-open .ui.selection.dropdown .menu.transition.visible {
-  position: absolute !important;
-  top: calc(100% + 0.125rem) !important;
-  left: 0 !important;
-  right: auto !important;
-  min-width: 100% !important;
-  max-height: 16rem !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  z-index: 200001 !important;
-  display: block !important;
+  position: absolute;
+  top: calc(100% + 0.125rem);
+  left: 0;
+  right: auto;
+  min-width: 100%;
+  max-height: 16rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 200001;
+  display: block;
 }
 
 .modal-open {
-  overflow: hidden !important;
+  overflow: hidden;
 }
 
 .modal-open .modal,
 .modal-open .formio-dialog {
-  overflow: hidden !important;
+  overflow: hidden;
 }
 
 .modal-open .modal-dialog {
-  max-height: calc(100vh - 2rem) !important;
-  margin-top: 1rem !important;
-  margin-bottom: 1rem !important;
-  overflow: visible !important;
+  max-height: calc(100vh - 2rem);
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  overflow: visible;
 }
 
 .modal-open .modal-content,
 .modal-open .formio-dialog-content {
-  max-height: calc(100vh - 2rem) !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior: contain !important;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
 }
 
 .modal-open .modal-body {
-  overflow: visible !important;
+  overflow: visible;
 }
 
 .builder-component-modal .formio-component-actions,
@@ -1923,8 +1923,8 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .formio-component-editgrid.formio-component-actions,
 .modal .formio-component-actions,
 .modal .formio-component-editgrid.formio-component-actions {
-  position: relative !important;
-  z-index: 1 !important;
+  position: relative;
+  z-index: 1;
 }
 
 .builder-component-modal .col-form-label[ref="editgrid-actions-addRow"],
@@ -1932,8 +1932,8 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-dialog .col-form-label[ref="editgrid-actions-addRow"],
 .modal-open .col-form-label[ref="editgrid-actions-addRow"],
 .modal .col-form-label[ref="editgrid-actions-addRow"] {
-  position: relative !important;
-  z-index: 1 !important;
+  position: relative;
+  z-index: 1;
 }
 
 .builder-component-modal .formio-component-actions .btn.btn-primary,
@@ -1941,8 +1941,8 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-dialog .formio-component-actions .btn.btn-primary,
 .modal-open .formio-component-actions .btn.btn-primary,
 .modal .formio-component-actions .btn.btn-primary {
-  position: relative !important;
-  z-index: 1 !important;
+  position: relative;
+  z-index: 1;
 }
 
 /*
@@ -1962,9 +1962,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .formio-form .formio-component-tags,
 .modal .formio-form .formio-component-select,
 .modal .formio-form .formio-component-tags {
-  position: relative !important;
-  z-index: 2 !important;
-  overflow: visible !important;
+  position: relative;
+  z-index: 2;
+  overflow: visible;
 }
 
 .builder-component-modal .formio-form .formio-component-select:focus-within,
@@ -1977,7 +1977,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .formio-form .formio-component-tags:focus-within,
 .modal .formio-form .formio-component-select:focus-within,
 .modal .formio-form .formio-component-tags:focus-within {
-  z-index: 200 !important;
+  z-index: 200;
 }
 
 .builder-component-modal .formio-form .formio-component-select .choices,
@@ -2010,9 +2010,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .formio-form .formio-component-tags .choices,
 .modal .formio-form .formio-component-tags .choices__inner,
 .modal .formio-form .formio-component-tags .choices__list--single {
-  position: relative !important;
-  overflow: visible !important;
-  z-index: 41 !important;
+  position: relative;
+  overflow: visible;
+  z-index: 41;
 }
 
 .builder-component-modal .formio-form .formio-component-select .choices.is-open,
@@ -2045,7 +2045,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .formio-form .formio-component-tags .choices.is-open,
 .modal .formio-form .formio-component-tags .choices__list--dropdown,
 .modal .formio-form .formio-component-tags .choices__list[aria-expanded] {
-  z-index: 201 !important;
+  z-index: 201;
 }
 
 .builder-component-modal .formio-form .formio-component-checkbox,
@@ -2073,8 +2073,8 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .formio-form .formio-component-editgrid,
 .modal .formio-form .formio-component-datagrid,
 .modal .formio-form .formio-component-datamap {
-  position: relative !important;
-  z-index: 1 !important;
+  position: relative;
+  z-index: 1;
 }
 
 /*
@@ -2088,11 +2088,11 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-dialog .preview-panel .component-preview .formio-form .btn,
 .modal-open .preview-panel .component-preview .formio-form .btn,
 .modal .preview-panel .component-preview .formio-form .btn {
-  min-height: 44px !important;
-  border-radius: 999px !important;
-  padding: 0.44rem 0.98rem !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.01em !important;
+  min-height: 44px;
+  border-radius: 999px;
+  padding: 0.44rem 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .builder-component-modal .preview-panel .component-preview .formio-form .btn.btn-primary,
@@ -2105,16 +2105,16 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .preview-panel .component-preview .formio-form button.btn.btn-primary,
 .modal .preview-panel .component-preview .formio-form .btn.btn-primary,
 .modal .preview-panel .component-preview .formio-form button.btn.btn-primary {
-  border-color: rgba(255, 255, 255, 0.16) !important;
-  background: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary)) !important;
-  background-color: var(--fio-bc-primary) !important;
-  background-image: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary)) !important;
-  color: #ffffff !important;
-  opacity: 1 !important;
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary));
+  background-color: var(--fio-bc-primary);
+  background-image: linear-gradient(135deg, var(--fio-bc-primary), var(--fio-bc-secondary));
+  color: #ffffff;
+  opacity: 1;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
     0 8px 16px rgba(10, 44, 71, 0.12),
-    0 14px 26px rgba(10, 44, 71, 0.16) !important;
+    0 14px 26px rgba(10, 44, 71, 0.16);
 }
 
 .builder-component-modal .preview-panel .component-preview .formio-form .btn.btn-primary:disabled,
@@ -2127,17 +2127,17 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .preview-panel .component-preview .formio-form .btn.btn-primary[disabled],
 .modal .preview-panel .component-preview .formio-form .btn.btn-primary:disabled,
 .modal .preview-panel .component-preview .formio-form .btn.btn-primary[disabled] {
-  border-color: rgba(255, 255, 255, 0.16) !important;
-  background: linear-gradient(135deg, #0f5ea8, #1b7486) !important;
-  background-color: #0f5ea8 !important;
-  background-image: linear-gradient(135deg, #0f5ea8, #1b7486) !important;
-  color: #ffffff !important;
-  opacity: 0.86 !important;
-  filter: saturate(0.94) !important;
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, #0f5ea8, #1b7486);
+  background-color: #0f5ea8;
+  background-image: linear-gradient(135deg, #0f5ea8, #1b7486);
+  color: #ffffff;
+  opacity: 0.86;
+  filter: saturate(0.94);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
     0 6px 12px rgba(10, 44, 71, 0.1),
-    0 10px 18px rgba(10, 44, 71, 0.12) !important;
+    0 10px 18px rgba(10, 44, 71, 0.12);
 }
 
 /*
@@ -2251,14 +2251,14 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   box-shadow:
     inset 0 0 0 1px rgba(22, 120, 58, 0.12),
     0 0 0 1px rgba(52, 199, 89, 0.12);
-  animation: bcSwitchTrackOn 420ms cubic-bezier(0.22, 1, 0.36, 1) both !important;
+  animation: bcSwitchTrackOn 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check-label::after,
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .checkbox label::after,
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check > label::after {
   transform: translate3d(1.25rem, -50%, 0);
-  animation: bcSwitchThumbOn 420ms cubic-bezier(0.22, 1, 0.36, 1) both !important;
+  animation: bcSwitchThumbOn 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:not(:checked)) .form-check-label::before,
@@ -2289,15 +2289,15 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form .bc-readability-toggle .form-check-label:active::after,
 .formio-form .bc-readability-toggle .checkbox label:active::after,
 .formio-form .bc-readability-toggle .form-check > label:active::after {
-  transform: translate3d(0, -50%, 0) scale(0.94) !important;
-  animation: none !important;
+  transform: translate3d(0, -50%, 0) scale(0.94);
+  animation: none;
 }
 
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check-label:active::after,
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .checkbox label:active::after,
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check > label:active::after {
-  transform: translate3d(1.25rem, -50%, 0) scale(0.94) !important;
-  animation: none !important;
+  transform: translate3d(1.25rem, -50%, 0) scale(0.94);
+  animation: none;
 }
 
 /*
@@ -2315,25 +2315,25 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked)::before,
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked)::after {
-  content: none !important;
+  content: none;
 }
 
 .v-main.app:has(.bc-readability-toggle input[type="checkbox"]:checked) {
-  background-image: none !important;
-  background-color: #f3f6f9 !important;
+  background-image: none;
+  background-color: #f3f6f9;
 }
 
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .bc-fixed-bg {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  background: none !important;
+  opacity: 0;
+  visibility: hidden;
+  background: none;
 }
 
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) *,
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) *::before,
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) *::after {
-  animation: none !important;
-  transition: none !important;
+  animation: none;
+  transition: none;
 }
 
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .formio-component:not(.formio-component-button):not(.formio-component-columns):not(.formio-component-column):not(.formio-component-content):not(.formio-component-htmlelement):not(.formio-component-hidden),
@@ -2350,11 +2350,11 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices__inner,
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices__list--dropdown,
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .choices__list[aria-expanded] {
-  background: #ffffff !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border-color: rgba(16, 40, 56, 0.14) !important;
+  background: #ffffff;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-color: rgba(16, 40, 56, 0.14);
 }
 
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-control,
@@ -2370,10 +2370,10 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .fileSelector,
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .file-area,
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .signature-box {
-  animation: none !important;
-  transition: none !important;
-  background-position: 50% 50% !important;
-  filter: none !important;
+  animation: none;
+  transition: none;
+  background-position: 50% 50%;
+  filter: none;
 }
 
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .form-control:hover,
@@ -2415,9 +2415,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .fileSelector:focus-within,
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .file-area:focus-within,
 .formio-form:has(.bc-readability-toggle input[type="checkbox"]:checked) .signature-box:focus-within {
-  transform: none !important;
-  background-position: 50% 50% !important;
-  filter: none !important;
+  transform: none;
+  background-position: 50% 50%;
+  filter: none;
 }
 
 /*
@@ -2440,32 +2440,213 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   --bc-frost-lite-contrast: 92%;
 }
 
+/* Frost lite hue variants: assign one class in Custom CSS Class for a subtle tint. */
+.bc-frost-lite-ice {
+  --bc-frost-lite-top: rgba(163, 236, 255, 0.11);
+  --bc-frost-lite-bottom: rgba(163, 236, 255, 0.045);
+  --bc-frost-lite-surface: rgba(163, 236, 255, 0.08);
+  --bc-frost-lite-border: rgba(190, 244, 255, 0.26);
+}
+
+.bc-frost-lite-aqua {
+  --bc-frost-lite-top: rgba(128, 255, 241, 0.1);
+  --bc-frost-lite-bottom: rgba(128, 255, 241, 0.04);
+  --bc-frost-lite-surface: rgba(128, 255, 241, 0.075);
+  --bc-frost-lite-border: rgba(177, 255, 246, 0.24);
+}
+
+.bc-frost-lite-mint {
+  --bc-frost-lite-top: rgba(172, 255, 200, 0.105);
+  --bc-frost-lite-bottom: rgba(172, 255, 200, 0.04);
+  --bc-frost-lite-surface: rgba(172, 255, 200, 0.078);
+  --bc-frost-lite-border: rgba(204, 255, 222, 0.25);
+}
+
+.bc-frost-lite-lime {
+  --bc-frost-lite-top: rgba(222, 255, 170, 0.105);
+  --bc-frost-lite-bottom: rgba(222, 255, 170, 0.042);
+  --bc-frost-lite-surface: rgba(222, 255, 170, 0.078);
+  --bc-frost-lite-border: rgba(236, 255, 198, 0.25);
+}
+
+.bc-frost-lite-sun {
+  --bc-frost-lite-top: rgba(255, 236, 160, 0.105);
+  --bc-frost-lite-bottom: rgba(255, 236, 160, 0.042);
+  --bc-frost-lite-surface: rgba(255, 236, 160, 0.078);
+  --bc-frost-lite-border: rgba(255, 243, 190, 0.25);
+}
+
+.bc-frost-lite-peach {
+  --bc-frost-lite-top: rgba(255, 212, 184, 0.105);
+  --bc-frost-lite-bottom: rgba(255, 212, 184, 0.043);
+  --bc-frost-lite-surface: rgba(255, 212, 184, 0.079);
+  --bc-frost-lite-border: rgba(255, 229, 211, 0.25);
+}
+
+.bc-frost-lite-coral {
+  --bc-frost-lite-top: rgba(255, 174, 167, 0.105);
+  --bc-frost-lite-bottom: rgba(255, 174, 167, 0.043);
+  --bc-frost-lite-surface: rgba(255, 174, 167, 0.078);
+  --bc-frost-lite-border: rgba(255, 205, 201, 0.25);
+}
+
+.bc-frost-lite-rose {
+  --bc-frost-lite-top: rgba(255, 184, 219, 0.105);
+  --bc-frost-lite-bottom: rgba(255, 184, 219, 0.043);
+  --bc-frost-lite-surface: rgba(255, 184, 219, 0.078);
+  --bc-frost-lite-border: rgba(255, 214, 234, 0.25);
+}
+
+.bc-frost-lite-lilac {
+  --bc-frost-lite-top: rgba(225, 195, 255, 0.105);
+  --bc-frost-lite-bottom: rgba(225, 195, 255, 0.043);
+  --bc-frost-lite-surface: rgba(225, 195, 255, 0.078);
+  --bc-frost-lite-border: rgba(238, 220, 255, 0.25);
+}
+
+.bc-frost-lite-violet {
+  --bc-frost-lite-top: rgba(196, 192, 255, 0.105);
+  --bc-frost-lite-bottom: rgba(196, 192, 255, 0.043);
+  --bc-frost-lite-surface: rgba(196, 192, 255, 0.078);
+  --bc-frost-lite-border: rgba(217, 214, 255, 0.25);
+}
+
+.bc-frost-lite-sky {
+  --bc-frost-lite-top: rgba(170, 213, 255, 0.105);
+  --bc-frost-lite-bottom: rgba(170, 213, 255, 0.043);
+  --bc-frost-lite-surface: rgba(170, 213, 255, 0.078);
+  --bc-frost-lite-border: rgba(202, 228, 255, 0.25);
+}
+
+.bc-frost-lite-steel {
+  --bc-frost-lite-top: rgba(192, 210, 226, 0.105);
+  --bc-frost-lite-bottom: rgba(192, 210, 226, 0.043);
+  --bc-frost-lite-surface: rgba(192, 210, 226, 0.078);
+  --bc-frost-lite-border: rgba(214, 226, 238, 0.25);
+}
+
 .bc-frost-lite,
+.bc-frost-lite-ice,
+.bc-frost-lite-aqua,
+.bc-frost-lite-mint,
+.bc-frost-lite-lime,
+.bc-frost-lite-sun,
+.bc-frost-lite-peach,
+.bc-frost-lite-coral,
+.bc-frost-lite-rose,
+.bc-frost-lite-lilac,
+.bc-frost-lite-violet,
+.bc-frost-lite-sky,
+.bc-frost-lite-steel,
 .bc-frost-lite > .panel,
+.bc-frost-lite-ice > .panel,
+.bc-frost-lite-aqua > .panel,
+.bc-frost-lite-mint > .panel,
+.bc-frost-lite-lime > .panel,
+.bc-frost-lite-sun > .panel,
+.bc-frost-lite-peach > .panel,
+.bc-frost-lite-coral > .panel,
+.bc-frost-lite-rose > .panel,
+.bc-frost-lite-lilac > .panel,
+.bc-frost-lite-violet > .panel,
+.bc-frost-lite-sky > .panel,
+.bc-frost-lite-steel > .panel,
 .bc-frost-lite > .card,
+.bc-frost-lite-ice > .card,
+.bc-frost-lite-aqua > .card,
+.bc-frost-lite-mint > .card,
+.bc-frost-lite-lime > .card,
+.bc-frost-lite-sun > .card,
+.bc-frost-lite-peach > .card,
+.bc-frost-lite-coral > .card,
+.bc-frost-lite-rose > .card,
+.bc-frost-lite-lilac > .card,
+.bc-frost-lite-violet > .card,
+.bc-frost-lite-sky > .card,
+.bc-frost-lite-steel > .card,
 .bc-frost-lite > .well,
+.bc-frost-lite-ice > .well,
+.bc-frost-lite-aqua > .well,
+.bc-frost-lite-mint > .well,
+.bc-frost-lite-lime > .well,
+.bc-frost-lite-sun > .well,
+.bc-frost-lite-peach > .well,
+.bc-frost-lite-coral > .well,
+.bc-frost-lite-rose > .well,
+.bc-frost-lite-lilac > .well,
+.bc-frost-lite-violet > .well,
+.bc-frost-lite-sky > .well,
+.bc-frost-lite-steel > .well,
 .bc-frost-lite > .container-component,
+.bc-frost-lite-ice > .container-component,
+.bc-frost-lite-aqua > .container-component,
+.bc-frost-lite-mint > .container-component,
+.bc-frost-lite-lime > .container-component,
+.bc-frost-lite-sun > .container-component,
+.bc-frost-lite-peach > .container-component,
+.bc-frost-lite-coral > .container-component,
+.bc-frost-lite-rose > .container-component,
+.bc-frost-lite-lilac > .container-component,
+.bc-frost-lite-violet > .container-component,
+.bc-frost-lite-sky > .container-component,
+.bc-frost-lite-steel > .container-component,
 .bc-frost-lite > fieldset,
+.bc-frost-lite-ice > fieldset,
+.bc-frost-lite-aqua > fieldset,
+.bc-frost-lite-mint > fieldset,
+.bc-frost-lite-lime > fieldset,
+.bc-frost-lite-sun > fieldset,
+.bc-frost-lite-peach > fieldset,
+.bc-frost-lite-coral > fieldset,
+.bc-frost-lite-rose > fieldset,
+.bc-frost-lite-lilac > fieldset,
+.bc-frost-lite-violet > fieldset,
+.bc-frost-lite-sky > fieldset,
+.bc-frost-lite-steel > fieldset,
 .bc-frost-lite > .table-responsive,
-.bc-frost-lite > .alert {
-  border-color: var(--bc-frost-lite-border) !important;
+.bc-frost-lite-ice > .table-responsive,
+.bc-frost-lite-aqua > .table-responsive,
+.bc-frost-lite-mint > .table-responsive,
+.bc-frost-lite-lime > .table-responsive,
+.bc-frost-lite-sun > .table-responsive,
+.bc-frost-lite-peach > .table-responsive,
+.bc-frost-lite-coral > .table-responsive,
+.bc-frost-lite-rose > .table-responsive,
+.bc-frost-lite-lilac > .table-responsive,
+.bc-frost-lite-violet > .table-responsive,
+.bc-frost-lite-sky > .table-responsive,
+.bc-frost-lite-steel > .table-responsive,
+.bc-frost-lite > .alert,
+.bc-frost-lite-ice > .alert,
+.bc-frost-lite-aqua > .alert,
+.bc-frost-lite-mint > .alert,
+.bc-frost-lite-lime > .alert,
+.bc-frost-lite-sun > .alert,
+.bc-frost-lite-peach > .alert,
+.bc-frost-lite-coral > .alert,
+.bc-frost-lite-rose > .alert,
+.bc-frost-lite-lilac > .alert,
+.bc-frost-lite-violet > .alert,
+.bc-frost-lite-sky > .alert,
+.bc-frost-lite-steel > .alert {
+  border-color: var(--bc-frost-lite-border);
   background:
-    linear-gradient(180deg, var(--bc-frost-lite-top), var(--bc-frost-lite-bottom)) !important;
-  background-color: var(--bc-frost-lite-surface) !important;
+    linear-gradient(180deg, var(--bc-frost-lite-top), var(--bc-frost-lite-bottom));
+  background-color: var(--bc-frost-lite-surface);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-    0 3px 8px rgba(8, 35, 55, 0.022) !important;
+    0 3px 8px rgba(8, 35, 55, 0.022);
   backdrop-filter:
     blur(var(--bc-frost-lite-blur))
     saturate(var(--bc-frost-lite-sat))
     brightness(var(--bc-frost-lite-brightness))
-    contrast(var(--bc-frost-lite-contrast)) !important;
+    contrast(var(--bc-frost-lite-contrast));
   -webkit-backdrop-filter:
     blur(var(--bc-frost-lite-blur))
     saturate(var(--bc-frost-lite-sat))
     brightness(var(--bc-frost-lite-brightness))
-    contrast(var(--bc-frost-lite-contrast)) !important;
+    contrast(var(--bc-frost-lite-contrast));
 }
 
 /*
@@ -2509,16 +2690,16 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form .formio-component.hover-note:focus-within > .form-text.text-muted,
 .formio-form .formio-component.hover-note:hover > .form-text.text-muted .text-muted,
 .formio-form .formio-component.hover-note:focus-within > .form-text.text-muted .text-muted {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
 }
 
 .formio-form .formio-component.hover-note:hover > .form-text.text-muted,
 .formio-form .formio-component.hover-note:focus-within > .form-text.text-muted,
 .formio-form .formio-component.hover-note:hover > .form-text.text-muted *,
 .formio-form .formio-component.hover-note:focus-within > .form-text.text-muted * {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
 }
 
 /*
@@ -2529,10 +2710,10 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form .formio-component.hover-note > .form-text.text-muted {
   transition:
     opacity 160ms ease,
-    transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1) !important;
+    transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .formio-form .formio-component.hover-note:hover > .form-text.text-muted,
 .formio-form .formio-component.hover-note:focus-within > .form-text.text-muted {
-  transition-delay: var(--bc-hover-note-idle-delay), var(--bc-hover-note-idle-delay) !important;
+  transition-delay: var(--bc-hover-note-idle-delay), var(--bc-hover-note-idle-delay);
 }
