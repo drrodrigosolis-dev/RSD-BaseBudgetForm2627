@@ -1,12 +1,5 @@
 [
-  {
-    "label": "n/a",
-    "value": "nA"
-  },
-  {
-    "label": "All",
-    "value": "all"
-  },
+
   {
     "label": "BIRD - Great Blue Heron",
     "value": "birdGreatBlueHeron"
@@ -150,5 +143,13 @@
   {
     "label": "FLORA - Shrubs",
     "value": "floraShrubs"
+  },
+  {
+    "label": "NA",
+    "value": "nA"
+  },
+  {
+    "label": "All",
+    "value": "all"
   }
 ]
