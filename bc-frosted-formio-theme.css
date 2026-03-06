@@ -2456,6 +2456,38 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 }
 
 /*
+  Utility class: manual collapsible wrapper for any component.
+  Standalone class (no parent selector dependency).
+  Add `bc-collapsible` in a component's "Custom CSS Class" field.
+  The component stays compact until hovered or focused.
+  Optional per-component overrides:
+  --bc-collapsible-collapsed-max, --bc-collapsible-expanded-max,
+  --bc-collapsible-duration, --bc-collapsible-ease.
+*/
+.bc-collapsible {
+  --bc-collapsible-collapsed-max: 2.75rem;
+  --bc-collapsible-expanded-max: 120rem;
+  --bc-collapsible-duration: 240ms;
+  --bc-collapsible-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+  max-height: var(--bc-collapsible-collapsed-max);
+  transition: max-height var(--bc-collapsible-duration) var(--bc-collapsible-ease);
+}
+
+.bc-collapsible:hover,
+.bc-collapsible:focus-within,
+.bc-collapsible.bc-collapsible-open,
+.bc-collapsible[aria-expanded="true"] {
+  max-height: var(--bc-collapsible-expanded-max);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bc-collapsible {
+    transition: none;
+  }
+}
+
+/*
   Last-resort runtime override:
   some Form.io renderers emit description/help text with extra utility classes or
   different wrappers. Keep all hover-note content readable on the dark note panel.
