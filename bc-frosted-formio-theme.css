@@ -1290,10 +1290,23 @@ body:has(.builder-sidebar) .formio-form::after {
 
 /* Keep the builder toolbox above all decorative runtime layers. */
 .builder-sidebar,
-.builder-sidebar.builder-sidebar_scroll,
-.accordion.builder-sidebar,
-.accordion.builder-sidebar.builder-sidebar_scroll {
+.accordion.builder-sidebar {
   position: relative !important;
+  z-index: 80 !important;
+  isolation: isolate !important;
+}
+
+/*
+  Make the Form.io builder toolbar follow vertical scroll in long forms.
+  Use a CSS variable so the offset can be tuned if a fixed app header exists.
+*/
+.builder-sidebar.builder-sidebar_scroll,
+.accordion.builder-sidebar.builder-sidebar_scroll {
+  position: sticky !important;
+  top: var(--bc-builder-toolbar-top, 12px) !important;
+  align-self: flex-start !important;
+  max-height: calc(100vh - var(--bc-builder-toolbar-top, 12px) - 12px) !important;
+  overflow-y: auto !important;
   z-index: 80 !important;
   isolation: isolate !important;
 }
