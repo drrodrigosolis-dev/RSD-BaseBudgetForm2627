@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form.io A-Z Lookup Cheat Sheet</title>
+  <style>
+    :root {
+      --bg: #f4f7fd;
+      --card: #ffffff;
+      --line: #d4ddef;
+      --ink: #20273d;
+      --code: #0f1530;
+      --code-ink: #eef3ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Noto Sans", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.35;
+    }
+    .page {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    h1, h2 { margin: 0 0 10px; }
+    h1 { font-size: 1.45rem; }
+    h2 { font-size: 1.08rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+    }
+    th, td {
+      border: 1px solid #d6deee;
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #f2f6ff; }
+    code {
+      font-family: Menlo, Consolas, "Liberation Mono", monospace;
+      background: #eaf0ff;
+      color: #1b2e57;
+      border-radius: 4px;
+      padding: 1px 4px;
+      white-space: nowrap;
+    }
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
+    @media (min-width: 1080px) {
+      .stack {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="card">
+      <h1>Form.io A-Z Lookup Cheat Sheet</h1>
+      <div><code>Syntax only. Alphabetical entries.</code></div>
+    </section>
+
+    <div class="stack">
+      <section class="card">
+        <h2>HTML Attributes (A-Z)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th>Syntax</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>aria-atomic</code></td><td><code>aria-atomic="true|false"</code></td></tr>
+            <tr><td><code>aria-busy</code></td><td><code>aria-busy="true|false"</code></td></tr>
+            <tr><td><code>aria-controls</code></td><td><code>aria-controls="&lt;id&gt;"</code></td></tr>
+            <tr><td><code>aria-current</code></td><td><code>aria-current="page|step|true|false"</code></td></tr>
+            <tr><td><code>aria-describedby</code></td><td><code>aria-describedby="&lt;id-list&gt;"</code></td></tr>
+            <tr><td><code>aria-disabled</code></td><td><code>aria-disabled="true|false"</code></td></tr>
+            <tr><td><code>aria-expanded</code></td><td><code>aria-expanded="true|false"</code></td></tr>
+            <tr><td><code>aria-hidden</code></td><td><code>aria-hidden="true|false"</code></td></tr>
+            <tr><td><code>aria-label</code></td><td><code>aria-label="&lt;text&gt;"</code></td></tr>
+            <tr><td><code>aria-labelledby</code></td><td><code>aria-labelledby="&lt;id-list&gt;"</code></td></tr>
+            <tr><td><code>aria-live</code></td><td><code>aria-live="off|polite|assertive"</code></td></tr>
+            <tr><td><code>aria-required</code></td><td><code>aria-required="true|false"</code></td></tr>
+            <tr><td><code>autocomplete</code></td><td><code>autocomplete="&lt;token&gt;"</code></td></tr>
+            <tr><td><code>class</code></td><td><code>class="&lt;class-list&gt;"</code></td></tr>
+            <tr><td><code>data-*</code></td><td><code>data-name="&lt;value&gt;"</code></td></tr>
+            <tr><td><code>dir</code></td><td><code>dir="ltr|rtl|auto"</code></td></tr>
+            <tr><td><code>disabled</code></td><td><code>disabled</code></td></tr>
+            <tr><td><code>hidden</code></td><td><code>hidden</code></td></tr>
+            <tr><td><code>id</code></td><td><code>id="&lt;unique-id&gt;"</code></td></tr>
+            <tr><td><code>inputmode</code></td><td><code>inputmode="text|numeric|decimal|tel|email|url|search"</code></td></tr>
+            <tr><td><code>lang</code></td><td><code>lang="&lt;language-tag&gt;"</code></td></tr>
+            <tr><td><code>name</code></td><td><code>name="&lt;field-name&gt;"</code></td></tr>
+            <tr><td><code>placeholder</code></td><td><code>placeholder="&lt;text&gt;"</code></td></tr>
+            <tr><td><code>readonly</code></td><td><code>readonly</code></td></tr>
+            <tr><td><code>required</code></td><td><code>required</code></td></tr>
+            <tr><td><code>role</code></td><td><code>role="&lt;role-name&gt;"</code></td></tr>
+            <tr><td><code>style</code></td><td><code>style="property:value; property:value;"</code></td></tr>
+            <tr><td><code>tabindex</code></td><td><code>tabindex="-1|0|1..."</code></td></tr>
+            <tr><td><code>title</code></td><td><code>title="&lt;text&gt;"</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>CSS Properties (A-Z)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Syntax</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>-webkit-backdrop-filter</code></td><td><code>-webkit-backdrop-filter: &lt;filter-list&gt;;</code></td></tr>
+            <tr><td><code>accent-color</code></td><td><code>accent-color: &lt;color&gt;;</code></td></tr>
+            <tr><td><code>align-content</code></td><td><code>align-content: &lt;value&gt;;</code></td></tr>
+            <tr><td><code>align-items</code></td><td><code>align-items: &lt;value&gt;;</code></td></tr>
+            <tr><td><code>align-self</code></td><td><code>align-self: &lt;value&gt;;</code></td></tr>
+            <tr><td><code>animation</code></td><td><code>animation: &lt;name&gt; &lt;duration&gt; &lt;timing-function&gt; &lt;delay&gt; &lt;iteration-count&gt; &lt;direction&gt; &lt;fill-mode&gt;;</code></td></tr>
+            <tr><td><code>animation-delay</code></td><td><code>animation-delay: &lt;time&gt;;</code></td></tr>
+            <tr><td><code>animation-direction</code></td><td><code>animation-direction: &lt;value&gt;;</code></td></tr>
+            <tr><td><code>animation-duration</code></td><td><code>animation-duration: &lt;time&gt;;</code></td></tr>
+            <tr><td><code>animation-fill-mode</code></td><td><code>animation-fill-mode: &lt;value&gt;;</code></td></tr>
+            <tr><td><code>animation-iteration-count</code></td><td><code>animation-iteration-count: &lt;number|infinite&gt;;</code></td></tr>
+            <tr><td><code>animation-name</code></td><td><code>animation-name: &lt;keyframes-name&gt;;</code></td></tr>
+            <tr><td><code>animation-play-state</code></td><td><code>animation-play-state: running|paused;</code></td></tr>
+            <tr><td><code>animation-timing-function</code></td><td><code>animation-timing-function: &lt;easing&gt;;</code></td></tr>
+            <tr><td><code>backdrop-filter</code></td><td><code>backdrop-filter: &lt;filter-list&gt;;</code></td></tr>
+            <tr><td><code>background</code></td><td><code>background: &lt;shorthand&gt;;</code></td></tr>
+            <tr><td><code>background-attachment</code></td><td><code>background-attachment: scroll|fixed|local;</code></td></tr>
+            <tr><td><code>background-clip</code></td><td><code>background-clip: border-box|padding-box|content-box;</code></td></tr>
+            <tr><td><code>background-color</code></td><td><code>background-color: &lt;color&gt;;</code></td></tr>
+            <tr><td><code>background-image</code></td><td><code>background-image: &lt;image&gt;;</code></td></tr>
+            <tr><td><code>background-origin</code></td><td><code>background-origin: border-box|padding-box|content-box;</code></td></tr>
+            <tr><td><code>background-position</code></td><td><code>background-position: &lt;x&gt; &lt;y&gt;;</code></td></tr>
+            <tr><td><code>background-repeat</code></td><td><code>background-repeat: repeat|no-repeat|repeat-x|repeat-y;</code></td></tr>
+            <tr><td><code>background-size</code></td><td><code>background-size: auto|cover|contain|&lt;length&gt;;</code></td></tr>
+            <tr><td><code>block-size</code></td><td><code>block-size: &lt;length|percentage&gt;;</code></td></tr>
+            <tr><td><code>border</code></td><td><code>border: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td></tr>
+            <tr><td><code>border-bottom</code></td><td><code>border-bottom: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td></tr>
+            <tr><td><code>border-bottom-left-radius</code></td><td><code>border-bottom-left-radius: &lt;radius&gt;;</code></td></tr>
+            <tr><td><code>border-bottom-right-radius</code></td><td><code>border-bottom-right-radius: &lt;radius&gt;;</code></td></tr>
+            <tr><td><code>border-color</code></td><td><code>border-color: &lt;color&gt;;</code></td></tr>
+            <tr><td><code>border-left</code></td><td><code>border-left: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td></tr>
+            <tr><td><code>border-radius</code></td><td><code>border-radius: &lt;radius&gt;;</code></td></tr>
+            <tr><td><code>border-right</code></td><td><code>border-right: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td></tr>
+            <tr><td><code>border-style</code></td><td><code>border-style: solid|dashed|dotted|none;</code></td></tr>
+            <tr><td><code>border-top</code></td><td><code>border-top: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td></tr>
+            <tr><td><code>border-top-left-radius</code></td><td><code>border-top-left-radius: &lt;radius&gt;;</code></td></tr>
+            <tr><td><code>border-top-right-radius</code></td><td><code>border-top-right-radius: &lt;radius&gt;;</code></td></tr>
+            <tr><td><code>border-width</code></td><td><code>border-width: &lt;length&gt;;</code></td></tr>
+            <tr><td><code>bottom</code></td><td><code>bottom: &lt;length|percentage|auto&gt;;</code></td></tr>
+            <tr><td><code>box-shadow</code></td><td><code>box-shadow: &lt;x&gt; &lt;y&gt; &lt;blur&gt; &lt;spread&gt; &lt;color&gt;;</code></td></tr>
+            <tr><td><code>box-sizing</code></td><td><code>box-sizing: content-box|border-box;</code></td></tr>
+            <tr><td><code>caret-color</code></td><td><code>caret-color: &lt;color&gt;;</code></td></tr>
+            <tr><td><code>clear</code></td><td><code>clear: none|left|right|both;</code></td></tr>
+            <tr><td><code>color</code></td><td><code>color: &lt;color&gt;;</code></td></tr>
+            <tr><td><code>column-gap</code></td><td><code>column-gap: &lt;length&gt;;</code></td></tr>
+            <tr><td><code>cursor</code></td><td><code>cursor: &lt;value&gt;;</code></td></tr>
+            <tr><td><code>direction</code></td><td><code>direction: ltr|rtl;</code></td></tr>
+            <tr><td><code>display</code></td><td><code>display: block|inline|inline-block|flex|grid|none;</code></td></tr>
+            <tr><td><code>filter</code></td><td><code>filter: &lt;filter-list&gt;;</code></td></tr>
+            <tr><td><code>flex</code></td><td><code>flex: &lt;grow&gt; &lt;shrink&gt; &lt;basis&gt;;</code></td></tr>
+            <tr><td><code>flex-basis</code></td><td><code>flex-basis: &lt;length|percentage|auto&gt;;</code></td></tr>
+            <tr><td><code>flex-direction</code></td><td><code>flex-direction: row|column|row-reverse|column-reverse;</code></td></tr>
+            <tr><td><code>flex-grow</code></td><td><code>flex-grow: &lt;number&gt;;</code></td></tr>
+            <tr><td><code>flex-shrink</code></td><td><code>flex-shrink: &lt;number&gt;;</code></td></tr>
+            <tr><td><code>flex-wrap</code></td><td><code>flex-wrap: nowrap|wrap|wrap-reverse;</code></td></tr>
+            <tr><td><code>font-family</code></td><td><code>font-family: &lt;family-list&gt;;</code></td></tr>
+            <tr><td><code>font-size</code></td><td><code>font-size: &lt;length|percentage&gt;;</code></td></tr>
+            <tr><td><code>font-style</code></td><td><code>font-style: normal|italic|oblique;</code></td></tr>
+            <tr><td><code>font-weight</code></td><td><code>font-weight: &lt;value&gt;;</code></td></tr>
+            <tr><td><code>gap</code></td><td><code>gap: &lt;row-gap&gt; &lt;column-gap&gt;;</code></td></tr>
+            <tr><td><code>grid-auto-flow</code></td><td><code>grid-auto-flow: row|column|dense;</code></td></tr>
+            <tr><td><code>grid-column</code></td><td><code>grid-column: &lt;start&gt; / &lt;end&gt;;</code></td></tr>
+            <tr><td><code>grid-row</code></td><td><code>grid-row: &lt;start&gt; / &lt;end&gt;;</code></td></tr>
+            <tr><td><code>grid-template-columns</code></td><td><code>grid-template-columns: &lt;track-list&gt;;</code></td></tr>
+            <tr><td><code>grid-template-rows</code></td><td><code>grid-template-rows: &lt;track-list&gt;;</code></td></tr>
+            <tr><td><code>height</code></td><td><code>height: &lt;length|percentage|auto&gt;;</code></td></tr>
+            <tr><td><code>inset</code></td><td><code>inset: &lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;;</code></td></tr>
+            <tr><td><code>justify-content</code></td><td><code>justify-content: &lt;value&gt;;</code></td></tr>
+            <tr><td><code>left</code></td><td><code>left: &lt;length|percentage|auto&gt;;</code></td></tr>
+            <tr><td><code>letter-spacing</code></td><td><code>letter-spacing: &lt;length&gt;;</code></td></tr>
+            <tr><td><code>line-height</code></td><td><code>line-height: &lt;number|length|percentage&gt;;</code></td></tr>
+            <tr><td><code>margin</code></td><td><code>margin: &lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;;</code></td></tr>
+            <tr><td><code>margin-bottom</code></td><td><code>margin-bottom: &lt;length|percentage|auto&gt;;</code></td></tr>
+            <tr><td><code>margin-left</code></td><td><code>margin-left: &lt;length|percentage|auto&gt;;</code></td></tr>
+            <tr><td><code>margin-right</code></td><td><code>margin-right: &lt;length|percentage|auto&gt;;</code></td></tr>
+            <tr><td><code>margin-top</code></td><td><code>margin-top: &lt;length|percentage|auto&gt;;</code></td></tr>
+            <tr><td><code>max-height</code></td><td><code>max-height: &lt;length|percentage|none&gt;;</code></td></tr>
+            <tr><td><code>max-width</code></td><td><code>max-width: &lt;length|percentage|none&gt;;</code></td></tr>
+            <tr><td><code>min-height</code></td><td><code>min-height: &lt;length|percentage&gt;;</code></td></tr>
+            <tr><td><code>min-width</code></td><td><code>min-width: &lt;length|percentage&gt;;</code></td></tr>
+            <tr><td><code>opacity</code></td><td><code>opacity: &lt;number&gt;;</code></td></tr>
+            <tr><td><code>outline</code></td><td><code>outline: &lt;width&gt; &lt;style&gt; &lt;color&gt;;</code></td></tr>
+            <tr><td><code>outline-offset</code></td><td><code>outline-offset: &lt;length&gt;;</code></td></tr>
+            <tr><td><code>overflow</code></td><td><code>overflow: visible|hidden|auto|scroll;</code></td></tr>
+            <tr><td><code>overflow-x</code></td><td><code>overflow-x: visible|hidden|auto|scroll;</code></td></tr>
+            <tr><td><code>overflow-y</code></td><td><code>overflow-y: visible|hidden|auto|scroll;</code></td></tr>
+            <tr><td><code>padding</code></td><td><code>padding: &lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;;</code></td></tr>
+            <tr><td><code>padding-bottom</code></td><td><code>padding-bottom: &lt;length|percentage&gt;;</code></td></tr>
+            <tr><td><code>padding-left</code></td><td><code>padding-left: &lt;length|percentage&gt;;</code></td></tr>
+            <tr><td><code>padding-right</code></td><td><code>padding-right: &lt;length|percentage&gt;;</code></td></tr>
+            <tr><td><code>padding-top</code></td><td><code>padding-top: &lt;length|percentage&gt;;</code></td></tr>
+            <tr><td><code>perspective</code></td><td><code>perspective: &lt;length|none&gt;;</code></td></tr>
+            <tr><td><code>pointer-events</code></td><td><code>pointer-events: auto|none;</code></td></tr>
+            <tr><td><code>position</code></td><td><code>position: static|relative|absolute|fixed|sticky;</code></td></tr>
+            <tr><td><code>right</code></td><td><code>right: &lt;length|percentage|auto&gt;;</code></td></tr>
+            <tr><td><code>row-gap</code></td><td><code>row-gap: &lt;length&gt;;</code></td></tr>
+            <tr><td><code>text-align</code></td><td><code>text-align: left|center|right|justify;</code></td></tr>
+            <tr><td><code>text-overflow</code></td><td><code>text-overflow: clip|ellipsis;</code></td></tr>
+            <tr><td><code>text-transform</code></td><td><code>text-transform: none|uppercase|lowercase|capitalize;</code></td></tr>
+            <tr><td><code>top</code></td><td><code>top: &lt;length|percentage|auto&gt;;</code></td></tr>
+            <tr><td><code>transform</code></td><td><code>transform: &lt;transform-list&gt;;</code></td></tr>
+            <tr><td><code>transform-origin</code></td><td><code>transform-origin: &lt;x&gt; &lt;y&gt; [&lt;z&gt;];</code></td></tr>
+            <tr><td><code>transition</code></td><td><code>transition: &lt;property&gt; &lt;duration&gt; &lt;easing&gt; &lt;delay&gt;;</code></td></tr>
+            <tr><td><code>transition-delay</code></td><td><code>transition-delay: &lt;time&gt;;</code></td></tr>
+            <tr><td><code>transition-duration</code></td><td><code>transition-duration: &lt;time&gt;;</code></td></tr>
+            <tr><td><code>transition-property</code></td><td><code>transition-property: &lt;property-list&gt;;</code></td></tr>
+            <tr><td><code>transition-timing-function</code></td><td><code>transition-timing-function: &lt;easing&gt;;</code></td></tr>
+            <tr><td><code>visibility</code></td><td><code>visibility: visible|hidden|collapse;</code></td></tr>
+            <tr><td><code>white-space</code></td><td><code>white-space: normal|nowrap|pre|pre-wrap;</code></td></tr>
+            <tr><td><code>width</code></td><td><code>width: &lt;length|percentage|auto&gt;;</code></td></tr>
+            <tr><td><code>word-break</code></td><td><code>word-break: normal|break-all|keep-all|break-word;</code></td></tr>
+            <tr><td><code>z-index</code></td><td><code>z-index: &lt;integer|auto&gt;;</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>CSS Value Functions (A-Z)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Function</th>
+            <th>Syntax</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>blur()</code></td><td><code>blur(&lt;radius&gt;)</code></td></tr>
+          <tr><td><code>brightness()</code></td><td><code>brightness(&lt;factor&gt;)</code></td></tr>
+          <tr><td><code>clamp()</code></td><td><code>clamp(&lt;min&gt;, &lt;preferred&gt;, &lt;max&gt;)</code></td></tr>
+          <tr><td><code>contrast()</code></td><td><code>contrast(&lt;factor&gt;)</code></td></tr>
+          <tr><td><code>cubic-bezier()</code></td><td><code>cubic-bezier(&lt;x1&gt;, &lt;y1&gt;, &lt;x2&gt;, &lt;y2&gt;)</code></td></tr>
+          <tr><td><code>hsl()</code></td><td><code>hsl(&lt;h&gt; &lt;s&gt; &lt;l&gt; / &lt;a&gt;)</code></td></tr>
+          <tr><td><code>hsla()</code></td><td><code>hsla(&lt;h&gt;, &lt;s&gt;, &lt;l&gt;, &lt;a&gt;)</code></td></tr>
+          <tr><td><code>inset()</code></td><td><code>inset(&lt;top&gt; &lt;right&gt; &lt;bottom&gt; &lt;left&gt;)</code></td></tr>
+          <tr><td><code>linear-gradient()</code></td><td><code>linear-gradient(&lt;angle&gt;, &lt;color-stop-1&gt;, &lt;color-stop-2&gt;, ...)</code></td></tr>
+          <tr><td><code>matrix()</code></td><td><code>matrix(&lt;a&gt;, &lt;b&gt;, &lt;c&gt;, &lt;d&gt;, &lt;tx&gt;, &lt;ty&gt;)</code></td></tr>
+          <tr><td><code>minmax()</code></td><td><code>minmax(&lt;min&gt;, &lt;max&gt;)</code></td></tr>
+          <tr><td><code>radial-gradient()</code></td><td><code>radial-gradient(&lt;shape&gt; at &lt;x y&gt;, &lt;color-stop-1&gt;, &lt;color-stop-2&gt;, ...)</code></td></tr>
+          <tr><td><code>repeat()</code></td><td><code>repeat(&lt;count&gt;, &lt;track-list&gt;)</code></td></tr>
+          <tr><td><code>rgb()</code></td><td><code>rgb(&lt;r&gt; &lt;g&gt; &lt;b&gt; / &lt;a&gt;)</code></td></tr>
+          <tr><td><code>rgba()</code></td><td><code>rgba(&lt;r&gt;, &lt;g&gt;, &lt;b&gt;, &lt;a&gt;)</code></td></tr>
+          <tr><td><code>rotate()</code></td><td><code>rotate(&lt;angle&gt;)</code></td></tr>
+          <tr><td><code>saturate()</code></td><td><code>saturate(&lt;factor|percent&gt;)</code></td></tr>
+          <tr><td><code>scale()</code></td><td><code>scale(&lt;x&gt;[, &lt;y&gt;])</code></td></tr>
+          <tr><td><code>translate()</code></td><td><code>translate(&lt;tx&gt;[, &lt;ty&gt;])</code></td></tr>
+          <tr><td><code>translateX()</code></td><td><code>translateX(&lt;length|percentage&gt;)</code></td></tr>
+          <tr><td><code>translateY()</code></td><td><code>translateY(&lt;length|percentage&gt;)</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

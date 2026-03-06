@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RSD Base Budget Form Assets</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7fb;
+      --panel: rgba(255, 255, 255, 0.82);
+      --text: #091018;
+      --muted: #425466;
+      --line: rgba(9, 16, 24, 0.12);
+      --accent: #0f5ea8;
+      --shadow: 0 18px 44px rgba(16, 34, 52, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(15, 94, 168, 0.1), transparent 32%),
+        linear-gradient(180deg, #f8fbff, var(--bg));
+    }
+
+    main {
+      width: min(820px, calc(100vw - 2rem));
+      margin: 4rem auto;
+      padding: 1.5rem;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    h1 {
+      margin: 0 0 0.75rem;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      line-height: 1.05;
+    }
+
+    p {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    code,
+    pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    pre {
+      margin: 1rem 0 0;
+      padding: 1rem;
+      overflow-x: auto;
+      border-radius: 16px;
+      background: #08131f;
+      color: #f7fbff;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    ul {
+      padding-left: 1.15rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>RSD Base Budget Form Assets</h1>
+    <p>This GitHub Pages site serves the live Form.io stylesheet from this repository without jsDelivr branch caching.</p>
+    <p>Primary stylesheet URL: <a href="./bc-frosted-formio-theme.css">`bc-frosted-formio-theme.css`</a></p>
+    <pre><code>@import url("https://drrodrigosolis-dev.github.io/RSD-BaseBudgetForm2627/bc-frosted-formio-theme.css");</code></pre>
+    <ul>
+      <li><a href="./bc-frosted-formio-theme.css">Theme stylesheet</a></li>
+      <li><a href="./bc-button-pop-toggle.js">Button interaction helper</a></li>
+      <li><a href="./images/background.jpg">Background image</a></li>
+    </ul>
+  </main>
+</body>
+</html>
