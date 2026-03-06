@@ -28,15 +28,13 @@
   --fio-bc-secondary: #1b7486;
   --fio-bc-forest: #245744;
   --fio-bc-gold: #b88325;
-  --fio-bc-text: #000000;
-  --fio-bc-muted: #000000;
+  --fio-bc-text: #102838;
+  --fio-bc-muted: #365466;
   --fio-bc-danger: #8b2538;
-  --fio-bc-font-family: "Trebuchet MS", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --fio-bc-font-weight: 500;
-  --fio-bc-border: rgba(255, 255, 255, 0.5);
+  --fio-bc-border: rgba(255, 255, 255, 0.44);
   --fio-bc-line: rgba(16, 40, 56, 0.12);
-  --fio-bc-glass: rgba(255, 255, 255, 0.38);
-  --fio-bc-glass-strong: rgba(255, 255, 255, 0.56);
+  --fio-bc-glass: rgba(255, 255, 255, 0.32);
+  --fio-bc-glass-strong: rgba(255, 255, 255, 0.5);
   --bc-bg-image: url("./images/background.jpg");
   --fio-bc-shadow:
     0 8px 18px rgba(8, 35, 55, 0.045),
@@ -45,8 +43,6 @@
   isolation: isolate;
   background: transparent !important;
   padding: clamp(0.28rem, 0.7vw, 0.55rem) clamp(0.55rem, 1.25vw, 1rem);
-  font-family: var(--fio-bc-font-family);
-  font-weight: var(--fio-bc-font-weight);
   color: var(--fio-bc-text);
 }
 
@@ -59,24 +55,12 @@
 }
 
 .formio-form,
-.formio-form input,
-.formio-form select,
-.formio-form textarea,
-.formio-form button,
-.formio-form .choices__inner,
-.formio-form .choices__list,
-.formio-form .choices__item {
-  font-family: var(--fio-bc-font-family);
-}
-
-.formio-form,
 .formio-form p,
 .formio-form li,
 .formio-form .form-text,
 .formio-form .description,
 .formio-form .help-block {
   line-height: 1.55;
-  font-weight: var(--fio-bc-font-weight);
 }
 
 .formio-form h1,
@@ -105,7 +89,7 @@
   border: 1px solid var(--fio-bc-border);
   border-radius: 18px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.48), rgba(248, 252, 255, 0.24)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(248, 252, 255, 0.18)),
     var(--fio-bc-glass);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.36),
@@ -183,114 +167,6 @@
   font-size: 0.92rem;
 }
 
-/* Description text shown as a hover note for components tagged with class "hover-note". */
-.formio-form .formio-component.hover-note {
-  position: relative;
-  --bc-hover-note-idle-delay: 220ms;
-}
-
-.formio-form .formio-component.hover-note > .form-text.text-muted {
-  position: absolute;
-  left: 0;
-  bottom: calc(100% + 6px);
-  margin-top: 0;
-  max-width: min(20rem, 92vw);
-  padding: 0.42rem 0.56rem;
-  min-height: auto !important;
-  border-radius: 8px;
-  border: 1px solid rgba(16, 40, 56, 0.2);
-  background: rgba(20, 30, 40, 0.62);
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.22);
-  font-size: 0.78rem;
-  line-height: 1.35;
-  box-shadow: 0 10px 20px rgba(8, 35, 55, 0.22);
-  backdrop-filter: blur(6px) saturate(112%);
-  -webkit-backdrop-filter: blur(6px) saturate(112%);
-  z-index: 12;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-4px) translateY(2px);
-  transform-origin: left center;
-  will-change: opacity, transform;
-  transition:
-    opacity 160ms ease,
-    transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.formio-form .formio-component.hover-note > .form-text.text-muted,
-.formio-form .formio-component.hover-note > .form-text.text-muted .text-muted {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
-
-.formio-form .formio-component.hover-note:hover > .form-text.text-muted,
-.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted {
-  opacity: 1;
-  transform: translateX(0) translateY(0);
-  transition-delay: var(--bc-hover-note-idle-delay), var(--bc-hover-note-idle-delay);
-}
-
-/*
-  Keep built-in Form.io question-mark tooltips independent from hover-note styling.
-  Form.io renders these either as Bootstrap tooltips or as .formio-tooltip__body blocks.
-*/
-.formio-form .fa.fa-question-circle.text-muted,
-.formio-form .fa.fa-question-circle-o.text-muted,
-.formio-form .formio-tooltip__trigger.text-muted {
-  color: rgba(16, 40, 56, 0.56) !important;
-  -webkit-text-fill-color: rgba(16, 40, 56, 0.56) !important;
-}
-
-.formio-form .formio-tooltip__body,
-.form-wrapper .formio-tooltip__body,
-.component-preview .formio-tooltip__body,
-.tooltip,
-.tooltip .tooltip-inner {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
-
-.formio-form .formio-tooltip__body,
-.form-wrapper .formio-tooltip__body,
-.component-preview .formio-tooltip__body,
-.tooltip {
-  background: rgba(20, 30, 40, 0.96) !important;
-  border-color: rgba(16, 40, 56, 0.24) !important;
-}
-
-.tooltip {
-  --bs-tooltip-color: #ffffff;
-  --bs-tooltip-bg: rgba(20, 30, 40, 0.96);
-}
-
-.tooltip .tooltip-inner {
-  background: rgba(20, 30, 40, 0.96) !important;
-  border: 1px solid rgba(16, 40, 56, 0.24);
-  box-shadow: 0 10px 20px rgba(8, 35, 55, 0.22);
-}
-
-.bs-tooltip-top .tooltip-arrow::before,
-.bs-tooltip-auto[data-popper-placement^="top"] .tooltip-arrow::before {
-  border-top-color: rgba(20, 30, 40, 0.96) !important;
-}
-
-.bs-tooltip-end .tooltip-arrow::before,
-.bs-tooltip-auto[data-popper-placement^="right"] .tooltip-arrow::before {
-  border-right-color: rgba(20, 30, 40, 0.96) !important;
-}
-
-.bs-tooltip-bottom .tooltip-arrow::before,
-.bs-tooltip-auto[data-popper-placement^="bottom"] .tooltip-arrow::before {
-  border-bottom-color: rgba(20, 30, 40, 0.96) !important;
-}
-
-.bs-tooltip-start .tooltip-arrow::before,
-.bs-tooltip-auto[data-popper-placement^="left"] .tooltip-arrow::before {
-  border-left-color: rgba(20, 30, 40, 0.96) !important;
-}
-
 .formio-form .form-control,
 .formio-form select.form-control,
 .formio-form textarea.form-control,
@@ -300,11 +176,10 @@
   border: 1px solid rgba(16, 40, 56, 0.14);
   border-radius: 12px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(253, 254, 255, 0.32));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.56), rgba(253, 254, 255, 0.26));
   background-size: 180% 180%;
   background-position: 50% 50%;
   color: var(--fio-bc-text);
-  font-weight: var(--fio-bc-font-weight);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
     inset 0 -1px 0 rgba(255, 255, 255, 0.12),
@@ -344,7 +219,7 @@
 
 .formio-form .form-control::placeholder,
 .formio-form textarea.form-control::placeholder {
-  color: #000000;
+  color: #5c7788;
   opacity: 1;
 }
 
@@ -358,7 +233,7 @@
     0 0 0 3px rgba(15, 94, 168, 0.14),
     0 8px 14px rgba(8, 35, 55, 0.05),
     0 14px 22px rgba(8, 35, 55, 0.04);
-  background: rgba(255, 255, 255, 0.68);
+  background: rgba(255, 255, 255, 0.62);
   transform: translateY(-0.5px);
   outline: none;
 }
@@ -368,7 +243,7 @@
 .formio-form .form-check-input:disabled,
 .formio-form .choices.is-disabled .choices__inner {
   background: rgba(239, 245, 248, 0.72);
-  color: #000000;
+  color: #617787;
   cursor: not-allowed;
 }
 
@@ -376,7 +251,7 @@
 .formio-form .choices__list[aria-expanded] {
   border: 1px solid var(--fio-bc-border);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.68);
+  background: rgba(255, 255, 255, 0.62);
   box-shadow: 0 14px 28px rgba(8, 35, 55, 0.12);
   backdrop-filter: blur(16px) saturate(112%) brightness(116%) contrast(88%);
   -webkit-backdrop-filter: blur(16px) saturate(112%) brightness(116%) contrast(88%);
@@ -392,7 +267,7 @@
   padding: 0.28rem 0.62rem;
   border: 1px solid rgba(255, 255, 255, 0.62);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.54);
+  background: rgba(255, 255, 255, 0.46);
   background-size: 180% 180%;
   background-position: 50% 50%;
   transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease, filter 160ms ease, background-position 220ms ease;
@@ -403,7 +278,7 @@
 }
 
 .formio-form .form-check:hover {
-  background: rgba(255, 255, 255, 0.66);
+  background: rgba(255, 255, 255, 0.58);
   transform: translateY(-1px);
 }
 
@@ -493,7 +368,7 @@
   border: 1px solid transparent;
   border-radius: 999px;
   padding: 0.44rem 0.98rem;
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.34);
   background-size: 180% 180%;
   background-position: 50% 50%;
   color: var(--fio-bc-text);
@@ -720,7 +595,7 @@
 .formio-form .btn-secondary,
 .formio-form .btn-default {
   border-color: rgba(255, 255, 255, 0.26);
-  background: rgba(255, 255, 255, 0.46);
+  background: rgba(255, 255, 255, 0.38);
   color: var(--fio-bc-text);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.62),
@@ -732,7 +607,7 @@
 
 .formio-form .btn-secondary:hover,
 .formio-form .btn-default:hover {
-  background: rgba(255, 255, 255, 0.58);
+  background: rgba(255, 255, 255, 0.5);
   color: var(--fio-bc-text);
 }
 
@@ -828,7 +703,7 @@
 
 .formio-form .alert-warning {
   border-color: rgba(184, 131, 37, 0.2);
-  color: #000000;
+  color: #66490f;
 }
 
 .formio-form .panel-title,
@@ -873,7 +748,7 @@
 .formio-form .nav-tabs a {
   border: 1px solid rgba(255, 255, 255, 0.24);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.32);
   color: var(--fio-bc-text);
 }
 
@@ -882,15 +757,15 @@
 .formio-form .nav-tabs > li.active > a:focus,
 .formio-form .nav-tabs .active a {
   border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.68);
-  color: #000000;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--fio-bc-primary);
   box-shadow: 0 10px 20px rgba(8, 35, 55, 0.12);
 }
 
 .formio-form .wizard-nav .step {
   border: 1px solid rgba(255, 255, 255, 0.24);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.34);
   color: var(--fio-bc-text);
 }
 
@@ -905,7 +780,7 @@
 .formio-form .signature-box {
   border: 1px dashed rgba(16, 40, 56, 0.18);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.44);
+  background: rgba(255, 255, 255, 0.36);
   transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
 }
 
@@ -913,7 +788,7 @@
 .formio-form .file-area:hover,
 .formio-form .signature-box:hover {
   border-color: rgba(15, 94, 168, 0.28);
-  background: rgba(255, 255, 255, 0.56);
+  background: rgba(255, 255, 255, 0.48);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.62),
     0 8px 16px rgba(8, 35, 55, 0.05),
@@ -921,14 +796,14 @@
 }
 
 .formio-form a {
-  color: #000000;
+  color: var(--fio-bc-primary);
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.14em;
 }
 
 .formio-form a:hover,
 .formio-form a:focus {
-  color: #000000;
+  color: #0c4a82;
 }
 
 @keyframes fioFadeUp {
@@ -1326,7 +1201,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .builder-sidebar .form-control,
 .builder-sidebar .form-group {
   background: #ffffff !important;
-  color: #000000 !important;
+  color: #1f2937 !important;
   border-color: rgba(31, 41, 55, 0.18) !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
@@ -1368,6 +1243,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal .component-edit-tabs .formio-form *::after {
   animation: none !important;
   transition: none !important;
+  transform: none !important;
   filter: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -1561,22 +1437,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   border: 1px solid #cbd5e1 !important;
   border-radius: 0.25rem !important;
   background: #ffffff !important;
-  color: #000000 !important;
-}
-
-/*
-  Builder editor readability:
-  Ensure long textarea content remains visible in modal edit dialogs, even when
-  users paste long unbroken tokens or JSON/CSS snippets.
-*/
-.builder-component-modal .component-edit-tabs .formio-form textarea.form-control,
-.component-settings .component-edit-tabs .formio-form textarea.form-control,
-.formio-dialog .component-edit-tabs .formio-form textarea.form-control,
-.modal-open .component-edit-tabs .formio-form textarea.form-control,
-.modal .component-edit-tabs .formio-form textarea.form-control {
-  white-space: pre-wrap !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
+  color: #1f2937 !important;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .btn,
@@ -1608,7 +1469,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   border: 1px solid #cbd5e1 !important;
   border-radius: 0.25rem !important;
   background: #ffffff !important;
-  color: #000000 !important;
+  color: #1f2937 !important;
 }
 
 .builder-component-modal .component-edit-tabs .formio-form .form-check-input,
@@ -1830,7 +1691,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   line-height: 1.35 !important;
   white-space: normal !important;
   background: #ffffff !important;
-  color: #000000 !important;
+  color: #1f2937 !important;
 }
 
 /*
@@ -2172,7 +2033,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: #000000;
+  color: #1f2937;
   box-shadow: none;
   cursor: pointer;
   font-size: 0.88rem;
@@ -2228,7 +2089,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check-label,
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .checkbox label,
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check > label {
-  color: #000000;
+  color: #166534;
 }
 
 .formio-form .bc-readability-toggle:has(input[type="checkbox"]:checked) .form-check-label::before,
@@ -2405,89 +2266,4 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   transform: none !important;
   background-position: 50% 50% !important;
   filter: none !important;
-}
-
-/*
-  Utility class: ultra-light frost for stacked containers.
-  Standalone class (no parent selector dependency).
-  Add `bc-frost-lite` in a component's "Custom CSS Class" field.
-  Optional per-component overrides via style/attributes:
-  --bc-frost-lite-top, --bc-frost-lite-bottom, --bc-frost-lite-surface,
-  --bc-frost-lite-border, --bc-frost-lite-blur, --bc-frost-lite-sat,
-  --bc-frost-lite-brightness, --bc-frost-lite-contrast.
-*/
-.bc-frost-lite {
-  --bc-frost-lite-top: rgba(255, 255, 255, 0.075);
-  --bc-frost-lite-bottom: rgba(255, 255, 255, 0.025);
-  --bc-frost-lite-surface: rgba(255, 255, 255, 0.05);
-  --bc-frost-lite-border: rgba(255, 255, 255, 0.2);
-  --bc-frost-lite-blur: 8px;
-  --bc-frost-lite-sat: 104%;
-  --bc-frost-lite-brightness: 106%;
-  --bc-frost-lite-contrast: 92%;
-}
-
-.bc-frost-lite,
-.bc-frost-lite .panel,
-.bc-frost-lite .card,
-.bc-frost-lite .well,
-.bc-frost-lite .container-component,
-.bc-frost-lite fieldset,
-.bc-frost-lite .table-responsive,
-.bc-frost-lite .alert {
-  border-color: var(--bc-frost-lite-border) !important;
-  background:
-    linear-gradient(180deg, var(--bc-frost-lite-top), var(--bc-frost-lite-bottom)) !important;
-  background-color: var(--bc-frost-lite-surface) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-    0 3px 8px rgba(8, 35, 55, 0.022) !important;
-  backdrop-filter:
-    blur(var(--bc-frost-lite-blur))
-    saturate(var(--bc-frost-lite-sat))
-    brightness(var(--bc-frost-lite-brightness))
-    contrast(var(--bc-frost-lite-contrast)) !important;
-  -webkit-backdrop-filter:
-    blur(var(--bc-frost-lite-blur))
-    saturate(var(--bc-frost-lite-sat))
-    brightness(var(--bc-frost-lite-brightness))
-    contrast(var(--bc-frost-lite-contrast)) !important;
-}
-
-/*
-  Last-resort runtime override:
-  some Form.io renderers emit description/help text with extra utility classes or
-  different wrappers. Keep all hover-note content readable on the dark note panel.
-*/
-.formio-form .formio-component.hover-note:hover > .form-text.text-muted,
-.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted,
-.formio-form .formio-component.hover-note:hover > .form-text.text-muted .text-muted,
-.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted .text-muted {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
-
-.formio-form .formio-component.hover-note:hover > .form-text.text-muted,
-.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted,
-.formio-form .formio-component.hover-note:hover > .form-text.text-muted *,
-.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted * {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
-
-/*
-  Final motion lock:
-  keep hover-note reveal transition active even when global readability helpers
-  set transition/animation to none on descendants.
-*/
-.formio-form .formio-component.hover-note > .form-text.text-muted {
-  transition:
-    opacity 160ms ease,
-    transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1) !important;
-}
-
-.formio-form .formio-component.hover-note:hover > .form-text.text-muted,
-.formio-form .formio-component.hover-note:focus-within > .form-text.text-muted {
-  transition-delay: var(--bc-hover-note-idle-delay), var(--bc-hover-note-idle-delay) !important;
 }
