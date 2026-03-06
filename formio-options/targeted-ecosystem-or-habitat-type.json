@@ -40,11 +40,11 @@
     "value": "wildlifeTree"
   },
   {
-    "label": "Aquatic - other *Explain in Notes",
+    "label": "Other (Aquatic)",
     "value": "aquaticOtherExplainInNotes"
   },
   {
-    "label": "Terrestrial - other *Explain in Notes",
+    "label": "Other (Terrestrial)",
     "value": "terrestrialOtherExplainInNotes"
   }
 ]
