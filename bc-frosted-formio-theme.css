@@ -2433,7 +2433,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   [class^="bc-frost-alpha-"],
   [class*=" bc-frost-alpha-"],
   [class^="bc-frost-sat-"],
-  [class*=" bc-frost-sat-"]
+  [class*=" bc-frost-sat-"],
+  [class^="bc-frost-bright-"],
+  [class*=" bc-frost-bright-"]
 ) {
   --bc-frost-lite-rgb: 255, 255, 255;
   --bc-frost-lite-alpha-top: 0.12;
@@ -2734,6 +2736,27 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .bc-frost-sat-160 { --bc-frost-lite-sat: 160%; }
 .bc-frost-sat-170 { --bc-frost-lite-sat: 170%; }
 
+/* Brightness utilities for frost surfaces. */
+.bc-frost-bright-00 { --bc-frost-lite-brightness: 0%; }
+.bc-frost-bright-05 { --bc-frost-lite-brightness: 5%; }
+.bc-frost-bright-10 { --bc-frost-lite-brightness: 10%; }
+.bc-frost-bright-20 { --bc-frost-lite-brightness: 20%; }
+.bc-frost-bright-30 { --bc-frost-lite-brightness: 30%; }
+.bc-frost-bright-40 { --bc-frost-lite-brightness: 40%; }
+.bc-frost-bright-50 { --bc-frost-lite-brightness: 50%; }
+.bc-frost-bright-60 { --bc-frost-lite-brightness: 60%; }
+.bc-frost-bright-70 { --bc-frost-lite-brightness: 70%; }
+.bc-frost-bright-80 { --bc-frost-lite-brightness: 80%; }
+.bc-frost-bright-90 { --bc-frost-lite-brightness: 90%; }
+.bc-frost-bright-100 { --bc-frost-lite-brightness: 100%; }
+.bc-frost-bright-110 { --bc-frost-lite-brightness: 110%; }
+.bc-frost-bright-120 { --bc-frost-lite-brightness: 120%; }
+.bc-frost-bright-130 { --bc-frost-lite-brightness: 130%; }
+.bc-frost-bright-140 { --bc-frost-lite-brightness: 140%; }
+.bc-frost-bright-150 { --bc-frost-lite-brightness: 150%; }
+.bc-frost-bright-160 { --bc-frost-lite-brightness: 160%; }
+.bc-frost-bright-170 { --bc-frost-lite-brightness: 170%; }
+
 :is(
   .bc-frost-lite,
   [class^="bc-frost-lite-"],
@@ -2741,7 +2764,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   [class^="bc-frost-alpha-"],
   [class*=" bc-frost-alpha-"],
   [class^="bc-frost-sat-"],
-  [class*=" bc-frost-sat-"]
+  [class*=" bc-frost-sat-"],
+  [class^="bc-frost-bright-"],
+  [class*=" bc-frost-bright-"]
 ),
 :is(
   .bc-frost-lite,
@@ -2750,7 +2775,9 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   [class^="bc-frost-alpha-"],
   [class*=" bc-frost-alpha-"],
   [class^="bc-frost-sat-"],
-  [class*=" bc-frost-sat-"]
+  [class*=" bc-frost-sat-"],
+  [class^="bc-frost-bright-"],
+  [class*=" bc-frost-bright-"]
 ) :is(
   .panel,
   .card,
