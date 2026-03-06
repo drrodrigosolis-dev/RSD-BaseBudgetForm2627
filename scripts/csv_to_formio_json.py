@@ -11,9 +11,13 @@ from collections import OrderedDict
 from pathlib import Path
 
 
-SOURCE_CSV = Path("Dropdowns.csv")
 OUTPUT_DIR = Path("formio-options")
 INDEX_FILE = OUTPUT_DIR / "index.json"
+SOURCE_CANDIDATES = [
+    Path("dropdoewns/Dropdowns.csv"),
+    Path("dropdowns/Dropdowns.csv"),
+    Path("Dropdowns.csv"),
+]
 
 
 def normalize_ascii(text: str) -> str:
@@ -58,12 +62,14 @@ def build_options(labels: list[str]) -> list[dict[str, str]]:
 
 
 def main() -> None:
-    if not SOURCE_CSV.exists():
-        raise FileNotFoundError(f"CSV not found: {SOURCE_CSV}")
+    source_csv = next((path for path in SOURCE_CANDIDATES if path.exists()), None)
+    if source_csv is None:
+        checked = ", ".join(str(path) for path in SOURCE_CANDIDATES)
+        raise FileNotFoundError(f"CSV not found. Checked: {checked}")
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    with SOURCE_CSV.open("r", newline="", encoding="utf-8-sig") as handle:
+    with source_csv.open("r", newline="", encoding="utf-8-sig") as handle:
         reader = csv.DictReader(handle)
         fieldnames = reader.fieldnames or []
         column_data: dict[str, list[str]] = {column: [] for column in fieldnames if column.strip()}
@@ -105,7 +111,7 @@ def main() -> None:
         json.dump(index, handle, ensure_ascii=False, indent=2)
         handle.write("\n")
 
-    print(f"Created {len(index)} dropdown files in {OUTPUT_DIR}")
+    print(f"Created {len(index)} dropdown files in {OUTPUT_DIR} from {source_csv}")
 
 
 if __name__ == "__main__":

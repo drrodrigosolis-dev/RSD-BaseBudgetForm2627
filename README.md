@@ -4,7 +4,7 @@ This repository stores JSON files that FormIO can fetch for dropdown options.
 
 ## Source and output
 
-- Source CSV: `Dropdowns.csv`
+- Source CSV: first match from `dropdoewns/Dropdowns.csv`, `dropdowns/Dropdowns.csv`, or `Dropdowns.csv`
 - Generated dropdown JSON files: `formio-options/*.json`
 - Column-to-file map: `formio-options/index.json`
 - Converter script: `scripts/csv_to_formio_json.py`
