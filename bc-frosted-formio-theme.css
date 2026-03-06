@@ -2714,6 +2714,14 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 }
 
 /* Saturation utilities for tone classes (or any frost surface). */
+.bc-frost-sat-00 { --bc-frost-lite-sat: 0%; }
+.bc-frost-sat-05 { --bc-frost-lite-sat: 5%; }
+.bc-frost-sat-10 { --bc-frost-lite-sat: 10%; }
+.bc-frost-sat-20 { --bc-frost-lite-sat: 20%; }
+.bc-frost-sat-30 { --bc-frost-lite-sat: 30%; }
+.bc-frost-sat-40 { --bc-frost-lite-sat: 40%; }
+.bc-frost-sat-50 { --bc-frost-lite-sat: 50%; }
+.bc-frost-sat-60 { --bc-frost-lite-sat: 60%; }
 .bc-frost-sat-70 { --bc-frost-lite-sat: 70%; }
 .bc-frost-sat-80 { --bc-frost-lite-sat: 80%; }
 .bc-frost-sat-90 { --bc-frost-lite-sat: 90%; }
