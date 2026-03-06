@@ -1,0 +1,38 @@
+[
+  {
+    "label": "FRPA/ERAA – WHA",
+    "value": "frpaEraaWha"
+  },
+  {
+    "label": "FRPA/ERAA – UWR",
+    "value": "frpaEraaUwr"
+  },
+  {
+    "label": "FRPA/ERAA - FSW",
+    "value": "frpaEraaFsw"
+  },
+  {
+    "label": "Wildlife Act – WMA (s.4)",
+    "value": "wildlifeActWmaS4"
+  },
+  {
+    "label": "Land Act – Reserve (s. 15)",
+    "value": "landActReserveS15"
+  },
+  {
+    "label": "Land Act – Withdrawal (s.16)",
+    "value": "landActWithdrawalS16"
+  },
+  {
+    "label": "Land Act - Conditional Withdrawal (s.17)",
+    "value": "landActConditionalWithdrawalS17"
+  },
+  {
+    "label": "Land Act – FRPA Objectives (s. 93.4)",
+    "value": "landActFrpaObjectivesS934"
+  },
+  {
+    "label": "Other *Explain in NOTES",
+    "value": "otherExplainInNotes"
+  }
+]

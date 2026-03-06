@@ -1,0 +1,14 @@
+[
+  {
+    "label": "Not yet submitted",
+    "value": "notYetSubmitted"
+  },
+  {
+    "label": "Submitted and awaiting decision",
+    "value": "submittedAndAwaitingDecision"
+  },
+  {
+    "label": "Approved",
+    "value": "approved"
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "label": "Indigenous",
+    "value": "indigenous"
+  },
+  {
+    "label": "Not Indigenous",
+    "value": "notIndigenous"
+  },
+  {
+    "label": "Both",
+    "value": "both"
+  },
+  {
+    "label": "Other",
+    "value": "other"
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "label": "50-52 - Internal staff salaries: Aux, Coop, Intern (not permanent salaries which have a different budget)",
+    "value": "5052InternalStaffSalariesAuxCoopInternNotPermanentSalariesWhichHaveADifferentBudget"
+  },
+  {
+    "label": "57 - Internal staff travel",
+    "value": "57InternalStaffTravel"
+  },
+  {
+    "label": "60 - Contracts",
+    "value": "60Contracts"
+  },
+  {
+    "label": "63 - IT",
+    "value": "63It"
+  },
+  {
+    "label": "65 - Business expenses (BEAs, training, office supplies, etc.)",
+    "value": "65BusinessExpensesBeasTrainingOfficeSuppliesEtc"
+  },
+  {
+    "label": "68 - Statutory advertising and publications (per statute/regulation)",
+    "value": "68StatutoryAdvertisingAndPublicationsPerStatuteRegulation"
+  },
+  {
+    "label": "69 - Utilities, materials, and supplies (A/V, medical supplies, permits, etc.)",
+    "value": "69UtilitiesMaterialsAndSuppliesAVMedicalSuppliesPermitsEtc"
+  },
+  {
+    "label": "70 - Operating expenses (vehicle/equipment rentals, including helicopter, fuel, etc.)",
+    "value": "70OperatingExpensesVehicleEquipmentRentalsIncludingHelicopterFuelEtc"
+  },
+  {
+    "label": "73 - Amortization",
+    "value": "73Amortization"
+  },
+  {
+    "label": "75 - Building Occupancy Charges",
+    "value": "75BuildingOccupancyCharges"
+  },
+  {
+    "label": "77 - Government transfer - grants (e.g., universities)",
+    "value": "77GovernmentTransferGrantsEGUniversities"
+  },
+  {
+    "label": "80 - Government transfer - shared cost arrangement",
+    "value": "80GovernmentTransferSharedCostArrangement"
+  },
+  {
+    "label": "85 - Other Expenses",
+    "value": "85OtherExpenses"
+  }
+]

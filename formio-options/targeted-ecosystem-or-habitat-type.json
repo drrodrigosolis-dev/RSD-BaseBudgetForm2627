@@ -1,0 +1,50 @@
+[
+  {
+    "label": "Alpine/Tundra",
+    "value": "alpineTundra"
+  },
+  {
+    "label": "Aquatic",
+    "value": "aquatic"
+  },
+  {
+    "label": "Biodiversity",
+    "value": "biodiversity"
+  },
+  {
+    "label": "Forest",
+    "value": "forest"
+  },
+  {
+    "label": "Grasslands",
+    "value": "grasslands"
+  },
+  {
+    "label": "Listed Ecosystem",
+    "value": "listedEcosystem"
+  },
+  {
+    "label": "Range",
+    "value": "range"
+  },
+  {
+    "label": "Riparian",
+    "value": "riparian"
+  },
+  {
+    "label": "Wetland",
+    "value": "wetland"
+  },
+  {
+    "label": "Wildlife Tree",
+    "value": "wildlifeTree"
+  },
+  {
+    "label": "Aquatic - other *Explain in Notes",
+    "value": "aquaticOtherExplainInNotes"
+  },
+  {
+    "label": "Terrestrial - other *Explain in Notes",
+    "value": "terrestrialOtherExplainInNotes"
+  }
+]

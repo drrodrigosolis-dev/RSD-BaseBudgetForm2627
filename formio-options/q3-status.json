@@ -1,0 +1,30 @@
+[
+  {
+    "label": "1 - Not Started",
+    "value": "1NotStarted"
+  },
+  {
+    "label": "2 - Completed",
+    "value": "2Completed"
+  },
+  {
+    "label": "3 - In Progress - On Track",
+    "value": "3InProgressOnTrack"
+  },
+  {
+    "label": "4 - In Progress - At Risk",
+    "value": "4InProgressAtRisk"
+  },
+  {
+    "label": "5 - On Hold",
+    "value": "5OnHold"
+  },
+  {
+    "label": "6 - Off Track",
+    "value": "6OffTrack"
+  },
+  {
+    "label": "7 - Cancelled",
+    "value": "7Cancelled"
+  }
+]

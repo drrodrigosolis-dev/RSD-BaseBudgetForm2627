@@ -1,0 +1,86 @@
+[
+  {
+    "label": "HCTF",
+    "value": "hctf"
+  },
+  {
+    "label": "Fed - NSCSF (ECCC)",
+    "value": "fedNscsfEccc"
+  },
+  {
+    "label": "FOR Research",
+    "value": "forResearch"
+  },
+  {
+    "label": "Treaty 8 WWG",
+    "value": "treaty8Wwg"
+  },
+  {
+    "label": "Fed - 2BT (NRCAN)",
+    "value": "fed2btNrcan"
+  },
+  {
+    "label": "Indigenous Funding Program (MIRR)",
+    "value": "indigenousFundingProgramMirr"
+  },
+  {
+    "label": "KTOI",
+    "value": "ktoi"
+  },
+  {
+    "label": "Fed - Caribou SMC (ECCC)",
+    "value": "fedCaribouSmcEccc"
+  },
+  {
+    "label": "FFSBC",
+    "value": "ffsbc"
+  },
+  {
+    "label": "IDFW",
+    "value": "idfw"
+  },
+  {
+    "label": "Forestry Engineering?",
+    "value": "forestryEngineering"
+  },
+  {
+    "label": "Fed - IPSAR (ECCC)",
+    "value": "fedIpsarEccc"
+  },
+  {
+    "label": "Fed - EcoCorridors (ParksCan)",
+    "value": "fedEcocorridorsParkscan"
+  },
+  {
+    "label": "Y2Y",
+    "value": "y2y"
+  },
+  {
+    "label": "Goat Funding Alliance",
+    "value": "goatFundingAlliance"
+  },
+  {
+    "label": "Skagit Environmental Endowment Commission",
+    "value": "skagitEnvironmentalEndowmentCommission"
+  },
+  {
+    "label": "SPOW Deferral",
+    "value": "spowDeferral"
+  },
+  {
+    "label": "Wild Sheep Foundation/Society",
+    "value": "wildSheepFoundationSociety"
+  },
+  {
+    "label": "MOTT",
+    "value": "mott"
+  },
+  {
+    "label": "NEEF",
+    "value": "neef"
+  },
+  {
+    "label": "Fed - Caribou Boreal (ECCC)",
+    "value": "fedCaribouBorealEccc"
+  }
+]

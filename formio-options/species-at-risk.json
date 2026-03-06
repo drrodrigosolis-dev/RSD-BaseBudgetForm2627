@@ -1,0 +1,18 @@
+[
+  {
+    "label": "SAR",
+    "value": "sar"
+  },
+  {
+    "label": "Not SAR",
+    "value": "notSar"
+  },
+  {
+    "label": "Both",
+    "value": "both"
+  },
+  {
+    "label": "Other *Explain in NOTES",
+    "value": "otherExplainInNotes"
+  }
+]

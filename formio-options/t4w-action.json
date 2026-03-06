@@ -1,0 +1,106 @@
+[
+  {
+    "label": "n/a",
+    "value": "nA"
+  },
+  {
+    "label": "Action 01. Establish a Minister’s Wildlife Advisory Council",
+    "value": "action01EstablishAMinistersWildlifeAdvisoryCouncil"
+  },
+  {
+    "label": "Action 02. Create or expand Regional Wildlife Advisory Committees",
+    "value": "action02CreateOrExpandRegionalWildlifeAdvisoryCommittees"
+  },
+  {
+    "label": "Action 03. Increase opportunities for engagement and involvement",
+    "value": "action03IncreaseOpportunitiesForEngagementAndInvolvement"
+  },
+  {
+    "label": "Action 04. Enhance biological, social, and economic data",
+    "value": "action04EnhanceBiologicalSocialAndEconomicData"
+  },
+  {
+    "label": "Action 05. Support wildlife research",
+    "value": "action05SupportWildlifeResearch"
+  },
+  {
+    "label": "Action 06. Foster citizen science",
+    "value": "action06FosterCitizenScience"
+  },
+  {
+    "label": "Action 07. Ensure data are accessible, reliable and integrated",
+    "value": "action07EnsureDataAreAccessibleReliableAndIntegrated"
+  },
+  {
+    "label": "Action 08. Establish accountable stewardship objectives",
+    "value": "action08EstablishAccountableStewardshipObjectives"
+  },
+  {
+    "label": "Action 09. Deliver on-the-ground stewardship",
+    "value": "action09DeliverOnTheGroundStewardship"
+  },
+  {
+    "label": "Action 10. Improve legislated land designations",
+    "value": "action10ImproveLegislatedLandDesignations"
+  },
+  {
+    "label": "Action 11. Support and expand Conservation Lands",
+    "value": "action11SupportAndExpandConservationLands"
+  },
+  {
+    "label": "Action 12. Recommend improvements to the Wildlife Act",
+    "value": "action12RecommendImprovementsToTheWildlifeAct"
+  },
+  {
+    "label": "Action 13. Explore new funding models for wildlife",
+    "value": "action13ExploreNewFundingModelsForWildlife"
+  },
+  {
+    "label": "Action 14. Report out on performance",
+    "value": "action14ReportOutOnPerformance"
+  },
+  {
+    "label": "Action 15. Share financial reports",
+    "value": "action15ShareFinancialReports"
+  },
+  {
+    "label": "Action 16. Communicate decision rationales",
+    "value": "action16CommunicateDecisionRationales"
+  },
+  {
+    "label": "Action 17. Periodically review and update our strategy",
+    "value": "action17PeriodicallyReviewAndUpdateOurStrategy"
+  },
+  {
+    "label": "Action 18. Advance co-management and shared decision-making",
+    "value": "action18AdvanceCoManagementAndSharedDecisionMaking"
+  },
+  {
+    "label": "Action 19. Promote the importance of Indigenous peoples and wildlife",
+    "value": "action19PromoteTheImportanceOfIndigenousPeoplesAndWildlife"
+  },
+  {
+    "label": "Action 20. Incorporate Indigenous Knowledge into decisions",
+    "value": "action20IncorporateIndigenousKnowledgeIntoDecisions"
+  },
+  {
+    "label": "Action 21. Support Indigenous guardian and compliance programs",
+    "value": "action21SupportIndigenousGuardianAndCompliancePrograms"
+  },
+  {
+    "label": "Action 22. Share wildlife and habitat data and information",
+    "value": "action22ShareWildlifeAndHabitatDataAndInformation"
+  },
+  {
+    "label": "Action 23. Invest in capacity for Indigenous governments",
+    "value": "action23InvestInCapacityForIndigenousGovernments"
+  },
+  {
+    "label": "Action 24. Support the First Nations-B.C. Wildlife & Habitat Conservation Forum",
+    "value": "action24SupportTheFirstNationsBCWildlifeAndHabitatConservationForum"
+  },
+  {
+    "label": "Other",
+    "value": "other"
+  }
+]

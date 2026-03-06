@@ -1,0 +1,154 @@
+[
+  {
+    "label": "n/a",
+    "value": "nA"
+  },
+  {
+    "label": "All",
+    "value": "all"
+  },
+  {
+    "label": "BIRD - Great Blue Heron",
+    "value": "birdGreatBlueHeron"
+  },
+  {
+    "label": "BIRD - MAMU (Marbled Murrelet) (SAR)",
+    "value": "birdMamuMarbledMurreletSar"
+  },
+  {
+    "label": "BIRD - NOGO (Northern Goshawk) (SAR)",
+    "value": "birdNogoNorthernGoshawkSar"
+  },
+  {
+    "label": "BIRD - SPOW (Spotted Owl) (SAR)",
+    "value": "birdSpowSpottedOwlSar"
+  },
+  {
+    "label": "BIRD - WESO (Western Screech Owl (SAR)",
+    "value": "birdWesoWesternScreechOwlSar"
+  },
+  {
+    "label": "BIRD - WISA (Williamson Sapsucker) (SAR)",
+    "value": "birdWisaWilliamsonSapsuckerSar"
+  },
+  {
+    "label": "BIRD - Other - Bird of Prey",
+    "value": "birdOtherBirdOfPrey"
+  },
+  {
+    "label": "BIRD - Other - Migratory Bird",
+    "value": "birdOtherMigratoryBird"
+  },
+  {
+    "label": "BIRD - Other - Raptor",
+    "value": "birdOtherRaptor"
+  },
+  {
+    "label": "BIRD - Other - Songbird",
+    "value": "birdOtherSongbird"
+  },
+  {
+    "label": "BIRD - Other - Waterfowl/Wetland",
+    "value": "birdOtherWaterfowlWetland"
+  },
+  {
+    "label": "FISH - Arctic Grayling",
+    "value": "fishArcticGrayling"
+  },
+  {
+    "label": "FISH - Brown Trout",
+    "value": "fishBrownTrout"
+  },
+  {
+    "label": "FISH - Bull Trout",
+    "value": "fishBullTrout"
+  },
+  {
+    "label": "FISH - Burbot",
+    "value": "fishBurbot"
+  },
+  {
+    "label": "FISH - Coastal Cutthroat Trout",
+    "value": "fishCoastalCutthroatTrout"
+  },
+  {
+    "label": "FISH - Dolly Varden",
+    "value": "fishDollyVarden"
+  },
+  {
+    "label": "FISH - Freshwater Fish",
+    "value": "fishFreshwaterFish"
+  },
+  {
+    "label": "FISH - Kokanee",
+    "value": "fishKokanee"
+  },
+  {
+    "label": "FISH - Lake Fish/Fishery",
+    "value": "fishLakeFishFishery"
+  },
+  {
+    "label": "FISH - Lake Trout",
+    "value": "fishLakeTrout"
+  },
+  {
+    "label": "FISH - Large Lake Fish/Fishery",
+    "value": "fishLargeLakeFishFishery"
+  },
+  {
+    "label": "FISH - Non-native fish",
+    "value": "fishNonNativeFish"
+  },
+  {
+    "label": "FISH - Northern Pike",
+    "value": "fishNorthernPike"
+  },
+  {
+    "label": "FISH - Rainbow Trout",
+    "value": "fishRainbowTrout"
+  },
+  {
+    "label": "FISH - River Fish/Fishery",
+    "value": "fishRiverFishFishery"
+  },
+  {
+    "label": "FISH - Salmon",
+    "value": "fishSalmon"
+  },
+  {
+    "label": "FISH - Saltwater Fish",
+    "value": "fishSaltwaterFish"
+  },
+  {
+    "label": "FISH - Small Lake Fish/Fishery",
+    "value": "fishSmallLakeFishFishery"
+  },
+  {
+    "label": "FISH - Steelhead",
+    "value": "fishSteelhead"
+  },
+  {
+    "label": "FISH - Sturgeon",
+    "value": "fishSturgeon"
+  },
+  {
+    "label": "FISH - Westslope Cutthroat Trout",
+    "value": "fishWestslopeCutthroatTrout"
+  },
+  {
+    "label": "FISH - White Sturgeon",
+    "value": "fishWhiteSturgeon"
+  },
+  {
+    "label": "FISH - Other",
+    "value": "fishOther"
+  },
+  {
+    "label": "FLORA - Grasses",
+    "value": "floraGrasses"
+  },
+  {
+    "label": "FLORA - Shrubs",
+    "value": "floraShrubs"
+  }
+]
