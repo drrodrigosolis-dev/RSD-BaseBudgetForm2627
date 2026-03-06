@@ -1,8 +1,5 @@
 [
-  {
-    "label": "n/a",
-    "value": "nA"
-  },
+  
   {
     "label": "Action 01. Establish a Minister’s Wildlife Advisory Council",
     "value": "action01EstablishAMinistersWildlifeAdvisoryCouncil"
@@ -98,6 +95,10 @@
   {
     "label": "Action 24. Support the First Nations-B.C. Wildlife & Habitat Conservation Forum",
     "value": "action24SupportTheFirstNationsBCWildlifeAndHabitatConservationForum"
+  },
+  {
+    "label": "NA",
+    "value": "nA"
   },
   {
     "label": "Other",
