@@ -2441,13 +2441,13 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 }
 
 .bc-frost-lite,
-.bc-frost-lite .panel,
-.bc-frost-lite .card,
-.bc-frost-lite .well,
-.bc-frost-lite .container-component,
-.bc-frost-lite fieldset,
-.bc-frost-lite .table-responsive,
-.bc-frost-lite .alert {
+.bc-frost-lite > .panel,
+.bc-frost-lite > .card,
+.bc-frost-lite > .well,
+.bc-frost-lite > .container-component,
+.bc-frost-lite > fieldset,
+.bc-frost-lite > .table-responsive,
+.bc-frost-lite > .alert {
   border-color: var(--bc-frost-lite-border) !important;
   background:
     linear-gradient(180deg, var(--bc-frost-lite-top), var(--bc-frost-lite-bottom)) !important;
