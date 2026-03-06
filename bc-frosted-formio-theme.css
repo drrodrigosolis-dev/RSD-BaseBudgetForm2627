@@ -2424,32 +2424,17 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   Utility class: ultra-light frost for stacked containers.
   Standalone class (no parent selector dependency).
   Add one of the frost classes in a component's "Custom CSS Class" field.
-  Combine a tone class with an alpha class to control both color and transparency.
+  Combine a tone class with alpha and saturation utilities to tune appearance.
 */
-.bc-frost-lite,
-.bc-frost-lite-ice,
-.bc-frost-lite-aqua,
-.bc-frost-lite-mint,
-.bc-frost-lite-lime,
-.bc-frost-lite-sun,
-.bc-frost-lite-peach,
-.bc-frost-lite-coral,
-.bc-frost-lite-rose,
-.bc-frost-lite-lilac,
-.bc-frost-lite-violet,
-.bc-frost-lite-sky,
-.bc-frost-lite-steel,
-.bc-frost-alpha-00,
-.bc-frost-alpha-05,
-.bc-frost-alpha-10,
-.bc-frost-alpha-15,
-.bc-frost-alpha-20,
-.bc-frost-alpha-25,
-.bc-frost-alpha-30,
-.bc-frost-alpha-35,
-.bc-frost-alpha-40,
-.bc-frost-alpha-45,
-.bc-frost-alpha-50 {
+:is(
+  .bc-frost-lite,
+  [class^="bc-frost-lite-"],
+  [class*=" bc-frost-lite-"],
+  [class^="bc-frost-alpha-"],
+  [class*=" bc-frost-alpha-"],
+  [class^="bc-frost-sat-"],
+  [class*=" bc-frost-sat-"]
+) {
   --bc-frost-lite-rgb: 255, 255, 255;
   --bc-frost-lite-alpha-top: 0.12;
   --bc-frost-lite-alpha-bottom: 0.04;
@@ -2473,18 +2458,30 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 }
 
 /* Frost lite hue variants with stronger visible tint. */
-.bc-frost-lite-ice,
-.bc-frost-lite-aqua,
-.bc-frost-lite-mint,
-.bc-frost-lite-lime,
-.bc-frost-lite-sun,
-.bc-frost-lite-peach,
-.bc-frost-lite-coral,
-.bc-frost-lite-rose,
-.bc-frost-lite-lilac,
-.bc-frost-lite-violet,
-.bc-frost-lite-sky,
-.bc-frost-lite-steel {
+:is(
+  .bc-frost-lite-ice,
+  .bc-frost-lite-aqua,
+  .bc-frost-lite-mint,
+  .bc-frost-lite-lime,
+  .bc-frost-lite-sun,
+  .bc-frost-lite-peach,
+  .bc-frost-lite-coral,
+  .bc-frost-lite-rose,
+  .bc-frost-lite-lilac,
+  .bc-frost-lite-violet,
+  .bc-frost-lite-sky,
+  .bc-frost-lite-steel,
+  .bc-frost-lite-teal,
+  .bc-frost-lite-emerald,
+  .bc-frost-lite-leaf,
+  .bc-frost-lite-amber,
+  .bc-frost-lite-apricot,
+  .bc-frost-lite-salmon,
+  .bc-frost-lite-magenta,
+  .bc-frost-lite-orchid,
+  .bc-frost-lite-indigo,
+  .bc-frost-lite-arctic
+) {
   --bc-frost-lite-alpha-top: 0.2;
   --bc-frost-lite-alpha-bottom: 0.08;
   --bc-frost-lite-alpha-surface: 0.14;
@@ -2540,11 +2537,81 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   --bc-frost-lite-rgb: 178, 199, 220;
 }
 
+/* Additional tone classes. */
+.bc-frost-lite-teal {
+  --bc-frost-lite-rgb: 111, 226, 218;
+}
+
+.bc-frost-lite-emerald {
+  --bc-frost-lite-rgb: 126, 226, 164;
+}
+
+.bc-frost-lite-leaf {
+  --bc-frost-lite-rgb: 170, 221, 124;
+}
+
+.bc-frost-lite-amber {
+  --bc-frost-lite-rgb: 255, 204, 112;
+}
+
+.bc-frost-lite-apricot {
+  --bc-frost-lite-rgb: 255, 186, 136;
+}
+
+.bc-frost-lite-salmon {
+  --bc-frost-lite-rgb: 255, 151, 138;
+}
+
+.bc-frost-lite-magenta {
+  --bc-frost-lite-rgb: 244, 154, 223;
+}
+
+.bc-frost-lite-orchid {
+  --bc-frost-lite-rgb: 212, 169, 255;
+}
+
+.bc-frost-lite-indigo {
+  --bc-frost-lite-rgb: 165, 173, 255;
+}
+
+.bc-frost-lite-arctic {
+  --bc-frost-lite-rgb: 147, 224, 255;
+}
+
+/* Fine-grain alpha utilities (0% to 10%). */
 .bc-frost-alpha-00 {
   --bc-frost-lite-alpha-top: 0;
   --bc-frost-lite-alpha-bottom: 0;
   --bc-frost-lite-alpha-surface: 0;
   --bc-frost-lite-alpha-border: 0;
+}
+
+.bc-frost-alpha-01 {
+  --bc-frost-lite-alpha-top: 0.07;
+  --bc-frost-lite-alpha-bottom: 0.004;
+  --bc-frost-lite-alpha-surface: 0.01;
+  --bc-frost-lite-alpha-border: 0.19;
+}
+
+.bc-frost-alpha-02 {
+  --bc-frost-lite-alpha-top: 0.08;
+  --bc-frost-lite-alpha-bottom: 0.008;
+  --bc-frost-lite-alpha-surface: 0.02;
+  --bc-frost-lite-alpha-border: 0.2;
+}
+
+.bc-frost-alpha-03 {
+  --bc-frost-lite-alpha-top: 0.09;
+  --bc-frost-lite-alpha-bottom: 0.012;
+  --bc-frost-lite-alpha-surface: 0.03;
+  --bc-frost-lite-alpha-border: 0.21;
+}
+
+.bc-frost-alpha-04 {
+  --bc-frost-lite-alpha-top: 0.1;
+  --bc-frost-lite-alpha-bottom: 0.016;
+  --bc-frost-lite-alpha-surface: 0.04;
+  --bc-frost-lite-alpha-border: 0.22;
 }
 
 .bc-frost-alpha-05 {
@@ -2554,13 +2621,42 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   --bc-frost-lite-alpha-border: 0.23;
 }
 
+.bc-frost-alpha-06 {
+  --bc-frost-lite-alpha-top: 0.12;
+  --bc-frost-lite-alpha-bottom: 0.024;
+  --bc-frost-lite-alpha-surface: 0.06;
+  --bc-frost-lite-alpha-border: 0.24;
+}
+
+.bc-frost-alpha-07 {
+  --bc-frost-lite-alpha-top: 0.13;
+  --bc-frost-lite-alpha-bottom: 0.028;
+  --bc-frost-lite-alpha-surface: 0.07;
+  --bc-frost-lite-alpha-border: 0.25;
+}
+
+.bc-frost-alpha-08 {
+  --bc-frost-lite-alpha-top: 0.14;
+  --bc-frost-lite-alpha-bottom: 0.032;
+  --bc-frost-lite-alpha-surface: 0.08;
+  --bc-frost-lite-alpha-border: 0.26;
+}
+
+.bc-frost-alpha-09 {
+  --bc-frost-lite-alpha-top: 0.15;
+  --bc-frost-lite-alpha-bottom: 0.036;
+  --bc-frost-lite-alpha-surface: 0.09;
+  --bc-frost-lite-alpha-border: 0.27;
+}
+
 .bc-frost-alpha-10 {
   --bc-frost-lite-alpha-top: 0.16;
-  --bc-frost-lite-alpha-bottom: 0.05;
+  --bc-frost-lite-alpha-bottom: 0.04;
   --bc-frost-lite-alpha-surface: 0.1;
   --bc-frost-lite-alpha-border: 0.28;
 }
 
+/* Extended alpha utilities (15% to 50%). */
 .bc-frost-alpha-15 {
   --bc-frost-lite-alpha-top: 0.21;
   --bc-frost-lite-alpha-bottom: 0.07;
@@ -2617,57 +2713,36 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   --bc-frost-lite-alpha-border: 0.68;
 }
 
+/* Saturation utilities for tone classes (or any frost surface). */
+.bc-frost-sat-70 { --bc-frost-lite-sat: 70%; }
+.bc-frost-sat-80 { --bc-frost-lite-sat: 80%; }
+.bc-frost-sat-90 { --bc-frost-lite-sat: 90%; }
+.bc-frost-sat-100 { --bc-frost-lite-sat: 100%; }
+.bc-frost-sat-110 { --bc-frost-lite-sat: 110%; }
+.bc-frost-sat-120 { --bc-frost-lite-sat: 120%; }
+.bc-frost-sat-130 { --bc-frost-lite-sat: 130%; }
+.bc-frost-sat-140 { --bc-frost-lite-sat: 140%; }
+.bc-frost-sat-150 { --bc-frost-lite-sat: 150%; }
+.bc-frost-sat-160 { --bc-frost-lite-sat: 160%; }
+.bc-frost-sat-170 { --bc-frost-lite-sat: 170%; }
+
 :is(
   .bc-frost-lite,
-  .bc-frost-lite-ice,
-  .bc-frost-lite-aqua,
-  .bc-frost-lite-mint,
-  .bc-frost-lite-lime,
-  .bc-frost-lite-sun,
-  .bc-frost-lite-peach,
-  .bc-frost-lite-coral,
-  .bc-frost-lite-rose,
-  .bc-frost-lite-lilac,
-  .bc-frost-lite-violet,
-  .bc-frost-lite-sky,
-  .bc-frost-lite-steel,
-  .bc-frost-alpha-00,
-  .bc-frost-alpha-05,
-  .bc-frost-alpha-10,
-  .bc-frost-alpha-15,
-  .bc-frost-alpha-20,
-  .bc-frost-alpha-25,
-  .bc-frost-alpha-30,
-  .bc-frost-alpha-35,
-  .bc-frost-alpha-40,
-  .bc-frost-alpha-45,
-  .bc-frost-alpha-50
+  [class^="bc-frost-lite-"],
+  [class*=" bc-frost-lite-"],
+  [class^="bc-frost-alpha-"],
+  [class*=" bc-frost-alpha-"],
+  [class^="bc-frost-sat-"],
+  [class*=" bc-frost-sat-"]
 ),
 :is(
   .bc-frost-lite,
-  .bc-frost-lite-ice,
-  .bc-frost-lite-aqua,
-  .bc-frost-lite-mint,
-  .bc-frost-lite-lime,
-  .bc-frost-lite-sun,
-  .bc-frost-lite-peach,
-  .bc-frost-lite-coral,
-  .bc-frost-lite-rose,
-  .bc-frost-lite-lilac,
-  .bc-frost-lite-violet,
-  .bc-frost-lite-sky,
-  .bc-frost-lite-steel,
-  .bc-frost-alpha-00,
-  .bc-frost-alpha-05,
-  .bc-frost-alpha-10,
-  .bc-frost-alpha-15,
-  .bc-frost-alpha-20,
-  .bc-frost-alpha-25,
-  .bc-frost-alpha-30,
-  .bc-frost-alpha-35,
-  .bc-frost-alpha-40,
-  .bc-frost-alpha-45,
-  .bc-frost-alpha-50
+  [class^="bc-frost-lite-"],
+  [class*=" bc-frost-lite-"],
+  [class^="bc-frost-alpha-"],
+  [class*=" bc-frost-alpha-"],
+  [class^="bc-frost-sat-"],
+  [class*=" bc-frost-sat-"]
 ) :is(
   .panel,
   .card,
