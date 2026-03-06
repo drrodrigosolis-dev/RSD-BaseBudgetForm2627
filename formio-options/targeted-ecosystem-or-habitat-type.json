@@ -41,10 +41,10 @@
   },
   {
     "label": "Other (Aquatic)",
-    "value": "aquaticOtherExplainInNotes"
+    "value": "otherAquatic"
   },
   {
     "label": "Other (Terrestrial)",
-    "value": "terrestrialOtherExplainInNotes"
+    "value": "otherTerrestrial"
   }
 ]
