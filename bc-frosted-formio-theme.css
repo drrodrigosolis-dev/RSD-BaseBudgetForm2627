@@ -176,6 +176,29 @@
   font-weight: 600;
 }
 
+/* Keep required marker glued to custom label text (no orphaned next-line asterisk). */
+label.field-required::after,
+.control-label.field-required::after,
+.form-label.field-required::after,
+.col-form-label.field-required::after {
+  content: "\00a0*" !important;
+  white-space: nowrap;
+  display: inline;
+}
+
+/* Custom label HTML often wraps text in block tags; force inline so marker stays adjacent. */
+label.field-required > p,
+label.field-required > div,
+.control-label.field-required > p,
+.control-label.field-required > div,
+.form-label.field-required > p,
+.form-label.field-required > div,
+.col-form-label.field-required > p,
+.col-form-label.field-required > div {
+  display: inline !important;
+  margin: 0 !important;
+}
+
 .formio-form .description,
 .formio-form .help-block,
 .formio-form .form-text {
