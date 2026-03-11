@@ -2955,3 +2955,50 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .formio-form .formio-component.hover-note:focus-within > .form-text.text-muted {
   transition-delay: var(--bc-hover-note-idle-delay), var(--bc-hover-note-idle-delay);
 }
+
+/*
+  Table cell background helpers (70% opacity).
+  Usage in Form.io: add one of these classes to the component placed inside the target cell.
+  Modern browsers color the containing <td> via :has(); fallback still colors the component.
+*/
+.formio-form .bc-cell-bg-grey,
+.formio-form td.bc-cell-bg-grey,
+.formio-form td:has(> .bc-cell-bg-grey) {
+  background-color: rgba(128, 128, 128, 0.7) !important;
+}
+
+.formio-form .bc-cell-bg-blue,
+.formio-form td.bc-cell-bg-blue,
+.formio-form td:has(> .bc-cell-bg-blue) {
+  background-color: rgba(0, 102, 204, 0.7) !important;
+}
+
+.formio-form .bc-cell-bg-green,
+.formio-form td.bc-cell-bg-green,
+.formio-form td:has(> .bc-cell-bg-green) {
+  background-color: rgba(46, 160, 67, 0.7) !important;
+}
+
+.formio-form .bc-cell-bg-yellow,
+.formio-form td.bc-cell-bg-yellow,
+.formio-form td:has(> .bc-cell-bg-yellow) {
+  background-color: rgba(255, 214, 10, 0.7) !important;
+}
+
+.formio-form .bc-cell-bg-orange,
+.formio-form td.bc-cell-bg-orange,
+.formio-form td:has(> .bc-cell-bg-orange) {
+  background-color: rgba(255, 140, 0, 0.7) !important;
+}
+
+.formio-form .bc-cell-bg-red,
+.formio-form td.bc-cell-bg-red,
+.formio-form td:has(> .bc-cell-bg-red) {
+  background-color: rgba(220, 53, 69, 0.7) !important;
+}
+
+.formio-form .bc-cell-bg-dark-gray,
+.formio-form td.bc-cell-bg-dark-gray,
+.formio-form td:has(> .bc-cell-bg-dark-gray) {
+  background-color: rgba(64, 64, 64, 0.7) !important;
+}
