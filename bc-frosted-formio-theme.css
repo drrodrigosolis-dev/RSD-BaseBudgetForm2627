@@ -375,6 +375,7 @@
 
 .formio-form .choices__list--dropdown,
 .formio-form .choices__list[aria-expanded] {
+  position: absolute;
   border: 1px solid var(--fio-bc-border);
   border-radius: 14px;
   background: #ffffff;
@@ -412,12 +413,24 @@
 .formio-form .choices.is-open {
   position: relative;
   z-index: calc(var(--fio-bc-dropdown-z) - 1);
+  overflow: visible;
 }
 
+.formio-form .formio-component-simpleselectadvanced:has(.choices.is-open),
 .formio-form .formio-component-select:has(.choices.is-open),
 .formio-form .formio-component-tags:has(.choices.is-open) {
   position: relative;
   z-index: calc(var(--fio-bc-dropdown-z) - 2);
+  overflow: visible;
+}
+
+.formio-form .formio-component-columns:has(.choices.is-open),
+.formio-form .row:has(.choices.is-open),
+.formio-form [class^="col-"]:has(.choices.is-open),
+.formio-form [class*=" col-"]:has(.choices.is-open) {
+  position: relative;
+  z-index: calc(var(--fio-bc-dropdown-z) - 3);
+  overflow: visible;
 }
 
 .formio-form .choices__item--selectable.is-highlighted {
