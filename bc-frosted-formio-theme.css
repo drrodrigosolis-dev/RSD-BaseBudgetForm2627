@@ -385,9 +385,39 @@
   animation: fioFadeUp 180ms ease both;
 }
 
+.formio-form .choices__list--dropdown .choices__list,
+.formio-form .choices__list[aria-expanded] .choices__list {
+  background: #ffffff;
+  position: relative;
+  z-index: var(--fio-bc-dropdown-z);
+}
+
+.formio-form .choices__list--dropdown .choices__list::-webkit-scrollbar,
+.formio-form .choices__list[aria-expanded] .choices__list::-webkit-scrollbar {
+  width: 12px;
+}
+
+.formio-form .choices__list--dropdown .choices__list::-webkit-scrollbar-track,
+.formio-form .choices__list[aria-expanded] .choices__list::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.formio-form .choices__list--dropdown .choices__list::-webkit-scrollbar-thumb,
+.formio-form .choices__list[aria-expanded] .choices__list::-webkit-scrollbar-thumb {
+  background: #9db2c5;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+}
+
 .formio-form .choices.is-open {
   position: relative;
   z-index: calc(var(--fio-bc-dropdown-z) - 1);
+}
+
+.formio-form .formio-component-select:has(.choices.is-open),
+.formio-form .formio-component-tags:has(.choices.is-open) {
+  position: relative;
+  z-index: calc(var(--fio-bc-dropdown-z) - 2);
 }
 
 .formio-form .choices__item--selectable.is-highlighted {
@@ -1984,7 +2014,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 .modal-open .formio-form .formio-component-tags:focus-within,
 .modal .formio-form .formio-component-select:focus-within,
 .modal .formio-form .formio-component-tags:focus-within {
-  z-index: 200;
+  z-index: calc(var(--fio-bc-dropdown-z) - 2);
 }
 
 .builder-component-modal .formio-form .formio-component-select .choices,
