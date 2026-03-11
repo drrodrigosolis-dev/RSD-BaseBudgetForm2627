@@ -1,5 +1,12 @@
 [
-
+  {
+    "label": "N/A",
+    "value": "nA"
+  },
+  {
+    "label": "All",
+    "value": "all"
+  },
   {
     "label": "BIRD - Great Blue Heron",
     "value": "birdGreatBlueHeron"
@@ -109,8 +116,8 @@
     "value": "fishSalmon"
   },
   {
-    "label": "FISH - Saltwater Fish",
-    "value": "fishSaltwaterFish"
+    "label": "FISH - Other - Saltwater Fish",
+    "value": "fishOtherSaltwaterFish"
   },
   {
     "label": "FISH - Small Lake Fish/Fishery",
@@ -145,11 +152,163 @@
     "value": "floraShrubs"
   },
   {
-    "label": "NA",
-    "value": "nA"
+    "label": "FLORA - Trees",
+    "value": "floraTrees"
   },
   {
-    "label": "All",
-    "value": "all"
+    "label": "FLORA - WBP (White Bark Pine) (SAR)",
+    "value": "floraWbpWhiteBarkPineSar"
+  },
+  {
+    "label": "FLORA - Other",
+    "value": "floraOther"
+  },
+  {
+    "label": "PREDATOR - Bobcat",
+    "value": "predatorBobcat"
+  },
+  {
+    "label": "PREDATOR - Badger",
+    "value": "predatorBadger"
+  },
+  {
+    "label": "PREDATOR - Black Bear",
+    "value": "predatorBlackBear"
+  },
+  {
+    "label": "PREDATOR - Cougar",
+    "value": "predatorCougar"
+  },
+  {
+    "label": "PREDATOR - Fisher (SAR)",
+    "value": "predatorFisherSar"
+  },
+  {
+    "label": "PREDATOR - Grizzly Bear (SAR)",
+    "value": "predatorGrizzlyBearSar"
+  },
+  {
+    "label": "PREDATOR - Wolf",
+    "value": "predatorWolf"
+  },
+  {
+    "label": "PREDATOR - Wolverine",
+    "value": "predatorWolverine"
+  },
+  {
+    "label": "PREDATOR - Other",
+    "value": "predatorOther"
+  },
+  {
+    "label": "UNGULATE - Bighorn Sheep",
+    "value": "ungulateBighornSheep"
+  },
+  {
+    "label": "UNGULATE - Bison",
+    "value": "ungulateBison"
+  },
+  {
+    "label": "UNGULATE - Black-tail Deer",
+    "value": "ungulateBlackTailDeer"
+  },
+  {
+    "label": "UNGULATE - Caribou - Boreal  (SAR)",
+    "value": "ungulateCaribouBorealSar"
+  },
+  {
+    "label": "UNGULATE - Caribou - Northern Mountain",
+    "value": "ungulateCaribouNorthernMountain"
+  },
+  {
+    "label": "UNGULATE - Caribou - Southern Mountain (SAR)",
+    "value": "ungulateCaribouSouthernMountainSar"
+  },
+  {
+    "label": "UNGULATE - Deer",
+    "value": "ungulateDeer"
+  },
+  {
+    "label": "UNGULATE - Elk",
+    "value": "ungulateElk"
+  },
+  {
+    "label": "UNGULATE - Moose",
+    "value": "ungulateMoose"
+  },
+  {
+    "label": "UNGULATE - Mountain Goat",
+    "value": "ungulateMountainGoat"
+  },
+  {
+    "label": "UNGULATE - Mule Deer",
+    "value": "ungulateMuleDeer"
+  },
+  {
+    "label": "UNGULATE - Roosevelt Elk",
+    "value": "ungulateRooseveltElk"
+  },
+  {
+    "label": "UNGULATE - Sheep",
+    "value": "ungulateSheep"
+  },
+  {
+    "label": "UNGULATE - Stone's Sheep",
+    "value": "ungulateStoneSSheep"
+  },
+  {
+    "label": "UNGULATE - Thinhorn Sheep",
+    "value": "ungulateThinhornSheep"
+  },
+  {
+    "label": "UNGULATE - White-tailed Deer",
+    "value": "ungulateWhiteTailedDeer"
+  },
+  {
+    "label": "UNGULATE - Other",
+    "value": "ungulateOther"
+  },
+  {
+    "label": "Other - Blue listed SAR (provincial)",
+    "value": "otherBlueListedSarProvincial"
+  },
+  {
+    "label": "Other - Red listed SAR (provincial)",
+    "value": "otherRedListedSarProvincial"
+  },
+  {
+    "label": "Other - Amphibian",
+    "value": "otherAmphibian"
+  },
+  {
+    "label": "Other - Feral",
+    "value": "otherFeral"
+  },
+  {
+    "label": "Other - Furbearers",
+    "value": "otherFurbearers"
+  },
+  {
+    "label": "Other - Harvested",
+    "value": "otherHarvested"
+  },
+  {
+    "label": "Other - Insects",
+    "value": "otherInsects"
+  },
+  {
+    "label": "Other - Non-game",
+    "value": "otherNonGame"
+  },
+  {
+    "label": "Other - Reptile",
+    "value": "otherReptile"
+  },
+  {
+    "label": "Other - Small Mammels",
+    "value": "otherSmallMammels"
+  },
+  {
+    "label": "Other - not listed above",
+    "value": "otherNotListedAbove"
   }
 ]
