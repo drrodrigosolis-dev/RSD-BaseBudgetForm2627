@@ -2957,48 +2957,80 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 }
 
 /*
-  Table cell background helpers (70% opacity).
-  Usage in Form.io: add one of these classes to the component placed inside the target cell.
-  Modern browsers color the containing <td> via :has(); fallback still colors the component.
+  Table cell background helpers (60% opacity, brighter hues for black text).
+  Usage in Form.io: add one class to the component inside the target cell.
+  Primary mode colors only the containing <td> so inner controls do not get layered tint.
 */
-.formio-form .bc-cell-bg-grey,
-.formio-form td.bc-cell-bg-grey,
 .formio-form td:has(> .bc-cell-bg-grey) {
-  background-color: rgba(128, 128, 128, 0.7) !important;
+  background-color: rgba(200, 200, 200, 0.6) !important;
 }
 
-.formio-form .bc-cell-bg-blue,
-.formio-form td.bc-cell-bg-blue,
 .formio-form td:has(> .bc-cell-bg-blue) {
-  background-color: rgba(0, 102, 204, 0.7) !important;
+  background-color: rgba(125, 205, 255, 0.6) !important;
 }
 
-.formio-form .bc-cell-bg-green,
-.formio-form td.bc-cell-bg-green,
 .formio-form td:has(> .bc-cell-bg-green) {
-  background-color: rgba(46, 160, 67, 0.7) !important;
+  background-color: rgba(152, 236, 173, 0.6) !important;
 }
 
-.formio-form .bc-cell-bg-yellow,
-.formio-form td.bc-cell-bg-yellow,
 .formio-form td:has(> .bc-cell-bg-yellow) {
-  background-color: rgba(255, 214, 10, 0.7) !important;
+  background-color: rgba(255, 235, 138, 0.6) !important;
 }
 
-.formio-form .bc-cell-bg-orange,
-.formio-form td.bc-cell-bg-orange,
 .formio-form td:has(> .bc-cell-bg-orange) {
-  background-color: rgba(255, 140, 0, 0.7) !important;
+  background-color: rgba(255, 198, 128, 0.6) !important;
 }
 
-.formio-form .bc-cell-bg-red,
-.formio-form td.bc-cell-bg-red,
 .formio-form td:has(> .bc-cell-bg-red) {
-  background-color: rgba(220, 53, 69, 0.7) !important;
+  background-color: rgba(255, 163, 163, 0.6) !important;
 }
 
-.formio-form .bc-cell-bg-dark-gray,
-.formio-form td.bc-cell-bg-dark-gray,
 .formio-form td:has(> .bc-cell-bg-dark-gray) {
-  background-color: rgba(64, 64, 64, 0.7) !important;
+  background-color: rgba(150, 160, 170, 0.6) !important;
+}
+
+/*
+  Prevent double tint: when cell-level tint is active, keep the component itself transparent.
+*/
+.formio-form td:has(> .bc-cell-bg-grey) > .bc-cell-bg-grey,
+.formio-form td:has(> .bc-cell-bg-blue) > .bc-cell-bg-blue,
+.formio-form td:has(> .bc-cell-bg-green) > .bc-cell-bg-green,
+.formio-form td:has(> .bc-cell-bg-yellow) > .bc-cell-bg-yellow,
+.formio-form td:has(> .bc-cell-bg-orange) > .bc-cell-bg-orange,
+.formio-form td:has(> .bc-cell-bg-red) > .bc-cell-bg-red,
+.formio-form td:has(> .bc-cell-bg-dark-gray) > .bc-cell-bg-dark-gray {
+  background-color: transparent !important;
+}
+
+/*
+  Fallback for browsers without :has(): color only the direct cell component.
+*/
+@supports not selector(td:has(> .x)) {
+  .formio-form td > .bc-cell-bg-grey {
+    background-color: rgba(200, 200, 200, 0.6) !important;
+  }
+
+  .formio-form td > .bc-cell-bg-blue {
+    background-color: rgba(125, 205, 255, 0.6) !important;
+  }
+
+  .formio-form td > .bc-cell-bg-green {
+    background-color: rgba(152, 236, 173, 0.6) !important;
+  }
+
+  .formio-form td > .bc-cell-bg-yellow {
+    background-color: rgba(255, 235, 138, 0.6) !important;
+  }
+
+  .formio-form td > .bc-cell-bg-orange {
+    background-color: rgba(255, 198, 128, 0.6) !important;
+  }
+
+  .formio-form td > .bc-cell-bg-red {
+    background-color: rgba(255, 163, 163, 0.6) !important;
+  }
+
+  .formio-form td > .bc-cell-bg-dark-gray {
+    background-color: rgba(150, 160, 170, 0.6) !important;
+  }
 }
