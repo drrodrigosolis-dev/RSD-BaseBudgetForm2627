@@ -1,0 +1,1050 @@
+[
+  {
+    "label": "N/A - This is a new project for Fiscal Year 26/27",
+    "value": "nAThisIsANewProjectForFiscalYear2627"
+  },
+  {
+    "label": "ENV01 - ENV Parks work for T4W Action 4",
+    "value": "env01EnvParksWorkForT4wAction4"
+  },
+  {
+    "label": "ENV02 - ENV Parks work for T4W Action 9  -- See Record - ENV - 10 projects: various restoration projects",
+    "value": "env02EnvParksWorkForT4wAction9SeeRecordEnv10ProjectsVariousRestorationProjects"
+  },
+  {
+    "label": "ENV03 - ENV Parks work for T4W Action 5 -- See Record - ENV - 2 projects  - grizzley and bear viewing (Action 5)",
+    "value": "env03EnvParksWorkForT4wAction5SeeRecordEnv2ProjectsGrizzleyAndBearViewingAction5"
+  },
+  {
+    "label": "ENV04 - BC Parks species at risk habitat restoration",
+    "value": "env04BcParksSpeciesAtRiskHabitatRestoration"
+  },
+  {
+    "label": "FOR01-A - Wildfire Recovery - Prescribed Burns",
+    "value": "for01AWildfireRecoveryPrescribedBurns"
+  },
+  {
+    "label": "FOR01-B - Wildfire Recovery - Rapid Ecological Assessment Protocols",
+    "value": "for01BWildfireRecoveryRapidEcologicalAssessmentProtocols"
+  },
+  {
+    "label": "FOR01-C - Wildfire Recovery - Risk Reduction for Birds",
+    "value": "for01CWildfireRecoveryRiskReductionForBirds"
+  },
+  {
+    "label": "FOR02 - Enhanced Invasive Plant Management  on provincial public lands to protect grasslands and open forest habitats in the Cariboo region",
+    "value": "for02EnhancedInvasivePlantManagementOnProvincialPublicLandsToProtectGrasslandsAndOpenForestHabitatsInTheCaribooRegion"
+  },
+  {
+    "label": "FOR03 - Enhanced invasive Plant Management to protect grasslands, open forest areas,  and riparian habitat  in the Okanagan.",
+    "value": "for03EnhancedInvasivePlantManagementToProtectGrasslandsOpenForestAreasAndRiparianHabitatInTheOkanagan"
+  },
+  {
+    "label": "FOR04 - Support for focused invasive plant detection and management efforts to protect critical aquatic/riparian habitats and SAR in South Coast Region - addressing Flowering rush, Phragmites, knotweeds, purple loosestrife, and yellow floating heart.",
+    "value": "for04SupportForFocusedInvasivePlantDetectionAndManagementEffortsToProtectCriticalAquaticRiparianHabitatsAndSarInSouthCoastRegionAddressingFloweringRushPhragmitesKnotweedsPurpleLoosestrifeAndYellowFloatingHeart"
+  },
+  {
+    "label": "LC03 - Spotted Owl Recovery",
+    "value": "lc03SpottedOwlRecovery"
+  },
+  {
+    "label": "LC04 - Oregon Spotted Frog Recovery",
+    "value": "lc04OregonSpottedFrogRecovery"
+  },
+  {
+    "label": "LC05 - Riparian habitat enhancement/restoration in Spuzzum Watershed",
+    "value": "lc05RiparianHabitatEnhancementRestorationInSpuzzumWatershed"
+  },
+  {
+    "label": "LC06 - Conservation of species, ecosystems, and Indigenous values in S’ólh Téméxw (COVIST)",
+    "value": "lc06ConservationOfSpeciesEcosystemsAndIndigenousValuesInSolhTemexwCovist"
+  },
+  {
+    "label": "LC07 - Lower Fraser River Stewardship",
+    "value": "lc07LowerFraserRiverStewardship"
+  },
+  {
+    "label": "LC08 - Evidence based practices for the management and protection of Black Bear dens on Vancouver Island and Haida Gwaii",
+    "value": "lc08EvidenceBasedPracticesForTheManagementAndProtectionOfBlackBearDensOnVancouverIslandAndHaidaGwaii"
+  },
+  {
+    "label": "LC09 - Garry Oak and Associated Ecosystem (GOE) Stewardship Actions",
+    "value": "lc09GarryOakAndAssociatedEcosystemGoeStewardshipActions"
+  },
+  {
+    "label": "LC10 - West Coast Conservation Lands on Vancouver Island and Haida Gwaii",
+    "value": "lc10WestCoastConservationLandsOnVancouverIslandAndHaidaGwaii"
+  },
+  {
+    "label": "LC11 - Roosevelt Elk habitat stewardship and monitoring on Vancouver Island.",
+    "value": "lc11RooseveltElkHabitatStewardshipAndMonitoringOnVancouverIsland"
+  },
+  {
+    "label": "LC13 - Resilient Watersheds – Effects of land use and climate change on stream and upper estuary habitat in the West Coast Region",
+    "value": "lc13ResilientWatershedsEffectsOfLandUseAndClimateChangeOnStreamAndUpperEstuaryHabitatInTheWestCoastRegion"
+  },
+  {
+    "label": "LC14 - Ecosystem Mapping for Species and Ecosystems at Risk",
+    "value": "lc14EcosystemMappingForSpeciesAndEcosystemsAtRisk"
+  },
+  {
+    "label": "LC15 - Ungulate Winter Range effectiveness monitoring for Black-tailed Deer and Roosevelt Elk on Vancouver Island",
+    "value": "lc15UngulateWinterRangeEffectivenessMonitoringForBlackTailedDeerAndRooseveltElkOnVancouverIsland"
+  },
+  {
+    "label": "LC17 - Wetland Stewardship and Restoration (for SAR)",
+    "value": "lc17WetlandStewardshipAndRestorationForSar"
+  },
+  {
+    "label": "LC18 - Captive breeding program for the recovery of Vancouver Island Marmot on Vancouver Island",
+    "value": "lc18CaptiveBreedingProgramForTheRecoveryOfVancouverIslandMarmotOnVancouverIsland"
+  },
+  {
+    "label": "LC19 - Watershed assessment to map habitat and ecological connectivity in the Koksilah Watershed on Vancouver Island.",
+    "value": "lc19WatershedAssessmentToMapHabitatAndEcologicalConnectivityInTheKoksilahWatershedOnVancouverIsland"
+  },
+  {
+    "label": "LC20 - Sayward and Quadra Island feral pigs response",
+    "value": "lc20SaywardAndQuadraIslandFeralPigsResponse"
+  },
+  {
+    "label": "LCS01 - Development and piloting of a field data collection approach for sampling shrub forage biomass for moose in different ecosystems and habitat types in BC.",
+    "value": "lcs01DevelopmentAndPilotingOfAFieldDataCollectionApproachForSamplingShrubForageBiomassForMooseInDifferentEcosystemsAndHabitatTypesInBc"
+  },
+  {
+    "label": "LN01 - Evaluation of large_scale moose habitat restoration",
+    "value": "ln01EvaluationOfLargeScaleMooseHabitatRestoration"
+  },
+  {
+    "label": "LN02 - Ungulate range and habitat quality assessment in post_fire landscapes",
+    "value": "ln02UngulateRangeAndHabitatQualityAssessmentInPostFireLandscapes"
+  },
+  {
+    "label": "LN03 - Monitoring the effects of stand thinning on bird, bat, and amphibian biodiversity in Omineca Sub Boreal Spruce habitat.",
+    "value": "ln03MonitoringTheEffectsOfStandThinningOnBirdBatAndAmphibianBiodiversityInOminecaSubBorealSpruceHabitat"
+  },
+  {
+    "label": "LN04 - 2024 _ 2025 Nechako White Sturgeon Recovery regional support _ Sturgeon monitoring, telemetry, coordinator support",
+    "value": "ln0420242025NechakoWhiteSturgeonRecoveryRegionalSupportSturgeonMonitoringTelemetryCoordinatorSupport"
+  },
+  {
+    "label": "LN05 - Nechako Riparian Wildlife Habitat Restoration",
+    "value": "ln05NechakoRiparianWildlifeHabitatRestoration"
+  },
+  {
+    "label": "LN06 - Cranberry Marsh and Meteor Lake Wildlife Management Area Proposals - First Nations and Community Outreach",
+    "value": "ln06CranberryMarshAndMeteorLakeWildlifeManagementAreaProposalsFirstNationsAndCommunityOutreach"
+  },
+  {
+    "label": "LN07 - Fisher WHA Effectiveness Monitoring and Development NE region",
+    "value": "ln07FisherWhaEffectivenessMonitoringAndDevelopmentNeRegion"
+  },
+  {
+    "label": "LN08 - Habitat Designation Development for Moose and Grizzly bear in Bulkley, Morice, and Kalum TSA's",
+    "value": "ln08HabitatDesignationDevelopmentForMooseAndGrizzlyBearInBulkleyMoriceAndKalumTsaS"
+  },
+  {
+    "label": "LN09 - Northern Wildlife Roundtable 2025 meeting coordination, communication and stakeholder participation support.",
+    "value": "ln09NorthernWildlifeRoundtable2025MeetingCoordinationCommunicationAndStakeholderParticipationSupport"
+  },
+  {
+    "label": "LN10 - North Skeena Wildlife and Habitat Information catalogue and sharing development",
+    "value": "ln10NorthSkeenaWildlifeAndHabitatInformationCatalogueAndSharingDevelopment"
+  },
+  {
+    "label": "LN11 - Road Restoration in Priority Grizzly Habitat",
+    "value": "ln11RoadRestorationInPriorityGrizzlyHabitat"
+  },
+  {
+    "label": "LP01 - 30x30 Planning and Implementation, including OECM Policy",
+    "value": "lp0130x30PlanningAndImplementationIncludingOecmPolicy"
+  },
+  {
+    "label": "LS01 - Development of a Regional Species at Risk Decision Support (SARDS) tool",
+    "value": "ls01DevelopmentOfARegionalSpeciesAtRiskDecisionSupportSardsTool"
+  },
+  {
+    "label": "LS02 - eDNA Workshop",
+    "value": "ls02EdnaWorkshop"
+  },
+  {
+    "label": "LS06 - Collaborative Species at Risk Management with Skeetchestn",
+    "value": "ls06CollaborativeSpeciesAtRiskManagementWithSkeetchestn"
+  },
+  {
+    "label": "LS07 - Collaborative Species at Risk Management with Tk'emlups te Secwepmc",
+    "value": "ls07CollaborativeSpeciesAtRiskManagementWithTkEmlupsTeSecwepmc"
+  },
+  {
+    "label": "LS08 - Collaborative Species at Risk Management with Simpcw",
+    "value": "ls08CollaborativeSpeciesAtRiskManagementWithSimpcw"
+  },
+  {
+    "label": "LS09 - Secwepmec Community Species at Risk Workshop/Training",
+    "value": "ls09SecwepmecCommunitySpeciesAtRiskWorkshopTraining"
+  },
+  {
+    "label": "LS10 - WHA Assessment and Management in syilx/Okanagan Territory",
+    "value": "ls10WhaAssessmentAndManagementInSyilxOkanaganTerritory"
+  },
+  {
+    "label": "LS11 - nʔaʕx̌ʷt Ginty’s Pond Conservation Land Habitat Management (TFW Action 11)",
+    "value": "ls11NaxwtGintysPondConservationLandHabitatManagementTfwAction11"
+  },
+  {
+    "label": "LS13 - South Okanagan WMA Habitat Restoration",
+    "value": "ls13SouthOkanaganWmaHabitatRestoration"
+  },
+  {
+    "label": "LS14 - North Cascades Grizzly Bear Recovery Socio_economic Analysis (SEA)",
+    "value": "ls14NorthCascadesGrizzlyBearRecoverySocioEconomicAnalysisSea"
+  },
+  {
+    "label": "LS15 - Advancing Habitat Designations in the Kootenay Boundary Region in collaboration with Indigenous Nations",
+    "value": "ls15AdvancingHabitatDesignationsInTheKootenayBoundaryRegionInCollaborationWithIndigenousNations"
+  },
+  {
+    "label": "LS16 - Effectiveness Monitoring of Trout Wildlife Habitat Areas",
+    "value": "ls16EffectivenessMonitoringOfTroutWildlifeHabitatAreas"
+  },
+  {
+    "label": "LS17 - Implementation of Essential Recovery Actions for Endangered SAR in Kootenay Boundary",
+    "value": "ls17ImplementationOfEssentialRecoveryActionsForEndangeredSarInKootenayBoundary"
+  },
+  {
+    "label": "LS18 - East Kootenay Wildlife & Habitat Advisory Committee Facilitation & Engagement",
+    "value": "ls18EastKootenayWildlifeAndHabitatAdvisoryCommitteeFacilitationAndEngagement"
+  },
+  {
+    "label": "LS19 - Ecological Restoration in the Kootenay Boundary Region",
+    "value": "ls19EcologicalRestorationInTheKootenayBoundaryRegion"
+  },
+  {
+    "label": "LS20 - Southern Rockies Mountain Passes Project",
+    "value": "ls20SouthernRockiesMountainPassesProject"
+  },
+  {
+    "label": "LS21 - Access Management in the Kootenay Boundary Region",
+    "value": "ls21AccessManagementInTheKootenayBoundaryRegion"
+  },
+  {
+    "label": "LS22 - Priority Initiatives on Conservation Lands in the Kootenay Boundary Region",
+    "value": "ls22PriorityInitiativesOnConservationLandsInTheKootenayBoundaryRegion"
+  },
+  {
+    "label": "LS23 - Protection of Wildlife Habitat through Recreation Planning in the Kootenay Boundary Region",
+    "value": "ls23ProtectionOfWildlifeHabitatThroughRecreationPlanningInTheKootenayBoundaryRegion"
+  },
+  {
+    "label": "LS24 - Building Resilience of Interior Douglas-fir Ecosystems (ARM Project)",
+    "value": "ls24BuildingResilienceOfInteriorDouglasFirEcosystemsArmProject"
+  },
+  {
+    "label": "LS25 - Great Basin Spadefoot Toad WHA Evaluation",
+    "value": "ls25GreatBasinSpadefootToadWhaEvaluation"
+  },
+  {
+    "label": "LS26 - Road Data Cleanup for Access Management Planning in Ungulate Habitat in teh Cariboo Region",
+    "value": "ls26RoadDataCleanupForAccessManagementPlanningInUngulateHabitatInTehCaribooRegion"
+  },
+  {
+    "label": "LS27 - Bighorn Sheep habitat _ GAR",
+    "value": "ls27BighornSheepHabitatGar"
+  },
+  {
+    "label": "LS28 - Improving Grassland Management for American Badger and Great Basin Spadefoot WHAs",
+    "value": "ls28ImprovingGrasslandManagementForAmericanBadgerAndGreatBasinSpadefootWhas"
+  },
+  {
+    "label": "LS29 - Road Risk Assessment Framework Pilot for Horsefly FSW",
+    "value": "ls29RoadRiskAssessmentFrameworkPilotForHorseflyFsw"
+  },
+  {
+    "label": "LS30 - Continuation of Horsefly FSW Audit (hydrologic assessment during freshet(s))",
+    "value": "ls30ContinuationOfHorseflyFswAuditHydrologicAssessmentDuringFreshetS"
+  },
+  {
+    "label": "LS31 - Conservation Land Amphibian Surveys",
+    "value": "ls31ConservationLandAmphibianSurveys"
+  },
+  {
+    "label": "LS32 - Tsilhqox Quay Naguten Wildlife Management Area",
+    "value": "ls32TsilhqoxQuayNagutenWildlifeManagementArea"
+  },
+  {
+    "label": "LS33 - Monitoring Mule Deer Use of Fuel Treatments in the Cariboo Region",
+    "value": "ls33MonitoringMuleDeerUseOfFuelTreatmentsInTheCaribooRegion"
+  },
+  {
+    "label": "LS34 - Churn Creek Protected Area Grassland Restoration",
+    "value": "ls34ChurnCreekProtectedAreaGrasslandRestoration"
+  },
+  {
+    "label": "LS35 - Elk Valley Road Data Cleanup for Cumulative Effects and Access Management Planning in Grizzly Bear and Ungulate Habitat",
+    "value": "ls35ElkValleyRoadDataCleanupForCumulativeEffectsAndAccessManagementPlanningInGrizzlyBearAndUngulateHabitat"
+  },
+  {
+    "label": "LS37 - Ecological Corridors and connectivity guidance pilot and development for FLP",
+    "value": "ls37EcologicalCorridorsAndConnectivityGuidancePilotAndDevelopmentForFlp"
+  },
+  {
+    "label": "LS38 - Columbia Lake Ecological Corridor Plan",
+    "value": "ls38ColumbiaLakeEcologicalCorridorPlan"
+  },
+  {
+    "label": "LS39 - Ecological Restoration and Conservation Land stewardhip in candidate corridors (Columbia Lake/Wetlands, Elk/Flathead)",
+    "value": "ls39EcologicalRestorationAndConservationLandStewardhipInCandidateCorridorsColumbiaLakeWetlandsElkFlathead"
+  },
+  {
+    "label": "LS41 - Similkameen watershed assessment project _ information dashboard",
+    "value": "ls41SimilkameenWatershedAssessmentProjectInformationDashboard"
+  },
+  {
+    "label": "LS42 - Mule deer habitat condition & cumulative effects assessment",
+    "value": "ls42MuleDeerHabitatConditionAndCumulativeEffectsAssessment"
+  },
+  {
+    "label": "LS43 - Habitat conservation and connectivity planning the west side of Okanagan Lake",
+    "value": "ls43HabitatConservationAndConnectivityPlanningTheWestSideOfOkanaganLake"
+  },
+  {
+    "label": "LS44 - Swan Lake Dam – signage",
+    "value": "ls44SwanLakeDamSignage"
+  },
+  {
+    "label": "LS45 - Fish Boat Repair",
+    "value": "ls45FishBoatRepair"
+  },
+  {
+    "label": "NR01 - System development work to modernize provincial wildlife data management, streamline business processes, make data openly accessible, and reduce staff time/resources spent managing wildlife related data from point of collection to publication. (Note: $50k of $300k from RSD already provided Oct. 2025).",
+    "value": "nr01SystemDevelopmentWorkToModernizeProvincialWildlifeDataManagementStreamlineBusinessProcessesMakeDataOpenlyAccessibleAndReduceStaffTimeResourcesSpentManagingWildlifeRelatedDataFromPointOfCollectionToPublicationNote50kOf300kFromRsdAlreadyProvidedOct2025"
+  },
+  {
+    "label": "NR02 - Alignment of B.C. CDC ecological communities to match new BEC guides for West Coast, South Coast, Kootenay/Boundary and Thompson/ Okanagan regions",
+    "value": "nr02AlignmentOfBCCdcEcologicalCommunitiesToMatchNewBecGuidesForWestCoastSouthCoastKootenayBoundaryAndThompsonOkanaganRegions"
+  },
+  {
+    "label": "NR03-RB12 - Environmental Mitigation Policy, procedures, guidance and legislation",
+    "value": "nr03Rb12EnvironmentalMitigationPolicyProceduresGuidanceAndLegislation"
+  },
+  {
+    "label": "RB01 - Wildlife Movement Risks and Barriers in the East Kootenay",
+    "value": "rb01WildlifeMovementRisksAndBarriersInTheEastKootenay"
+  },
+  {
+    "label": "RB02 - Thompson Nicola corridor mapping with Indigenous knowledge",
+    "value": "rb02ThompsonNicolaCorridorMappingWithIndigenousKnowledge"
+  },
+  {
+    "label": "RB03 - K'nmalka Corridor",
+    "value": "rb03KNmalkaCorridor"
+  },
+  {
+    "label": "RB04 - Provincial Coordination _ connectivity staffing",
+    "value": "rb04ProvincialCoordinationConnectivityStaffing"
+  },
+  {
+    "label": "RB05 - Provincial priority areas for ecological corridors",
+    "value": "rb05ProvincialPriorityAreasForEcologicalCorridors"
+  },
+  {
+    "label": "RB06 - First Nations wildlife movement mapping pilot",
+    "value": "rb06FirstNationsWildlifeMovementMappingPilot"
+  },
+  {
+    "label": "RB07 - Shuswap Band Capacity Agreement",
+    "value": "rb07ShuswapBandCapacityAgreement"
+  },
+  {
+    "label": "RB08 - Highway Crossings with MOTT _ fencing with Shuswap, business case",
+    "value": "rb08HighwayCrossingsWithMottFencingWithShuswapBusinessCase"
+  },
+  {
+    "label": "RB09 - Conservation Lands Program _ Leadership, Management and Operations (incl new designations)",
+    "value": "rb09ConservationLandsProgramLeadershipManagementAndOperationsInclNewDesignations"
+  },
+  {
+    "label": "RB10 - Wildlife Recreation Guidelines_policy updates",
+    "value": "rb10WildlifeRecreationGuidelinesPolicyUpdates"
+  },
+  {
+    "label": "RB11 - Biodiversity and Ecosystem Health Framework (BEHF). Provincial scope: Finalisation of the BEHF products with policy development",
+    "value": "rb11BiodiversityAndEcosystemHealthFrameworkBehfProvincialScopeFinalisationOfTheBehfProductsWithPolicyDevelopment"
+  },
+  {
+    "label": "RB13 - Action 10 _ Effectiveness of Habitat Desginations",
+    "value": "rb13Action10EffectivenessOfHabitatDesginations"
+  },
+  {
+    "label": "RB14 - Old Growth Working Group co_chair and Forest Technical Analysis (seral stage distribution)",
+    "value": "rb14OldGrowthWorkingGroupCoChairAndForestTechnicalAnalysisSeralStageDistribution"
+  },
+  {
+    "label": "RB15 - Supporting Grizzly Bear recovery in Southwest BC",
+    "value": "rb15SupportingGrizzlyBearRecoveryInSouthwestBc"
+  },
+  {
+    "label": "RB16 - Building resilient bat populations; threat mitigation, and multi_partner White Nose Syndrome (WNS) emergency preparedness projects.",
+    "value": "rb16BuildingResilientBatPopulationsThreatMitigationAndMultiPartnerWhiteNoseSyndromeWnsEmergencyPreparednessProjects"
+  },
+  {
+    "label": "RB17 - Terrestrial Invasive Species Management",
+    "value": "rb17TerrestrialInvasiveSpeciesManagement"
+  },
+  {
+    "label": "RB18 - Lead the prioritization of road mortality mitigation projects for badger and herpetofauna, and support enhancing ecological connectivity.",
+    "value": "rb18LeadThePrioritizationOfRoadMortalityMitigationProjectsForBadgerAndHerpetofaunaAndSupportEnhancingEcologicalConnectivity"
+  },
+  {
+    "label": "RB19 - Biodiversity Monitoring Project – in partnership with First Nations.",
+    "value": "rb19BiodiversityMonitoringProjectInPartnershipWithFirstNations"
+  },
+  {
+    "label": "RB20 - Represent BC on key federal committees (e.g., COSEWIC, FTP)",
+    "value": "rb20RepresentBcOnKeyFederalCommitteesEGCosewicFtp"
+  },
+  {
+    "label": "RB21 - Tripartite Framework Agreement for Nature Conservation - Habitat Restoration Sub Committee",
+    "value": "rb21TripartiteFrameworkAgreementForNatureConservationHabitatRestorationSubCommittee"
+  },
+  {
+    "label": "RB22 - Forest Biodiversity Guidance for Planning tables",
+    "value": "rb22ForestBiodiversityGuidanceForPlanningTables"
+  },
+  {
+    "label": "RB23 - Update categories of species (SAR, RIW, ungulates) lists under FRPA & ERAA",
+    "value": "rb23UpdateCategoriesOfSpeciesSarRiwUngulatesListsUnderFrpaAndEraa"
+  },
+  {
+    "label": "RB24 - Develop with Care Document Updates __ Supporting stewardship led by others. __ _ update Develop with Care 2014: Environmental Guidelines for Urban and Rural Land Development in British Columbia",
+    "value": "rb24DevelopWithCareDocumentUpdatesSupportingStewardshipLedByOthersUpdateDevelopWithCare2014EnvironmentalGuidelinesForUrbanAndRuralLandDevelopmentInBritishColumbia"
+  },
+  {
+    "label": "RB25 - Provincial Wetlands Project (and SRP)",
+    "value": "rb25ProvincialWetlandsProjectAndSrp"
+  },
+  {
+    "label": "RB26 - Foundational  Information  Provincial Biodiversity Assessment Approach and Biodiversity Indicators",
+    "value": "rb26FoundationalInformationProvincialBiodiversityAssessmentApproachAndBiodiversityIndicators"
+  },
+  {
+    "label": "RB27 - Voluntary Biodiversity Stewardship _ Supporting stewardship by others. Biodiversity Stewardship Initiatives Map",
+    "value": "rb27VoluntaryBiodiversityStewardshipSupportingStewardshipByOthersBiodiversityStewardshipInitiativesMap"
+  },
+  {
+    "label": "RB28 - supporting legislation devleopment under Bill 14.",
+    "value": "rb28SupportingLegislationDevleopmentUnderBill14"
+  },
+  {
+    "label": "RB29 - Science_based BMPs, reports, recommendations to support major projects/ development",
+    "value": "rb29ScienceBasedBmpsReportsRecommendationsToSupportMajorProjectsDevelopment"
+  },
+  {
+    "label": "RB30 - Recovery of Plant Species at Risk at Cowichan Garry Oak Preserve -- Rare plant monitoring project to support SAR (including development of a citizen science, volunteer based rare plant monitoring program)",
+    "value": "rb30RecoveryOfPlantSpeciesAtRiskAtCowichanGarryOakPreserveRarePlantMonitoringProjectToSupportSarIncludingDevelopmentOfACitizenScienceVolunteerBasedRarePlantMonitoringProgram"
+  },
+  {
+    "label": "RB31 - Investigate options for seed banking species at risk for long-term conservation and climate mitigation translocations",
+    "value": "rb31InvestigateOptionsForSeedBankingSpeciesAtRiskForLongTermConservationAndClimateMitigationTranslocations"
+  },
+  {
+    "label": "RB32 - Evaluate extent of occurrence and the effectiveness of mitigation measures for multi_SAR and non_SAR herp species, their critical habitats  and other related activities (targeted SAR spp Western painted turtle, Northern leopard frog, Sharp_tailed snake, Rubber Boa).",
+    "value": "rb32EvaluateExtentOfOccurrenceAndTheEffectivenessOfMitigationMeasuresForMultiSarAndNonSarHerpSpeciesTheirCriticalHabitatsAndOtherRelatedActivitiesTargetedSarSppWesternPaintedTurtleNorthernLeopardFrogSharpTailedSnakeRubberBoa"
+  },
+  {
+    "label": "RB33 - Pika Genomics _ Understanding genomics of sentinel alpine species to understand adaptive capacity as it relates to climate change.",
+    "value": "rb33PikaGenomicsUnderstandingGenomicsOfSentinelAlpineSpeciesToUnderstandAdaptiveCapacityAsItRelatesToClimateChange"
+  },
+  {
+    "label": "RB34 - Forest and fire management for recovering fisher populations/fisher recovery planning",
+    "value": "rb34ForestAndFireManagementForRecoveringFisherPopulationsFisherRecoveryPlanning"
+  },
+  {
+    "label": "RB35 - Mesocarnivore (Biodiversity) Monitoring Project",
+    "value": "rb35MesocarnivoreBiodiversityMonitoringProject"
+  },
+  {
+    "label": "RB36 - Rocky Mountain Ridged Mussel Surveys",
+    "value": "rb36RockyMountainRidgedMusselSurveys"
+  },
+  {
+    "label": "RB37 - placeholder",
+    "value": "rb37Placeholder"
+  },
+  {
+    "label": "RB38 - Taylor Checkerspot Conservation Project",
+    "value": "rb38TaylorCheckerspotConservationProject"
+  },
+  {
+    "label": "RB39 - Invertebrate inventory & recovery in B.C.",
+    "value": "rb39InvertebrateInventoryAndRecoveryInBC"
+  },
+  {
+    "label": "RB40 - Gathering information, writing, and contributing to COSEWIC recovery planning and status assessments.",
+    "value": "rb40GatheringInformationWritingAndContributingToCosewicRecoveryPlanningAndStatusAssessments"
+  },
+  {
+    "label": "RB41 - Community Science Bumble Bee Monitoring Project",
+    "value": "rb41CommunityScienceBumbleBeeMonitoringProject"
+  },
+  {
+    "label": "RB42 - Biodiversity Stewardship Initiatives Map",
+    "value": "rb42BiodiversityStewardshipInitiativesMap"
+  },
+  {
+    "label": "RMBIN01 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin01WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN02 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin02WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN03 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin03WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN04 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin04WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN05 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin05WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN06 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin06WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN07 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin07WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN08 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin08WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN09 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin09WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN10 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin10WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN11 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin11WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN12 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin12WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN13 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin13WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN14 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin14WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN15 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin15WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN16 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin16WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN17 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin17WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN18 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin18WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN19 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin19WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN20 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin20WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN21 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin21WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN22 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin22WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN23 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin23WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN24 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin24WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN25 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin25WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN26 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin26WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN27 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin27WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN28 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin28WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBIN29 - Wildlive Inventory - Ken Walburger managing",
+    "value": "rmbin29WildliveInventoryKenWalburgerManaging"
+  },
+  {
+    "label": "RMBST01 - Compulsory Inspections - or all Stewardship Operatoins Areas",
+    "value": "rmbst01CompulsoryInspectionsOrAllStewardshipOperatoinsAreas"
+  },
+  {
+    "label": "RMBST03 - Determining mechanisms of decline of Robson Valley Mountain Goats",
+    "value": "rmbst03DeterminingMechanismsOfDeclineOfRobsonValleyMountainGoats"
+  },
+  {
+    "label": "RMBST04 - Juvenile sturgeon population assessments. Evaluation of the prevalence of hatchery origin fish in the mid-fraser",
+    "value": "rmbst04JuvenileSturgeonPopulationAssessmentsEvaluationOfThePrevalenceOfHatcheryOriginFishInTheMidFraser"
+  },
+  {
+    "label": "RMBST05 - Psoroptes Disease Trials",
+    "value": "rmbst05PsoroptesDiseaseTrials"
+  },
+  {
+    "label": "RMBST06 - Understand if metholodgy in use is still appropriate for sustainable stewardship",
+    "value": "rmbst06UnderstandIfMetholodgyInUseIsStillAppropriateForSustainableStewardship"
+  },
+  {
+    "label": "RMBST07 - Advance co_management",
+    "value": "rmbst07AdvanceCoManagement"
+  },
+  {
+    "label": "RMBST08 - Co_delivering of Kispiox Moose SRB",
+    "value": "rmbst08CoDeliveringOfKispioxMooseSrb"
+  },
+  {
+    "label": "RMBST09 - T8WWG - Co-develop a multi-year wildlife management plan, develop wildlife mgmt objectives, comms package and F2F Gathering wtih T8 First Nations",
+    "value": "rmbst09T8wwgCoDevelopAMultiYearWildlifeManagementPlanDevelopWildlifeMgmtObjectivesCommsPackageAndF2fGatheringWtihT8FirstNations"
+  },
+  {
+    "label": "RMBST10 - Elk Valley bighorn sheep project",
+    "value": "rmbst10ElkValleyBighornSheepProject"
+  },
+  {
+    "label": "RMBST11 - Action 2 - Targeted Wildlife Gathering",
+    "value": "rmbst11Action2TargetedWildlifeGathering"
+  },
+  {
+    "label": "RMBST12 - Capacity support to manage the process of interacting with 3 Stewardship Forums and advancing collaborative monitoring plans.",
+    "value": "rmbst12CapacitySupportToManageTheProcessOfInteractingWith3StewardshipForumsAndAdvancingCollaborativeMonitoringPlans"
+  },
+  {
+    "label": "RMBST13 - Fraser River Caligornia Bighorn Sheep disease mitigation and recovery project",
+    "value": "rmbst13FraserRiverCaligorniaBighornSheepDiseaseMitigationAndRecoveryProject"
+  },
+  {
+    "label": "RMBST14 - Improving human-wildlife interactions in area of high human activity (elk and bear conflict mitigation)",
+    "value": "rmbst14ImprovingHumanWildlifeInteractionsInAreaOfHighHumanActivityElkAndBearConflictMitigation"
+  },
+  {
+    "label": "RMBST15 - Support new collaborative stewarship forum",
+    "value": "rmbst15SupportNewCollaborativeStewarshipForum"
+  },
+  {
+    "label": "RMBST16 - Support FN and stakeholder access by determining appropriate threshold",
+    "value": "rmbst16SupportFnAndStakeholderAccessByDeterminingAppropriateThreshold"
+  },
+  {
+    "label": "RMBST17 - Movi Disease Treatment",
+    "value": "rmbst17MoviDiseaseTreatment"
+  },
+  {
+    "label": "RMBST18 - Elk Stewardship Plan",
+    "value": "rmbst18ElkStewardshipPlan"
+  },
+  {
+    "label": "RMBST19 - Collaborative camera grid project with Williams Lake and Xhatsul First Nations supporting the regional elk stewardship planning process.",
+    "value": "rmbst19CollaborativeCameraGridProjectWithWilliamsLakeAndXhatsulFirstNationsSupportingTheRegionalElkStewardshipPlanningProcess"
+  },
+  {
+    "label": "RMBST20 - Update wildlife mgmt objectives in the Muskwa-Kechika",
+    "value": "rmbst20UpdateWildlifeMgmtObjectivesInTheMuskwaKechika"
+  },
+  {
+    "label": "RMBST21 - Completion of two FSWC needs surveys initiated in previous fiscal before fundgin was lost",
+    "value": "rmbst21CompletionOfTwoFswcNeedsSurveysInitiatedInPreviousFiscalBeforeFundginWasLost"
+  },
+  {
+    "label": "RMBST22 - Inform harvest numbers for priority population units. (Elk)",
+    "value": "rmbst22InformHarvestNumbersForPriorityPopulationUnitsElk"
+  },
+  {
+    "label": "RMBST23 - Collaboartive Mule Deer Assessment via Cameras with Skeetchesn Indian Band",
+    "value": "rmbst23CollaboartiveMuleDeerAssessmentViaCamerasWithSkeetchesnIndianBand"
+  },
+  {
+    "label": "RMBST24 - Collaboartive Mule Deer Inventory via Cameras with ONA",
+    "value": "rmbst24CollaboartiveMuleDeerInventoryViaCamerasWithOna"
+  },
+  {
+    "label": "RMBST25 - Grizzly bear conflict mitigation workshop with TNG",
+    "value": "rmbst25GrizzlyBearConflictMitigationWorkshopWithTng"
+  },
+  {
+    "label": "RMBST26 - Chilcotin cougar project",
+    "value": "rmbst26ChilcotinCougarProject"
+  },
+  {
+    "label": "RMBST27 - Reconnecting the Rockies Effectiveness Monitoring",
+    "value": "rmbst27ReconnectingTheRockiesEffectivenessMonitoring"
+  },
+  {
+    "label": "RMBST28 - SIM Deer Research Program Support",
+    "value": "rmbst28SimDeerResearchProgramSupport"
+  },
+  {
+    "label": "RMBST29 - Support coastal genetics project through regional contribution",
+    "value": "rmbst29SupportCoastalGeneticsProjectThroughRegionalContribution"
+  },
+  {
+    "label": "RMBST30 - Black Bear Population Estimate (DNA analysis; year 2 of 2)",
+    "value": "rmbst30BlackBearPopulationEstimateDnaAnalysisYear2Of2"
+  },
+  {
+    "label": "RMBST31 - Radium bighorn sheep mitigation",
+    "value": "rmbst31RadiumBighornSheepMitigation"
+  },
+  {
+    "label": "RMBST32 - Inform potential LEH and impacts from commercial backcountry recreation tenures.",
+    "value": "rmbst32InformPotentialLehAndImpactsFromCommercialBackcountryRecreationTenures"
+  },
+  {
+    "label": "RMBST33 - Mule Deer Inventory to support regulations",
+    "value": "rmbst33MuleDeerInventoryToSupportRegulations"
+  },
+  {
+    "label": "RMBST34 - Cougar Samples",
+    "value": "rmbst34CougarSamples"
+  },
+  {
+    "label": "RMBST35 - Agricultural Elk Conflict Support and Monitoring",
+    "value": "rmbst35AgriculturalElkConflictSupportAndMonitoring"
+  },
+  {
+    "label": "RMBST36 - Wildlife veternarian support (Columbia Lake East bighorn sheep project and other)",
+    "value": "rmbst36WildlifeVeternarianSupportColumbiaLakeEastBighornSheepProjectAndOther"
+  },
+  {
+    "label": "RMBST37 - Creston Agricultural Bear Conflict Support",
+    "value": "rmbst37CrestonAgriculturalBearConflictSupport"
+  },
+  {
+    "label": "RMBST38 - North Trench Elk monitoring: Collar an initial set of elk to begin the analysis of survival, migration and habitat use for a population that has never been studied.",
+    "value": "rmbst38NorthTrenchElkMonitoringCollarAnInitialSetOfElkToBeginTheAnalysisOfSurvivalMigrationAndHabitatUseForAPopulationThatHasNeverBeenStudied"
+  },
+  {
+    "label": "RMBST39 - Addressing Mountain Goat Knowledge Gaps in Southeast BC",
+    "value": "rmbst39AddressingMountainGoatKnowledgeGapsInSoutheastBc"
+  },
+  {
+    "label": "RMBST40 - East Kootenay Human Bear Co-Existence Project",
+    "value": "rmbst40EastKootenayHumanBearCoExistenceProject"
+  },
+  {
+    "label": "RS01 - Tripartite Framework Agreement on Nature Conservation governance and oversight",
+    "value": "rs01TripartiteFrameworkAgreementOnNatureConservationGovernanceAndOversight"
+  },
+  {
+    "label": "RS02 - Kootenay Forest/Hamilton Marsh",
+    "value": "rs02KootenayForestHamiltonMarsh"
+  },
+  {
+    "label": "RS03 - First Nations B.C. Wildlife and Habitat Conservation Forum",
+    "value": "rs03FirstNationsBCWildlifeAndHabitatConservationForum"
+  },
+  {
+    "label": "RS04 - Minister's Wildlife Advisory Council",
+    "value": "rs04MinisterSWildlifeAdvisoryCouncil"
+  },
+  {
+    "label": "RS05 - Together for Wildlife Summary Report",
+    "value": "rs05TogetherForWildlifeSummaryReport"
+  },
+  {
+    "label": "RS06 - Together for Wildlife Action 5 _ Research",
+    "value": "rs06TogetherForWildlifeAction5Research"
+  },
+  {
+    "label": "RS07 - Together for Wildlife Policy Implementation",
+    "value": "rs07TogetherForWildlifePolicyImplementation"
+  },
+  {
+    "label": "RS08 - Together for Wildlife Community Science Framework",
+    "value": "rs08TogetherForWildlifeCommunityScienceFramework"
+  },
+  {
+    "label": "RS09 - Together for Wildlife 2025 Strategy Review",
+    "value": "rs09TogetherForWildlife2025StrategyReview"
+  },
+  {
+    "label": "RS10 - Together for Wildlife Oversight and Implementation",
+    "value": "rs10TogetherForWildlifeOversightAndImplementation"
+  },
+  {
+    "label": "RTS01 - 2 Billion Trees Post_Fire Restoration of Conservation Designations to Enhance Biodiversity",
+    "value": "rts012BillionTreesPostFireRestorationOfConservationDesignationsToEnhanceBiodiversity"
+  },
+  {
+    "label": "RTS02 - Conservation Area Adaptive Management",
+    "value": "rts02ConservationAreaAdaptiveManagement"
+  },
+  {
+    "label": "RTS03 - Critical Habitat Digital Tool development and implementation for Species at Risks across BC",
+    "value": "rts03CriticalHabitatDigitalToolDevelopmentAndImplementationForSpeciesAtRisksAcrossBc"
+  },
+  {
+    "label": "RTS04 - Government Action Regulation (IWMS) Terrestrial Habitat",
+    "value": "rts04GovernmentActionRegulationIwmsTerrestrialHabitat"
+  },
+  {
+    "label": "RTS05 - Grassland Stewardship in the Thompson_Okanagan and Cariboo_Chilcotin regions and Community of Practice",
+    "value": "rts05GrasslandStewardshipInTheThompsonOkanaganAndCaribooChilcotinRegionsAndCommunityOfPractice"
+  },
+  {
+    "label": "RTS06 - Implementation of Recovery Objectives for Whitebark Pine (WBP) in the Thompson Okanagan Boundaries",
+    "value": "rts06ImplementationOfRecoveryObjectivesForWhitebarkPineWbpInTheThompsonOkanaganBoundaries"
+  },
+  {
+    "label": "RTS07 - Implementation of Recovery Objectives for the Marbled Murrelet (MAMU) in the South and West Coast - SEAR",
+    "value": "rts07ImplementationOfRecoveryObjectivesForTheMarbledMurreletMamuInTheSouthAndWestCoastSear"
+  },
+  {
+    "label": "RTS08 - Implementation of Recovery Objectives for the Northern Goshawk (NOGO) in the South and West Coast - SEAR",
+    "value": "rts08ImplementationOfRecoveryObjectivesForTheNorthernGoshawkNogoInTheSouthAndWestCoastSear"
+  },
+  {
+    "label": "RTS09A - Implementation of Recovery Objectives for the Western Screech Owl (WESO) in the South and Interior - SEAR",
+    "value": "rts09aImplementationOfRecoveryObjectivesForTheWesternScreechOwlWesoInTheSouthAndInteriorSear"
+  },
+  {
+    "label": "RTS09B - Implementation of Recovery Objectives for the Western Screech Owl (WESO) in the West Coast - SEAR",
+    "value": "rts09bImplementationOfRecoveryObjectivesForTheWesternScreechOwlWesoInTheWestCoastSear"
+  },
+  {
+    "label": "RTS10 - Implementation of Recovery Objectives for the Williamson Sapsucker (WISA) in the Okanagan and Kootenays Boundaries - SEAR",
+    "value": "rts10ImplementationOfRecoveryObjectivesForTheWilliamsonSapsuckerWisaInTheOkanaganAndKootenaysBoundariesSear"
+  },
+  {
+    "label": "RTS11 - Priority Places - Coordination",
+    "value": "rts11PriorityPlacesCoordination"
+  },
+  {
+    "label": "RTS12 - Species at Risk _ Cross Organizational relationship and communication (RENEW committee)",
+    "value": "rts12SpeciesAtRiskCrossOrganizationalRelationshipAndCommunicationRenewCommittee"
+  },
+  {
+    "label": "RTS13 - Species at Risk _ Recovery documents coordination and development",
+    "value": "rts13SpeciesAtRiskRecoveryDocumentsCoordinationAndDevelopment"
+  },
+  {
+    "label": "RTS14 - Stewardship of the Great Blue Heron on the coast",
+    "value": "rts14StewardshipOfTheGreatBlueHeronOnTheCoast"
+  },
+  {
+    "label": "RTS15 - Caribou Restoration Implementation (and 2BT)",
+    "value": "rts15CaribouRestorationImplementationAnd2bt"
+  },
+  {
+    "label": "RTS20N - Grassland Conservation Council of British Columbia REMC132",
+    "value": "rts20nGrasslandConservationCouncilOfBritishColumbiaRemc132"
+  },
+  {
+    "label": "RW01 - Data & Licensing Service Agreements for ServiceBC, FCBC and the Yukon. Set Amounts.",
+    "value": "rw01DataAndLicensingServiceAgreementsForServicebcFcbcAndTheYukonSetAmounts"
+  },
+  {
+    "label": "RW02 - WILD & eLicensing maintenance and enhancements (both fish & wildlife licensing)",
+    "value": "rw02WildAndElicensingMaintenanceAndEnhancementsBothFishAndWildlifeLicensing"
+  },
+  {
+    "label": "RW03 - Overtime _ LEH / Transformation for FCBC",
+    "value": "rw03OvertimeLehTransformationForFcbc"
+  },
+  {
+    "label": "RW04 - Controlled Alien Species Response",
+    "value": "rw04ControlledAlienSpeciesResponse"
+  },
+  {
+    "label": "RW05 - Hunter Harvest Surveys",
+    "value": "rw05HunterHarvestSurveys"
+  },
+  {
+    "label": "RW06 - Hunting & Fishing License Print & Production & CI supplies",
+    "value": "rw06HuntingAndFishingLicensePrintAndProductionAndCiSupplies"
+  },
+  {
+    "label": "RW07 - Compulsory Inspection Tooth Aging",
+    "value": "rw07CompulsoryInspectionToothAging"
+  },
+  {
+    "label": "RW08 - AO24 1/3 including benefits",
+    "value": "rw08Ao2413IncludingBenefits"
+  },
+  {
+    "label": "RW09 - Hunter Harvest Survey into WILD",
+    "value": "rw09HunterHarvestSurveyIntoWild"
+  },
+  {
+    "label": "RW10 - Wildlife Act Review",
+    "value": "rw10WildlifeActReview"
+  },
+  {
+    "label": "RW11 - Treaty negotiation",
+    "value": "rw11TreatyNegotiation"
+  },
+  {
+    "label": "RW12 - FN Negotiation guidance document",
+    "value": "rw12FnNegotiationGuidanceDocument"
+  },
+  {
+    "label": "RW13 - Fishing Synopsis (printing/distribution (cost is for 25/26)",
+    "value": "rw13FishingSynopsisPrintingDistributionCostIsFor2526"
+  },
+  {
+    "label": "RW14 - Re write of the Annual Allowable Harvest Policy and Procedure",
+    "value": "rw14ReWriteOfTheAnnualAllowableHarvestPolicyAndProcedure"
+  },
+  {
+    "label": "RW15 - 2026_2028 Biennial hunting/trapping regulation cycle",
+    "value": "rw1520262028BiennialHuntingTrappingRegulationCycle"
+  },
+  {
+    "label": "RW16 - Miscellaneous animal welfare/permitting regulation amendment",
+    "value": "rw16MiscellaneousAnimalWelfarePermittingRegulationAmendment"
+  },
+  {
+    "label": "RW17 - Finalization of the provincial Grizzly Bear Stewardship Framework and Commercial Bear Viewing Strategy",
+    "value": "rw17FinalizationOfTheProvincialGrizzlyBearStewardshipFrameworkAndCommercialBearViewingStrategy"
+  },
+  {
+    "label": "RW18 - Sheltering/Protocol Hunting Policy and Procedure",
+    "value": "rw18ShelteringProtocolHuntingPolicyAndProcedure"
+  },
+  {
+    "label": "RW19 - Harvest Allocation Policy",
+    "value": "rw19HarvestAllocationPolicy"
+  },
+  {
+    "label": "RW20 - s.59.1 policy and workplan",
+    "value": "rw20S591PolicyAndWorkplan"
+  },
+  {
+    "label": "RW21 - CI Program Review and outcome of Region's review",
+    "value": "rw21CiProgramReviewAndOutcomeOfRegionSReview"
+  },
+  {
+    "label": "RW22 - Address Self_Guided Hunts",
+    "value": "rw22AddressSelfGuidedHunts"
+  },
+  {
+    "label": "RW23 - CWD Surveillance and Response; Provincial wildlife health response",
+    "value": "rw23CwdSurveillanceAndResponseProvincialWildlifeHealthResponse"
+  },
+  {
+    "label": "RW24 - Livestock Protection Program (LPP) _ will not run w/o guaranteed funding",
+    "value": "rw24LivestockProtectionProgramLppWillNotRunWOGuaranteedFunding"
+  },
+  {
+    "label": "RW26 - PHTAT website",
+    "value": "rw26PhtatWebsite"
+  },
+  {
+    "label": "RW27 - Stein GB Recovery support (T4W)",
+    "value": "rw27SteinGbRecoverySupportT4w"
+  },
+  {
+    "label": "RW28 - Integrated Population Monitoring (IPM) Project _ T4W/Base",
+    "value": "rw28IntegratedPopulationMonitoringIpmProjectT4wBase"
+  },
+  {
+    "label": "RW29 - Wildlife Health (T4W)",
+    "value": "rw29WildlifeHealthT4w"
+  },
+  {
+    "label": "RW30 - Wild Sheep and Goat Compulsory Inspection _ MOVI surveillance (T4W)",
+    "value": "rw30WildSheepAndGoatCompulsoryInspectionMoviSurveillanceT4w"
+  },
+  {
+    "label": "RW32 - CWHC Cervid Health Workshop (Fed funding)",
+    "value": "rw32CwhcCervidHealthWorkshopFedFunding"
+  },
+  {
+    "label": "RW33 - UVic WildCam Project (MOF Research)",
+    "value": "rw33UvicWildcamProjectMofResearch"
+  },
+  {
+    "label": "RW34 - Provincial Moose Research (MOF Research)",
+    "value": "rw34ProvincialMooseResearchMofResearch"
+  },
+  {
+    "label": "RW35 - Huckleberry Mapping (MOF Research)",
+    "value": "rw35HuckleberryMappingMofResearch"
+  },
+  {
+    "label": "RW36 - Cougar Sustainablity Research (MOF Research)",
+    "value": "rw36CougarSustainablityResearchMofResearch"
+  },
+  {
+    "label": "RW37 - Shrub Response to Forestry (MOF Research)",
+    "value": "rw37ShrubResponseToForestryMofResearch"
+  },
+  {
+    "label": "RW38 - Flathead Grizzly Research (MOF Research)",
+    "value": "rw38FlatheadGrizzlyResearchMofResearch"
+  },
+  {
+    "label": "RW39 - Elk Valley Grizzly Bear Mortality (Elk Valley Resources - EVR)",
+    "value": "rw39ElkValleyGrizzlyBearMortalityElkValleyResourcesEvr"
+  },
+  {
+    "label": "RW41 - Drone Wildlife Inventory Pilot Project",
+    "value": "rw41DroneWildlifeInventoryPilotProject"
+  },
+  {
+    "label": "RW42 - Finalizing Thinhorn Sheep Stewardship Framework",
+    "value": "rw42FinalizingThinhornSheepStewardshipFramework"
+  },
+  {
+    "label": "RW43 - Finalizing Mule Deer Stewardship Framework",
+    "value": "rw43FinalizingMuleDeerStewardshipFramework"
+  },
+  {
+    "label": "RW44 - Mountain Goat review",
+    "value": "rw44MountainGoatReview"
+  },
+  {
+    "label": "RW45 - NE thinhorn sheep allocation review.",
+    "value": "rw45NeThinhornSheepAllocationReview"
+  },
+  {
+    "label": "WFC01 - Nechako white sturgeon spawning habitat restoration",
+    "value": "wfc01NechakoWhiteSturgeonSpawningHabitatRestoration"
+  },
+  {
+    "label": "WFC02 - Distribution Sampling for Special Concern Bull Trout in Coastal BC",
+    "value": "wfc02DistributionSamplingForSpecialConcernBullTroutInCoastalBc"
+  }
+]

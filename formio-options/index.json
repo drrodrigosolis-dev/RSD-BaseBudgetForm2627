@@ -73,5 +73,10 @@
     "columnName": "Non-RSD Funding Source",
     "file": "non-rsd-funding-source.json",
     "itemCount": 21
+  },
+  {
+    "columnName": "STIDFY2526",
+    "file": "stidfy2526.json",
+    "itemCount": 262
   }
 ]
