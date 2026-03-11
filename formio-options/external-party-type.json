@@ -4,15 +4,11 @@
     "value": "indigenous"
   },
   {
-    "label": "Not Indigenous",
-    "value": "notIndigenous"
+    "label": "Non-Indigenous",
+    "value": "nonIndigenous"
   },
   {
     "label": "Both",
     "value": "both"
-  },
-  {
-    "label": "Other",
-    "value": "other"
   }
 ]
