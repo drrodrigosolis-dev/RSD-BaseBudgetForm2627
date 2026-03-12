@@ -38,6 +38,7 @@
   --fio-bc-glass: rgba(255, 255, 255, 0.16);
   --fio-bc-glass-strong: rgba(255, 255, 255, 0.26);
   --fio-bc-dropdown-z: 200001;
+  --fio-bc-tooltip-z: 2147483646;
   --bc-bg-image: url("./images/background.jpg");
   --fio-bc-shadow:
     0 8px 18px rgba(8, 35, 55, 0.045),
@@ -282,11 +283,18 @@ label.field-required > div,
 .tooltip {
   background: rgba(20, 30, 40, 0.96);
   border-color: rgba(16, 40, 56, 0.24);
+  z-index: var(--fio-bc-tooltip-z) !important;
 }
 
 .tooltip {
+  --bs-tooltip-zindex: var(--fio-bc-tooltip-z);
   --bs-tooltip-color: #ffffff;
   --bs-tooltip-bg: rgba(20, 30, 40, 0.96);
+}
+
+.formio-form [data-tooltip][aria-expanded="true"] {
+  position: relative;
+  z-index: calc(var(--fio-bc-tooltip-z) - 1);
 }
 
 .tooltip .tooltip-inner {
