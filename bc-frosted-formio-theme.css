@@ -2990,6 +2990,29 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
+
+  .formio-form .formio-component-editgrid :is(
+    .form-control,
+    select.form-control,
+    textarea.form-control,
+    .choices__inner,
+    .input-group-text
+  ) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .formio-form .formio-component-editgrid :is(
+    .form-control,
+    select.form-control,
+    textarea.form-control,
+    .choices__inner
+  ) {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(253, 254, 255, 0.52));
+    background-color: rgba(255, 255, 255, 0.72);
+    transform: none;
+  }
 }
 
 /*
