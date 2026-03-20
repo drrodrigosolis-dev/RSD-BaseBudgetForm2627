@@ -464,6 +464,20 @@ label.field-required > div,
   overflow: visible;
 }
 
+/*
+  Frosted panels/cards create independent stacking contexts (via backdrop-filter).
+  Raise the active panel wrapper while a Choices menu is open so sibling panels
+  cannot paint over the dropdown list.
+*/
+.formio-form .formio-component-panel:has(.choices.is-open),
+.formio-form .formio-component-panel:has(.choices__list--dropdown.is-active),
+.formio-form .formio-component-triggerPanel:has(.choices.is-open),
+.formio-form .formio-component-triggerPanel:has(.choices__list--dropdown.is-active) {
+  position: relative;
+  z-index: calc(var(--fio-bc-dropdown-z) - 4);
+  overflow: visible;
+}
+
 .formio-form .choices__item--selectable.is-highlighted {
   background: rgba(15, 94, 168, 0.12);
   color: var(--fio-bc-text);
