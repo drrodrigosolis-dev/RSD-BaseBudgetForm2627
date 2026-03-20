@@ -2940,12 +2940,17 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   isolation: isolate;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  background:
+    linear-gradient(180deg, var(--bc-frost-lite-top), var(--bc-frost-lite-bottom));
   background-color: hsl(
     var(--bc-frost-lite-tone-h)
     var(--bc-frost-lite-tone-s)
     var(--bc-frost-lite-tone-l) /
     calc(var(--bc-frost-lite-alpha-surface) + 0.08)
   );
+  /* Reduce scroll jank on dense EditGrid stacks over fixed page backgrounds. */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 /*
