@@ -15,7 +15,8 @@
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: fixed;
+  /* Prevent scroll-time backdrop/compositor fade on frosted Form.io surfaces. */
+  background-attachment: scroll;
   background-color: transparent;
 }
 
@@ -2918,6 +2919,33 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
     saturate(var(--bc-frost-lite-backdrop-sat))
     brightness(var(--bc-frost-lite-brightness))
     contrast(var(--bc-frost-lite-contrast));
+}
+
+/*
+  Scroll/compositing stability for frosted EditGrid surfaces:
+  when backdrop layers are throttled during active scroll, keep a stronger base
+  fill so perceived opacity does not collapse.
+*/
+:is(
+  .bc-frost-lite,
+  [class^="bc-frost-lite-"],
+  [class*=" bc-frost-lite-"],
+  [class^="bc-frost-alpha-"],
+  [class*=" bc-frost-alpha-"],
+  [class^="bc-frost-sat-"],
+  [class*=" bc-frost-sat-"],
+  [class^="bc-frost-bright-"],
+  [class*=" bc-frost-bright-"]
+).formio-component-editgrid .table-responsive {
+  isolation: isolate;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  background-color: hsl(
+    var(--bc-frost-lite-tone-h)
+    var(--bc-frost-lite-tone-s)
+    var(--bc-frost-lite-tone-l) /
+    calc(var(--bc-frost-lite-alpha-surface) + 0.08)
+  );
 }
 
 /*
