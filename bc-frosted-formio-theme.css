@@ -15,8 +15,8 @@
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
-  /* Prevent scroll-time backdrop/compositor fade on frosted Form.io surfaces. */
-  background-attachment: scroll;
+  /* Keep page background fixed to viewport (independent of form height/scroll). */
+  background-attachment: fixed;
   background-color: transparent;
 }
 
