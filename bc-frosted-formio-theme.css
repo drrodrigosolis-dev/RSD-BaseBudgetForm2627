@@ -436,6 +436,12 @@ label.field-required > div,
   z-index: var(--fio-bc-dropdown-z);
 }
 
+.formio-form .all-options .choices__list--dropdown .choices__list,
+.formio-form .all-options .choices__list[aria-expanded] .choices__list {
+  max-height: none !important;
+  overflow-y: visible;
+}
+
 .formio-form .choices__list--dropdown .choices__list::-webkit-scrollbar,
 .formio-form .choices__list[aria-expanded] .choices__list::-webkit-scrollbar {
   width: 12px;
