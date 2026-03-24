@@ -78948,3 +78948,25 @@ svg.leaflet-zoom-animated {
 .v-card--variant-outlined[data-v-23dd6b4d] {
     border: thin solid rgba(0, 0, 0, .12) !important
 }
+
+/* Show all options for Choices dropdowns when component/class uses .all-options */
+.all-options .choices__list--dropdown,
+.all-options .choices__list[aria-expanded],
+.all-options .choices__list--dropdown .choices__list,
+.all-options .choices__list[aria-expanded] .choices__list,
+.choices.all-options .choices__list--dropdown,
+.choices.all-options .choices__list[aria-expanded],
+.choices.all-options .choices__list--dropdown .choices__list,
+.choices.all-options .choices__list[aria-expanded] .choices__list,
+.choices__list--dropdown.all-options,
+.choices__list[aria-expanded].all-options,
+.choices__list--dropdown.all-options .choices__list,
+.choices__list[aria-expanded].all-options .choices__list,
+select.all-options + .choices .choices__list--dropdown,
+select.all-options + .choices .choices__list[aria-expanded],
+select.all-options + .choices .choices__list--dropdown .choices__list,
+select.all-options + .choices .choices__list[aria-expanded] .choices__list {
+    max-height: none !important;
+    height: auto !important;
+    overflow-y: visible !important
+}
