@@ -436,10 +436,25 @@ label.field-required > div,
   z-index: var(--fio-bc-dropdown-z);
 }
 
+.formio-form .all-options .choices__list--dropdown,
+.formio-form .all-options .choices__list[aria-expanded],
 .formio-form .all-options .choices__list--dropdown .choices__list,
-.formio-form .all-options .choices__list[aria-expanded] .choices__list {
+.formio-form .all-options .choices__list[aria-expanded] .choices__list,
+.formio-form .choices.all-options .choices__list--dropdown,
+.formio-form .choices.all-options .choices__list[aria-expanded],
+.formio-form .choices.all-options .choices__list--dropdown .choices__list,
+.formio-form .choices.all-options .choices__list[aria-expanded] .choices__list,
+.formio-form .choices__list--dropdown.all-options,
+.formio-form .choices__list[aria-expanded].all-options,
+.formio-form .choices__list--dropdown.all-options .choices__list,
+.formio-form .choices__list[aria-expanded].all-options .choices__list,
+.formio-form select.all-options + .choices .choices__list--dropdown,
+.formio-form select.all-options + .choices .choices__list[aria-expanded],
+.formio-form select.all-options + .choices .choices__list--dropdown .choices__list,
+.formio-form select.all-options + .choices .choices__list[aria-expanded] .choices__list {
   max-height: none !important;
-  overflow-y: visible;
+  height: auto !important;
+  overflow-y: visible !important;
 }
 
 .formio-form .choices__list--dropdown .choices__list::-webkit-scrollbar,
