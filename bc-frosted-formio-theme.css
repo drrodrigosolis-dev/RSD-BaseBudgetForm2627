@@ -3108,12 +3108,14 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 /*
   Utility class: move EditGrid action buttons into a bottom footer rail.
   Add `bc-editgrid-footer-actions` in the EditGrid "Custom CSS Class" field.
-  Desktop: Save + Cancel left, Add Another right.
+  Desktop: Save + Cancel right, Add Another right.
   Mobile: stack buttons for touch-safe spacing.
 */
 .formio-form .formio-component-editgrid.bc-editgrid-footer-actions {
   --bc-editgrid-footer-row-height: 4.75rem;
-  --bc-editgrid-footer-gap: 1.1rem;
+  --bc-editgrid-footer-gap: 1.5rem;
+  --bc-editgrid-footer-group-gap: 0.9rem;
+  --bc-editgrid-add-row-width: 10rem;
   position: relative;
   padding-bottom: var(--bc-editgrid-footer-row-height);
 }
@@ -3123,7 +3125,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   [ref$="-cancelRow"]
 ) {
   position: absolute;
-  left: 0;
+  right: calc(var(--bc-editgrid-add-row-width) + var(--bc-editgrid-footer-group-gap));
   bottom: 0;
   z-index: 2;
   display: flex;
@@ -3143,6 +3145,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   right: 0;
   bottom: 0;
   z-index: 2;
+  width: var(--bc-editgrid-add-row-width);
 }
 
 .formio-form .formio-component-editgrid.bc-editgrid-footer-actions tr:has(
