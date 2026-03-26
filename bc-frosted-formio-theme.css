@@ -3106,6 +3106,87 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 }
 
 /*
+  Utility class: move EditGrid action buttons into a bottom footer rail.
+  Add `bc-editgrid-footer-actions` in the EditGrid "Custom CSS Class" field.
+  Desktop: Save + Cancel left, Add Another right.
+  Mobile: stack buttons for touch-safe spacing.
+*/
+.formio-form .formio-component-editgrid.bc-editgrid-footer-actions {
+  --bc-editgrid-footer-row-height: 4.75rem;
+  --bc-editgrid-footer-gap: 1.1rem;
+  position: relative;
+  padding-bottom: var(--bc-editgrid-footer-row-height);
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-footer-actions .editgrid-actions:has(
+  [ref$="-saveRow"],
+  [ref$="-cancelRow"]
+) {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--bc-editgrid-footer-gap);
+}
+
+.formio-form
+  .formio-component-editgrid.bc-editgrid-footer-actions
+  .editgrid-actions:has([ref$="-saveRow"], [ref$="-cancelRow"])
+  > .btn {
+  min-width: 7.25rem;
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-footer-actions button[ref$="-addRow"] {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-footer-actions tr:has(
+  [ref$="-saveRow"],
+  [ref$="-cancelRow"]
+) > td:last-child {
+  width: 0;
+  padding: 0;
+  border: 0;
+}
+
+@media (max-width: 767.98px) {
+  .formio-form .formio-component-editgrid.bc-editgrid-footer-actions {
+    padding-bottom: 0;
+  }
+
+  .formio-form
+    .formio-component-editgrid.bc-editgrid-footer-actions
+    .editgrid-actions:has([ref$="-saveRow"], [ref$="-cancelRow"]) {
+    position: static;
+    margin-top: 0.95rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .formio-form
+    .formio-component-editgrid.bc-editgrid-footer-actions
+    .editgrid-actions:has([ref$="-saveRow"], [ref$="-cancelRow"])
+    > .btn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .formio-form .formio-component-editgrid.bc-editgrid-footer-actions button[ref$="-addRow"] {
+    position: static;
+    display: block;
+    width: 100%;
+    margin-top: 0.95rem;
+  }
+}
+
+/*
   Table cell background helpers (60% opacity, brighter hues for black text).
   Usage in Form.io: add one class to the component inside the target cell.
   Primary mode colors only the containing <td> so inner controls do not get layered tint.
