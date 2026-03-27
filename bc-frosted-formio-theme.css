@@ -3120,6 +3120,15 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   padding-bottom: var(--bc-editgrid-footer-row-height);
 }
 
+.formio-form .formio-component-editgrid.bc-editgrid-footer-actions.formio-hidden,
+.formio-form .formio-component-editgrid.bc-editgrid-footer-actions[hidden] {
+  display: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  min-height: 0 !important;
+}
+
 .formio-form .formio-component-editgrid.bc-editgrid-footer-actions .editgrid-actions:has(
   [ref$="-saveRow"],
   [ref$="-cancelRow"]
