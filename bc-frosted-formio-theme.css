@@ -550,6 +550,47 @@ label.field-required > div,
   overflow: visible;
 }
 
+/*
+  EditGrid dropdown escape hatch:
+  Choices menus inside EditGrid rows can be clipped by table wrappers and painted
+  under neighboring components. Open the EditGrid stack only while a menu is open.
+*/
+.formio-form .formio-component-editgrid:has(.choices.is-open),
+.formio-form .formio-component-editgrid:has(.choices__list--dropdown.is-active),
+.formio-form .formio-component-editgrid:has(.choices__list[aria-expanded="true"]) {
+  position: relative;
+  z-index: calc(var(--fio-bc-dropdown-z) - 5);
+  overflow: visible;
+}
+
+.formio-form .formio-component-editgrid:has(.choices.is-open) :is(
+  .editgrid-table-container,
+  .table-responsive,
+  .table,
+  .datagrid-table
+),
+.formio-form .formio-component-editgrid:has(.choices__list--dropdown.is-active) :is(
+  .editgrid-table-container,
+  .table-responsive,
+  .table,
+  .datagrid-table
+),
+.formio-form .formio-component-editgrid:has(.choices__list[aria-expanded="true"]) :is(
+  .editgrid-table-container,
+  .table-responsive,
+  .table,
+  .datagrid-table
+) {
+  overflow: visible;
+}
+
+.formio-form .formio-component-editgrid td:has(.choices.is-open),
+.formio-form .formio-component-editgrid td:has(.choices__list--dropdown.is-active),
+.formio-form .formio-component-editgrid td:has(.choices__list[aria-expanded="true"]) {
+  position: relative;
+  z-index: calc(var(--fio-bc-dropdown-z) - 2);
+}
+
 .formio-form .choices__item--selectable.is-highlighted {
   background: rgba(15, 94, 168, 0.12);
   color: var(--fio-bc-text);
