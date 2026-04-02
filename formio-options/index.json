@@ -78,5 +78,10 @@
     "columnName": "STIDFY2526",
     "file": "stidfy2526.json",
     "itemCount": 262
+  },
+  {
+    "columnName": "ProjectInfo",
+    "file": "ProjectInfo.json",
+    "itemCount": 5
   }
 ]

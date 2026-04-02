@@ -1,0 +1,52 @@
+[
+  {
+    "stidAndTitle": "R01 - XXXX",
+    "placematCategory": "A",
+    "placematSubcategory": "a",
+    "branch": "f",
+    "regionSection": "k",
+    "leadPositionOrUnit": "p",
+    "description": "u",
+    "admApprovedStewardshipTogetherFunding": 100
+  },
+  {
+    "stidAndTitle": "R02 - XXXX",
+    "placematCategory": "B",
+    "placematSubcategory": "b",
+    "branch": "g",
+    "regionSection": "l",
+    "leadPositionOrUnit": "q",
+    "description": "v",
+    "admApprovedStewardshipTogetherFunding": 200
+  },
+  {
+    "stidAndTitle": "R03 - XXXX",
+    "placematCategory": "C",
+    "placematSubcategory": "c",
+    "branch": "h",
+    "regionSection": "m",
+    "leadPositionOrUnit": "r",
+    "description": "w",
+    "admApprovedStewardshipTogetherFunding": 300
+  },
+  {
+    "stidAndTitle": "R04 - XXXX",
+    "placematCategory": "D",
+    "placematSubcategory": "d",
+    "branch": "i",
+    "regionSection": "n",
+    "leadPositionOrUnit": "s",
+    "description": "x",
+    "admApprovedStewardshipTogetherFunding": 400
+  },
+  {
+    "stidAndTitle": "R05 - XXXX",
+    "placematCategory": "E",
+    "placematSubcategory": "e",
+    "branch": "j",
+    "regionSection": "o",
+    "leadPositionOrUnit": "t",
+    "description": "y",
+    "admApprovedStewardshipTogetherFunding": 500
+  }
+]
