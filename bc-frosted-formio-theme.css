@@ -3153,15 +3153,24 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   --bc-editgrid-condensed-cell-padding-x.
 */
 .formio-form .formio-component-editgrid.bc-editgrid-condensed {
-  --bc-editgrid-condensed-gap: 0.38rem;
-  --bc-editgrid-condensed-label-gap: 0.22rem;
-  --bc-editgrid-condensed-help-gap: 0.24rem;
-  --bc-editgrid-condensed-cell-padding-y: 0.58rem;
-  --bc-editgrid-condensed-cell-padding-x: 0.62rem;
+  --bc-editgrid-condensed-gap: 0.12rem;
+  --bc-editgrid-condensed-label-gap: 0.06rem;
+  --bc-editgrid-condensed-help-gap: 0.08rem;
+  --bc-editgrid-condensed-cell-padding-y: 0.28rem;
+  --bc-editgrid-condensed-cell-padding-x: 0.44rem;
+  --bc-editgrid-condensed-shell-padding-y: 0.2rem;
+  --bc-editgrid-condensed-shell-padding-x: 0.45rem;
+  --bc-editgrid-condensed-control-min-height: 34px;
+  margin-top: -0.48rem !important;
+  margin-bottom: 0.16rem !important;
+}
+
+.formio-form :is(.formio-component, .form-group):has(+ .formio-component-editgrid.bc-editgrid-condensed) {
+  margin-bottom: 0.16rem !important;
 }
 
 .formio-form .formio-component-editgrid.bc-editgrid-condensed :is(.formio-component, .form-group) {
-  margin-bottom: var(--bc-editgrid-condensed-gap);
+  margin-bottom: var(--bc-editgrid-condensed-gap) !important;
 }
 
 .formio-form .formio-component-editgrid.bc-editgrid-condensed :is(
@@ -3170,7 +3179,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   .col-form-label,
   legend
 ) {
-  margin-bottom: var(--bc-editgrid-condensed-label-gap);
+  margin-bottom: var(--bc-editgrid-condensed-label-gap) !important;
 }
 
 .formio-form .formio-component-editgrid.bc-editgrid-condensed :is(
@@ -3178,7 +3187,23 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   .help-block,
   .form-text
 ) {
-  margin-top: var(--bc-editgrid-condensed-help-gap);
+  margin-top: var(--bc-editgrid-condensed-help-gap) !important;
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-condensed .col-form-label > :is(
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  div
+) {
+  margin-top: 0 !important;
+  margin-bottom: 0.12rem !important;
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-condensed .col-form-label > :last-child {
+  margin-bottom: 0 !important;
 }
 
 .formio-form .formio-component-editgrid.bc-editgrid-condensed :is(
@@ -3187,7 +3212,37 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   .datagrid-table th,
   .datagrid-table td
 ) {
-  padding: var(--bc-editgrid-condensed-cell-padding-y) var(--bc-editgrid-condensed-cell-padding-x);
+  padding: var(--bc-editgrid-condensed-cell-padding-y) var(--bc-editgrid-condensed-cell-padding-x) !important;
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-condensed :is(
+  .panel,
+  .card,
+  .well,
+  .container-component,
+  fieldset,
+  .table-responsive,
+  .alert
+) {
+  padding: var(--bc-editgrid-condensed-shell-padding-y) var(--bc-editgrid-condensed-shell-padding-x) !important;
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-condensed :is(
+  .form-control,
+  select.form-control,
+  textarea.form-control,
+  .choices__inner,
+  .input-group-text
+) {
+  min-height: var(--bc-editgrid-condensed-control-min-height);
+  padding-top: 0.22rem !important;
+  padding-bottom: 0.22rem !important;
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-condensed .btn {
+  min-height: 34px;
+  padding-top: 0.22rem;
+  padding-bottom: 0.22rem;
 }
 
 /*
@@ -3280,6 +3335,35 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
     display: block;
     width: 100%;
     margin-top: 0.95rem;
+  }
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-footer-actions.bc-editgrid-condensed {
+  --bc-editgrid-footer-row-height: 3.25rem;
+  --bc-editgrid-footer-gap: 0.55rem;
+  --bc-editgrid-footer-group-gap: 0.4rem;
+  --bc-editgrid-add-row-width: 8.25rem;
+}
+
+.formio-form
+  .formio-component-editgrid.bc-editgrid-footer-actions.bc-editgrid-condensed
+  .editgrid-actions:has([ref$="-saveRow"], [ref$="-cancelRow"])
+  > .btn {
+  min-width: 5.8rem;
+}
+
+@media (max-width: 767.98px) {
+  .formio-form
+    .formio-component-editgrid.bc-editgrid-footer-actions.bc-editgrid-condensed
+    .editgrid-actions:has([ref$="-saveRow"], [ref$="-cancelRow"]) {
+    margin-top: 0.4rem;
+    gap: 0.4rem;
+  }
+
+  .formio-form
+    .formio-component-editgrid.bc-editgrid-footer-actions.bc-editgrid-condensed
+    button[ref$="-addRow"] {
+    margin-top: 0.4rem;
   }
 }
 
