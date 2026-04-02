@@ -465,7 +465,7 @@ label.field-required > div,
 .formio-form .compact-option-rows .choices__list[aria-expanded] .choices__list,
 .formio-form select.compact-option-rows + .choices .choices__list--dropdown .choices__list,
 .formio-form select.compact-option-rows + .choices .choices__list[aria-expanded] .choices__list {
-  padding: 0 !important;
+  padding: 1px 0 !important;
 }
 
 .formio-form .compact-option-rows .choices__list--dropdown .choices__item,
@@ -473,9 +473,9 @@ label.field-required > div,
 .formio-form select.compact-option-rows + .choices .choices__list--dropdown .choices__item,
 .formio-form select.compact-option-rows + .choices .choices__list[aria-expanded] .choices__item {
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 2px 0 !important;
   min-height: 0 !important;
-  line-height: 1 !important;
+  line-height: 1.15 !important;
 }
 
 .formio-form .compact-option-rows .choices__item table,
@@ -492,8 +492,8 @@ label.field-required > div,
 .formio-form select.compact-option-rows + .choices .choices__item td,
 .formio-form select.compact-option-rows + .choices .choices__item p {
   margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1 !important;
+  padding: 1px 0 !important;
+  line-height: 1.15 !important;
 }
 
 .formio-form .choices__list--dropdown .choices__list::-webkit-scrollbar,
