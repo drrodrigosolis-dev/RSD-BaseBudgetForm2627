@@ -457,6 +457,45 @@ label.field-required > div,
   overflow-y: visible !important;
 }
 
+/*
+  Use class "compact-option-rows" on a Select component (or on the <select>)
+  to collapse rich HTML option spacing to nearly zero.
+*/
+.formio-form .compact-option-rows .choices__list--dropdown .choices__list,
+.formio-form .compact-option-rows .choices__list[aria-expanded] .choices__list,
+.formio-form select.compact-option-rows + .choices .choices__list--dropdown .choices__list,
+.formio-form select.compact-option-rows + .choices .choices__list[aria-expanded] .choices__list {
+  padding: 0 !important;
+}
+
+.formio-form .compact-option-rows .choices__list--dropdown .choices__item,
+.formio-form .compact-option-rows .choices__list[aria-expanded] .choices__item,
+.formio-form select.compact-option-rows + .choices .choices__list--dropdown .choices__item,
+.formio-form select.compact-option-rows + .choices .choices__list[aria-expanded] .choices__item {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  line-height: 1 !important;
+}
+
+.formio-form .compact-option-rows .choices__item table,
+.formio-form select.compact-option-rows + .choices .choices__item table {
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  margin: 0 !important;
+}
+
+.formio-form .compact-option-rows .choices__item th,
+.formio-form .compact-option-rows .choices__item td,
+.formio-form .compact-option-rows .choices__item p,
+.formio-form select.compact-option-rows + .choices .choices__item th,
+.formio-form select.compact-option-rows + .choices .choices__item td,
+.formio-form select.compact-option-rows + .choices .choices__item p {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
 .formio-form .choices__list--dropdown .choices__list::-webkit-scrollbar,
 .formio-form .choices__list[aria-expanded] .choices__list::-webkit-scrollbar {
   width: 12px;
