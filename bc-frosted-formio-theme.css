@@ -3145,6 +3145,52 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 }
 
 /*
+  Utility class: condense EditGrid vertical spacing.
+  Add `bc-editgrid-condensed` in the EditGrid "Custom CSS Class" field.
+  Optional per-grid overrides:
+  --bc-editgrid-condensed-gap, --bc-editgrid-condensed-label-gap,
+  --bc-editgrid-condensed-help-gap, --bc-editgrid-condensed-cell-padding-y,
+  --bc-editgrid-condensed-cell-padding-x.
+*/
+.formio-form .formio-component-editgrid.bc-editgrid-condensed {
+  --bc-editgrid-condensed-gap: 0.38rem;
+  --bc-editgrid-condensed-label-gap: 0.22rem;
+  --bc-editgrid-condensed-help-gap: 0.24rem;
+  --bc-editgrid-condensed-cell-padding-y: 0.58rem;
+  --bc-editgrid-condensed-cell-padding-x: 0.62rem;
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-condensed :is(.formio-component, .form-group) {
+  margin-bottom: var(--bc-editgrid-condensed-gap);
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-condensed :is(
+  .control-label,
+  .form-label,
+  .col-form-label,
+  legend
+) {
+  margin-bottom: var(--bc-editgrid-condensed-label-gap);
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-condensed :is(
+  .description,
+  .help-block,
+  .form-text
+) {
+  margin-top: var(--bc-editgrid-condensed-help-gap);
+}
+
+.formio-form .formio-component-editgrid.bc-editgrid-condensed :is(
+  .table th,
+  .table td,
+  .datagrid-table th,
+  .datagrid-table td
+) {
+  padding: var(--bc-editgrid-condensed-cell-padding-y) var(--bc-editgrid-condensed-cell-padding-x);
+}
+
+/*
   Utility class: move EditGrid action buttons into a bottom footer rail.
   Add `bc-editgrid-footer-actions` in the EditGrid "Custom CSS Class" field.
   Desktop: Save + Cancel right, Add Another right.
