@@ -3039,7 +3039,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 
 /*
   Non-table EditGrid mode (Display as Table off):
-  apply frosted tint/modifier stack to list-group shell and rows.
+  apply frosted tint/modifier stack to the list-group shell.
 */
 :is(
   .bc-frost-lite,
@@ -3051,28 +3051,67 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   [class*=" bc-frost-sat-"],
   [class^="bc-frost-bright-"],
   [class*=" bc-frost-bright-"]
-).formio-component-editgrid :is(
-  .editgrid-listgroup,
-  .editgrid-listgroup .list-group-item
-) {
-  border-color: var(--bc-frost-lite-border);
+).formio-component-editgrid .editgrid-listgroup {
+  border-color: var(--bc-frost-lite-border) !important;
   background:
-    linear-gradient(180deg, var(--bc-frost-lite-top), var(--bc-frost-lite-bottom));
-  background-color: var(--bc-frost-lite-surface);
+    linear-gradient(180deg, var(--bc-frost-lite-top), var(--bc-frost-lite-bottom)) !important;
+  background-color: var(--bc-frost-lite-surface) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-    0 3px 8px rgba(8, 35, 55, 0.022);
+    0 3px 8px rgba(8, 35, 55, 0.022) !important;
   backdrop-filter:
     blur(var(--bc-frost-lite-blur))
     saturate(var(--bc-frost-lite-backdrop-sat))
     brightness(var(--bc-frost-lite-brightness))
-    contrast(var(--bc-frost-lite-contrast));
+    contrast(var(--bc-frost-lite-contrast)) !important;
   -webkit-backdrop-filter:
     blur(var(--bc-frost-lite-blur))
     saturate(var(--bc-frost-lite-backdrop-sat))
     brightness(var(--bc-frost-lite-brightness))
-    contrast(var(--bc-frost-lite-contrast));
+    contrast(var(--bc-frost-lite-contrast)) !important;
+}
+
+/*
+  Keep list rows transparent so shell frost remains visible.
+  Also force against bootstrap/formio list-group default white backgrounds.
+*/
+:is(
+  .bc-frost-lite,
+  [class^="bc-frost-lite-"],
+  [class*=" bc-frost-lite-"],
+  [class^="bc-frost-alpha-"],
+  [class*=" bc-frost-alpha-"],
+  [class^="bc-frost-sat-"],
+  [class*=" bc-frost-sat-"],
+  [class^="bc-frost-bright-"],
+  [class*=" bc-frost-bright-"]
+).formio-component-editgrid .editgrid-listgroup.list-group > .list-group-item {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-color: var(--bc-frost-lite-border) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:is(
+  .bc-frost-lite,
+  [class^="bc-frost-lite-"],
+  [class*=" bc-frost-lite-"],
+  [class^="bc-frost-alpha-"],
+  [class*=" bc-frost-alpha-"],
+  [class^="bc-frost-sat-"],
+  [class*=" bc-frost-sat-"],
+  [class^="bc-frost-bright-"],
+  [class*=" bc-frost-bright-"]
+).formio-component-editgrid .editgrid-listgroup.list-group > .list-group-item.list-group-header {
+  background-color: hsl(
+    var(--bc-frost-lite-tone-h)
+    var(--bc-frost-lite-tone-s)
+    var(--bc-frost-lite-tone-l) /
+    calc(var(--bc-frost-lite-alpha-surface) + 0.14)
+  ) !important;
 }
 
 /*
@@ -3092,8 +3131,7 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   [class*=" bc-frost-bright-"]
 ).formio-component-editgrid :is(
   .table-responsive,
-  .editgrid-listgroup,
-  .editgrid-listgroup .list-group-item
+  .editgrid-listgroup
 ) {
   isolation: isolate;
   -webkit-backface-visibility: hidden;
@@ -3136,7 +3174,6 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
     fieldset,
     .table-responsive,
     .editgrid-listgroup,
-    .editgrid-listgroup .list-group-item,
     .alert
   ) {
     background:
