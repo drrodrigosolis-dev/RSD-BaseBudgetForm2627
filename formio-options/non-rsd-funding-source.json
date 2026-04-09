@@ -1,86 +1,50 @@
 [
   {
-    "label": "HCTF",
-    "value": "hctf"
+    "label": "2BT - Two Billion Trees (Fed - NRCAN)",
+    "value": "2btTwoBillionTreesFedNrcan"
   },
   {
-    "label": "Fed - NSCSF (ECCC)",
-    "value": "fedNscsfEccc"
+    "label": "Ecological Corridors (Fed  -Parks Can)",
+    "value": "ecologicalCorridorsFedParksCan"
   },
   {
-    "label": "FOR Research",
-    "value": "forResearch"
+    "label": "FFSBC - Freshwater Fisheries Society of BC",
+    "value": "ffsbcFreshwaterFisheriesSocietyOfBc"
+  },
+  {
+    "label": "FOR – Research Program Funding",
+    "value": "forResearchProgramFunding"
+  },
+  {
+    "label": "FWCP - Fish and Wildlife Compensation Program",
+    "value": "fwcpFishAndWildlifeCompensationProgram"
+  },
+  {
+    "label": "HCTF – Habitat Conservation Trust Foundation",
+    "value": "hctfHabitatConservationTrustFoundation"
+  },
+  {
+    "label": "IFP - Indigenous Funding Program (MIRR)",
+    "value": "ifpIndigenousFundingProgramMirr"
+  },
+  {
+    "label": "License Plate Fund (BC Parks)",
+    "value": "licensePlateFundBcParks"
+  },
+  {
+    "label": "NEEF - Nechako Environmental Enhancement Fund",
+    "value": "neefNechakoEnvironmentalEnhancementFund"
+  },
+  {
+    "label": "NSCS - Nature Smart Climate Solutions Fund (Fed - ECCC)",
+    "value": "nscsNatureSmartClimateSolutionsFundFedEccc"
   },
   {
     "label": "Treaty 8 WWG",
     "value": "treaty8Wwg"
   },
   {
-    "label": "Fed - 2BT (NRCAN)",
-    "value": "fed2btNrcan"
-  },
-  {
-    "label": "Indigenous Funding Program (MIRR)",
-    "value": "indigenousFundingProgramMirr"
-  },
-  {
-    "label": "KTOI",
-    "value": "ktoi"
-  },
-  {
-    "label": "Fed - Caribou SMC (ECCC)",
-    "value": "fedCaribouSmcEccc"
-  },
-  {
-    "label": "FFSBC",
-    "value": "ffsbc"
-  },
-  {
-    "label": "IDFW",
-    "value": "idfw"
-  },
-  {
-    "label": "Forestry Engineering?",
-    "value": "forestryEngineering"
-  },
-  {
-    "label": "Fed - IPSAR (ECCC)",
-    "value": "fedIpsarEccc"
-  },
-  {
-    "label": "Fed - EcoCorridors (ParksCan)",
-    "value": "fedEcocorridorsParkscan"
-  },
-  {
-    "label": "Y2Y",
-    "value": "y2y"
-  },
-  {
-    "label": "Goat Funding Alliance",
-    "value": "goatFundingAlliance"
-  },
-  {
-    "label": "Skagit Environmental Endowment Commission",
-    "value": "skagitEnvironmentalEndowmentCommission"
-  },
-  {
-    "label": "SPOW Deferral",
-    "value": "spowDeferral"
-  },
-  {
-    "label": "Wild Sheep Foundation/Society",
-    "value": "wildSheepFoundationSociety"
-  },
-  {
-    "label": "MOTT",
-    "value": "mott"
-  },
-  {
-    "label": "NEEF",
-    "value": "neef"
-  },
-  {
-    "label": "Fed - Caribou Boreal (ECCC)",
-    "value": "fedCaribouBorealEccc"
+    "label": "Other",
+    "value": "other"
   }
 ]
