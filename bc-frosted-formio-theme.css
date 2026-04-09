@@ -567,19 +567,25 @@ label.field-required > div,
   .editgrid-table-container,
   .table-responsive,
   .table,
-  .datagrid-table
+  .datagrid-table,
+  .editgrid-listgroup,
+  .editgrid-listgroup .list-group-item
 ),
 .formio-form .formio-component-editgrid:has(.choices__list--dropdown.is-active) :is(
   .editgrid-table-container,
   .table-responsive,
   .table,
-  .datagrid-table
+  .datagrid-table,
+  .editgrid-listgroup,
+  .editgrid-listgroup .list-group-item
 ),
 .formio-form .formio-component-editgrid:has(.choices__list[aria-expanded="true"]) :is(
   .editgrid-table-container,
   .table-responsive,
   .table,
-  .datagrid-table
+  .datagrid-table,
+  .editgrid-listgroup,
+  .editgrid-listgroup .list-group-item
 ) {
   overflow: visible;
 }
@@ -587,6 +593,15 @@ label.field-required > div,
 .formio-form .formio-component-editgrid td:has(.choices.is-open),
 .formio-form .formio-component-editgrid td:has(.choices__list--dropdown.is-active),
 .formio-form .formio-component-editgrid td:has(.choices__list[aria-expanded="true"]) {
+  position: relative;
+  z-index: calc(var(--fio-bc-dropdown-z) - 2);
+}
+
+.formio-form .formio-component-editgrid .editgrid-listgroup .list-group-item:has(.choices.is-open),
+.formio-form .formio-component-editgrid .editgrid-listgroup .list-group-item:has(.choices__list--dropdown.is-active),
+.formio-form .formio-component-editgrid .editgrid-listgroup .list-group-item:has(
+  .choices__list[aria-expanded="true"]
+) {
   position: relative;
   z-index: calc(var(--fio-bc-dropdown-z) - 2);
 }
@@ -3023,6 +3038,44 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
 }
 
 /*
+  Non-table EditGrid mode (Display as Table off):
+  apply frosted tint/modifier stack to list-group shell and rows.
+*/
+:is(
+  .bc-frost-lite,
+  [class^="bc-frost-lite-"],
+  [class*=" bc-frost-lite-"],
+  [class^="bc-frost-alpha-"],
+  [class*=" bc-frost-alpha-"],
+  [class^="bc-frost-sat-"],
+  [class*=" bc-frost-sat-"],
+  [class^="bc-frost-bright-"],
+  [class*=" bc-frost-bright-"]
+).formio-component-editgrid :is(
+  .editgrid-listgroup,
+  .editgrid-listgroup .list-group-item
+) {
+  border-color: var(--bc-frost-lite-border);
+  background:
+    linear-gradient(180deg, var(--bc-frost-lite-top), var(--bc-frost-lite-bottom));
+  background-color: var(--bc-frost-lite-surface);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    0 3px 8px rgba(8, 35, 55, 0.022);
+  backdrop-filter:
+    blur(var(--bc-frost-lite-blur))
+    saturate(var(--bc-frost-lite-backdrop-sat))
+    brightness(var(--bc-frost-lite-brightness))
+    contrast(var(--bc-frost-lite-contrast));
+  -webkit-backdrop-filter:
+    blur(var(--bc-frost-lite-blur))
+    saturate(var(--bc-frost-lite-backdrop-sat))
+    brightness(var(--bc-frost-lite-brightness))
+    contrast(var(--bc-frost-lite-contrast));
+}
+
+/*
   Scroll/compositing stability for frosted EditGrid surfaces:
   when backdrop layers are throttled during active scroll, keep a stronger base
   fill so perceived opacity does not collapse.
@@ -3037,7 +3090,11 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
   [class*=" bc-frost-sat-"],
   [class^="bc-frost-bright-"],
   [class*=" bc-frost-bright-"]
-).formio-component-editgrid .table-responsive {
+).formio-component-editgrid :is(
+  .table-responsive,
+  .editgrid-listgroup,
+  .editgrid-listgroup .list-group-item
+) {
   isolation: isolate;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
@@ -3078,6 +3135,8 @@ body.modal-open .accordion.builder-sidebar.builder-sidebar_scroll {
     .container-component,
     fieldset,
     .table-responsive,
+    .editgrid-listgroup,
+    .editgrid-listgroup .list-group-item,
     .alert
   ) {
     background:
