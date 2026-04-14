@@ -1,10 +1,26 @@
 [
   {
+    "label": "RSD Base - Caribou Recovery",
+    "value": "rsdBaseCaribouRecovery"
+  },
+  {
+    "label": "RSD Base - Compulsory Inspection",
+    "value": "rsdBaseCompulsoryInspection"
+  },
+  {
+    "label": "RSD Base - Wildlife Inventory",
+    "value": "rsdBaseWildlifeInventory"
+  },
+  {
+    "label": "RSD Base - Other",
+    "value": "rsdBaseOther"
+  },
+  {
     "label": "2BT - Two Billion Trees (Fed - NRCAN)",
     "value": "2btTwoBillionTreesFedNrcan"
   },
   {
-    "label": "Ecological Corridors (Fed  -Parks Can)",
+    "label": "Ecological Corridors (Fed - Parks Can)",
     "value": "ecologicalCorridorsFedParksCan"
   },
   {
@@ -16,12 +32,12 @@
     "value": "forResearchProgramFunding"
   },
   {
-    "label": "FWCP - Fish and Wildlife Compensation Program",
-    "value": "fwcpFishAndWildlifeCompensationProgram"
+    "label": "FWCP - Fish and Wildlife Compensation",
+    "value": "fwcpFishAndWildlifeCompensation"
   },
   {
-    "label": "HCTF – Habitat Conservation Trust Foundation",
-    "value": "hctfHabitatConservationTrustFoundation"
+    "label": "HCTF - Habitat Conservation Trust",
+    "value": "hctfHabitatConservationTrust"
   },
   {
     "label": "IFP - Indigenous Funding Program (MIRR)",
@@ -32,19 +48,23 @@
     "value": "licensePlateFundBcParks"
   },
   {
-    "label": "NEEF - Nechako Environmental Enhancement Fund",
-    "value": "neefNechakoEnvironmentalEnhancementFund"
+    "label": "NEEF - Nechako Environmental",
+    "value": "neefNechakoEnvironmental"
   },
   {
-    "label": "NSCS - Nature Smart Climate Solutions Fund (Fed - ECCC)",
-    "value": "nscsNatureSmartClimateSolutionsFundFedEccc"
+    "label": "NSCS - Nature Smart Climate Solutions Fund",
+    "value": "nscsNatureSmartClimateSolutionsFund"
   },
   {
     "label": "Treaty 8 WWG",
     "value": "treaty8Wwg"
   },
   {
-    "label": "Other",
-    "value": "other"
+    "label": "State - Other",
+    "value": "stateOther"
+  },
+  {
+    "label": "Other External Source",
+    "value": "otherExternalSource"
   }
 ]
