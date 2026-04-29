@@ -685,6 +685,9 @@ label.field-required > div,
 
 .formio-form .formio-component-radio .form-check-input[type="radio"],
 .formio-form .formio-component-simpleradioadvanced .form-check-input[type="radio"] {
+  flex: 0 0 1.1rem;
+  min-width: 1.1rem;
+  min-height: 1.1rem;
   transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, filter 140ms ease;
 }
 
