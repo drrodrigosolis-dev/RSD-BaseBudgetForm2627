@@ -566,6 +566,23 @@ label.field-required > div,
 }
 
 /*
+  backdrop-filter stacking-context escape hatch:
+  backdrop-filter on .card creates its own stacking context, trapping child z-indexes
+  so that later sibling elements paint over the dropdown regardless of z-index 200001.
+  Clearing backdrop-filter dissolves that context so the dropdown competes at the panel
+  level (z-index 199997) in the document stacking order.
+*/
+.formio-form .card:has(.choices.is-open),
+.formio-form .card:has(.choices__list--dropdown.is-active),
+.formio-form .well:has(.choices.is-open),
+.formio-form .well:has(.choices__list--dropdown.is-active),
+.formio-form fieldset:has(.choices.is-open),
+.formio-form fieldset:has(.choices__list--dropdown.is-active) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/*
   EditGrid dropdown escape hatch:
   Choices menus inside EditGrid rows can be clipped by table wrappers and painted
   under neighboring components. Open the EditGrid stack only while a menu is open.
