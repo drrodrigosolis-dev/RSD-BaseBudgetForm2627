@@ -168,6 +168,33 @@
   -webkit-backdrop-filter: none !important;
 }
 
+/*
+  Move backdrop-filter off .card/.well to a ::after pseudo-element.
+  When backdrop-filter is on the element itself it creates a stacking context
+  that traps child z-indexes (e.g. the dropdown at z-index 200001 becomes
+  local to the card SC, then a later sibling card paints over it).
+  Placing the blur on ::after (z-index -1, behind all card content) keeps the
+  frosted-glass visual while the card element itself forms no stacking context,
+  so the dropdown competes freely in the parent (panel) stacking context.
+*/
+.formio-form .card,
+.formio-form .well {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.formio-form .card::after,
+.formio-form .well::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  backdrop-filter: blur(20px) saturate(112%) brightness(118%) contrast(86%);
+  -webkit-backdrop-filter: blur(20px) saturate(112%) brightness(118%) contrast(86%);
+  z-index: -1;
+  pointer-events: none;
+}
+
 .formio-form .panel::before,
 .formio-form .card::before,
 .formio-form .container-component::before,
@@ -645,28 +672,6 @@ label.field-required > div,
 .formio-form:has(.choices__list[aria-expanded="true"]) .well {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-}
-
-/*
-  Dissolve panel stacking contexts when any dropdown is open.
-  Removing backdrop-filter from cards is not enough: the panel components
-  themselves have position:relative + z-index (5/4/3...) which creates
-  stacking contexts that trap the dropdown list. When the dropdown opens
-  upward (is-flipped), it extends into the area of an earlier panel with
-  a HIGHER z-index, which paints over panel1's entire SC including the
-  dropdown. Setting z-index:auto on all panels when a dropdown is open
-  dissolves those SCs so the dropdown's z-index:200001 floats to the
-  root stacking context and nothing can paint over it.
-*/
-.formio-form:has(.choices.is-open) .formio-component-panel,
-.formio-form:has(.choices.is-open) .formio-component-triggerPanel,
-.formio-form:has(.choices__list--dropdown.is-active) .formio-component-panel,
-.formio-form:has(.choices__list--dropdown.is-active) .formio-component-triggerPanel,
-.formio-form:has(.selection.dropdown.active) .formio-component-panel,
-.formio-form:has(.selection.dropdown.active) .formio-component-triggerPanel,
-.formio-form:has(.choices__list[aria-expanded="true"]) .formio-component-panel,
-.formio-form:has(.choices__list[aria-expanded="true"]) .formio-component-triggerPanel {
-  z-index: auto !important;
 }
 
 /*
