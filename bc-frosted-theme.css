@@ -625,10 +625,23 @@ label.field-required > div,
   overflow: visible;
 }
 
-.formio-form .card:has(.selection.dropdown.active),
-.formio-form .card:has(.selection.dropdown.visible),
-.formio-form .well:has(.selection.dropdown.active),
-.formio-form fieldset:has(.selection.dropdown.active) {
+/*
+  Form-level nuclear: when ANY dropdown is open, dissolve backdrop-filter
+  on ALL cards/wells in the form — not just the card containing the dropdown.
+  The previous fix targeted only the card that *contains* the open trigger,
+  leaving sibling/later cards with backdrop-filter stacking contexts that
+  still painted over the dropdown list in document order.
+*/
+.formio-form:has(.selection.dropdown.active) .card,
+.formio-form:has(.selection.dropdown.active) .well,
+.formio-form:has(.selection.dropdown.visible) .card,
+.formio-form:has(.selection.dropdown.visible) .well,
+.formio-form:has(.choices.is-open) .card,
+.formio-form:has(.choices.is-open) .well,
+.formio-form:has(.choices__list--dropdown.is-active) .card,
+.formio-form:has(.choices__list--dropdown.is-active) .well,
+.formio-form:has(.choices__list[aria-expanded="true"]) .card,
+.formio-form:has(.choices__list[aria-expanded="true"]) .well {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
