@@ -155,6 +155,19 @@
     0 20px 34px rgba(8, 35, 55, 0.055);
 }
 
+/*
+  Fieldsets are nested inside .card which already carries backdrop-filter.
+  A fieldset with its own backdrop-filter creates a nested stacking context
+  that traps child z-indexes: the dropdown at z-index 200001 only competes
+  within that fieldset SC, so a later sibling fieldset or panel paints over
+  it in document order. Removing backdrop-filter dissolves the trap; the
+  parent .card still provides the frosted-glass visual.
+*/
+.formio-form fieldset {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 .formio-form .panel::before,
 .formio-form .card::before,
 .formio-form .container-component::before,
@@ -580,6 +593,80 @@ label.field-required > div,
 .formio-form fieldset:has(.choices__list[aria-expanded="true"]) {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+}
+
+/*
+  Semantic UI dropdown open state (formio-component-simpleselectadvanced).
+  DOM inspection showed this component uses a Semantic UI trigger
+  (div.form-control.ui.fluid.selection.dropdown) with no .choices wrapper,
+  and aria-expanded stays "false" even when open — so the Choices.js
+  :has() selectors above never fire for this component type.
+  Semantic UI adds .active (and .visible) to the trigger when open.
+*/
+.formio-form .formio-component-simpleselectadvanced:has(.selection.dropdown.active),
+.formio-form .formio-component-select:has(.selection.dropdown.active) {
+  position: relative;
+  z-index: calc(var(--fio-bc-dropdown-z) - 2);
+  overflow: visible;
+}
+
+.formio-form .formio-component-columns:has(.selection.dropdown.active),
+.formio-form .row:has(.selection.dropdown.active),
+.formio-form [class^="col-"]:has(.selection.dropdown.active),
+.formio-form [class*=" col-"]:has(.selection.dropdown.active) {
+  position: relative;
+  z-index: calc(var(--fio-bc-dropdown-z) - 3);
+  overflow: visible;
+}
+
+.formio-form .formio-component-panel:has(.selection.dropdown.active),
+.formio-form .formio-component-triggerPanel:has(.selection.dropdown.active) {
+  position: relative;
+  z-index: calc(var(--fio-bc-dropdown-z) - 4);
+  overflow: visible;
+}
+
+.formio-form .card:has(.selection.dropdown.active),
+.formio-form .card:has(.selection.dropdown.visible),
+.formio-form .well:has(.selection.dropdown.active),
+.formio-form fieldset:has(.selection.dropdown.active) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/*
+  Inverted z-index pattern for panels.
+  Each .formio-component-panel gets position:relative so its z-index is active.
+  Earlier panels get higher z-index than later siblings so any dropdown that
+  extends beyond the panel boundary is always painted above subsequent panels,
+  regardless of open-state class detection. This is the safety-net fix for
+  cases where backdrop-filter stacking contexts on sibling panels would otherwise
+  paint over a dropdown in document order.
+*/
+.formio-form .formio-component-panel,
+.formio-form .formio-component-triggerPanel {
+  position: relative;
+  z-index: 5;
+}
+
+.formio-form .formio-component-panel ~ .formio-component-panel,
+.formio-form .formio-component-panel ~ .formio-component-triggerPanel,
+.formio-form .formio-component-triggerPanel ~ .formio-component-panel {
+  z-index: 4;
+}
+
+.formio-form .formio-component-panel ~ .formio-component-panel ~ .formio-component-panel,
+.formio-form .formio-component-panel ~ .formio-component-panel ~ .formio-component-triggerPanel {
+  z-index: 3;
+}
+
+.formio-form .formio-component-panel ~ .formio-component-panel ~ .formio-component-panel ~ .formio-component-panel,
+.formio-form .formio-component-panel ~ .formio-component-panel ~ .formio-component-panel ~ .formio-component-triggerPanel {
+  z-index: 2;
+}
+
+.formio-form .formio-component-panel ~ .formio-component-panel ~ .formio-component-panel ~ .formio-component-panel ~ .formio-component-panel {
+  z-index: 1;
 }
 
 /*
