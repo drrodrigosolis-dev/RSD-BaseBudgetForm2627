@@ -646,6 +646,17 @@ label.field-required > div,
   -webkit-backdrop-filter: none !important;
 }
 
+.formio-form:has(.choices.is-open) .formio-component-panel,
+.formio-form:has(.choices.is-open) .formio-component-triggerPanel,
+.formio-form:has(.choices__list--dropdown.is-active) .formio-component-panel,
+.formio-form:has(.choices__list--dropdown.is-active) .formio-component-triggerPanel,
+.formio-form:has(.selection.dropdown.active) .formio-component-panel,
+.formio-form:has(.selection.dropdown.active) .formio-component-triggerPanel,
+.formio-form:has(.choices__list[aria-expanded="true"]) .formio-component-panel,
+.formio-form:has(.choices__list[aria-expanded="true"]) .formio-component-triggerPanel {
+  z-index: auto !important;
+}
+
 .formio-form .formio-component-panel,
 .formio-form .formio-component-triggerPanel {
   position: relative;

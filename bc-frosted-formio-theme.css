@@ -648,6 +648,28 @@ label.field-required > div,
 }
 
 /*
+  Dissolve panel stacking contexts when any dropdown is open.
+  Removing backdrop-filter from cards is not enough: the panel components
+  themselves have position:relative + z-index (5/4/3...) which creates
+  stacking contexts that trap the dropdown list. When the dropdown opens
+  upward (is-flipped), it extends into the area of an earlier panel with
+  a HIGHER z-index, which paints over panel1's entire SC including the
+  dropdown. Setting z-index:auto on all panels when a dropdown is open
+  dissolves those SCs so the dropdown's z-index:200001 floats to the
+  root stacking context and nothing can paint over it.
+*/
+.formio-form:has(.choices.is-open) .formio-component-panel,
+.formio-form:has(.choices.is-open) .formio-component-triggerPanel,
+.formio-form:has(.choices__list--dropdown.is-active) .formio-component-panel,
+.formio-form:has(.choices__list--dropdown.is-active) .formio-component-triggerPanel,
+.formio-form:has(.selection.dropdown.active) .formio-component-panel,
+.formio-form:has(.selection.dropdown.active) .formio-component-triggerPanel,
+.formio-form:has(.choices__list[aria-expanded="true"]) .formio-component-panel,
+.formio-form:has(.choices__list[aria-expanded="true"]) .formio-component-triggerPanel {
+  z-index: auto !important;
+}
+
+/*
   Inverted z-index pattern for panels.
   Each .formio-component-panel gets position:relative so its z-index is active.
   Earlier panels get higher z-index than later siblings so any dropdown that
