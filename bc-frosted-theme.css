@@ -528,7 +528,8 @@ label.field-required > div,
   border: 2px solid #ffffff;
 }
 
-.formio-form .choices.is-open {
+.formio-form .choices.is-open,
+.formio-form .choices:has(.choices__list[aria-expanded="true"]) {
   position: relative;
   z-index: calc(var(--fio-bc-dropdown-z) - 1);
   overflow: visible;
@@ -536,7 +537,10 @@ label.field-required > div,
 
 .formio-form .formio-component-simpleselectadvanced:has(.choices.is-open),
 .formio-form .formio-component-select:has(.choices.is-open),
-.formio-form .formio-component-tags:has(.choices.is-open) {
+.formio-form .formio-component-tags:has(.choices.is-open),
+.formio-form .formio-component-simpleselectadvanced:has(.choices__list[aria-expanded="true"]),
+.formio-form .formio-component-select:has(.choices__list[aria-expanded="true"]),
+.formio-form .formio-component-tags:has(.choices__list[aria-expanded="true"]) {
   position: relative;
   z-index: calc(var(--fio-bc-dropdown-z) - 2);
   overflow: visible;
@@ -545,7 +549,11 @@ label.field-required > div,
 .formio-form .formio-component-columns:has(.choices.is-open),
 .formio-form .row:has(.choices.is-open),
 .formio-form [class^="col-"]:has(.choices.is-open),
-.formio-form [class*=" col-"]:has(.choices.is-open) {
+.formio-form [class*=" col-"]:has(.choices.is-open),
+.formio-form .formio-component-columns:has(.choices__list[aria-expanded="true"]),
+.formio-form .row:has(.choices__list[aria-expanded="true"]),
+.formio-form [class^="col-"]:has(.choices__list[aria-expanded="true"]),
+.formio-form [class*=" col-"]:has(.choices__list[aria-expanded="true"]) {
   position: relative;
   z-index: calc(var(--fio-bc-dropdown-z) - 3);
   overflow: visible;
@@ -558,8 +566,10 @@ label.field-required > div,
 */
 .formio-form .formio-component-panel:has(.choices.is-open),
 .formio-form .formio-component-panel:has(.choices__list--dropdown.is-active),
+.formio-form .formio-component-panel:has(.choices__list[aria-expanded="true"]),
 .formio-form .formio-component-triggerPanel:has(.choices.is-open),
-.formio-form .formio-component-triggerPanel:has(.choices__list--dropdown.is-active) {
+.formio-form .formio-component-triggerPanel:has(.choices__list--dropdown.is-active),
+.formio-form .formio-component-triggerPanel:has(.choices__list[aria-expanded="true"]) {
   position: relative;
   z-index: calc(var(--fio-bc-dropdown-z) - 4);
   overflow: visible;
@@ -571,13 +581,18 @@ label.field-required > div,
   so that later sibling elements paint over the dropdown regardless of z-index 200001.
   Clearing backdrop-filter dissolves that context so the dropdown competes at the panel
   level (z-index 199997) in the document stacking order.
+  All three Choices.js open-state signals covered: is-open class, is-active class,
+  and aria-expanded attribute (varies by Choices.js version / FormIO build).
 */
 .formio-form .card:has(.choices.is-open),
 .formio-form .card:has(.choices__list--dropdown.is-active),
+.formio-form .card:has(.choices__list[aria-expanded="true"]),
 .formio-form .well:has(.choices.is-open),
 .formio-form .well:has(.choices__list--dropdown.is-active),
+.formio-form .well:has(.choices__list[aria-expanded="true"]),
 .formio-form fieldset:has(.choices.is-open),
-.formio-form fieldset:has(.choices__list--dropdown.is-active) {
+.formio-form fieldset:has(.choices__list--dropdown.is-active),
+.formio-form fieldset:has(.choices__list[aria-expanded="true"]) {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
